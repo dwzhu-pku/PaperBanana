@@ -1,0 +1,205 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0B1426" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+
+    <!-- Drop Shadow for Boxes -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.25" flood-color="#000000" />
+    </filter>
+    
+    <!-- Glow Effect for Output -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Arrow Markers -->
+    <marker id="arrow-down-gray" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B" />
+    </marker>
+    <marker id="arrow-down-green" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#10B981" />
+    </marker>
+    <marker id="arrow-right-red" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EF4444" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#bg-grad)" />
+
+  <!-- ================= HEADER & CORE INSIGHT ================= -->
+  <text x="50" y="40" font-size="28" font-weight="bold" fill="#F8FAFC">Pi's 7-Layer Security Defense Pipeline</text>
+  <text x="50" y="65" font-size="16" fill="#94A3B8">Sequential, defense-in-depth architecture for agent contributions.</text>
+
+  <!-- Core Insight Box -->
+  <rect x="710" y="30" width="440" height="74" rx="8" fill="#1E293B" stroke="#3B82F6" stroke-width="1" filter="url(#shadow)" />
+  <text x="730" y="54" font-size="13" font-weight="bold" fill="#60A5FA" letter-spacing="1">CORE INSIGHT</text>
+  <text x="730" y="74" font-size="14" fill="#F8FAFC">Data must pass ALL 7 independent layers to be accepted.</text>
+  <text x="730" y="94" font-size="14" fill="#F8FAFC">Compromising one layer does not bypass the others.</text>
+
+  <!-- ================= ZONE LABELS ================= -->
+  <text x="100" y="135" font-size="14" font-weight="bold" fill="#64748B" letter-spacing="1">VALIDATION LAYERS (PIPELINE)</text>
+  <text x="710" y="135" font-size="14" font-weight="bold" fill="#EF4444" letter-spacing="1">REJECTED THREATS</text>
+
+  <!-- ================= DATA INPUT ================= -->
+  <rect x="275" y="80" width="200" height="40" rx="20" fill="#0F172A" stroke="#475569" stroke-width="2" />
+  <text x="375" y="105" font-size="15" font-weight="bold" fill="#E2E8F0" text-anchor="middle">Agent Submissions</text>
+  
+  <path d="M 375 120 L 375 142" stroke="#64748B" stroke-width="2" marker-end="url(#arrow-down-gray)" />
+  <text x="385" y="135" font-size="13" font-weight="bold" fill="#94A3B8">Untrusted Raw Data</text>
+
+
+  <!-- ================= PIPELINE BACKGROUND ================= -->
+  <rect x="80" y="140" width="590" height="560" rx="16" fill="#0F172A" stroke="#1E293B" stroke-width="2" />
+
+
+  <!-- ================= LAYER 1: INPUT VALIDATION ================= -->
+  <!-- Main Box -->
+  <rect x="100" y="150" width="550" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1" filter="url(#shadow)" />
+  <rect x="102" y="152" width="6" height="56" rx="3" fill="#3B82F6" />
+  <text x="125" y="174" font-size="16" font-weight="bold" fill="#3B82F6">Layer 1 - INPUT VALIDATION</text>
+  <text x="125" y="196" font-size="14" fill="#CBD5E1">PII stripping, JSON schema enforcement, and payload size limits</text>
+  
+  <!-- Flow Out -->
+  <path d="M 650 180 L 696 180" stroke="#EF4444" stroke-width="2" stroke-dasharray="4 2" marker-end="url(#arrow-right-red)" />
+  <text x="660" y="174" font-size="12" font-weight="bold" fill="#EF4444">Drop</text>
+  <path d="M 375 210 L 375 224" stroke="#64748B" stroke-width="2" marker-end="url(#arrow-down-gray)" />
+  <text x="385" y="222" font-size="12" fill="#94A3B8">Well-formed JSON</text>
+
+  <!-- Threat Box -->
+  <rect x="710" y="150" width="440" height="60" rx="8" fill="#1A1118" stroke="#4C1D2F" stroke-width="1" filter="url(#shadow)" />
+  <path d="M 725 168 l 8 -4 l 8 4 v 6 c 0 6 -8 12 -8 12 c 0 0 -8 -6 -8 -12 z" fill="#EF4444" />
+  <text x="750" y="174" font-size="13" font-weight="bold" fill="#FCA5A5">STOPS:</text>
+  <text x="750" y="196" font-size="15" fill="#F8FAFC">Malformed data, privacy leaks</text>
+
+
+  <!-- ================= LAYER 2: CRYPTOGRAPHY ================= -->
+  <!-- Main Box -->
+  <rect x="100" y="230" width="550" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1" filter="url(#shadow)" />
+  <rect x="102" y="232" width="6" height="56" rx="3" fill="#06B6D4" />
+  <text x="125" y="254" font-size="16" font-weight="bold" fill="#06B6D4">Layer 2 - CRYPTOGRAPHY</text>
+  <text x="125" y="276" font-size="14" fill="#CBD5E1">SHAKE-256 hashing, Ed25519 signatures, and witness chains</text>
+  
+  <!-- Flow Out -->
+  <path d="M 650 260 L 696 260" stroke="#EF4444" stroke-width="2" stroke-dasharray="4 2" marker-end="url(#arrow-right-red)" />
+  <text x="660" y="254" font-size="12" font-weight="bold" fill="#EF4444">Drop</text>
+  <path d="M 375 290 L 375 304" stroke="#64748B" stroke-width="2" marker-end="url(#arrow-down-gray)" />
+  <text x="385" y="302" font-size="12" fill="#94A3B8">Verified Signatures</text>
+
+  <!-- Threat Box -->
+  <rect x="710" y="230" width="440" height="60" rx="8" fill="#1A1118" stroke="#4C1D2F" stroke-width="1" filter="url(#shadow)" />
+  <path d="M 725 248 l 8 -4 l 8 4 v 6 c 0 6 -8 12 -8 12 c 0 0 -8 -6 -8 -12 z" fill="#EF4444" />
+  <text x="750" y="254" font-size="13" font-weight="bold" fill="#FCA5A5">STOPS:</text>
+  <text x="750" y="276" font-size="15" fill="#F8FAFC">Impersonation, tampering</text>
+
+
+  <!-- ================= LAYER 3: BOUNDS CHECKING ================= -->
+  <!-- Main Box -->
+  <rect x="100" y="310" width="550" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1" filter="url(#shadow)" />
+  <rect x="102" y="312" width="6" height="56" rx="3" fill="#10B981" />
+  <text x="125" y="334" font-size="16" font-weight="bold" fill="#10B981">Layer 3 - BOUNDS CHECKING</text>
+  <text x="125" y="356" font-size="14" fill="#CBD5E1">Rejects NaN, Infinity, and extreme numerical outlier values</text>
+  
+  <!-- Flow Out -->
+  <path d="M 650 340 L 696 340" stroke="#EF4444" stroke-width="2" stroke-dasharray="4 2" marker-end="url(#arrow-right-red)" />
+  <text x="660" y="334" font-size="12" font-weight="bold" fill="#EF4444">Drop</text>
+  <path d="M 375 370 L 375 384" stroke="#64748B" stroke-width="2" marker-end="url(#arrow-down-gray)" />
+  <text x="385" y="382" font-size="12" fill="#94A3B8">Safe Values</text>
+
+  <!-- Threat Box -->
+  <rect x="710" y="310" width="440" height="60" rx="8" fill="#1A1118" stroke="#4C1D2F" stroke-width="1" filter="url(#shadow)" />
+  <path d="M 725 328 l 8 -4 l 8 4 v 6 c 0 6 -8 12 -8 12 c 0 0 -8 -6 -8 -12 z" fill="#EF4444" />
+  <text x="750" y="334" font-size="13" font-weight="bold" fill="#FCA5A5">STOPS:</text>
+  <text x="750" y="356" font-size="15" fill="#F8FAFC">Numerical attacks, overflow exploits</text>
+
+
+  <!-- ================= LAYER 4: RATE LIMITING ================= -->
+  <!-- Main Box -->
+  <rect x="100" y="390" width="550" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1" filter="url(#shadow)" />
+  <rect x="102" y="392" width="6" height="56" rx="3" fill="#F59E0B" />
+  <text x="125" y="414" font-size="16" font-weight="bold" fill="#F59E0B">Layer 4 - RATE LIMITING</text>
+  <text x="125" y="436" font-size="14" fill="#CBD5E1">Token bucket algorithm with replay-protection nonces</text>
+  
+  <!-- Flow Out -->
+  <path d="M 650 420 L 696 420" stroke="#EF4444" stroke-width="2" stroke-dasharray="4 2" marker-end="url(#arrow-right-red)" />
+  <text x="660" y="414" font-size="12" font-weight="bold" fill="#EF4444">Drop</text>
+  <path d="M 375 450 L 375 464" stroke="#64748B" stroke-width="2" marker-end="url(#arrow-down-gray)" />
+  <text x="385" y="462" font-size="12" fill="#94A3B8">Under Limit</text>
+
+  <!-- Threat Box -->
+  <rect x="710" y="390" width="440" height="60" rx="8" fill="#1A1118" stroke="#4C1D2F" stroke-width="1" filter="url(#shadow)" />
+  <path d="M 725 408 l 8 -4 l 8 4 v 6 c 0 6 -8 12 -8 12 c 0 0 -8 -6 -8 -12 z" fill="#EF4444" />
+  <text x="750" y="414" font-size="13" font-weight="bold" fill="#FCA5A5">STOPS:</text>
+  <text x="750" y="436" font-size="15" fill="#F8FAFC">DDoS, spam, replay attacks</text>
+
+
+  <!-- ================= LAYER 5: BYZANTINE OUTLIER EXCLUSION ================= -->
+  <!-- Main Box -->
+  <rect x="100" y="470" width="550" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1" filter="url(#shadow)" />
+  <rect x="102" y="472" width="6" height="56" rx="3" fill="#F97316" />
+  <text x="125" y="494" font-size="16" font-weight="bold" fill="#F97316">Layer 5 - BYZANTINE OUTLIER EXCLUSION</text>
+  <text x="125" y="516" font-size="14" fill="#CBD5E1">Statistical 2-sigma exclusion of anomalous contributions</text>
+  
+  <!-- Flow Out -->
+  <path d="M 650 500 L 696 500" stroke="#EF4444" stroke-width="2" stroke-dasharray="4 2" marker-end="url(#arrow-right-red)" />
+  <text x="660" y="494" font-size="12" font-weight="bold" fill="#EF4444">Drop</text>
+  <path d="M 375 530 L 375 544" stroke="#64748B" stroke-width="2" marker-end="url(#arrow-down-gray)" />
+  <text x="385" y="542" font-size="12" fill="#94A3B8">In-Distribution</text>
+
+  <!-- Threat Box -->
+  <rect x="710" y="470" width="440" height="60" rx="8" fill="#1A1118" stroke="#4C1D2F" stroke-width="1" filter="url(#shadow)" />
+  <path d="M 725 488 l 8 -4 l 8 4 v 6 c 0 6 -8 12 -8 12 c 0 0 -8 -6 -8 -12 z" fill="#EF4444" />
+  <text x="750" y="494" font-size="13" font-weight="bold" fill="#FCA5A5">STOPS:</text>
+  <text x="750" y="516" font-size="15" fill="#F8FAFC">Poisoning attacks from malicious agents</text>
+
+
+  <!-- ================= LAYER 6: REPUTATION SCORING ================= -->
+  <!-- Main Box -->
+  <rect x="100" y="550" width="550" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1" filter="url(#shadow)" />
+  <rect x="102" y="552" width="6" height="56" rx="3" fill="#EF4444" />
+  <text x="125" y="574" font-size="16" font-weight="bold" fill="#EF4444">Layer 6 - REPUTATION SCORING</text>
+  <text x="125" y="596" font-size="14" fill="#CBD5E1">Score = accuracy² × uptime × stake (weights low-rep down)</text>
+  
+  <!-- Flow Out -->
+  <path d="M 650 580 L 696 580" stroke="#EF4444" stroke-width="2" stroke-dasharray="4 2" marker-end="url(#arrow-right-red)" />
+  <text x="660" y="574" font-size="12" font-weight="bold" fill="#EF4444">Drop</text>
+  <path d="M 375 610 L 375 624" stroke="#64748B" stroke-width="2" marker-end="url(#arrow-down-gray)" />
+  <text x="385" y="622" font-size="12" fill="#94A3B8">High Trust Score</text>
+
+  <!-- Threat Box -->
+  <rect x="710" y="550" width="440" height="60" rx="8" fill="#1A1118" stroke="#4C1D2F" stroke-width="1" filter="url(#shadow)" />
+  <path d="M 725 568 l 8 -4 l 8 4 v 6 c 0 6 -8 12 -8 12 c 0 0 -8 -6 -8 -12 z" fill="#EF4444" />
+  <text x="750" y="574" font-size="13" font-weight="bold" fill="#FCA5A5">STOPS:</text>
+  <text x="750" y="596" font-size="15" fill="#F8FAFC">Sybil attacks, low-quality flooding</text>
+
+
+  <!-- ================= LAYER 7: DRIFT DETECTION ================= -->
+  <!-- Main Box -->
+  <rect x="100" y="630" width="550" height="60" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1" filter="url(#shadow)" />
+  <rect x="102" y="632" width="6" height="56" rx="3" fill="#D946EF" />
+  <text x="125" y="654" font-size="16" font-weight="bold" fill="#D946EF">Layer 7 - DRIFT DETECTION</text>
+  <text x="125" y="676" font-size="14" fill="#CBD5E1">Spiking Neural Network (SNN) monitors distribution changes</text>
+  
+  <!-- Flow Out -->
+  <path d="M 650 660 L 696 660" stroke="#EF4444" stroke-width="2" stroke-dasharray="4 2" marker-end="url(#arrow-right-red)" />
+  <text x="660" y="654" font-size="12" font-weight="bold" fill="#EF4444">Drop</text>
+  <path d="M 375 690 L 375 714" stroke="#10B981" stroke-width="3" marker-end="url(#arrow-down-green)" />
+  <text x="385" y="707" font-size="13" font-weight="bold" fill="#10B981">Stable &amp; Verified</text>
+
+  <!-- Threat Box -->
+  <rect x="710" y="630" width="440" height="60" rx="8" fill="#1A1118" stroke="#4C1D2F" stroke-width="1" filter="url(#shadow)" />
+  <path d="M 725 648 l 8 -4 l 8 4 v 6 c 0 6 -8 12 -8 12 c 0 0 -8 -6 -8 -12 z" fill="#EF4444" />
+  <text x="750" y="654" font-size="13" font-weight="bold" fill="#FCA5A5">STOPS:</text>
+  <text x="750" y="676" font-size="15" fill="#F8FAFC">Slow poisoning, concept drift attacks</text>
+
+
+  <!-- ================= FINAL OUTPUT ================= -->
+  <rect x="100" y="724" width="550" height="50" rx="8" fill="#064E3B" stroke="#10B981" stroke-width="2" filter="url(#glow)" />
+  <text x="375" y="754" font-size="18" font-weight="bold" fill="#A7F3D0" text-anchor="middle" letter-spacing="1">ACCEPTED GLOBAL STATE CONTRIBUTION</text>
+
+</svg>

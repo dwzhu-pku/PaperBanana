@@ -1,0 +1,221 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" font-family="system-ui, -apple-system, sans-serif">
+    <defs>
+        <!-- Background Gradients -->
+        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0B1426" />
+            <stop offset="100%" stop-color="#020617" />
+        </linearGradient>
+        
+        <linearGradient id="jujutsuBg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0F172A" />
+            <stop offset="100%" stop-color="#171033" />
+        </linearGradient>
+
+        <linearGradient id="gitBg" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#111827" />
+            <stop offset="100%" stop-color="#030712" />
+        </linearGradient>
+
+        <!-- Drop Shadows -->
+        <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4" />
+        </filter>
+        
+        <filter id="glowBlue" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="8" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+
+        <!-- Arrow Markers -->
+        <marker id="arrowGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B" />
+        </marker>
+        <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E0B" />
+        </marker>
+        <marker id="arrowEmerald" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#10B981" />
+        </marker>
+        <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B82F6" />
+        </marker>
+        <marker id="arrowPink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#EC4899" />
+        </marker>
+    </defs>
+
+    <!-- Base Canvas -->
+    <rect width="1200" height="800" fill="url(#bgGradient)" />
+
+    <!-- ========================================== -->
+    <!-- LEFT PANEL: TRADITIONAL GIT (THE PROBLEM)  -->
+    <!-- ========================================== -->
+    
+    <rect x="30" y="40" width="320" height="720" rx="12" fill="url(#gitBg)" stroke="#374151" stroke-width="2" filter="url(#shadow)" />
+    
+    <text x="190" y="80" text-anchor="middle" fill="#94A3B8" font-size="16" font-weight="bold" letter-spacing="1.5">TRADITIONAL GIT</text>
+    <text x="190" y="100" text-anchor="middle" fill="#64748B" font-size="13">The Sequential Bottleneck</text>
+
+    <!-- Git Box 1: Human -->
+    <rect x="50" y="130" width="280" height="90" rx="8" fill="#1F2937" stroke="#4B5563" />
+    <text x="70" y="160" fill="#F3F4F6" font-size="16" font-weight="bold">Single Human Developer</text>
+    <text x="70" y="185" fill="#9CA3AF" font-size="14">Sequential, manual coding workflows</text>
+    <text x="70" y="205" fill="#9CA3AF" font-size="14">designed for single-threaded thought.</text>
+    
+    <!-- Git Icon 1 -->
+    <circle cx="305" cy="145" r="10" fill="#4B5563" />
+    <path d="M 293 165 C 293 155 317 155 317 165" fill="none" stroke="#4B5563" stroke-width="3" />
+
+    <!-- Flow Arrow 1 -->
+    <line x1="190" y1="220" x2="190" y2="285" stroke="#64748B" stroke-width="2" marker-end="url(#arrowGray)" />
+    <text x="200" y="255" fill="#94A3B8" font-size="13">15 ops/sec limit</text>
+
+    <!-- Git Box 2: Commits -->
+    <rect x="50" y="295" width="280" height="90" rx="8" fill="#1F2937" stroke="#4B5563" />
+    <text x="70" y="325" fill="#F3F4F6" font-size="16" font-weight="bold">Blocking Commits</text>
+    <text x="70" y="350" fill="#9CA3AF" font-size="14">Lock-based architecture creates</text>
+    <text x="70" y="370" fill="#9CA3AF" font-size="14">severe bottlenecks for multiple actors.</text>
+
+    <!-- Git Icon 2 -->
+    <circle cx="300" cy="325" r="4" fill="#6B7280" />
+    <circle cx="300" cy="340" r="4" fill="#6B7280" />
+    <circle cx="300" cy="355" r="4" fill="#6B7280" />
+    <line x1="300" y1="329" x2="300" y2="336" stroke="#6B7280" stroke-width="2" />
+    <line x1="300" y1="344" x2="300" y2="351" stroke="#6B7280" stroke-width="2" />
+
+    <!-- Flow Arrow 2 -->
+    <line x1="190" y1="385" x2="190" y2="450" stroke="#64748B" stroke-width="2" marker-end="url(#arrowGray)" />
+    <text x="200" y="420" fill="#94A3B8" font-size="13">Text-based diffs</text>
+
+    <!-- Git Box 3: Conflicts -->
+    <rect x="50" y="460" width="280" height="90" rx="8" fill="#1F2937" stroke="#4B5563" />
+    <text x="70" y="490" fill="#F3F4F6" font-size="16" font-weight="bold">Manual Merge Conflicts</text>
+    <text x="70" y="515" fill="#9CA3AF" font-size="14">Requires human intervention to</text>
+    <text x="70" y="535" fill="#9CA3AF" font-size="14">resolve overlapping text changes.</text>
+
+    <!-- Git Icon 3 -->
+    <path d="M 290 500 L 305 515 M 310 500 L 295 515" stroke="#EF4444" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Flow Arrow 3 -->
+    <line x1="190" y1="550" x2="190" y2="615" stroke="#64748B" stroke-width="2" marker-end="url(#arrowGray)" />
+    <text x="200" y="585" fill="#94A3B8" font-size="13">Standard cryptography</text>
+
+    <!-- Git Box 4: Security -->
+    <rect x="50" y="625" width="280" height="90" rx="8" fill="#1F2937" stroke="#4B5563" />
+    <text x="70" y="655" fill="#F3F4F6" font-size="16" font-weight="bold">Vulnerable Security</text>
+    <text x="70" y="680" fill="#9CA3AF" font-size="14">Standard SHA-1/256 hashes are</text>
+    <text x="70" y="700" fill="#9CA3AF" font-size="14">highly vulnerable to quantum attacks.</text>
+
+    <!-- Git Icon 4 -->
+    <rect x="292" y="675" width="16" height="12" rx="2" fill="#6B7280" />
+    <path d="M 296 675 L 296 665 C 296 660 304 660 304 665" fill="none" stroke="#6B7280" stroke-width="2" />
+
+
+    <!-- ========================================== -->
+    <!-- RIGHT PANEL: AGENTIC JUJUTSU (SOLUTION)    -->
+    <!-- ========================================== -->
+
+    <rect x="380" y="40" width="790" height="720" rx="12" fill="url(#jujutsuBg)" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)" />
+    
+    <text x="775" y="80" text-anchor="middle" fill="#3B82F6" font-size="22" font-weight="bold" letter-spacing="1.5" filter="url(#glowBlue)">AGENTIC JUJUTSU</text>
+    
+    <!-- Core Insight Block -->
+    <rect x="410" y="105" width="730" height="65" rx="6" fill="#1E293B" fill-opacity="0.6" stroke="#334155" />
+    <text x="430" y="130" fill="#F8FAFC" font-size="15" font-weight="bold">CORE INSIGHT:</text>
+    <text x="555" y="130" fill="#CBD5E1" font-size="15">AI agents require a fundamentally different version control architecture.</text>
+    <text x="430" y="152" fill="#CBD5E1" font-size="15">Agentic Jujutsu replaces sequential locks with a concurrent, quantum-secure, learning-based engine.</text>
+
+    <!-- 1. Concurrent AI Agents (Top) -->
+    <rect x="410" y="195" width="730" height="90" rx="8" fill="#1E293B" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)" />
+    <text x="440" y="225" fill="#F8FAFC" font-size="18" font-weight="bold">Concurrent AI Agent Swarm</text>
+    <text x="440" y="250" fill="#CBD5E1" font-size="14">Dozens of autonomous agents operating and committing code simultaneously.</text>
+    <text x="440" y="270" fill="#CBD5E1" font-size="14">Requires high-throughput, non-blocking architecture to prevent stalling.</text>
+    
+    <!-- Agent Icons -->
+    <g transform="translate(1050, 240)">
+        <circle cx="-30" cy="0" r="14" fill="#1E1B4B" stroke="#8B5CF6" stroke-width="2" />
+        <circle cx="-30" cy="0" r="6" fill="#8B5CF6" />
+        <circle cx="0" cy="-20" r="14" fill="#1E1B4B" stroke="#8B5CF6" stroke-width="2" />
+        <circle cx="0" cy="-20" r="6" fill="#8B5CF6" />
+        <circle cx="30" cy="0" r="14" fill="#1E1B4B" stroke="#8B5CF6" stroke-width="2" />
+        <circle cx="30" cy="0" r="6" fill="#8B5CF6" />
+        <path d="M -20 -8 L -10 -14 M 20 -8 L 10 -14 M -16 0 L 16 0" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="2 2" />
+    </g>
+
+    <!-- Flow Arrows from Agents -->
+    <line x1="585" y1="285" x2="585" y2="335" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrowAmber)" />
+    <text x="595" y="315" fill="#94A3B8" font-size="13">High-speed commits</text>
+
+    <line x1="965" y1="285" x2="965" y2="335" stroke="#10B981" stroke-width="2" marker-end="url(#arrowEmerald)" />
+    <text x="975" y="315" fill="#94A3B8" font-size="13">Semantic code changes</text>
+
+    <!-- 2. Lock-Free Commit Engine (Middle Left) -->
+    <rect x="410" y="345" width="350" height="110" rx="8" fill="#1E293B" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)" />
+    
+    <rect x="650" y="355" width="100" height="22" rx="4" fill="#F59E0B" fill-opacity="0.15" stroke="#F59E0B" />
+    <text x="700" y="371" text-anchor="middle" fill="#F59E0B" font-size="12" font-weight="bold">23x FASTER</text>
+    
+    <text x="430" y="375" fill="#F8FAFC" font-size="18" font-weight="bold">Lock-Free Commit Engine</text>
+    <text x="430" y="405" fill="#CBD5E1" font-size="14">Handles 350 ops/sec concurrently.</text>
+    <text x="430" y="425" fill="#CBD5E1" font-size="14">Multiple agents commit without blocking.</text>
+    <text x="430" y="445" fill="#CBD5E1" font-size="14">Eliminates traditional checkout overhead.</text>
+
+    <!-- 3. Semantic Auto-Resolver (Middle Right) -->
+    <rect x="790" y="345" width="350" height="110" rx="8" fill="#1E293B" stroke="#10B981" stroke-width="2" filter="url(#shadow)" />
+    
+    <rect x="1010" y="355" width="120" height="22" rx="4" fill="#10B981" fill-opacity="0.15" stroke="#10B981" />
+    <text x="1070" y="371" text-anchor="middle" fill="#10B981" font-size="11" font-weight="bold">87% AUTO-RESOLVE</text>
+    
+    <text x="810" y="375" fill="#F8FAFC" font-size="18" font-weight="bold">Semantic Auto-Resolver</text>
+    <text x="810" y="405" fill="#CBD5E1" font-size="14">Understands code intent, not just text diffs.</text>
+    <text x="810" y="425" fill="#CBD5E1" font-size="14">Automatically resolves complex conflicts.</text>
+    <text x="810" y="445" fill="#CBD5E1" font-size="14">Keeps agent workflows continuous.</text>
+
+    <!-- Flow Arrows between Middle Layers -->
+    <line x1="585" y1="455" x2="585" y2="480" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrowBlue)" />
+    <line x1="965" y1="455" x2="965" y2="480" stroke="#EC4899" stroke-width="2" marker-end="url(#arrowPink)" />
+
+    <!-- 4. Fast Context Switcher (Lower Middle Left) -->
+    <rect x="410" y="490" width="350" height="100" rx="8" fill="#1E293B" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)" />
+    
+    <rect x="650" y="500" width="100" height="22" rx="4" fill="#3B82F6" fill-opacity="0.15" stroke="#3B82F6" />
+    <text x="700" y="516" text-anchor="middle" fill="#3B82F6" font-size="12" font-weight="bold">10x FASTER</text>
+    
+    <text x="430" y="520" fill="#F8FAFC" font-size="18" font-weight="bold">Fast Context Switcher</text>
+    <text x="430" y="550" fill="#CBD5E1" font-size="14">Agents jump between branches instantly.</text>
+    <text x="430" y="570" fill="#CBD5E1" font-size="14">Zero overhead for workspace loading.</text>
+
+    <!-- 5. Learning Trajectories (Lower Middle Right) -->
+    <rect x="790" y="490" width="350" height="100" rx="8" fill="#1E293B" stroke="#EC4899" stroke-width="2" filter="url(#shadow)" />
+    
+    <rect x="1020" y="500" width="110" height="22" rx="4" fill="#EC4899" fill-opacity="0.15" stroke="#EC4899" />
+    <text x="1075" y="516" text-anchor="middle" fill="#EC4899" font-size="11" font-weight="bold">REASONING BANK</text>
+    
+    <text x="810" y="520" fill="#F8FAFC" font-size="18" font-weight="bold">Learning Trajectories</text>
+    <text x="810" y="550" fill="#CBD5E1" font-size="14">Tracks agent actions via vector embeddings.</text>
+    <text x="810" y="570" fill="#CBD5E1" font-size="14">Suggests improvements based on confidence.</text>
+
+    <!-- Flow Arrows to Quantum Layer -->
+    <line x1="585" y1="590" x2="585" y2="630" stroke="#64748B" stroke-width="2" marker-end="url(#arrowGray)" />
+    <text x="595" y="615" fill="#94A3B8" font-size="13">Branch state storage</text>
+
+    <line x1="965" y1="590" x2="965" y2="630" stroke="#64748B" stroke-width="2" marker-end="url(#arrowGray)" />
+    <text x="975" y="615" fill="#94A3B8" font-size="13">Action embeddings</text>
+
+    <!-- 6. Quantum-Resistant Layer (Bottom) -->
+    <rect x="410" y="640" width="730" height="100" rx="8" fill="#1E293B" stroke="#F43F5E" stroke-width="2" filter="url(#shadow)" />
+    
+    <rect x="960" y="650" width="160" height="22" rx="4" fill="#F43F5E" fill-opacity="0.15" stroke="#F43F5E" />
+    <text x="1040" y="666" text-anchor="middle" fill="#F43F5E" font-size="12" font-weight="bold">SHA3-512 + HQC-128</text>
+    
+    <text x="440" y="670" fill="#F8FAFC" font-size="18" font-weight="bold">Quantum-Resistant Cryptographic Layer</text>
+    <text x="440" y="700" fill="#CBD5E1" font-size="14">Post-quantum encryption ensures commits cannot be forged by quantum computers.</text>
+    <text x="440" y="720" fill="#CBD5E1" font-size="14">Provides future-proof security for proprietary AI learning models and repositories.</text>
+
+    <!-- Quantum Shield Icon -->
+    <g transform="translate(1090, 690)">
+        <path d="M 0 0 L 20 -10 L 40 0 L 40 20 C 40 35 20 50 20 50 C 20 50 0 35 0 20 Z" fill="none" stroke="#F43F5E" stroke-width="2" />
+        <path d="M 12 20 L 18 26 L 28 12" fill="none" stroke="#F43F5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+
+</svg>

@@ -1,0 +1,294 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1426" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+
+    <!-- Layer Gradients -->
+    <linearGradient id="layer-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#1E293B" stop-opacity="0.2" />
+    </linearGradient>
+
+    <!-- Active Node Glow -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    
+    <!-- Target Node Glow -->
+    <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Arrow Markers -->
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E0B" />
+    </marker>
+    <marker id="arrow-drop" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F97316" />
+    </marker>
+    <marker id="arrow-query" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B82F6" />
+    </marker>
+  </defs>
+
+  <!-- Base Background -->
+  <rect width="1200" height="800" fill="url(#bg-grad)" />
+
+  <!-- ========================================== -->
+  <!-- TITLE & CORE INSIGHT                       -->
+  <!-- ========================================== -->
+  <text x="310" y="50" font-family="system-ui, -apple-system, sans-serif" font-size="26" font-weight="bold" fill="#F1F5F9">HNSW Vector Search Architecture</text>
+  <text x="310" y="75" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#94A3B8">How Pi searches billions of high-dimensional knowledge vectors</text>
+  <text x="310" y="95" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#94A3B8">in sub-milliseconds using multi-layer skip lists.</text>
+  <text x="310" y="115" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#94A3B8">Global "teleportation" routes queries before exact local matches.</text>
+
+  <!-- ========================================== -->
+  <!-- LAYER CONTAINERS & DESCRIPTIONS            -->
+  <!-- ========================================== -->
+  
+  <!-- Layer 3 -->
+  <rect x="40" y="140" width="780" height="110" rx="12" fill="url(#layer-grad)" stroke="#334155" stroke-width="1" />
+  <text x="60" y="175" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold" fill="#F1F5F9">Layer 3: Global Entry</text>
+  <text x="60" y="195" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94A3B8">Extremely sparse nodes</text>
+  <text x="60" y="215" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94A3B8">Ultra-long-range links</text>
+
+  <!-- Layer 2 -->
+  <rect x="40" y="270" width="780" height="110" rx="12" fill="url(#layer-grad)" stroke="#334155" stroke-width="1" />
+  <text x="60" y="305" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold" fill="#F1F5F9">Layer 2: Coarse Routing</text>
+  <text x="60" y="325" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94A3B8">More vectors included</text>
+  <text x="60" y="345" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94A3B8">Medium-range connections</text>
+
+  <!-- Layer 1 -->
+  <rect x="40" y="400" width="780" height="110" rx="12" fill="url(#layer-grad)" stroke="#334155" stroke-width="1" />
+  <text x="60" y="435" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold" fill="#F1F5F9">Layer 1: Fine Routing</text>
+  <text x="60" y="455" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94A3B8">Denser population</text>
+  <text x="60" y="475" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94A3B8">Short-range connections</text>
+
+  <!-- Layer 0 -->
+  <rect x="40" y="530" width="780" height="150" rx="12" fill="url(#layer-grad)" stroke="#3B82F6" stroke-width="1.5" opacity="0.8"/>
+  <text x="60" y="565" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold" fill="#60A5FA">Layer 0: Base Graph</text>
+  <text x="60" y="585" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#93C5FD">Contains ALL billions of vectors</text>
+  <text x="60" y="605" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#93C5FD">Dense local connections</text>
+  <text x="60" y="625" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#93C5FD">Final K-nearest search happens here</text>
+
+
+  <!-- ========================================== -->
+  <!-- BACKGROUND GRAPH STRUCTURE                 -->
+  <!-- ========================================== -->
+  
+  <!-- Vertical Skip-List Lines (Showing nodes exist in lower layers) -->
+  <g stroke="#475569" stroke-width="1" stroke-dasharray="4,4" opacity="0.6">
+    <line x1="280" y1="195" x2="280" y2="605" /> <!-- Node A -->
+    <line x1="480" y1="210" x2="480" y2="605" /> <!-- Node B -->
+    <line x1="680" y1="180" x2="680" y2="605" /> <!-- Node C -->
+    <line x1="620" y1="310" x2="620" y2="605" /> <!-- Node D -->
+    <line x1="380" y1="340" x2="380" y2="605" /> <!-- Node E -->
+    <line x1="720" y1="460" x2="720" y2="605" /> <!-- Node F -->
+    <line x1="520" y1="430" x2="520" y2="605" /> <!-- Node G -->
+  </g>
+
+  <!-- Horizontal Background Edges -->
+  <g stroke="#334155" stroke-width="1.5" fill="none">
+    <!-- L3 Edges -->
+    <path d="M 280 195 L 480 210 L 680 180 M 280 195 L 680 180" />
+    
+    <!-- L2 Edges -->
+    <path d="M 280 325 L 380 340 L 480 340 L 620 310 L 680 300 M 280 325 L 480 340 M 380 340 L 620 310" />
+    
+    <!-- L1 Edges -->
+    <path d="M 280 455 L 330 430 L 380 470 L 480 460 L 520 430 L 620 440 L 720 460 L 680 420 M 380 470 L 520 430 L 720 460 M 280 455 L 480 460 L 680 420" />
+    
+    <!-- L0 Edges (Dense) -->
+    <path d="M 280 605 L 310 580 L 350 630 L 380 605 L 420 570 L 450 620 L 480 605 L 520 580 L 550 640 L 580 590 L 620 605 L 650 570 L 690 620 L 720 610 L 750 640 L 780 630 L 680 590" />
+    <path d="M 280 605 L 350 630 L 420 570 L 480 605 L 550 640 L 620 605 L 690 620 L 780 630 M 310 580 L 380 605 L 450 620 L 520 580 L 580 590 L 650 570 L 720 610" />
+    <path d="M 720 610 L 750 580 L 780 630 L 790 590" />
+  </g>
+
+  <!-- Background Nodes -->
+  <g fill="#475569" stroke="#1E293B" stroke-width="1">
+    <!-- L3 Nodes -->
+    <circle cx="680" cy="180" r="5" />
+    
+    <!-- L2 Nodes -->
+    <circle cx="280" cy="325" r="4" />
+    <circle cx="380" cy="340" r="4" />
+    <circle cx="680" cy="300" r="4" />
+    
+    <!-- L1 Nodes -->
+    <circle cx="280" cy="455" r="3" />
+    <circle cx="330" cy="430" r="3" />
+    <circle cx="380" cy="470" r="3" />
+    <circle cx="480" cy="460" r="3" />
+    <circle cx="520" cy="430" r="3" />
+    <circle cx="680" cy="420" r="3" />
+    
+    <!-- L0 Nodes -->
+    <circle cx="280" cy="605" r="3" />
+    <circle cx="310" cy="580" r="3" />
+    <circle cx="350" cy="630" r="3" />
+    <circle cx="380" cy="605" r="3" />
+    <circle cx="420" cy="570" r="3" />
+    <circle cx="450" cy="620" r="3" />
+    <circle cx="480" cy="605" r="3" />
+    <circle cx="520" cy="580" r="3" />
+    <circle cx="550" cy="640" r="3" />
+    <circle cx="580" cy="590" r="3" />
+    <circle cx="620" cy="605" r="3" />
+    <circle cx="650" cy="570" r="3" />
+    <circle cx="680" cy="590" r="3" />
+    <circle cx="690" cy="620" r="3" />
+    <circle cx="750" cy="580" r="3" />
+    <circle cx="750" cy="640" r="3" />
+    <circle cx="790" cy="590" r="3" />
+  </g>
+
+
+  <!-- ========================================== -->
+  <!-- FOREGROUND SEARCH PATH (THE ALGORITHM)     -->
+  <!-- ========================================== -->
+  
+  <!-- Query Entry Point -->
+  <rect x="60" y="40" width="180" height="60" rx="8" fill="#1E3A8A" opacity="0.6" stroke="#3B82F6" stroke-width="1.5" />
+  <text x="75" y="65" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="bold" fill="#60A5FA">Query Embedding</text>
+  <text x="75" y="85" font-family="monospace" font-size="12" fill="#93C5FD">[0.12, -0.45, 0.88, ...]</text>
+  
+  <path d="M 150 100 Q 150 180 270 190" fill="none" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrow-query)" stroke-dasharray="4,2"/>
+  <rect x="160" y="165" width="140" height="20" rx="4" fill="#0B1426" opacity="0.8" />
+  <text x="165" y="180" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#93C5FD">Enter random top node</text>
+
+  <!-- Active Search Path (Orange Lines) -->
+  <g fill="none">
+    <!-- Horizontal Hops -->
+    <g stroke="#F59E0B" stroke-width="3" marker-end="url(#arrow-orange)">
+      <line x1="280" y1="195" x2="465" y2="209" />
+      <line x1="480" y1="340" x2="605" y2="312" />
+      <line x1="620" y1="440" x2="705" y2="458" />
+      <line x1="720" y1="610" x2="765" y2="627" />
+    </g>
+    
+    <!-- Vertical Drops -->
+    <g stroke="#F97316" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrow-drop)">
+      <line x1="480" y1="216" x2="480" y2="325" />
+      <line x1="620" y1="316" x2="620" y2="425" />
+      <line x1="720" y1="466" x2="720" y2="595" />
+    </g>
+  </g>
+
+  <!-- Path Labels (with dark backgrounds for readability) -->
+  <g font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold">
+    <!-- L3 Hop -->
+    <rect x="340" y="175" width="80" height="20" rx="4" fill="#0B1426" opacity="0.9" />
+    <text x="345" y="190" fill="#FDE68A">Greedy Hop</text>
+    
+    <!-- L3 to L2 Drop -->
+    <rect x="490" y="260" width="75" height="20" rx="4" fill="#0B1426" opacity="0.9" />
+    <text x="495" y="275" fill="#FFEDD5">Drop Down</text>
+    
+    <!-- L2 Hop -->
+    <rect x="520" y="300" width="80" height="20" rx="4" fill="#0B1426" opacity="0.9" />
+    <text x="525" y="315" fill="#FDE68A">Greedy Hop</text>
+    
+    <!-- L2 to L1 Drop -->
+    <rect x="630" y="360" width="75" height="20" rx="4" fill="#0B1426" opacity="0.9" />
+    <text x="635" y="375" fill="#FFEDD5">Drop Down</text>
+    
+    <!-- L1 Hop -->
+    <rect x="635" y="425" width="80" height="20" rx="4" fill="#0B1426" opacity="0.9" />
+    <text x="640" y="440" fill="#FDE68A">Greedy Hop</text>
+    
+    <!-- L1 to L0 Drop -->
+    <rect x="730" y="520" width="75" height="20" rx="4" fill="#0B1426" opacity="0.9" />
+    <text x="735" y="535" fill="#FFEDD5">Drop Down</text>
+    
+    <!-- L0 Hop -->
+    <rect x="725" y="575" width="85" height="20" rx="4" fill="#0B1426" opacity="0.9" />
+    <text x="730" y="590" fill="#FDE68A">Local Search</text>
+  </g>
+
+  <!-- Active Search Nodes (Orange) -->
+  <g fill="#F59E0B" filter="url(#glow)">
+    <circle cx="280" cy="195" r="6" />
+    <circle cx="480" cy="210" r="6" />
+    <circle cx="480" cy="340" r="6" />
+    <circle cx="620" cy="310" r="6" />
+    <circle cx="620" cy="440" r="6" />
+    <circle cx="720" cy="460" r="6" />
+    <circle cx="720" cy="610" r="6" />
+  </g>
+
+  <!-- Target Node (Green) -->
+  <circle cx="780" cy="630" r="14" fill="#10B981" opacity="0.3" filter="url(#glow-green)" />
+  <circle cx="780" cy="630" r="8" fill="#10B981" />
+  
+  <!-- Target Node Label (Moved to prevent clipping) -->
+  <line x1="725" y1="650" x2="770" y2="635" stroke="#10B981" stroke-width="1.5" stroke-dasharray="2,2" />
+  <rect x="660" y="650" width="130" height="40" rx="6" fill="#0F172A" stroke="#10B981" stroke-width="1.5" />
+  <text x="670" y="668" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#10B981">K-Nearest Match</text>
+  <text x="670" y="688" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#A7F3D0">Final target found</text>
+
+
+  <!-- ========================================== -->
+  <!-- RIGHT PANEL: ALGORITHM STEPS               -->
+  <!-- ========================================== -->
+  <rect x="840" y="140" width="320" height="540" rx="12" fill="#0F172A" stroke="#1E293B" stroke-width="2" />
+  
+  <text x="860" y="175" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="bold" fill="#F1F5F9">HNSW Search Algorithm</text>
+  <text x="860" y="195" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94A3B8">How multi-layer routing works</text>
+
+  <!-- Step 1 -->
+  <circle cx="875" cy="250" r="14" fill="#3B82F6" />
+  <text x="870" y="255" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF">1</text>
+  <text x="900" y="240" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="bold" fill="#F1F5F9">Top Layer Entry</text>
+  <text x="900" y="260" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94A3B8">Start at a random node in the</text>
+  <text x="900" y="280" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94A3B8">sparsest layer for global routing.</text>
+
+  <!-- Step 2 -->
+  <circle cx="875" cy="340" r="14" fill="#F59E0B" />
+  <text x="870" y="345" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF">2</text>
+  <text x="900" y="330" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="bold" fill="#F1F5F9">Greedy Navigation</text>
+  <text x="900" y="350" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94A3B8">Evaluate neighbors and move to</text>
+  <text x="900" y="370" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94A3B8">the one semantically closest to query.</text>
+
+  <!-- Step 3 -->
+  <circle cx="875" cy="430" r="14" fill="#F97316" />
+  <text x="870" y="435" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF">3</text>
+  <text x="900" y="420" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="bold" fill="#F1F5F9">Layer Descent (Drop Down)</text>
+  <text x="900" y="440" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94A3B8">When no closer neighbor exists at</text>
+  <text x="900" y="460" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94A3B8">current level, drop to layer below.</text>
+
+  <!-- Step 4 -->
+  <circle cx="875" cy="520" r="14" fill="#10B981" />
+  <text x="870" y="525" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF">4</text>
+  <text x="900" y="510" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="bold" fill="#F1F5F9">Bottom Layer Precision</text>
+  <text x="900" y="530" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94A3B8">Conduct final local search among</text>
+  <text x="900" y="550" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94A3B8">dense connections for top K results.</text>
+  
+  <!-- Step 5 (Repeat) -->
+  <text x="900" y="590" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-style="italic" fill="#64748B">Process repeats layer by layer</text>
+  <text x="900" y="610" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-style="italic" fill="#64748B">until target is found at Layer 0.</text>
+
+
+  <!-- ========================================== -->
+  <!-- BOTTOM PANEL: PERFORMANCE / WHY IT'S FAST  -->
+  <!-- ========================================== -->
+  <rect x="40" y="700" width="1120" height="90" rx="12" fill="#0F172A" stroke="#1E293B" stroke-width="2" />
+  
+  <text x="60" y="730" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold" fill="#F1F5F9">Computational Efficiency</text>
+  <text x="60" y="750" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94A3B8">By avoiding exhaustive comparisons, HNSW reduces search complexity.</text>
+  <text x="60" y="770" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94A3B8">Linear time becomes logarithmic time.</text>
+
+  <!-- Performance Bars -->
+  <text x="600" y="730" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#FCA5A5">Brute Force: O(N)</text>
+  <text x="730" y="730" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94A3B8">— Compares billions of vectors (Hours)</text>
+  <rect x="600" y="740" width="480" height="8" rx="4" fill="#EF4444" opacity="0.8" />
+
+  <text x="600" y="770" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#6EE7B7">HNSW Graph: O(log N)</text>
+  <text x="760" y="770" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94A3B8">— Teleports via layers (Sub-milliseconds)</text>
+  <rect x="600" y="780" width="15" height="8" rx="4" fill="#10B981" />
+
+</svg>

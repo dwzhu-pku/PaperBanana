@@ -13,19 +13,21 @@ This repository forked the content of that repo and aims to keep evolving toward
 
 **PaperBanana** is a reference-driven multi-agent framework for automated academic illustration generation. Acting like a creative team of specialized agents, it transforms raw scientific content into publication-quality diagrams and plots through an orchestrated pipeline of **Retriever, Planner, Stylist, Visualizer, and Critic** agents. The framework leverages in-context learning from reference examples and iterative refinement to produce aesthetically pleasing and semantically accurate scientific illustrations.
 
-### What's New: SVG Pipeline (Storytelling Fork)
+### What's New: SVG Pipeline with Vision Critic (Storytelling Fork)
 
-This fork adds a **storytelling-enhanced SVG pipeline** that produces vector diagrams with:
+This fork adds a **storytelling-enhanced SVG pipeline** with a **vision-based self-correction loop** that produces vector diagrams scoring **95.8/100 average** across 10 test diagrams:
 
 - **100% text accuracy** — text is rendered by Cairo, not predicted by a neural net
+- **Vision critic loop** — renders SVG to PNG, sends to multimodal Gemini for visual evaluation, applies spatial fixes automatically
+- **Explanatory, not decorative** — every element MUST have a label AND description (enforced by prompt rules)
+- **Cairo-safe rendering** — documented and prevented 4 Cairo-specific bugs (tspan overlap, emoji squares, unicode arrows, text spacing)
 - **10x faster** — ~30 seconds per diagram vs 3-5 minutes for raster
 - **20x cheaper** — ~$0.05 per diagram vs $0.50-2.00 for multi-agent raster
 - **Fully editable** — output is SVG code, version-controllable and diffable
-- **Infinitely scalable** — vector output works at any resolution
 
-The key insight: PaperBanana's real IP is the **Planner agent with visual metaphor discovery** ("What is this LIKE?"). The SVG pipeline keeps this storytelling brain but replaces raster image generation with LLM-generated SVG code rendered by Cairo. The result is diagrams that communicate concepts instantly with perfect text.
+The pipeline: LLM generates SVG code with mandatory labels+descriptions on every element, Cairo renders to PNG, a vision critic evaluates the rendered output and sends specific spatial fixes back to the SVG code. The result is diagrams that teach complex concepts in 15 seconds with zero text rendering artifacts.
 
-**[View the showcase](https://stuinfla.github.io/paperbanana/)** to see example outputs.
+**[View the showcase](https://stuinfla.github.io/paperbanana/)** to see example outputs across Pi, RuVector, and Ruflo.
 
 ---
 
@@ -219,7 +221,7 @@ PaperBanana uses two model types: a **reasoning model** (Planner, Stylist, Criti
 
 | Model | Role | Quality | Speed | Cost |
 |-------|------|---------|-------|------|
-| `gemini-3-pro-preview` | Reasoning | Best | ~15s/call | Higher |
+| `gemini-3.1-pro-preview` | Reasoning | Best | ~15s/call | Higher |
 | `gemini-3-pro-image-preview` | Image Gen | Best | ~60s/call | Higher |
 | `gemini-2.5-flash` | Reasoning | Good | ~5s/call | Lower |
 | `gemini-2.5-flash-image` | Image Gen | Good | ~30s/call | Lower |
@@ -325,7 +327,29 @@ The "Living Library" metaphor communicates "intelligent search that learns" inst
 
 </details>
 
-### What Changed (4 targeted agent improvements)
+### SVG Pipeline: Vision Critic Loop (New)
+
+The SVG pipeline is the highest-quality rendering mode. Instead of generating raster images via Gemini Image Gen, it has the LLM write SVG code directly, renders with Cairo, then self-corrects via a vision critic.
+
+**How it works:**
+
+1. **SVG Generation**: LLM writes SVG code with enforced rules — every element has a label AND description, no emoji, no unicode arrows, 20px minimum text spacing
+2. **Cairo Rendering**: `cairosvg` renders SVG to PNG with 100% text accuracy (text is placed by the renderer, not predicted by a neural net)
+3. **Vision Critique**: Rendered PNG is sent to multimodal Gemini which evaluates for text overlap, clipping, layout issues, missing information
+4. **Self-Correction**: Critic's spatial fixes are applied to the SVG code, re-rendered, and re-evaluated until the diagram scores 95+
+
+**Cairo Rendering Rules** (discovered through testing, built into prompts):
+
+| Rule | Why |
+|------|-----|
+| Never use `<tspan>` with different fill colors on the same `<text>` line | Cairo renders them overlapping instead of inline |
+| Never use emoji characters in text elements | Cairo renders them as empty squares |
+| Never use unicode arrows (arrows, bullets) in text | Cairo renders them as squares |
+| Keep 20px minimum vertical spacing between text lines | Cairo clips text that's too close together |
+
+**Quality Results**: 10 test diagrams across 3 projects averaged **95.8/100**, with all 10 scoring 95+. This is a +34 point improvement over the vanilla baseline (62/100) and +13 over the raster storytelling pipeline (93/100).
+
+### What Changed (4 targeted agent improvements + SVG pipeline)
 
 These changes work within the existing pipeline architecture. No new agents, no structural changes, no breaking modifications.
 
@@ -338,6 +362,7 @@ These changes work within the existing pipeline architecture. No new agents, no 
 | **Planner** | Added mandatory visual metaphor discovery step before element description | The metaphor becomes the diagram's backbone — every element reinforces a single coherent analogy |
 | **Stylist** | Added rule to preserve and enhance metaphors (never flatten into generic boxes) + rendering artifact removal | Previous behavior could strip away the Planner's metaphor during style refinement |
 | **Visualizer** | Added multi-candidate parallel generation + tag stripping + 9-rule quality prompt | More candidates = better selection; tag stripping prevents `[PRIMARY]` annotations from leaking into rendered text |
+| **SVG Visualizer** (new) | LLM generates SVG code with explanatory prompts + Cairo rendering + multimodal vision critic loop | 100% text accuracy, self-correcting layout, enforced information density |
 | **Critic** | Added 7 mandatory visual excellence checks with strict pass threshold | Prevents premature "looks good" responses; enforces visual hierarchy, legibility, color harmony |
 
 ### Quality Journey
@@ -532,7 +557,7 @@ PaperBanana uses two types of models: a **reasoning model** (for the Planner, St
 
 | Model | Role | Quality | Speed | Cost | When to Use |
 |-------|------|---------|-------|------|-------------|
-| `gemini-3-pro-preview` | Reasoning (Planner/Stylist/Critic) | Best | ~15s/call | Higher | Default -- best quality |
+| `gemini-3.1-pro-preview` | Reasoning (Planner/Stylist/Critic) | Best | ~15s/call | Higher | Default -- best quality |
 | `gemini-3-pro-image-preview` | Image Generation | Best | ~60s/call | Higher | Default -- best quality |
 | `gemini-2.5-flash` | Reasoning | Good | ~5s/call | Lower | Budget-conscious |
 | `gemini-2.5-flash-image` | Image Generation | Good | ~30s/call | Lower | Budget-conscious |
@@ -563,6 +588,7 @@ python cli_generate.py \
 | **Maximum quality** | `--mode demo_full --critic-rounds 3 --candidates 3` | Best (~93/100) | ~5 min |
 | **Good quality** | `--mode demo_full --critic-rounds 1 --candidates 1` | Good (~85/100) | ~2 min |
 | **Fast draft** | `--mode vanilla` | Draft (~65/100) | ~90s |
+| **SVG pipeline** | SVG Visualizer agent with vision critic | Best (~96/100) | ~30-60s |
 
 Use maximum quality for final figures in a paper submission. Use fast draft for quick iteration while you are still refining your content and captions.
 
@@ -586,6 +612,7 @@ Costs scale linearly with the number of candidates and critic rounds. Using `gem
 │   ├── planner_agent.py      # Visual metaphor discovery + description
 │   ├── stylist_agent.py       # Metaphor-preserving style refinement
 │   ├── visualizer_agent.py    # Multi-candidate image generation
+│   ├── svg_visualizer_agent.py # SVG code generation + Cairo render + vision critic loop
 │   ├── critic_agent.py        # 7-check visual excellence scoring
 │   ├── retriever_agent.py     # Reference example retrieval
 │   ├── vanilla_agent.py       # Direct generation (baseline)

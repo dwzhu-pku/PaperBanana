@@ -1,0 +1,200 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" style="font-family: system-ui, -apple-system, sans-serif; background-color: #0B1426;">
+  
+  <defs>
+    <!-- Shadows -->
+    <filter id="drop-shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Gradients for Flow Arrows -->
+    <linearGradient id="grad12" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+    <linearGradient id="grad23" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#6366F1" />
+    </linearGradient>
+    <linearGradient id="grad31" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+
+    <!-- Arrowhead Markers -->
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B82F6" />
+    </marker>
+    <marker id="arrow-indigo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6366F1" />
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E0B" />
+    </marker>
+  </defs>
+
+  <!-- Background Layer -->
+  <rect width="1200" height="800" fill="#0B1426" />
+  
+  <!-- Subtle background circle to group the learning loop visually -->
+  <circle cx="790" cy="380" r="340" fill="#1E293B" fill-opacity="0.15" stroke="#1E293B" stroke-width="2" stroke-dasharray="8 8" />
+
+  <!-- ========================================== -->
+  <!-- LEFT COLUMN: CONTEXT & COMPARISONS           -->
+  <!-- ========================================== -->
+  <g id="left-column">
+    
+    <!-- Core Insight Box -->
+    <rect x="30" y="40" width="320" height="150" rx="8" fill="#15233D" stroke="#3B82F6" stroke-width="1" filter="url(#drop-shadow)" />
+    <rect x="30" y="40" width="6" height="150" fill="#3B82F6" rx="3" />
+    <text x="55" y="70" font-size="13" font-weight="bold" fill="#60A5FA" letter-spacing="1">CORE INSIGHT</text>
+    <text x="55" y="95" font-size="15" fill="#F8FAFC">RuVector transforms search from a</text>
+    <text x="55" y="115" font-size="15" fill="#F8FAFC">static retrieval process into a</text>
+    <text x="55" y="135" font-size="15" fill="#F8FAFC">self-evolving GNN ecosystem.</text>
+    <text x="55" y="165" font-size="14" fill="#F59E0B" font-style="italic">Every interaction reshapes the graph.</text>
+
+    <!-- Database Paradigms Comparison -->
+    <text x="30" y="235" font-size="14" font-weight="bold" fill="#94A3B8" letter-spacing="1">DATABASE PARADIGMS</text>
+    
+    <!-- Traditional DB -->
+    <rect x="30" y="250" width="320" height="110" rx="8" fill="#111827" stroke="#334155" stroke-width="1" />
+    <text x="50" y="280" font-size="16" font-weight="bold" fill="#F87171">Traditional Vector DB</text>
+    <text x="50" y="305" font-size="13" fill="#94A3B8">Data is stored and searched statically.</text>
+    <text x="50" y="325" font-size="13" fill="#94A3B8">Results never improve from usage.</text>
+    <text x="50" y="345" font-size="13" fill="#94A3B8">System remains rigid forever.</text>
+
+    <!-- RuVector DB -->
+    <rect x="30" y="380" width="320" height="110" rx="8" fill="#1E3A8A" fill-opacity="0.2" stroke="#3B82F6" stroke-width="1.5" />
+    <text x="50" y="410" font-size="16" font-weight="bold" fill="#34D399">RuVector GNN</text>
+    <text x="50" y="435" font-size="13" fill="#E2E8F0">Every query and click teaches the system.</text>
+    <text x="50" y="455" font-size="13" fill="#E2E8F0">Results improve automatically over time.</text>
+    <text x="50" y="475" font-size="13" fill="#E2E8F0">Dynamic, self-learning intuition.</text>
+
+    <!-- Temporal Patterns -->
+    <text x="30" y="545" font-size="14" font-weight="bold" fill="#94A3B8" letter-spacing="1">TEMPORAL &amp; CONTEXTUAL DATA</text>
+    <rect x="30" y="560" width="320" height="130" rx="8" fill="#15233D" stroke="#2A3A59" stroke-width="1" />
+    <text x="50" y="590" font-size="14" font-weight="bold" fill="#CBD5E1">The system also learns from metadata:</text>
+    <text x="50" y="615" font-size="13" fill="#94A3B8">TIME: Time-of-day search patterns</text>
+    <text x="50" y="635" font-size="13" fill="#94A3B8">SEQUENCE: "A then B" implies relation</text>
+    <text x="50" y="655" font-size="13" fill="#94A3B8">IDENTITY: User expertise affects ranking</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- RIGHT AREA: THE 3-STEP LEARNING LOOP         -->
+  <!-- ========================================== -->
+
+  <!-- Flow Arrows Connecting the Loop -->
+  <g id="arrows">
+    <!-- Arrow 1: Step 1 to Step 2 -->
+    <path d="M 970 120 C 1150 120, 1150 560, 1010 590" fill="none" stroke="url(#grad12)" stroke-width="5" marker-end="url(#arrow-blue)" />
+    
+    <!-- Arrow 2: Step 2 to Step 3 -->
+    <path d="M 850 675 L 725 675" fill="none" stroke="url(#grad23)" stroke-width="5" marker-end="url(#arrow-indigo)" />
+    
+    <!-- Arrow 3: Step 3 to Step 1 -->
+    <path d="M 550 590 C 400 560, 400 120, 595 120" fill="none" stroke="url(#grad31)" stroke-width="5" marker-end="url(#arrow-orange)" />
+  </g>
+
+  <!-- Flow Arrow Labels -->
+  <g id="arrow-labels">
+    <!-- Label 1 -->
+    <text x="1060" y="340" font-size="14" font-weight="bold" fill="#60A5FA">Aggregated</text>
+    <text x="1060" y="360" font-size="14" font-weight="bold" fill="#60A5FA">Node Signals</text>
+    
+    <!-- Label 2 -->
+    <text x="780" y="710" font-size="14" font-weight="bold" fill="#818CF8" text-anchor="middle">Ranked Results</text>
+    <text x="780" y="730" font-size="14" font-weight="bold" fill="#818CF8" text-anchor="middle">&amp; User Clicks</text>
+    
+    <!-- Label 3 -->
+    <text x="510" y="340" font-size="14" font-weight="bold" fill="#FBBF24" text-anchor="end">Updated Graph</text>
+    <text x="510" y="360" font-size="14" font-weight="bold" fill="#FBBF24" text-anchor="end">Edge Weights</text>
+  </g>
+
+  <!-- Center Graph: The Evolving Knowledge Graph -->
+  <g id="center-graph">
+    <text x="790" y="215" font-size="16" font-weight="bold" fill="#F8FAFC" text-anchor="middle" letter-spacing="1">EVOLVING KNOWLEDGE GRAPH</text>
+    <text x="790" y="235" font-size="13" fill="#94A3B8" text-anchor="middle">Connections physically reshape based on human utility</text>
+    
+    <!-- Graph Container Circle -->
+    <circle cx="790" cy="390" r="140" fill="#0F172A" stroke="#1E293B" stroke-width="2" filter="url(#drop-shadow)" />
+    
+    <!-- Edges (Drawn first so they are behind nodes) -->
+    <!-- Strengthened Edge -->
+    <line x1="790" y1="390" x2="870" y2="320" stroke="#F59E0B" stroke-width="5" />
+    <line x1="790" y1="390" x2="720" y2="310" stroke="#F59E0B" stroke-width="3" />
+    <!-- Weakened Edge -->
+    <line x1="790" y1="390" x2="860" y2="470" stroke="#475569" stroke-width="2" stroke-dasharray="4 4" />
+    <line x1="790" y1="390" x2="700" y2="440" stroke="#475569" stroke-width="1" stroke-dasharray="2 2" />
+    <!-- Background Edges -->
+    <line x1="870" y1="320" x2="930" y2="370" stroke="#3B82F6" stroke-width="2" />
+    <line x1="860" y1="470" x2="930" y2="370" stroke="#334155" stroke-width="1" />
+    <line x1="720" y1="310" x2="700" y2="440" stroke="#3B82F6" stroke-width="1" />
+
+    <!-- Edge Labels (Badges) -->
+    <rect x="795" y="335" width="95" height="20" rx="4" fill="#1E293B" stroke="#F59E0B" stroke-width="1" />
+    <text x="800" y="349" font-size="10" font-weight="bold" fill="#F59E0B">Strengthened (+)</text>
+    
+    <rect x="795" y="435" width="80" height="20" rx="4" fill="#1E293B" stroke="#475569" stroke-width="1" />
+    <text x="800" y="449" font-size="10" font-weight="bold" fill="#94A3B8">Weakened (-)</text>
+
+    <!-- Nodes -->
+    <!-- Central Query Node (Glowing) -->
+    <circle cx="790" cy="390" r="16" fill="#F59E0B" filter="url(#glow)" />
+    <circle cx="790" cy="390" r="16" fill="#F59E0B" />
+    <text x="790" y="365" font-size="12" font-weight="bold" fill="#F8FAFC" text-anchor="middle">Query Node</text>
+    
+    <!-- Clicked Result Node -->
+    <circle cx="870" cy="320" r="12" fill="#3B82F6" />
+    <text x="890" y="315" font-size="12" font-weight="bold" fill="#60A5FA">Clicked Result</text>
+    
+    <!-- Ignored Result Node -->
+    <circle cx="860" cy="470" r="10" fill="#64748B" />
+    <text x="880" y="475" font-size="12" font-weight="bold" fill="#94A3B8">Ignored Result</text>
+    
+    <!-- Neighbor Nodes -->
+    <circle cx="720" cy="310" r="10" fill="#3B82F6" />
+    <circle cx="700" cy="440" r="8" fill="#64748B" />
+    <circle cx="930" cy="370" r="8" fill="#1E40AF" />
+  </g>
+
+  <!-- Step Cards -->
+  <g id="step-cards">
+    <!-- Step 1: Message Passing (Top Center) -->
+    <rect x="610" y="50" width="360" height="140" rx="12" fill="#15233D" stroke="#F59E0B" stroke-width="2" filter="url(#drop-shadow)" />
+    <text x="630" y="80" font-size="18" font-weight="bold" fill="#F59E0B">1. MESSAGE PASSING</text>
+    <text x="630" y="110" font-size="14" fill="#94A3B8">When a user searches, the GNN</text>
+    <text x="630" y="130" font-size="14" fill="#94A3B8">propagates signals through the graph.</text>
+    <text x="630" y="150" font-size="14" fill="#94A3B8">Nodes ask neighbors to aggregate</text>
+    <text x="630" y="170" font-size="14" fill="#94A3B8">local context and relevance.</text>
+
+    <!-- Step 2: Attention Weighting (Bottom Right) -->
+    <rect x="850" y="600" width="320" height="150" rx="12" fill="#15233D" stroke="#3B82F6" stroke-width="2" filter="url(#drop-shadow)" />
+    <text x="870" y="630" font-size="18" font-weight="bold" fill="#3B82F6">2. ATTENTION WEIGHTING</text>
+    <text x="870" y="660" font-size="14" fill="#94A3B8">MoE router selects from 46 distinct</text>
+    <text x="870" y="680" font-size="14" fill="#94A3B8">attention heads (semantics, recency,</text>
+    <text x="870" y="700" font-size="14" fill="#94A3B8">popularity) to evaluate the query</text>
+    <text x="870" y="720" font-size="14" fill="#94A3B8">from multiple specialized angles.</text>
+    
+    <!-- 46 Heads Visual Detail -->
+    <rect x="870" y="730" width="10" height="10" fill="#3B82F6" rx="2" />
+    <rect x="884" y="730" width="10" height="10" fill="#F59E0B" rx="2" />
+    <rect x="898" y="730" width="10" height="10" fill="#10B981" rx="2" />
+    <rect x="912" y="730" width="10" height="10" fill="#8B5CF6" rx="2" />
+    <text x="930" y="740" font-size="12" fill="#64748B">... 46 specialized attention heads</text>
+
+    <!-- Step 3: Feedback Integration (Bottom Left) -->
+    <rect x="390" y="600" width="320" height="150" rx="12" fill="#15233D" stroke="#6366F1" stroke-width="2" filter="url(#drop-shadow)" />
+    <text x="410" y="630" font-size="18" font-weight="bold" fill="#6366F1">3. FEEDBACK INTEGRATION</text>
+    <text x="410" y="660" font-size="14" fill="#94A3B8">User clicks strengthen graph edges</text>
+    <text x="410" y="680" font-size="14" fill="#94A3B8">between the query and results.</text>
+    <text x="410" y="700" font-size="14" fill="#94A3B8">Edges to ignored results weaken.</text>
+    <text x="410" y="720" font-size="14" fill="#94A3B8">The graph reshapes based on utility.</text>
+  </g>
+
+</svg>

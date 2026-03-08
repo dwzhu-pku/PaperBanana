@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Background Dot Grid Pattern -->
+    <pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#1E293B"/>
+    </pattern>
+
+    <!-- Drop Shadows -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Box Gradients -->
+    <linearGradient id="bg-retrieve" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#0B1E36"/>
+    </linearGradient>
+    <linearGradient id="bg-judge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1A160C"/>
+    </linearGradient>
+    <linearGradient id="bg-distill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E140C"/>
+    </linearGradient>
+    <linearGradient id="bg-consolidate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#160F24"/>
+    </linearGradient>
+    <linearGradient id="bg-route" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#0A1C16"/>
+    </linearGradient>
+    <linearGradient id="bg-kb" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1E3A8A"/>
+      <stop offset="100%" stop-color="#312E81"/>
+    </linearGradient>
+    <linearGradient id="bg-antidrift" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2C121A"/>
+      <stop offset="100%" stop-color="#1A0A0F"/>
+    </linearGradient>
+    <linearGradient id="bg-insight" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+
+    <!-- Arrowhead Markers -->
+    <marker id="marker-retrieve" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0EA5E9"/>
+    </marker>
+    <marker id="marker-judge" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E0B"/>
+    </marker>
+    <marker id="marker-distill" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F97316"/>
+    </marker>
+    <marker id="marker-consolidate" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8B5CF6"/>
+    </marker>
+    <marker id="marker-route" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#10B981"/>
+    </marker>
+    <marker id="marker-kb" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6366F1"/>
+    </marker>
+    <marker id="marker-task" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94A3B8"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#0B1426"/>
+  <rect width="1200" height="800" fill="url(#dots)"/>
+
+  <!-- ========================================== -->
+  <!-- ARROWS & CONNECTIONS                       -->
+  <!-- ========================================== -->
+  <g fill="none" stroke-width="3">
+    <!-- Main Loop Flow -->
+    <path d="M 360 235 C 400 235, 400 175, 428 175" stroke="#0EA5E9" marker-end="url(#marker-retrieve)"/>
+    <path d="M 760 175 C 800 175, 800 255, 828 255" stroke="#F59E0B" marker-end="url(#marker-judge)"/>
+    <path d="M 1000 330 L 1000 508" stroke="#F97316" marker-end="url(#marker-distill)"/>
+    <path d="M 840 575 L 372 575" stroke="#8B5CF6" marker-end="url(#marker-consolidate)"/>
+    <path d="M 200 520 L 200 462" stroke="#10B981" marker-end="url(#marker-route)"/>
+    <path d="M 200 390 L 200 302" stroke="#94A3B8" marker-end="url(#marker-task)"/>
+
+    <!-- Knowledge Base Interactions (Dashed) -->
+    <path d="M 440 410 C 390 410, 390 270, 372 270" stroke="#6366F1" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#marker-kb)"/>
+    <path d="M 840 540 C 790 540, 790 450, 772 450" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#marker-consolidate)"/>
+    <path d="M 440 450 C 390 450, 390 540, 372 540" stroke="#6366F1" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#marker-kb)"/>
+
+    <!-- Anti-Drift Guardian Scanning Lines -->
+    <path d="M 415 60 L 200 60 L 200 168" stroke="#E11D48" stroke-width="2" stroke-dasharray="4,6" opacity="0.6" marker-end="url(#marker-task)"/>
+    <path d="M 785 60 L 1000 60 L 1000 168" stroke="#E11D48" stroke-width="2" stroke-dasharray="4,6" opacity="0.6" marker-end="url(#marker-task)"/>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- BOXES & CONTAINERS                         -->
+  <!-- ========================================== -->
+  <g id="boxes">
+    <!-- ANTI-DRIFT GUARDIAN (Top Center) -->
+    <g transform="translate(415, 20)">
+      <rect width="370" height="80" rx="12" fill="url(#bg-antidrift)" stroke="#E11D48" stroke-width="2" filter="url(#shadow)"/>
+      <path d="M20 42s8-4 8-10V25l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="#FB7185" stroke-width="2"/>
+      <text x="45" y="35" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#FB7185">ANTI-DRIFT GUARDIAN</text>
+      <text x="45" y="55" font-family="system-ui, sans-serif" font-size="13" fill="#FDA4AF">Monitors behavior across all stages.</text>
+      <text x="45" y="75" font-family="system-ui, sans-serif" font-size="13" fill="#FDA4AF">Auto-corrects if divergence exceeds thresholds.</text>
+    </g>
+
+    <!-- 1. RETRIEVE (Middle Left) -->
+    <g transform="translate(40, 180)">
+      <rect width="320" height="110" rx="12" fill="url(#bg-retrieve)" stroke="#0EA5E9" stroke-width="2" filter="url(#shadow)"/>
+      <path d="M30 40l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" fill="none" stroke="#38BDF8" stroke-width="2"/>
+      <text x="55" y="35" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#38BDF8">1. RETRIEVE</text>
+      <text x="55" y="65" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">HNSW vector search pulls similar</text>
+      <text x="55" y="85" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">past tasks before starting work.</text>
+      <text x="55" y="105" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">Extracts raw patterns &amp; mistakes.</text>
+    </g>
+
+    <!-- 2. JUDGE (Top Right) -->
+    <g transform="translate(440, 120)">
+      <rect width="320" height="110" rx="12" fill="url(#bg-judge)" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)"/>
+      <path d="M20 30l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M23 31l3 9M23 31l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M35 31l3 9m-3-9l-6-2m0-2v2m0 16V29m0 16H26m3 0h3" fill="none" stroke="#FBBF24" stroke-width="2"/>
+      <text x="55" y="35" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#FBBF24">2. JUDGE</text>
+      <text x="55" y="65" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">Scores relevance of past patterns</text>
+      <text x="55" y="85" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">by recency, success, &amp; similarity.</text>
+      <text x="55" y="105" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">Discards irrelevant noise.</text>
+    </g>
+
+    <!-- 3. DISTILL (Middle Right) -->
+    <g transform="translate(840, 180)">
+      <rect width="320" height="150" rx="12" fill="url(#bg-distill)" stroke="#F97316" stroke-width="2" filter="url(#shadow)"/>
+      <path d="M20 24a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V37l-4 4v-6.586a1 1 0 00-.293-.707L20.293 27.293A1 1 0 0120 26.586V24z" fill="none" stroke="#FB923C" stroke-width="2"/>
+      <text x="55" y="35" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#FB923C">3. DISTILL</text>
+      <text x="55" y="65" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">Compresses verbose past experiences</text>
+      <text x="55" y="85" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">into direct, actionable rules.</text>
+      <text x="55" y="115" font-family="system-ui, sans-serif" font-size="13" font-style="italic" fill="#9CA3AF">Ex: "Always check token expiry</text>
+      <text x="55" y="135" font-family="system-ui, sans-serif" font-size="13" font-style="italic" fill="#9CA3AF">edge cases — missed in 3 past tasks."</text>
+    </g>
+
+    <!-- CENTRAL KNOWLEDGE BASE -->
+    <g transform="translate(440, 350)" filter="url(#glow)">
+      <rect width="320" height="120" rx="16" fill="url(#bg-kb)" stroke="#818CF8" stroke-width="3"/>
+      <path d="M25 45v20c0 4.42 7.164 8 16 8s16-3.58 16-8V45M25 45c0 4.42 7.164 8 16 8s16-3.58 16-8M25 45c0-4.42 7.164-8 16-8s16 3.58 16 8" fill="none" stroke="#C7D2FE" stroke-width="2"/>
+      <text x="60" y="40" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC">PERSISTENT KNOWLEDGE BASE</text>
+      <text x="60" y="70" font-family="system-ui, sans-serif" font-size="13" fill="#E0E7FF">Accumulates all past solutions, patterns,</text>
+      <text x="60" y="90" font-family="system-ui, sans-serif" font-size="13" fill="#E0E7FF">mistakes, and distilled agent experiences.</text>
+      <text x="60" y="110" font-family="system-ui, sans-serif" font-size="13" fill="#E0E7FF">The core memory of the system.</text>
+    </g>
+
+    <!-- TASK EXECUTION (Middle Left) -->
+    <g transform="translate(120, 390)">
+      <rect width="160" height="60" rx="30" fill="#1E293B" stroke="#64748B" stroke-width="2" filter="url(#shadow)"/>
+      <text x="80" y="35" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#F8FAFC" text-anchor="middle">TASK EXECUTION</text>
+    </g>
+
+    <!-- 4. CONSOLIDATE (Bottom Right) -->
+    <g transform="translate(840, 520)">
+      <rect width="320" height="110" rx="12" fill="url(#bg-consolidate)" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)"/>
+      <path d="M32 22L22 27l10 5 10-5-10-5zM22 37l10 5 10-5M22 32l10 5 10-5" fill="none" stroke="#A78BFA" stroke-width="2"/>
+      <text x="55" y="35" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#A78BFA">4. CONSOLIDATE</text>
+      <text x="55" y="65" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">EWC++ merges new distilled knowledge</text>
+      <text x="55" y="85" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">into the core memory without</text>
+      <text x="55" y="105" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">catastrophic forgetting of old rules.</text>
+    </g>
+
+    <!-- 5. ROUTE (Bottom Left) -->
+    <g transform="translate(40, 520)">
+      <rect width="320" height="110" rx="12" fill="url(#bg-route)" stroke="#10B981" stroke-width="2" filter="url(#shadow)"/>
+      <path d="M28 27v8a2 2 0 002 2h6M28 27V23m0 4H24m12-4v4m0 4v-4m0 0h-4" fill="none" stroke="#34D399" stroke-width="2"/>
+      <text x="55" y="35" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#34D399">5. ROUTE</text>
+      <text x="55" y="65" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">Uses accumulated knowledge to assign</text>
+      <text x="55" y="85" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">tasks to WASM (fast), Haiku (medium),</text>
+      <text x="55" y="105" font-family="system-ui, sans-serif" font-size="13" fill="#D1D5DB">or Opus (complex) agents.</text>
+    </g>
+
+    <!-- CORE INSIGHT BANNER (Bottom) -->
+    <g transform="translate(50, 680)">
+      <rect width="1100" height="90" rx="12" fill="url(#bg-insight)" stroke="#334155" stroke-width="1" filter="url(#shadow)"/>
+      <rect x="0" y="0" width="8" height="90" rx="4" fill="#F59E0B"/>
+      <text x="30" y="35" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC">KEY INSIGHT: The Power of Persistent Memory</text>
+      <text x="30" y="65" font-family="system-ui, sans-serif" font-size="16" fill="#94A3B8">Most AI tools start from zero every time. Ruflo remembers.</text>
+      <text x="500" y="55" font-family="system-ui, sans-serif" font-size="16" fill="#CBD5E1">Each completed task enriches the knowledge base,</text>
+      <text x="500" y="75" font-family="system-ui, sans-serif" font-size="16" fill="#CBD5E1">making the next execution faster and higher quality.</text>
+    </g>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- ARROW LABELS (Drawn last to prevent overlap)-->
+  <!-- ========================================== -->
+  <g id="labels" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#F1F5F9">
+    <text x="400" y="195" text-anchor="middle" fill="#7DD3FC">Raw patterns</text>
+    <text x="800" y="205" text-anchor="middle" fill="#FDE68A">Filtered patterns</text>
+    <text x="1010" y="425" text-anchor="start" fill="#FFEDD5">Actionable rules</text>
+    <text x="606" y="565" text-anchor="middle" fill="#DDD6FE">System updated</text>
+    <text x="210" y="495" text-anchor="start" fill="#A7F3D0">Assigned task</text>
+    <text x="210" y="350" text-anchor="start" fill="#E2E8F0">New task data</text>
+    
+    <!-- KB Arrow Labels -->
+    <text x="375" y="340" text-anchor="end" fill="#A5B4FC">Past context</text>
+    <text x="825" y="490" text-anchor="start" fill="#C4B5FD">EWC++ Merge</text>
+    <text x="375" y="500" text-anchor="end" fill="#A5B4FC">Routing strategy</text>
+  </g>
+
+</svg>

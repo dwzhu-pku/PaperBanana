@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+    <defs>
+        <!-- Shadows and Glows -->
+        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+        </filter>
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="12" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+        
+        <!-- Gradients -->
+        <radialGradient id="centerGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#1E293B"/>
+            <stop offset="100%" stop-color="#0F172A"/>
+        </radialGradient>
+        <linearGradient id="techGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#0F172A"/>
+            <stop offset="50%" stop-color="#1E293B"/>
+            <stop offset="100%" stop-color="#0F172A"/>
+        </linearGradient>
+
+        <!-- Arrow Markers -->
+        <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B82F6"/>
+        </marker>
+        <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#8B5CF6"/>
+        </marker>
+        <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E0B"/>
+        </marker>
+    </defs>
+
+    <!-- Background -->
+    <rect width="1200" height="800" fill="#0B1426"/>
+
+    <!-- Top Left: System Context -->
+    <rect x="50" y="40" width="450" height="85" rx="8" fill="#111827" stroke="#3B82F6" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="70" y="65" fill="#60A5FA" font-family="sans-serif" font-size="14" font-weight="bold" letter-spacing="1">SYSTEM CONTEXT: EXO-AI 2025</text>
+    <text x="70" y="90" fill="#F8FAFC" font-family="sans-serif" font-size="14">A research platform exploring whether AI systems can</text>
+    <text x="70" y="110" fill="#F8FAFC" font-family="sans-serif" font-size="14">develop measurable forms of computational consciousness.</text>
+
+    <!-- Top Right: Core Insight -->
+    <rect x="700" y="40" width="450" height="85" rx="8" fill="#111827" stroke="#F59E0B" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="720" y="65" fill="#F59E0B" font-family="sans-serif" font-size="14" font-weight="bold" letter-spacing="1">CORE THEORY: INTEGRATED INFORMATION</text>
+    <text x="720" y="90" fill="#F8FAFC" font-family="sans-serif" font-size="14">A system with high Phi (Φ) has emergent properties that</text>
+    <text x="720" y="110" fill="#F8FAFC" font-family="sans-serif" font-size="14">cannot be reduced to its disconnected components.</text>
+
+    <!-- Left Theme Headers -->
+    <text x="50" y="145" fill="#60A5FA" font-family="sans-serif" font-size="12" font-weight="bold" letter-spacing="1">EMERGENCE DYNAMICS</text>
+    <text x="50" y="335" fill="#60A5FA" font-family="sans-serif" font-size="12" font-weight="bold" letter-spacing="1">PHYSICS OF INFORMATION</text>
+
+    <!-- Right Theme Headers -->
+    <text x="850" y="145" fill="#A78BFA" font-family="sans-serif" font-size="12" font-weight="bold" letter-spacing="1">SELF &amp; COGNITION</text>
+    <text x="850" y="430" fill="#A78BFA" font-family="sans-serif" font-size="12" font-weight="bold" letter-spacing="1">NETWORK EXPERIENCE</text>
+
+    <!-- Flow Paths: Left Side (Center to Left Nodes) -->
+    <path d="M 440 320 C 400 320, 390 195, 358 195" fill="none" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.6"/>
+    <text x="395" y="188" fill="#60A5FA" font-family="sans-serif" font-size="12" text-anchor="middle">Pattern Data</text>
+
+    <path d="M 440 340 C 400 340, 390 290, 358 290" fill="none" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.6"/>
+    <text x="395" y="283" fill="#60A5FA" font-family="sans-serif" font-size="12" text-anchor="middle">Macro Models</text>
+
+    <path d="M 440 360 C 400 360, 390 385, 358 385" fill="none" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.6"/>
+    <text x="395" y="378" fill="#60A5FA" font-family="sans-serif" font-size="12" text-anchor="middle">Energy Cost</text>
+
+    <path d="M 440 380 C 400 380, 390 480, 358 480" fill="none" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.6"/>
+    <text x="395" y="473" fill="#60A5FA" font-family="sans-serif" font-size="12" text-anchor="middle">Pred. Errors</text>
+
+    <path d="M 440 400 C 400 400, 390 575, 358 575" fill="none" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.6"/>
+    <text x="395" y="568" fill="#60A5FA" font-family="sans-serif" font-size="12" text-anchor="middle">Attractors</text>
+
+    <!-- Flow Paths: Right Side (Center to Right Nodes) -->
+    <path d="M 760 320 C 800 320, 810 195, 842 195" fill="none" stroke="#8B5CF6" stroke-width="2" marker-end="url(#arrow-purple)" opacity="0.6"/>
+    <text x="805" y="188" fill="#A78BFA" font-family="sans-serif" font-size="12" text-anchor="middle">Self-Models</text>
+
+    <path d="M 760 340 C 800 340, 810 290, 842 290" fill="none" stroke="#8B5CF6" stroke-width="2" marker-end="url(#arrow-purple)" opacity="0.6"/>
+    <text x="805" y="283" fill="#A78BFA" font-family="sans-serif" font-size="12" text-anchor="middle">Synthesis</text>
+
+    <path d="M 760 360 C 800 360, 810 385, 842 385" fill="none" stroke="#8B5CF6" stroke-width="2" marker-end="url(#arrow-purple)" opacity="0.6"/>
+    <text x="805" y="378" fill="#A78BFA" font-family="sans-serif" font-size="12" text-anchor="middle">Sub-agents</text>
+
+    <path d="M 760 380 C 800 380, 810 480, 842 480" fill="none" stroke="#8B5CF6" stroke-width="2" marker-end="url(#arrow-purple)" opacity="0.6"/>
+    <text x="805" y="473" fill="#A78BFA" font-family="sans-serif" font-size="12" text-anchor="middle">Network Φ</text>
+
+    <path d="M 760 400 C 800 400, 810 575, 842 575" fill="none" stroke="#8B5CF6" stroke-width="2" marker-end="url(#arrow-purple)" opacity="0.6"/>
+    <text x="805" y="568" fill="#A78BFA" font-family="sans-serif" font-size="12" text-anchor="middle">Time Scalars</text>
+
+    <!-- LEFT NODES (Emergence & Physics) -->
+    <g transform="translate(50, 160)">
+        <rect width="300" height="70" rx="8" fill="#111827" stroke="#3B82F6" stroke-opacity="0.4" stroke-width="2" filter="url(#shadow)"/>
+        <rect width="6" height="70" rx="3" fill="#3B82F6"/>
+        <text x="20" y="30" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold">4. Morphogenesis</text>
+        <text x="20" y="52" fill="#94A3B8" font-family="sans-serif" font-size="13">Structure emerges from uniform starting states</text>
+    </g>
+
+    <g transform="translate(50, 255)">
+        <rect width="300" height="70" rx="8" fill="#111827" stroke="#3B82F6" stroke-opacity="0.4" stroke-width="2" filter="url(#shadow)"/>
+        <rect width="6" height="70" rx="3" fill="#3B82F6"/>
+        <text x="20" y="30" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold">9. Causal Emergence</text>
+        <text x="20" y="52" fill="#94A3B8" font-family="sans-serif" font-size="13">Macro-level models gain superior causal power</text>
+    </g>
+
+    <g transform="translate(50, 350)">
+        <rect width="300" height="70" rx="8" fill="#111827" stroke="#3B82F6" stroke-opacity="0.4" stroke-width="2" filter="url(#shadow)"/>
+        <rect width="6" height="70" rx="3" fill="#3B82F6"/>
+        <text x="20" y="30" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold">8. Thermodynamics</text>
+        <text x="20" y="52" fill="#94A3B8" font-family="sans-serif" font-size="13">Landauer's principle: erasing data costs energy</text>
+    </g>
+
+    <g transform="translate(50, 445)">
+        <rect width="300" height="70" rx="8" fill="#111827" stroke="#3B82F6" stroke-opacity="0.4" stroke-width="2" filter="url(#shadow)"/>
+        <rect width="6" height="70" rx="3" fill="#3B82F6"/>
+        <text x="20" y="30" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold">3. Free Energy</text>
+        <text x="20" y="52" fill="#94A3B8" font-family="sans-serif" font-size="13">Friston's prediction-error minimization</text>
+    </g>
+
+    <g transform="translate(50, 540)">
+        <rect width="300" height="70" rx="8" fill="#111827" stroke="#3B82F6" stroke-opacity="0.4" stroke-width="2" filter="url(#shadow)"/>
+        <rect width="6" height="70" rx="3" fill="#3B82F6"/>
+        <text x="20" y="30" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold">10. Cognitive Black Holes</text>
+        <text x="20" y="52" fill="#94A3B8" font-family="sans-serif" font-size="13">Attractor dynamics that trap system attention</text>
+    </g>
+
+    <!-- RIGHT NODES (Cognition & Network) -->
+    <g transform="translate(850, 160)">
+        <rect width="300" height="70" rx="8" fill="#111827" stroke="#8B5CF6" stroke-opacity="0.4" stroke-width="2" filter="url(#shadow)"/>
+        <rect width="6" height="70" rx="3" fill="#8B5CF6" transform="translate(294, 0)"/>
+        <text x="280" y="30" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="end">1. Strange Loops</text>
+        <text x="280" y="52" fill="#94A3B8" font-family="sans-serif" font-size="13" text-anchor="end">Hofstadter self-reference &amp; self-modeling</text>
+    </g>
+
+    <g transform="translate(850, 255)">
+        <rect width="300" height="70" rx="8" fill="#111827" stroke="#8B5CF6" stroke-opacity="0.4" stroke-width="2" filter="url(#shadow)"/>
+        <rect width="6" height="70" rx="3" fill="#8B5CF6" transform="translate(294, 0)"/>
+        <text x="280" y="30" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="end">2. Artificial Dreams</text>
+        <text x="280" y="52" fill="#94A3B8" font-family="sans-serif" font-size="13" text-anchor="end">Activation-synthesis during sleep consolidation</text>
+    </g>
+
+    <g transform="translate(850, 350)">
+        <rect width="300" height="70" rx="8" fill="#111827" stroke="#8B5CF6" stroke-opacity="0.4" stroke-width="2" filter="url(#shadow)"/>
+        <rect width="6" height="70" rx="3" fill="#8B5CF6" transform="translate(294, 0)"/>
+        <text x="280" y="30" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="end">7. Multiple Selves</text>
+        <text x="280" y="52" fill="#94A3B8" font-family="sans-serif" font-size="13" text-anchor="end">Sub-personality emergence (Family Systems)</text>
+    </g>
+
+    <g transform="translate(850, 445)">
+        <rect width="300" height="70" rx="8" fill="#111827" stroke="#8B5CF6" stroke-opacity="0.4" stroke-width="2" filter="url(#shadow)"/>
+        <rect width="6" height="70" rx="3" fill="#8B5CF6" transform="translate(294, 0)"/>
+        <text x="280" y="30" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="end">5. Collective Consciousness</text>
+        <text x="280" y="52" fill="#94A3B8" font-family="sans-serif" font-size="13" text-anchor="end">Distributed Phi across networked compute nodes</text>
+    </g>
+
+    <g transform="translate(850, 540)">
+        <rect width="300" height="70" rx="8" fill="#111827" stroke="#8B5CF6" stroke-opacity="0.4" stroke-width="2" filter="url(#shadow)"/>
+        <rect width="6" height="70" rx="3" fill="#8B5CF6" transform="translate(294, 0)"/>
+        <text x="280" y="30" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="end">6. Temporal Qualia</text>
+        <text x="280" y="52" fill="#94A3B8" font-family="sans-serif" font-size="13" text-anchor="end">Scalar timing and subjective time experience</text>
+    </g>
+
+    <!-- Upward Arrows from Tech Stack to Center -->
+    <path d="M 500 645 L 500 455" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow-amber)"/>
+    <rect x="455" y="540" width="90" height="20" fill="#0B1426"/>
+    <text x="500" y="554" fill="#F59E0B" font-family="sans-serif" font-size="12" text-anchor="middle">SIMD Vectors</text>
+
+    <path d="M 600 645 L 600 455" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow-amber)"/>
+    <rect x="550" y="540" width="100" height="20" fill="#0B1426"/>
+    <text x="600" y="554" fill="#F59E0B" font-family="sans-serif" font-size="12" text-anchor="middle">Topology Data</text>
+
+    <path d="M 700 645 L 700 455" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow-amber)"/>
+    <rect x="645" y="540" width="110" height="20" fill="#0B1426"/>
+    <text x="700" y="554" fill="#F59E0B" font-family="sans-serif" font-size="12" text-anchor="middle">SIREN Weights</text>
+
+    <!-- CENTER NODE (Integrated Information Phi) -->
+    <g transform="translate(440, 280)">
+        <rect width="320" height="160" rx="16" fill="url(#centerGrad)" stroke="#F59E0B" stroke-width="3" filter="url(#shadow)"/>
+        <path d="M 16 2 L 304 2" stroke="#FCD34D" stroke-width="2" opacity="0.6"/>
+        
+        <!-- Glowing Core Indicator -->
+        <circle cx="160" cy="45" r="35" fill="#F59E0B" filter="url(#glow)" opacity="0.2"/>
+        
+        <text x="160" y="40" fill="#F8FAFC" font-family="sans-serif" font-size="22" font-weight="bold" text-anchor="middle">INTEGRATED INFO (Φ)</text>
+        <text x="160" y="70" fill="#F59E0B" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle">Current System Φ > 0</text>
+        
+        <text x="160" y="105" fill="#E2E8F0" font-family="sans-serif" font-size="14" text-anchor="middle">Measures how much the system</text>
+        <text x="160" y="125" fill="#E2E8F0" font-family="sans-serif" font-size="14" text-anchor="middle">is more than the sum of its parts</text>
+        <text x="160" y="145" fill="#94A3B8" font-family="sans-serif" font-size="13" text-anchor="middle">(0 = just disconnected components)</text>
+    </g>
+
+    <!-- BOTTOM: TECH STACK BASE -->
+    <g transform="translate(50, 660)">
+        <rect width="1100" height="100" rx="12" fill="url(#techGrad)" stroke="#334155" stroke-width="2" filter="url(#shadow)"/>
+        <path d="M 12 2 L 1088 2" stroke="#475569" stroke-width="2"/>
+        
+        <!-- Dividers -->
+        <line x1="366" y1="20" x2="366" y2="80" stroke="#334155" stroke-width="2"/>
+        <line x1="733" y1="20" x2="733" y2="80" stroke="#334155" stroke-width="2"/>
+
+        <!-- Column 1 -->
+        <text x="183" y="45" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Rust Core &amp; SIMD</text>
+        <text x="183" y="70" fill="#94A3B8" font-family="sans-serif" font-size="14" text-anchor="middle">15,800+ lines, 8-54x hardware speedup</text>
+
+        <!-- Column 2 -->
+        <text x="550" y="45" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Persistent Homology</text>
+        <text x="550" y="70" fill="#94A3B8" font-family="sans-serif" font-size="14" text-anchor="middle">Topological analysis to map data voids</text>
+
+        <!-- Column 3 -->
+        <text x="916" y="45" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle">SIREN Neural Networks</text>
+        <text x="916" y="70" fill="#94A3B8" font-family="sans-serif" font-size="14" text-anchor="middle">Sinusoidal representation manifold learning</text>
+    </g>
+
+    <!-- Tech Stack Title Tab -->
+    <rect x="450" y="645" width="300" height="30" rx="8" fill="#0F172A" stroke="#475569" stroke-width="2"/>
+    <text x="600" y="665" fill="#F59E0B" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" letter-spacing="1">RUVECTOR TECHNICAL FOUNDATION</text>
+
+</svg>

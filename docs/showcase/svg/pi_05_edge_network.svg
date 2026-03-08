@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" font-family="system-ui, -apple-system, sans-serif">
+    <!-- Definitions for gradients, shadows, and markers -->
+    <defs>
+        <!-- Drop Shadow for Main Containers -->
+        <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+            <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5"/>
+        </filter>
+        
+        <!-- Arrowhead Markers -->
+        <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B82F6"/>
+        </marker>
+        <marker id="arrowIndigo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#6366F1"/>
+        </marker>
+        <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E0B"/>
+        </marker>
+        <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#10B981"/>
+        </marker>
+    </defs>
+
+    <!-- Global Background -->
+    <rect width="1200" height="800" fill="#0B1426"/>
+
+    <!-- Main Title & Core Insight -->
+    <text x="40" y="50" font-size="28" font-weight="bold" fill="#FFFFFF">Pi's Edge Network: Distributed WebAssembly Compute</text>
+    <text x="40" y="80" font-size="16" fill="#94A3B8">A self-sustaining intelligence economy where users earn rUv credits by contributing</text>
+    <text x="40" y="105" font-size="16" fill="#94A3B8">browser-based compute and knowledge, eliminating the need for centralized AI servers.</text>
+
+    <!-- ========================================== -->
+    <!-- TIER 1: BROWSER NODES (THE EDGE)           -->
+    <!-- ========================================== -->
+    <g filter="url(#shadow)">
+        <rect x="40" y="130" width="300" height="430" rx="12" fill="#111B33" stroke="#3B82F6" stroke-width="2"/>
+    </g>
+    
+    <!-- Edge Header -->
+    <rect x="60" y="145" width="24" height="16" rx="2" fill="none" stroke="#3B82F6" stroke-width="2"/>
+    <line x1="64" y1="150" x2="80" y2="150" stroke="#3B82F6" stroke-width="1"/>
+    <text x="95" y="160" font-size="20" font-weight="bold" fill="#3B82F6">Browser Nodes</text>
+    <text x="95" y="185" font-size="14" fill="#94A3B8">Users' browsers become nodes</text>
+    
+    <!-- Zero Server Badge -->
+    <rect x="230" y="145" width="90" height="22" rx="11" fill="#1E40AF" fill-opacity="0.3" stroke="#3B82F6" stroke-width="1"/>
+    <text x="275" y="160" font-size="10" font-weight="bold" fill="#60A5FA" text-anchor="middle">ZERO SERVER</text>
+
+    <!-- Edge Item 1 -->
+    <rect x="60" y="220" width="260" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="80" y="250" font-size="16" font-weight="bold" fill="#E2E8F0">Embedding Generation</text>
+    <text x="80" y="275" font-size="13" fill="#94A3B8">Creates semantic vectors in-browser</text>
+
+    <!-- Edge Item 2 -->
+    <rect x="60" y="320" width="260" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="80" y="350" font-size="16" font-weight="bold" fill="#E2E8F0">Similarity Search</text>
+    <text x="80" y="375" font-size="13" fill="#94A3B8">Executes fast local vector matching</text>
+
+    <!-- Edge Item 3 -->
+    <rect x="60" y="420" width="260" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="80" y="450" font-size="16" font-weight="bold" fill="#E2E8F0">Model Inference</text>
+    <text x="80" y="475" font-size="13" fill="#94A3B8">Runs lightweight AI models via WASM</text>
+
+
+    <!-- ========================================== -->
+    <!-- TIER 2: RELAY NODES (THE NEXUS)            -->
+    <!-- ========================================== -->
+    <g filter="url(#shadow)">
+        <rect x="450" y="130" width="300" height="430" rx="12" fill="#111B33" stroke="#6366F1" stroke-width="2"/>
+    </g>
+
+    <!-- Relay Header -->
+    <circle cx="482" cy="153" r="6" fill="none" stroke="#6366F1" stroke-width="2"/>
+    <line x1="472" y1="153" x2="476" y2="153" stroke="#6366F1" stroke-width="2"/>
+    <line x1="488" y1="153" x2="492" y2="153" stroke="#6366F1" stroke-width="2"/>
+    <line x1="482" y1="143" x2="482" y2="147" stroke="#6366F1" stroke-width="2"/>
+    <line x1="482" y1="159" x2="482" y2="163" stroke="#6366F1" stroke-width="2"/>
+    <text x="505" y="160" font-size="20" font-weight="bold" fill="#6366F1">Relay Nodes</text>
+    <text x="505" y="185" font-size="14" fill="#94A3B8">Maintains connections &amp; P2P</text>
+
+    <!-- WSS Nexus Badge -->
+    <rect x="640" y="145" width="90" height="22" rx="11" fill="#3730A3" fill-opacity="0.3" stroke="#6366F1" stroke-width="1"/>
+    <text x="685" y="160" font-size="10" font-weight="bold" fill="#818CF8" text-anchor="middle">WSS NEXUS</text>
+
+    <!-- Relay Item 1 -->
+    <rect x="470" y="220" width="260" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="490" y="250" font-size="16" font-weight="bold" fill="#E2E8F0">Message Routing</text>
+    <text x="490" y="275" font-size="13" fill="#94A3B8">Routes P2P WebSocket traffic</text>
+
+    <!-- Relay Item 2 -->
+    <rect x="470" y="320" width="260" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="490" y="350" font-size="16" font-weight="bold" fill="#E2E8F0">Presence Tracking</text>
+    <text x="490" y="375" font-size="13" fill="#94A3B8">Monitors edge node health &amp; status</text>
+
+    <!-- Relay Item 3 -->
+    <rect x="470" y="420" width="260" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="490" y="450" font-size="16" font-weight="bold" fill="#E2E8F0">Discovery &amp; Load</text>
+    <text x="490" y="475" font-size="13" fill="#94A3B8">Balances tasks across the edge swarm</text>
+
+
+    <!-- ========================================== -->
+    <!-- TIER 3: PI CORE & INFRASTRUCTURE           -->
+    <!-- ========================================== -->
+    <g filter="url(#shadow)">
+        <rect x="860" y="130" width="300" height="430" rx="12" fill="#111B33" stroke="#F59E0B" stroke-width="2"/>
+    </g>
+
+    <!-- Core Header -->
+    <ellipse cx="892" cy="148" rx="10" ry="4" fill="none" stroke="#F59E0B" stroke-width="2"/>
+    <path d="M 882 148 L 882 158 C 882 162 902 162 902 158 L 902 148" fill="none" stroke="#F59E0B" stroke-width="2"/>
+    <text x="915" y="160" font-size="20" font-weight="bold" fill="#F59E0B">Pi Core State</text>
+    <text x="915" y="185" font-size="14" fill="#94A3B8">The central intelligence ledger</text>
+
+    <!-- Consensus Badge -->
+    <rect x="1050" y="145" width="90" height="22" rx="11" fill="#92400E" fill-opacity="0.3" stroke="#F59E0B" stroke-width="1"/>
+    <text x="1095" y="160" font-size="10" font-weight="bold" fill="#FBBF24" text-anchor="middle">CONSENSUS</text>
+
+    <!-- Core Item 1 -->
+    <rect x="880" y="220" width="260" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="900" y="250" font-size="16" font-weight="bold" fill="#E2E8F0">Pi Core Network</text>
+    <text x="900" y="275" font-size="13" fill="#94A3B8">Stores global knowledge &amp; runs consensus</text>
+
+    <!-- Core Item 2 -->
+    <rect x="880" y="320" width="260" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="900" y="350" font-size="16" font-weight="bold" fill="#E2E8F0">Genesis Node</text>
+    <text x="900" y="375" font-size="13" fill="#94A3B8">Ledger tracking rUv credits via QDAG</text>
+
+    <!-- Core Item 3 -->
+    <rect x="880" y="420" width="260" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="900" y="450" font-size="16" font-weight="bold" fill="#E2E8F0">Dashboard Node</text>
+    <text x="900" y="475" font-size="13" fill="#94A3B8">UI for network state visualization</text>
+
+
+    <!-- ========================================== -->
+    <!-- HORIZONTAL FLOW ARROWS                     -->
+    <!-- ========================================== -->
+    
+    <!-- Edge -> Relay (Top) -->
+    <path d="M 345 265 L 435 265" fill="none" stroke="#3B82F6" stroke-width="3" marker-end="url(#arrowBlue)"/>
+    <text x="395" y="235" font-size="12" fill="#3B82F6" text-anchor="middle">Compute</text>
+    <text x="395" y="255" font-size="12" fill="#3B82F6" text-anchor="middle">Results</text>
+
+    <!-- Relay -> Core (Top) -->
+    <path d="M 755 265 L 845 265" fill="none" stroke="#6366F1" stroke-width="3" marker-end="url(#arrowIndigo)"/>
+    <text x="805" y="235" font-size="12" fill="#6366F1" text-anchor="middle">State</text>
+    <text x="805" y="255" font-size="12" fill="#6366F1" text-anchor="middle">Updates</text>
+
+    <!-- Core -> Relay (Bottom) -->
+    <path d="M 855 455 L 765 455" fill="none" stroke="#F59E0B" stroke-width="3" marker-end="url(#arrowAmber)"/>
+    <text x="805" y="425" font-size="12" fill="#F59E0B" text-anchor="middle">Task</text>
+    <text x="805" y="445" font-size="12" fill="#F59E0B" text-anchor="middle">Distribution</text>
+
+    <!-- Relay -> Edge (Bottom) -->
+    <path d="M 445 455 L 355 455" fill="none" stroke="#6366F1" stroke-width="3" marker-end="url(#arrowIndigo)"/>
+    <text x="395" y="425" font-size="12" fill="#6366F1" text-anchor="middle">Compute</text>
+    <text x="395" y="445" font-size="12" fill="#6366F1" text-anchor="middle">Requests</text>
+
+
+    <!-- ========================================== -->
+    <!-- TIER 4: ECONOMICS PANEL (rUv CREDITS)      -->
+    <!-- ========================================== -->
+    <g filter="url(#shadow)">
+        <rect x="40" y="620" width="1120" height="140" rx="12" fill="#1A1625" stroke="#F97316" stroke-width="2"/>
+    </g>
+
+    <!-- Economics Header -->
+    <circle cx="60" cy="645" r="10" fill="none" stroke="#F97316" stroke-width="2"/>
+    <text x="60" y="650" font-size="12" font-weight="bold" fill="#F97316" text-anchor="middle">R</text>
+    <text x="85" y="652" font-size="20" font-weight="bold" fill="#F97316">rUv Credit Economics</text>
+    <text x="320" y="650" font-size="14" fill="#E2E8F0">The self-sustaining incentive model: Earn tokens by providing network value, spend tokens to consume resources.</text>
+
+    <!-- Economics Grid Row 1 -->
+    <!-- Earn 20 -->
+    <rect x="65" y="680" width="340" height="32" rx="6" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="80" y="702" font-size="15" font-weight="bold" fill="#10B981">+20 rUv</text>
+    <text x="160" y="701" font-size="14" fill="#E2E8F0">WASM Compute Task Contribution</text>
+
+    <!-- Earn 10 -->
+    <rect x="430" y="680" width="340" height="32" rx="6" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="445" y="702" font-size="15" font-weight="bold" fill="#10B981">+10 rUv</text>
+    <text x="525" y="701" font-size="14" fill="#E2E8F0">LoRA Training Contribution</text>
+
+    <!-- Earn 5 -->
+    <rect x="795" y="680" width="340" height="32" rx="6" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="810" y="702" font-size="15" font-weight="bold" fill="#10B981">+5 rUv</text>
+    <text x="880" y="701" font-size="14" fill="#E2E8F0">Knowledge Share (If Upvoted)</text>
+
+    <!-- Economics Grid Row 2 -->
+    <!-- Earn 1 -->
+    <rect x="65" y="720" width="340" height="32" rx="6" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="80" y="742" font-size="15" font-weight="bold" fill="#10B981">+1 rUv</text>
+    <text x="160" y="741" font-size="14" fill="#E2E8F0">Embedding Generation</text>
+
+    <!-- Earn 0.1 -->
+    <rect x="430" y="720" width="340" height="32" rx="6" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="445" y="742" font-size="15" font-weight="bold" fill="#10B981">+0.1 rUv</text>
+    <text x="525" y="741" font-size="14" fill="#E2E8F0">Quality Voting on Network Content</text>
+
+    <!-- Cost 0.5 -->
+    <rect x="795" y="720" width="340" height="32" rx="6" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="810" y="742" font-size="15" font-weight="bold" fill="#F43F5E">-0.5 rUv</text>
+    <text x="880" y="741" font-size="14" fill="#E2E8F0">Search Execution (Resource Cost)</text>
+
+
+    <!-- ========================================== -->
+    <!-- VERTICAL FLOW ARROWS (ECONOMICS CYCLE)     -->
+    <!-- ========================================== -->
+    
+    <!-- Economics to Edge (Rewards Distributed) -->
+    <path d="M 190 620 L 190 575" fill="none" stroke="#10B981" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#arrowGreen)"/>
+    <text x="205" y="602" font-size="13" font-weight="bold" fill="#10B981">Rewards Distributed</text>
+
+    <!-- Core to Economics (Ledger Updated) -->
+    <path d="M 1010 560 L 1010 605" fill="none" stroke="#F59E0B" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#arrowAmber)"/>
+    <text x="1025" y="588" font-size="13" font-weight="bold" fill="#F59E0B">Ledger Updated via QDAG</text>
+
+</svg>
