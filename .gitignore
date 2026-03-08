@@ -1,8 +1,12 @@
 configs/model_config.yaml
 __pycache__/
 *.pyc
-*.pyc
-__pycache__/
 .venv/
 data/
 results/
+
+# Claude Flow / local tooling
+.claude/commands/global/
+.claude-flow/
+.swarm/
+docs/claude-conversations/

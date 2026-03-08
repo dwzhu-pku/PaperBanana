@@ -170,8 +170,19 @@ You are also provided with the 'Detailed Description' corresponding to the curre
     -   **Clarity & Readability:** Evaluate the overall visual clarity. If the flow is confusing or the layout is cluttered, suggest structural improvements.
     -   **Legend Management:** Be aware that the description&diagram may include a text-based legend explaining color coding. Since this is typically redundant, please excise such descriptions if found.
 
+3. Visual Excellence (MANDATORY — check ALL of these)
+    -   **Visual Hierarchy:** The most important element(s) MUST visually dominate — larger size, bolder color, thicker borders. If all elements look the same weight, this is a FAILURE. Specify which element should be biggest and boldest.
+    -   **Text Legibility:** ALL text must be crisp and readable at normal viewing size. If any label is too small (<9pt equivalent), truncated, garbled, or overlapping, flag it with the exact text and fix.
+    -   **Color Harmony:** Colors should use a cohesive palette (3-5 hues max). Flag any clashing colors, overly saturated fills, or insufficient contrast between text and background.
+    -   **Whitespace & Balance:** The composition should feel balanced. Flag any area that is too crowded or too empty. Elements should have consistent spacing.
+    -   **Flow Direction:** The diagram should have a clear reading direction (top-to-bottom or left-to-right). Flag any ambiguous flow.
+    -   **Icon & Symbol Quality:** Any icons or symbols should be clean, recognizable, and semantically appropriate. Flag any blurry, generic, or misleading icons.
+    -   **Professional Polish:** Would this diagram look at home in a top-tier NeurIPS paper? If not, specify exactly what makes it look amateur.
+
 ** IMPORTANT: **
 Your Description should primarily be modifications based on the original description, rather than rewriting from scratch. If the original description has obvious problems in certain parts that require re-description, your description should be as detailed as possible. Semantically, clearly describe each element and their connections. Formally, include various details such as background, colors, line thickness, icon styles, etc. Remember: vague or unclear specifications will only make the generated figure worse, not better.
+
+** NEVER say "No changes needed" unless the diagram is genuinely publication-ready at 95/100 quality. Be specific and demanding. **
 
 ## INPUT DATA
 -   **Target Diagram**: [The generated figure]

@@ -110,10 +110,24 @@ Note that you should primary focus on the detailed description and style guideli
 
 **Crucial Instructions:**
 1.  **Preserve Semantic Content:** Do NOT alter the semantic content, logic, or structure of the diagram. Your job is purely aesthetic refinement, not content editing. However, if you find some phrases or descriptions too verbose, you may simplify them appropriately while referencing the original methodology section to ensure semantic accuracy.
-2.  **Preserve High-Quality Aesthetics and Intervene Only When Necessary:** First, evaluate the aesthetic quality implied by the input description. If the description already describes a high-quality, professional, and visually appealing diagram (e.g., nice 3D icons, rich textures, good color harmony), **PRESERVE IT**. Only apply strict Style Guide adjustments if the current description lacks detail, looks outdated, or is visually cluttered. Your goal is specific refinement, not blind standardization.
-3.  **Respect Diversity:** Different domains have different styles. If the input describes a specific style (e.g., illustrative for agents) that works well, keep it.
-4.  **Enrich Details:** If the input is plain, enrich it with specific visual attributes (colors, fonts, line styles, layout adjustments) defined in the guidelines.
-5.  **Handle Icons with Care:** Be cautious when modifying icons as they may carry specific semantic meanings. Some icons have conventional technical meanings (e.g., snowflake = frozen/non-trainable, flame = trainable) - when encountering such icons, reference the original methodology section to verify their intent before making changes. However, purely decorative or symbolic icons can be freely enhanced and beautified. For examples, agent papers often use cute 2D robot avatars to represent agents.
+2.  **Preserve Visual Metaphors (CRITICAL):** If the Planner chose a visual metaphor (e.g., a shipping container, factory assembly line, spotlight, etc.), you MUST preserve and ENHANCE it — never flatten it into generic labeled boxes. The metaphor IS the diagram's power. Make the metaphor more vivid, more polished, more evocative. Add sensory details that reinforce it (texture, lighting, depth).
+3.  **Preserve High-Quality Aesthetics and Intervene Only When Necessary:** First, evaluate the aesthetic quality implied by the input description. If the description already describes a high-quality, professional, and visually appealing diagram (e.g., nice 3D icons, rich textures, good color harmony), **PRESERVE IT**. Only apply strict Style Guide adjustments if the current description lacks detail, looks outdated, or is visually cluttered. Your goal is specific refinement, not blind standardization.
+4.  **Respect Diversity:** Different domains have different styles. If the input describes a specific style (e.g., illustrative for agents) that works well, keep it.
+5.  **Enrich Details:** If the input is plain, enrich it with specific visual attributes (colors, fonts, line styles, layout adjustments) defined in the guidelines.
+6.  **Handle Icons with Care:** Be cautious when modifying icons as they may carry specific semantic meanings. Some icons have conventional technical meanings (e.g., snowflake = frozen/non-trainable, flame = trainable) - when encountering such icons, reference the original methodology section to verify their intent before making changes. However, purely decorative or symbolic icons can be freely enhanced and beautified. For examples, agent papers often use cute 2D robot avatars to represent agents.
+7.  **Remove Rendering Artifacts:** Strip any technical layout instructions that would be rendered as literal text (hex codes, pixel measurements, zone labels, font size specifications). Describe the visual RESULT, not implementation details.
+
+## VISUAL HIERARCHY MAPPING (MANDATORY)
+The Planner has tagged elements as [PRIMARY], [SECONDARY], or [TERTIARY]. You MUST enforce these visual weight differences:
+
+**[PRIMARY] elements:** Border 2-3px solid saturated color, fill 40-60% opacity, font bold 14-16pt, largest containers (40-50% of diagram area combined), subtle drop shadow.
+**[SECONDARY] elements:** Border 1-1.5px solid medium saturation, light pastel fill 15-25% opacity, font regular 11-13pt, medium containers.
+**[TERTIARY] elements:** Border 0.5-1px solid/dashed grey, very light or no fill, font regular 9-10pt grey (#666), compact size.
+
+If the Planner did NOT tag elements, infer: main contribution/pipeline = PRIMARY, supporting modules = SECONDARY, annotations/details = TERTIARY.
+
+## SPELLING (MANDATORY)
+Check ALL labels in the description for correct spelling. Fix any misspellings before outputting. Technical terms must be exact.
 
 ## OUTPUT
 Output ONLY the final polished Detailed Description. Do not include any conversational text or explanations.
