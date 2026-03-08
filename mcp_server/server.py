@@ -239,6 +239,136 @@ async def generate_plot(
     return Image(path=tmp.name, format=fmt)
 
 
+@mcp.tool
+async def about() -> str:
+    """Learn about PaperBanana and the storytelling enhancement.
+
+    Returns an overview of what PaperBanana does, how the storytelling
+    pipeline works, and why it produces better diagrams than standard
+    approaches. Call this first if you're new to PaperBanana.
+    """
+    return """# PaperBanana — Enhanced Storytelling Pipeline
+
+## What is PaperBanana?
+PaperBanana is a multi-agent framework (Peking University + Google Cloud AI Research)
+that generates publication-quality academic diagrams and plots from text descriptions.
+
+## What does this enhancement add?
+A **visual metaphor discovery** step in the Planner agent. Before describing boxes and
+arrows, the Planner asks: "What is this concept LIKE in the real world?" and finds a
+visual analogy (e.g., a self-learning database becomes a "living library").
+
+This single change improved diagram quality from 71.75/100 to 93.5/100 average
+(+22 points) across 4 diverse test scenarios — using the same image generation model.
+
+## The 5-Agent Pipeline
+1. **Retriever** — Finds reference examples similar to your content
+2. **Planner** — Discovers a visual metaphor, then describes the diagram
+3. **Stylist** — Applies NeurIPS-grade aesthetics while preserving the metaphor
+4. **Visualizer** — Generates the image via Gemini (supports multiple candidates)
+5. **Critic** — Examines output with 7 quality checks, refines up to 3 rounds
+
+## Available Tools
+- `generate_diagram(source_context, caption)` — Full pipeline for diagrams
+- `generate_plot(data_json, intent)` — Statistical plots from JSON data
+- `about()` — This overview (you're reading it now)
+- `setup_guide()` — Step-by-step setup instructions
+
+## Why this approach?
+Standard: "Here are 7 features. Draw boxes with labels." → Spec sheet (71.75/100)
+Storytelling: "This is like a living library with a brain-librarian." → Instant understanding (93.5/100)
+
+The gap isn't rendering quality — it's what you ask the model to draw.
+
+## Credits
+Original framework: Dawei Zhu et al. (Peking University + Google Cloud AI Research)
+Enhancement: Community contribution by @stuinfla
+GitHub: https://github.com/stuinfla/paperbanana
+"""
+
+
+@mcp.tool
+async def setup_guide() -> str:
+    """Get step-by-step setup instructions for PaperBanana.
+
+    Returns instructions for installing PaperBanana, configuring your
+    API key, and running your first diagram generation.
+    """
+    return """# PaperBanana Setup Guide
+
+## Prerequisites
+- Python 3.12+
+- A Google Gemini API key (get one at https://aistudio.google.com/apikey)
+
+## Step 1: Clone and Install
+```bash
+git clone https://github.com/stuinfla/paperbanana.git
+cd paperbanana
+uv venv && source .venv/bin/activate
+uv pip install -r requirements.txt
+pip install fastmcp  # for MCP server
+```
+
+## Step 2: Configure Your API Key
+```bash
+cp configs/model_config.template.yaml configs/model_config.yaml
+```
+Edit `configs/model_config.yaml` and set your `google_api_key`.
+
+Or set it as an environment variable:
+```bash
+export GOOGLE_API_KEY="your-key-here"
+```
+
+## Step 3: (Optional) Download Reference Dataset
+For best quality, download PaperBananaBench:
+https://huggingface.co/datasets/dwzhu/PaperBananaBench
+Place it under `data/PaperBananaBench/`
+
+Without the dataset, the pipeline still works but skips reference retrieval.
+
+## Step 4: Generate Your First Diagram
+```bash
+python cli_generate.py \\
+  --content "Your methodology description here..." \\
+  --caption "Figure 1: System architecture overview." \\
+  --output my_diagram.png \\
+  --mode demo_full \\
+  --critic-rounds 3
+```
+
+## Using as MCP Server
+Add to your Claude Code `.mcp.json`:
+```json
+{
+  "mcpServers": {
+    "paperbanana": {
+      "command": "python3",
+      "args": ["-m", "mcp_server.server"],
+      "cwd": "/path/to/paperbanana",
+      "env": {
+        "GOOGLE_API_KEY": "your-key-here"
+      }
+    }
+  }
+}
+```
+
+## Using as Claude Code Skill
+Copy the skill file from the repo:
+```bash
+mkdir -p ~/.claude/skills/paperbanana
+cp docs/SKILL.md ~/.claude/skills/paperbanana/SKILL.md
+```
+
+## Tips
+- Use `--mode demo_full` for highest quality (2-3 min per image)
+- Use `--mode vanilla` for quick drafts (30 sec)
+- Use `--candidates 3` to generate multiple options
+- The `--retrieval auto` flag uses reference examples for better results
+"""
+
+
 def main():
     """MCP server entry point."""
     mcp.run()
