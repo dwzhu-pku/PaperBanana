@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PaperBanana Showcase — AI-Generated Diagrams with Visual Storytelling</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a1a; color: #e2e8f0; line-height: 1.6; }
+
+  .hero { padding: 3rem 2rem; text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1a1040 100%); border-bottom: 2px solid #e8a634; }
+  .hero h1 { font-size: 2.5rem; color: #f8fafc; margin-bottom: 0.5rem; }
+  .hero h1 span { color: #e8a634; }
+  .hero .subtitle { color: #94a3b8; font-size: 1.1rem; max-width: 700px; margin: 0 auto; }
+  .hero .stats { display: flex; justify-content: center; gap: 3rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat .num { font-size: 2rem; font-weight: 700; color: #e8a634; }
+  .stat .label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .intro { max-width: 800px; margin: 2rem auto; padding: 0 2rem; }
+  .intro p { color: #94a3b8; margin-bottom: 1rem; }
+  .intro strong { color: #e8a634; }
+
+  nav { position: sticky; top: 0; background: #0f172aee; backdrop-filter: blur(10px); padding: 0.75rem 2rem; border-bottom: 1px solid #1e293b; z-index: 50; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  nav a { color: #94a3b8; text-decoration: none; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; transition: all 0.2s; }
+  nav a:hover, nav a.active { background: #e8a63420; color: #e8a634; }
+
+  .section { padding: 2.5rem 2rem; border-bottom: 1px solid #1e293b; max-width: 1200px; margin: 0 auto; }
+  .section h2 { font-size: 1.8rem; color: #f8fafc; margin-bottom: 0.25rem; }
+  .section h2 span { color: #e8a634; font-size: 0.7em; }
+  .section .desc { color: #94a3b8; font-size: 0.95rem; margin-bottom: 2rem; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem; }
+  .card { background: #1e293b; border-radius: 12px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(232,166,52,0.15); }
+  .card img { width: 100%; height: auto; display: block; }
+  .card .info { padding: 1rem 1.25rem; }
+  .card .info .name { font-size: 0.95rem; font-weight: 600; color: #f1f5f9; margin-bottom: 0.25rem; }
+  .card .info .score { font-size: 0.85rem; color: #94a3b8; }
+  .card .info .score strong { color: #e8a634; }
+  .badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700; margin-left: 0.5rem; letter-spacing: 0.03em; }
+  .badge-story { background: #e8a63430; color: #e8a634; }
+  .badge-standard { background: #44403c; color: #d6d3d1; }
+
+  .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .comparison-label { text-align: center; font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+
+  .cta { text-align: center; padding: 3rem 2rem; background: linear-gradient(135deg, #1a1040 0%, #0f172a 100%); }
+  .cta h2 { color: #f8fafc; margin-bottom: 0.5rem; }
+  .cta p { color: #94a3b8; margin-bottom: 1.5rem; }
+  .cta a { display: inline-block; padding: 0.75rem 2rem; background: #e8a634; color: #0a0a1a; font-weight: 700; text-decoration: none; border-radius: 8px; font-size: 1rem; }
+  .cta a:hover { background: #d4952e; }
+
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; align-items: center; justify-content: center; padding: 2rem; }
+  .lightbox.active { display: flex; }
+  .lightbox img { max-width: 95vw; max-height: 90vh; border-radius: 8px; }
+  .lightbox .close { position: absolute; top: 1rem; right: 1.5rem; font-size: 2.5rem; color: white; cursor: pointer; background: none; border: none; }
+  .lightbox .caption { position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: #e2e8f0; font-size: 1rem; text-align: center; background: rgba(0,0,0,0.7); padding: 0.5rem 1.5rem; border-radius: 8px; max-width: 80vw; }
+
+  footer { padding: 2rem; text-align: center; color: #475569; font-size: 0.8rem; }
+
+  @media (max-width: 768px) {
+    .comparison-grid { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Paper<span>Banana</span> Showcase</h1>
+  <p class="subtitle">AI-generated diagrams using visual storytelling — finding real-world metaphors before drawing, so concepts click in 5 seconds instead of 5 minutes.</p>
+  <div class="stats">
+    <div class="stat"><div class="num">92</div><div class="label">Avg Score (Storytelling)</div></div>
+    <div class="stat"><div class="num">72</div><div class="label">Avg Score (Standard)</div></div>
+    <div class="stat"><div class="num">+20</div><div class="label">Point Improvement</div></div>
+    <div class="stat"><div class="num">17</div><div class="label">Images Generated</div></div>
+  </div>
+</div>
+
+<div class="intro">
+  <p>These diagrams were generated by <strong>PaperBanana</strong>, an enhanced multi-agent pipeline that asks <strong>"What is this concept LIKE?"</strong> before drawing anything. Instead of labeled boxes and arrows, it finds visual metaphors — a security pipeline becomes a water purification system, a container format becomes a shipping crate, collective intelligence becomes a crystal forming from converging streams.</p>
+  <p>Below you'll see the full output for <strong>Pi (collective intelligence platform)</strong>, <strong>RuVector (vector database)</strong>, and <strong>RuView (WiFi pose detection)</strong> — plus side-by-side comparisons showing storytelling vs standard approaches.</p>
+</div>
+
+<nav>
+  <a href="#pi">Pi (10 images)</a>
+  <a href="#ruvector">RuVector (2 images)</a>
+  <a href="#ruview">RuView (1 image)</a>
+  <a href="#comparison">Storytelling vs Standard</a>
+  <a href="#about">About the Tool</a>
+</nav>
+
+<!-- PI SECTION -->
+<div class="section" id="pi">
+  <h2>Pi — Collective Intelligence Platform <span>(10 images)</span></h2>
+  <p class="desc">A shared AI brain where agents contribute knowledge, vote on quality, and learn through federated consensus. "Not stored. Alive."</p>
+
+  <div class="grid">
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/pi/10_complete_system.png" alt="Pi Complete System">
+      <div class="info">
+        <div class="name">Complete System — Encyclopedia Galactica <span class="badge badge-story">94/100</span></div>
+        <div class="score">The full pipeline: Identity → Security → Collective Graph → Edge Network. Dark space aesthetic matching pi.ruv.io.</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/pi/01_overview.png" alt="Pi Overview">
+      <div class="info">
+        <div class="name">Collective Intelligence Overview <span class="badge badge-story">91/100</span></div>
+        <div class="score">Crystal core with Science, Creativity, Ethics domains merging. All 5 mathematical symbols (π,Σ,∞,∇,Δ) visible.</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/pi/02_five_pillars.png" alt="Five Pillars">
+      <div class="info">
+        <div class="name">The Five Pillars (π → Σ → ∞ → ∇ → Δ) <span class="badge badge-story">94/100</span></div>
+        <div class="score">Left-to-right journey: Identity fingerprint → Contribution blocks → Collective ring → Graph network → Transfer landing.</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/pi/03_consensus_protocol.png" alt="Consensus Protocol">
+      <div class="info">
+        <div class="name">Consensus Protocol — Intellectual Combat <span class="badge badge-story">90/100</span></div>
+        <div class="score">Many rough shapes (proposals) enter a funnel, get challenged, refined — one golden sphere (truth) emerges.</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/pi/04_identity_layer.png" alt="Identity Layer">
+      <div class="info">
+        <div class="name">Identity Layer — Agent Specialist Cards <span class="badge badge-story">95/100</span></div>
+        <div class="score">Three distinct agent profiles with radar charts, trust scores, expertise domains. Each is a unique specialist.</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/pi/05_knowledge_synthesis.png" alt="Knowledge Synthesis">
+      <div class="info">
+        <div class="name">Knowledge Synthesis — Streams to Diamond <span class="badge badge-story">89/100</span></div>
+        <div class="score">Three agents feed reasoning chains, evidence, and confidence into a shared knowledge graph. Diamond of truth emerges.</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/pi/06_security_layers.png" alt="7-Layer Security">
+      <div class="info">
+        <div class="name">7-Layer Security Pipeline <span class="badge badge-story">96/100</span></div>
+        <div class="score">Dirty PII input passes through 7 glass filter panels (Input → Crypto → Bounds → Rate → Byzantine → Reputation → Drift) → pure golden output.</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/pi/07_edge_network.png" alt="Edge Network">
+      <div class="info">
+        <div class="name">Edge Network — Constellation of Nodes <span class="badge badge-story">88/100</span></div>
+        <div class="score">Genesis node core with browser satellites contributing idle compute. rUv credit economics shown.</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/pi/08_emergence.png" alt="Emergence">
+      <div class="info">
+        <div class="name">Emergence — Simple Parts, Magnificent Whole <span class="badge badge-story">93/100</span></div>
+        <div class="score">Scattered blue shapes → consensus synthesis → golden π symbol formed from particles. The magic of collective intelligence.</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/pi/09_rvf_containers.png" alt="RVF Containers">
+      <div class="info">
+        <div class="name">RVF Cognitive Containers <span class="badge badge-story">92/100</span></div>
+        <div class="score">Glass shipping container: precious knowledge gem inside, Ed25519 wax seal, metadata lid, provenance tag, witness chain lock.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RUVECTOR SECTION -->
+<div class="section" id="ruvector">
+  <h2>RuVector — Vector Database Engine <span>(2 images)</span></h2>
+  <p class="desc">A unified vector database that understands the meaning of your data. One engine powering 6 completely different application domains.</p>
+
+  <div class="grid">
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/ruvector/01_apps_ecosystem.png" alt="RuVector Apps">
+      <div class="info">
+        <div class="name">Application Ecosystem — One Core, Six Domains <span class="badge badge-story">92/100</span></div>
+        <div class="score">Hexagonal core (HNSW + Quantization) radiating to Legal, Medical, E-commerce, Code, Research, Media — each with a distinct icon.</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/ruvector/02_overview.png" alt="RuVector Overview">
+      <div class="info">
+        <div class="name">Product Overview — Crystalline Transformation <span class="badge badge-story">90/100</span></div>
+        <div class="score">Raw multi-modal data enters, crystal core transforms it, organized semantic clusters emerge. "Filing cabinet → brilliant librarian."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RUVIEW SECTION -->
+<div class="section" id="ruview">
+  <h2>RuView — WiFi DensePose <span>(1 image)</span></h2>
+  <p class="desc">Uses ordinary WiFi signals to detect human body poses without cameras. Making the invisible visible.</p>
+
+  <div class="grid">
+    <div class="card" onclick="openLightbox(this)">
+      <img src="images/ruview/01_wifi_densepose.png" alt="RuView WiFi">
+      <div class="info">
+        <div class="name">WiFi DensePose — Physical to Digital <span class="badge badge-story">87/100</span></div>
+        <div class="score">Physical zone (WiFi waves + human silhouette) → through-wall → CSI patterns → DensePose NN → 3D mesh avatar in digital zone.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARISON SECTION -->
+<div class="section" id="comparison">
+  <h2>Storytelling vs Standard Approach</h2>
+  <p class="desc">Same content, same model, same pipeline — the only difference is whether the Planner asks "What is this concept LIKE?" first. Average improvement: +20 points.</p>
+
+  <h3 style="color:#94a3b8; font-size:0.85rem; margin: 1.5rem 0 0.75rem; text-transform:uppercase; letter-spacing:0.05em;">RuVector Application Ecosystem</h3>
+  <div class="comparison-grid">
+    <div>
+      <div class="comparison-label">Storytelling (92/100)</div>
+      <div class="card" onclick="openLightbox(this)">
+        <img src="images/ruvector/01_apps_ecosystem.png" alt="Storytelling RuVector">
+        <div class="info"><div class="score">Hexagonal core radiating to 6 distinct domain icons. Clean, intuitive, memorable.</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="comparison-label">Standard (74/100)</div>
+      <div class="card" onclick="openLightbox(this)">
+        <img src="images/comparison/standard_ruvector_apps.png" alt="Standard RuVector">
+        <div class="info"><div class="score">Labeled boxes with bidirectional arrows. Accurate but generic. "Just another tech diagram."</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="color:#94a3b8; font-size:0.85rem; margin: 1.5rem 0 0.75rem; text-transform:uppercase; letter-spacing:0.05em;">RuView WiFi DensePose</h3>
+  <div class="comparison-grid">
+    <div>
+      <div class="comparison-label">Storytelling (87/100)</div>
+      <div class="card" onclick="openLightbox(this)">
+        <img src="images/ruview/01_wifi_densepose.png" alt="Storytelling RuView">
+        <div class="info"><div class="score">Physical/digital zones with human silhouette → wall → 3D mesh. Shows the "invisible becoming visible."</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="comparison-label">Standard (70/100)</div>
+      <div class="card" onclick="openLightbox(this)">
+        <img src="images/comparison/standard_ruview.png" alt="Standard RuView">
+        <div class="info"><div class="score">TX antenna → stick figure → RX antenna → boxes → output. Linear, technical, forgettable.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="color:#94a3b8; font-size:0.85rem; margin: 1.5rem 0 0.75rem; text-transform:uppercase; letter-spacing:0.05em;">Pi Collective Intelligence</h3>
+  <div class="comparison-grid">
+    <div>
+      <div class="comparison-label">Storytelling (91/100)</div>
+      <div class="card" onclick="openLightbox(this)">
+        <img src="images/pi/01_overview.png" alt="Storytelling Pi">
+        <div class="info"><div class="score">Crystal core with specialist domains. Mathematical symbols as anchors. Feels alive.</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="comparison-label">Standard (72/100)</div>
+      <div class="card" onclick="openLightbox(this)">
+        <img src="images/comparison/standard_pi.png" alt="Standard Pi">
+        <div class="info"><div class="score">Center hub with "agents" icons and labeled arrows. Correct but soulless.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT SECTION -->
+<div class="section" id="about">
+  <h2>About PaperBanana</h2>
+  <p class="desc">An enhanced multi-agent pipeline for publication-quality academic diagrams.</p>
+  <div style="color:#94a3b8; max-width:700px;">
+    <p style="margin-bottom:1rem;"><strong style="color:#e8a634;">What it is:</strong> A Python tool that generates diagrams from text descriptions. You describe a concept, it produces a publication-quality image.</p>
+    <p style="margin-bottom:1rem;"><strong style="color:#e8a634;">What makes it different:</strong> The Planner agent asks "What is this concept LIKE?" before drawing. It finds a visual metaphor (security = water purification, containers = shipping crates) that makes the concept click instantly.</p>
+    <p style="margin-bottom:1rem;"><strong style="color:#e8a634;">Original framework:</strong> Peking University + Google Cloud AI Research</p>
+    <p style="margin-bottom:1rem;"><strong style="color:#e8a634;">Storytelling enhancement:</strong> Community contribution by @stuinfla</p>
+    <p style="margin-bottom:1rem;"><strong style="color:#e8a634;">Models used:</strong> Google Gemini 3 Pro (reasoning) + Gemini 3 Pro Image (generation)</p>
+    <p><strong style="color:#e8a634;">GitHub:</strong> <a href="https://github.com/stuinfla/paperbanana" style="color:#5b8def;">github.com/stuinfla/paperbanana</a></p>
+  </div>
+</div>
+
+<div class="cta">
+  <h2>Try It Yourself</h2>
+  <p>Generate your own diagrams with visual storytelling. Free API key, open source.</p>
+  <a href="https://github.com/stuinfla/paperbanana">Get Started on GitHub</a>
+</div>
+
+<footer>
+  Generated with PaperBanana Storytelling Pipeline | Gemini 3 Pro | March 2026
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="close" onclick="closeLightbox(event)">&times;</button>
+  <img id="lightbox-img" src="" alt="">
+  <div class="caption" id="lightbox-caption"></div>
+</div>
+
+<script>
+function openLightbox(card) {
+  const img = card.querySelector('img');
+  const name = card.querySelector('.name')?.textContent || '';
+  const score = card.querySelector('.score')?.textContent || '';
+  document.getElementById('lightbox-img').src = img.src;
+  document.getElementById('lightbox-caption').textContent = name + (score ? ' — ' + score : '');
+  document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox(e) {
+  if (e.target === document.getElementById('lightbox') || e.target.classList.contains('close')) {
+    document.getElementById('lightbox').classList.remove('active');
+  }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('active'); });
+</script>
+</body>
+</html>

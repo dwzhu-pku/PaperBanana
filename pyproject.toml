@@ -1,0 +1,151 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel>=0.41.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "paperbanana-storytelling"
+version = "1.0.0"
+description = "Publication-quality academic diagrams with visual storytelling. Enhanced PaperBanana pipeline with metaphor discovery (93.5/100 avg quality)."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [
+    { name = "stuinfla" },
+]
+keywords = [
+    "academic",
+    "diagrams",
+    "plots",
+    "visualization",
+    "multi-agent",
+    "storytelling",
+    "gemini",
+    "paper",
+    "figures",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+dependencies = [
+    "google-genai",
+    "streamlit",
+    "aiofiles",
+    "pillow",
+    "numpy",
+    "tqdm",
+    "json-repair",
+    "anthropic",
+    "openai",
+    "matplotlib",
+    "python-dotenv",
+    "pyyaml",
+    "google-auth",
+]
+
+[project.optional-dependencies]
+mcp = [
+    "fastmcp",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio",
+    "pytest-cov",
+    "ruff",
+    "mypy",
+]
+
+[project.urls]
+Homepage = "https://github.com/stuinfla/paperbanana"
+Documentation = "https://github.com/stuinfla/paperbanana#readme"
+Repository = "https://github.com/stuinfla/paperbanana"
+Issues = "https://github.com/stuinfla/paperbanana/issues"
+Upstream = "https://github.com/dwzhu-pku/PaperBanana"
+
+[project.scripts]
+paperbanana = "cli_generate:main"
+paperbanana-mcp = "mcp_server.server:main"
+
+[tool.setuptools]
+py-modules = ["cli_generate", "demo", "main"]
+
+[tool.setuptools.packages.find]
+include = [
+    "agents*",
+    "utils*",
+    "prompts*",
+    "mcp_server*",
+    "visualize*",
+    "scripts*",
+]
+
+[tool.setuptools.package-data]
+"*" = [
+    "*.yaml",
+    "*.yml",
+    "*.md",
+    "*.json",
+    "*.txt",
+]
+
+[tool.setuptools.exclude-package-data]
+"*" = [
+    "*.pyc",
+    "__pycache__/*",
+]
+
+[tool.setuptools.data-files]
+"style_guides" = [
+    "style_guides/neurips2025_diagram_style_guide.md",
+    "style_guides/neurips2025_plot_style_guide.md",
+]
+"configs" = [
+    "configs/model_config.template.yaml",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "SIM",    # flake8-simplify
+    "TCH",    # flake8-type-checking
+    "RUF",    # ruff-specific
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "B008",   # function call in default argument (common in FastMCP)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["agents", "utils", "prompts", "mcp_server"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-v --tb=short"
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false

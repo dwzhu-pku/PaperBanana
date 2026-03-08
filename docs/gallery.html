@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PaperBanana — All Generated Images</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; }
+
+  header { padding: 2rem; text-align: center; border-bottom: 1px solid #1e293b; }
+  header h1 { font-size: 2rem; color: #f8fafc; margin-bottom: 0.5rem; }
+  header p { color: #94a3b8; font-size: 1rem; }
+
+  .stats { display: flex; justify-content: center; gap: 2rem; margin-top: 1rem; }
+  .stat { text-align: center; }
+  .stat .num { font-size: 1.5rem; font-weight: 700; color: #818cf8; }
+  .stat .label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .scenario { padding: 2rem; border-bottom: 1px solid #1e293b; }
+  .scenario h2 { font-size: 1.4rem; margin-bottom: 0.25rem; color: #f8fafc; }
+  .scenario .subtitle { color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .scenario .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem; }
+  .badge-ours { background: #166534; color: #bbf7d0; }
+  .badge-standard { background: #44403c; color: #d6d3d1; }
+  .badge-experiment { background: #1e3a5f; color: #93c5fd; }
+
+  .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .extras { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem; }
+
+  .card { background: #1e293b; border-radius: 12px; overflow: hidden; transition: transform 0.2s; cursor: pointer; }
+  .card:hover { transform: scale(1.02); }
+  .card img { width: 100%; height: auto; display: block; }
+  .card .info { padding: 0.75rem 1rem; }
+  .card .info .name { font-size: 0.85rem; font-weight: 600; color: #f1f5f9; }
+  .card .info .score { font-size: 0.8rem; color: #94a3b8; }
+  .card .info .score strong { color: #818cf8; }
+
+  /* Lightbox */
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 100; align-items: center; justify-content: center; padding: 2rem; }
+  .lightbox.active { display: flex; }
+  .lightbox img { max-width: 95vw; max-height: 90vh; border-radius: 8px; }
+  .lightbox .close { position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; color: white; cursor: pointer; background: none; border: none; }
+  .lightbox .caption { position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: #e2e8f0; font-size: 1rem; text-align: center; background: rgba(0,0,0,0.6); padding: 0.5rem 1.5rem; border-radius: 8px; }
+
+  @media (max-width: 768px) {
+    .comparison { grid-template-columns: 1fr; }
+    .extras { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>PaperBanana — Generated Images Gallery</h1>
+  <p>Every image generated across 4 scenarios + early experiments</p>
+  <div class="stats">
+    <div class="stat"><div class="num">19</div><div class="label">Total Images</div></div>
+    <div class="stat"><div class="num">93.5</div><div class="label">Avg Score (Ours)</div></div>
+    <div class="stat"><div class="num">71.75</div><div class="label">Avg Score (Standard)</div></div>
+    <div class="stat"><div class="num">+21.75</div><div class="label">Improvement</div></div>
+  </div>
+</header>
+
+<!-- SCENARIO 1 -->
+<div class="scenario">
+  <h2>Scenario 1: RuVector Application Ecosystem</h2>
+  <p class="subtitle">Show the "impossible applications" — one engine powering 6 different use cases</p>
+
+  <h3 style="color:#94a3b8; font-size:0.85rem; margin-bottom:0.75rem; text-transform:uppercase; letter-spacing:0.05em;">Head-to-Head Comparison</h3>
+  <div class="comparison">
+    <div class="card" onclick="openLightbox(this)">
+      <img src="comparison/storytelling_ruvector_apps.png" alt="Storytelling: RuVector Apps">
+      <div class="info">
+        <div class="name">Our Storytelling Approach <span class="badge badge-ours">OURS</span></div>
+        <div class="score">Score: <strong>93/100</strong> — Hexagonal core radiating to 6 application scenes</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="comparison/standard_ruvector_apps.png" alt="Standard: RuVector Apps">
+      <div class="info">
+        <div class="name">Standard Pipeline <span class="badge badge-standard">STANDARD</span></div>
+        <div class="score">Score: <strong>68/100</strong> — Dense labeled-box spec sheet</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="color:#94a3b8; font-size:0.85rem; margin-bottom:0.75rem; text-transform:uppercase; letter-spacing:0.05em;">Earlier RuVector Experiments</h3>
+  <div class="extras">
+    <div class="card" onclick="openLightbox(this)">
+      <img src="../static/gallery/ruvector_full_architecture.png" alt="RuVector Full Architecture">
+      <div class="info"><div class="name">Full Architecture <span class="badge badge-experiment">EXPERIMENT</span></div><div class="score">Early pipeline test — overall system view</div></div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="../static/gallery/ruvector_hnsw_v2.png" alt="RuVector HNSW v2">
+      <div class="info"><div class="name">HNSW Index (v2) <span class="badge badge-experiment">EXPERIMENT</span></div><div class="score">Vector indexing visualization</div></div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="../static/gallery/ruvector_mincut.png" alt="RuVector Min-Cut">
+      <div class="info"><div class="name">Min-Cut Analysis <span class="badge badge-experiment">EXPERIMENT</span></div><div class="score">Graph partitioning diagram</div></div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="../static/gallery/ruvector_prime_radiant.png" alt="RuVector Prime Radiant">
+      <div class="info"><div class="name">Prime Radiant <span class="badge badge-experiment">EXPERIMENT</span></div><div class="score">Neural architecture overview</div></div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="../static/gallery/ruvector_sona.png" alt="RuVector SONA">
+      <div class="info"><div class="name">SONA Architecture <span class="badge badge-experiment">EXPERIMENT</span></div><div class="score">Self-organizing network agents</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENARIO 2 -->
+<div class="scenario">
+  <h2>Scenario 2: RuVector Product Overview — "Why Should I Care?"</h2>
+  <p class="subtitle">Explain what RuVector does and why it's compelling — make a non-technical person understand</p>
+
+  <div class="comparison">
+    <div class="card" onclick="openLightbox(this)">
+      <img src="comparison/storytelling_ruvector_overview.png" alt="Storytelling: RuVector Overview">
+      <div class="info">
+        <div class="name">Our Storytelling Approach <span class="badge badge-ours">OURS</span></div>
+        <div class="score">Score: <strong>94/100</strong> — "Living Library" metaphor with brain-librarian</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="comparison/standard_ruvector_overview.png" alt="Standard: RuVector Overview">
+      <div class="info">
+        <div class="name">Standard Pipeline <span class="badge badge-standard">STANDARD</span></div>
+        <div class="score">Score: <strong>78/100</strong> — Feature list as labeled boxes</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="color:#94a3b8; font-size:0.85rem; margin-bottom:0.75rem; margin-top:1rem; text-transform:uppercase; letter-spacing:0.05em;">RVF Format — The Storytelling Breakthrough</h3>
+  <p style="color:#64748b; font-size:0.85rem; margin-bottom:0.75rem;">These 3 candidates were generated when we first tested the visual metaphor approach. The "shipping container" metaphor for a binary format was the moment we knew this approach worked.</p>
+  <div class="extras">
+    <div class="card" onclick="openLightbox(this)">
+      <img src="../static/gallery/ruvector_rvf_format_v5.png" alt="RVF Format v5">
+      <div class="info"><div class="name">RVF Format (Final) <span class="badge badge-experiment">EXPERIMENT</span></div><div class="score">Shipping container metaphor — clean version</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENARIO 3 -->
+<div class="scenario">
+  <h2>Scenario 3: RuView — WiFi DensePose Architecture</h2>
+  <p class="subtitle">Show how WiFi signals can sense human poses — make the invisible visible</p>
+
+  <div class="comparison">
+    <div class="card" onclick="openLightbox(this)">
+      <img src="comparison/storytelling_ruview.png" alt="Storytelling: RuView">
+      <div class="info">
+        <div class="name">Our Storytelling Approach <span class="badge badge-ours">OURS</span></div>
+        <div class="score">Score: <strong>95/100</strong> — WiFi waves passing through a person with pose overlay</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="comparison/standard_ruview.png" alt="Standard: RuView">
+      <div class="info">
+        <div class="name">Standard Pipeline <span class="badge badge-standard">STANDARD</span></div>
+        <div class="score">Score: <strong>65/100</strong> — Opaque block diagram</div>
+      </div>
+    </div>
+  </div>
+  <p style="color:#22c55e; font-size:0.9rem; margin-top:0.75rem; font-weight:600;">Biggest improvement: +30 points. The hardest scenario to visualize — and where metaphors help most.</p>
+</div>
+
+<!-- SCENARIO 4 -->
+<div class="scenario">
+  <h2>Scenario 4: Pi — Collective Intelligence Concepts</h2>
+  <p class="subtitle">Explain abstract AI concepts (consensus, identity, collective intelligence) so people actually understand them</p>
+
+  <div class="comparison">
+    <div class="card" onclick="openLightbox(this)">
+      <img src="comparison/storytelling_pi.png" alt="Storytelling: Pi">
+      <div class="info">
+        <div class="name">Our Storytelling Approach <span class="badge badge-ours">OURS</span></div>
+        <div class="score">Score: <strong>92/100</strong> — "Knowledge City" with glowing districts</div>
+      </div>
+    </div>
+    <div class="card" onclick="openLightbox(this)">
+      <img src="comparison/standard_pi.png" alt="Standard: Pi">
+      <div class="info">
+        <div class="name">Standard Pipeline <span class="badge badge-standard">STANDARD</span></div>
+        <div class="score">Score: <strong>76/100</strong> — Abstract flowchart</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="close" onclick="closeLightbox(event)">&times;</button>
+  <img id="lightbox-img" src="" alt="">
+  <div class="caption" id="lightbox-caption"></div>
+</div>
+
+<script>
+function openLightbox(card) {
+  const img = card.querySelector('img');
+  const name = card.querySelector('.name')?.textContent || '';
+  const score = card.querySelector('.score')?.textContent || '';
+  document.getElementById('lightbox-img').src = img.src;
+  document.getElementById('lightbox-caption').textContent = name + ' — ' + score;
+  document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox(e) {
+  if (e.target === document.getElementById('lightbox') || e.target.classList.contains('close')) {
+    document.getElementById('lightbox').classList.remove('active');
+  }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('active'); });
+</script>
+
+</body>
+</html>

@@ -47,12 +47,26 @@ def parse_args():
     parser.add_argument("--output", type=str, default="output.png", help="Output image path (default: output.png)")
     parser.add_argument("--output-json", type=str, help="Also save full pipeline result as JSON")
 
+    # Quality presets
+    parser.add_argument(
+        "--quality",
+        type=str,
+        choices=["draft", "standard", "refined"],
+        default=None,
+        help=(
+            "Quality presets (overrides --mode, --critic-rounds, --candidates):\n"
+            "  draft    — Fast preview (~90s, ~$0.02). Skips storytelling.\n"
+            "  standard — Recommended (~2 min, ~$0.05). Full storytelling pipeline. [DEFAULT]\n"
+            "  refined  — Publication quality (~5 min, ~$0.15). Multiple candidates + reviews."
+        ),
+    )
+
     # Pipeline config
     parser.add_argument("--task", type=str, choices=["diagram", "plot"], default="diagram", help="Task type (default: diagram)")
-    parser.add_argument("--mode", type=str, choices=["demo_full", "demo_planner_critic", "vanilla"], default="demo_full", help="Pipeline mode (default: demo_full)")
+    parser.add_argument("--mode", type=str, choices=["demo_full", "demo_planner_critic", "vanilla"], default=None, help="Pipeline mode (default: demo_full)")
     parser.add_argument("--retrieval", type=str, choices=["auto", "manual", "random", "none"], default="none", help="Retrieval setting (default: none)")
-    parser.add_argument("--critic-rounds", type=int, default=3, help="Max critic refinement rounds (default: 3)")
-    parser.add_argument("--candidates", type=int, default=1, help="Number of parallel candidates to generate (default: 1)")
+    parser.add_argument("--critic-rounds", type=int, default=None, help="Max critic refinement rounds (default: 3)")
+    parser.add_argument("--candidates", type=int, default=None, help="Number of parallel candidates to generate (default: 1)")
     parser.add_argument("--aspect-ratio", type=str, default="16:9", help="Aspect ratio (default: 16:9)")
 
     # Model overrides
@@ -62,7 +76,36 @@ def parse_args():
     # Misc
     parser.add_argument("--quiet", action="store_true", help="Suppress progress output")
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    _apply_quality_preset(args)
+    return args
+
+
+# ── Quality preset definitions ───────────────────────────────────────────────
+QUALITY_PRESETS = {
+    "draft":    {"mode": "vanilla",   "critic_rounds": 0, "candidates": 1},
+    "standard": {"mode": "demo_full", "critic_rounds": 1, "candidates": 1},
+    "refined":  {"mode": "demo_full", "critic_rounds": 3, "candidates": 3},
+}
+
+
+def _apply_quality_preset(args):
+    """Resolve --quality presets and fill in defaults for unset flags.
+
+    Priority:
+      1. Explicit --mode / --critic-rounds / --candidates always win.
+      2. If --quality is given, its values fill any flags left at None.
+      3. If neither --quality nor explicit flags are set, use 'standard' preset.
+    """
+    preset_name = args.quality if args.quality else "standard"
+    preset = QUALITY_PRESETS[preset_name]
+
+    if args.mode is None:
+        args.mode = preset["mode"]
+    if args.critic_rounds is None:
+        args.critic_rounds = preset["critic_rounds"]
+    if args.candidates is None:
+        args.candidates = preset["candidates"]
 
 
 async def generate(args):
@@ -77,7 +120,8 @@ async def generate(args):
         content = args.content
 
     if not args.quiet:
-        print(f"Task: {args.task} | Mode: {args.mode} | Retrieval: {args.retrieval} | Critic rounds: {args.critic_rounds}")
+        quality_label = f" (quality={args.quality})" if args.quality else ""
+        print(f"Task: {args.task} | Mode: {args.mode}{quality_label} | Retrieval: {args.retrieval} | Critic rounds: {args.critic_rounds}")
         print(f"Candidates: {args.candidates} | Aspect ratio: {args.aspect_ratio}")
         print(f"Content length: {len(content)} chars")
         print(f"Caption: {args.caption[:80]}{'...' if len(args.caption) > 80 else ''}")
