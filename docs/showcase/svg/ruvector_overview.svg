@@ -1,178 +1,181 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" style="background-color: #0B1426; font-family: system-ui, -apple-system, sans-serif;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
   <defs>
-    <!-- Background Dot Pattern -->
-    <pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-      <circle cx="2" cy="2" r="1.5" fill="#FFFFFF" opacity="0.04"/>
-    </pattern>
-
-    <!-- Gradients -->
-    <linearGradient id="coreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F59E0B"/>
-      <stop offset="100%" stop-color="#EA580C"/>
-    </linearGradient>
-    
-    <linearGradient id="apiGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#1E3A8A" stop-opacity="0.9"/>
-      <stop offset="100%" stop-color="#312E81" stop-opacity="0.9"/>
+    <!-- Background Gradient -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1426" />
+      <stop offset="100%" stop-color="#0F172A" />
     </linearGradient>
 
-    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.2"/>
-      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
-    </radialGradient>
-
-    <!-- Drop Shadow Filter -->
+    <!-- Drop Shadow for Boxes -->
     <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.5"/>
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.4" />
     </filter>
     
-    <filter id="lightShadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.3"/>
+    <!-- Subtle Glow for Engine Core -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="15" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
 
-    <!-- Arrowhead Marker -->
-    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#60A5FA"/>
+    <!-- Markers for Arrows -->
+    <marker id="arrow-left-amber" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 10 0 L 0 5 L 10 10 z" fill="#F59E0B" />
+    </marker>
+    <marker id="arrow-right-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E0B" />
+    </marker>
+    <marker id="arrow-down-slate" viewBox="0 0 10 10" refX="5" refY="8" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 0 L 5 10 z" fill="#475569" />
     </marker>
   </defs>
 
   <!-- Background -->
-  <rect width="1200" height="800" fill="#0B1426"/>
-  <rect width="1200" height="800" fill="url(#dots)"/>
-  
-  <!-- Center Glow -->
-  <rect x="300" y="100" width="600" height="600" fill="url(#coreGlow)" pointer-events="none"/>
+  <rect width="1200" height="800" fill="url(#bg-grad)" />
 
-  <!-- HEADER SECTION -->
-  <g text-anchor="middle">
-    <text x="600" y="65" font-size="28" font-weight="800" fill="#F8FAFC" letter-spacing="0.5">RuVector: The Universal Vector Database Engine</text>
-    <text x="600" y="98" font-size="16" fill="#94A3B8">A high-performance engine acting like a semantic librarian—understanding the meaning of data</text>
-    <text x="600" y="122" font-size="16" fill="#94A3B8">to power six distinct application patterns through one unified API.</text>
+  <!-- HEADER / CORE INSIGHT -->
+  <g id="header" transform="translate(100, 30)">
+    <rect width="1000" height="100" rx="12" fill="#1E293B" fill-opacity="0.6" stroke="#334155" stroke-width="1" filter="url(#shadow)" />
+    <text x="500" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="26" font-weight="bold" fill="#F8FAFC">RuVector: The Semantic Database Engine</text>
+    <text x="500" y="65" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F59E0B">Core Insight: Think of RuVector as a librarian who understands what every book is ABOUT.</text>
+    <text x="500" y="88" text-anchor="middle" font-family="system-ui, sans-serif" font-size="15" fill="#94A3B8">It uses meaning—not keywords—to power six distinct application types from one unified core.</text>
   </g>
 
-  <!-- CENTRAL HUB (API + CORE) -->
-  <g transform="translate(0, 0)">
-    <!-- API Layer (Outer Wrapper) -->
-    <rect x="400" y="220" width="400" height="380" rx="24" fill="url(#apiGrad)" stroke="#3B82F6" stroke-width="2" stroke-dasharray="8 8" filter="url(#shadow)"/>
-    <text x="600" y="255" font-size="18" font-weight="bold" fill="#60A5FA" text-anchor="middle" letter-spacing="1">Unified API Layer</text>
-    <text x="600" y="275" font-size="14" fill="#CBD5E1" text-anchor="middle">Adapts engine behavior dynamically per application pattern</text>
+  <!-- ========================================== -->
+  <!-- CENTRAL ENGINE CORE                        -->
+  <!-- ========================================== -->
+  <g id="engine-core" transform="translate(420, 160)">
+    <!-- Main Engine Container -->
+    <rect width="360" height="590" rx="16" fill="#111827" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)" />
+    
+    <!-- Engine Header -->
+    <text x="180" y="40" text-anchor="middle" font-family="system-ui, sans-serif" font-size="22" font-weight="bold" fill="#F8FAFC">RuVector Core Engine</text>
+    <text x="180" y="65" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Billions of vectors • Sub-millisecond latency</text>
 
-    <!-- Core Engine (Inner Wrapper) -->
-    <rect x="430" y="300" width="340" height="270" rx="16" fill="url(#coreGrad)" filter="url(#shadow)"/>
-    <text x="600" y="340" font-size="22" font-weight="bold" fill="#FFFFFF" text-anchor="middle">RuVector Core Engine</text>
-    <text x="600" y="362" font-size="14" fill="#FFFBEB" text-anchor="middle" opacity="0.9">One Centralized Brain. Six Capabilities.</text>
-
-    <!-- Core Engine Internal Layers -->
-    <g transform="translate(450, 390)">
-      <rect x="0" y="0" width="300" height="44" rx="8" fill="#FFFFFF" fill-opacity="0.15" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1"/>
-      <text x="150" y="27" font-size="15" font-weight="bold" fill="#FFFBEB" text-anchor="middle">HNSW Indexing Layer</text>
-      
-      <rect x="0" y="60" width="300" height="44" rx="8" fill="#FFFFFF" fill-opacity="0.15" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1"/>
-      <text x="150" y="87" font-size="15" font-weight="bold" fill="#FFFBEB" text-anchor="middle">Billion-Scale Vector Storage</text>
-      
-      <rect x="0" y="120" width="300" height="44" rx="8" fill="#FFFFFF" fill-opacity="0.15" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1"/>
-      <text x="150" y="147" font-size="15" font-weight="bold" fill="#FFFBEB" text-anchor="middle">Sub-millisecond Execution</text>
+    <!-- Layer 1: Unified API -->
+    <g transform="translate(20, 90)">
+      <rect width="320" height="80" rx="8" fill="#1E293B" stroke="#F59E0B" stroke-width="1" filter="url(#shadow)"/>
+      <text x="160" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F59E0B">Unified API</text>
+      <text x="160" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#E2E8F0">Adapts query behavior per application pattern</text>
     </g>
 
-    <!-- API Connection Points (Left) -->
-    <circle cx="400" cy="340" r="6" fill="#0B1426" stroke="#60A5FA" stroke-width="2"/>
-    <circle cx="400" cy="410" r="6" fill="#0B1426" stroke="#60A5FA" stroke-width="2"/>
-    <circle cx="400" cy="480" r="6" fill="#0B1426" stroke="#60A5FA" stroke-width="2"/>
+    <!-- Internal Flow Arrow 1 -->
+    <line x1="180" y1="170" x2="180" y2="195" stroke="#475569" stroke-width="2" marker-end="url(#arrow-down-slate)" />
 
-    <!-- API Connection Points (Right) -->
-    <circle cx="800" cy="340" r="6" fill="#0B1426" stroke="#60A5FA" stroke-width="2"/>
-    <circle cx="800" cy="410" r="6" fill="#0B1426" stroke="#60A5FA" stroke-width="2"/>
-    <circle cx="800" cy="480" r="6" fill="#0B1426" stroke="#60A5FA" stroke-width="2"/>
+    <!-- Layer 2: Execution Engine -->
+    <g transform="translate(20, 200)">
+      <rect width="320" height="80" rx="8" fill="#1E293B" stroke="#475569" stroke-width="1" filter="url(#shadow)"/>
+      <text x="160" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC">Execution Engine</text>
+      <text x="160" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Distributes queries across high-perf clusters</text>
+    </g>
+
+    <!-- Internal Flow Arrow 2 -->
+    <line x1="180" y1="280" x2="180" y2="305" stroke="#475569" stroke-width="2" marker-end="url(#arrow-down-slate)" />
+
+    <!-- Layer 3: HNSW Indexing -->
+    <g transform="translate(20, 310)">
+      <rect width="320" height="80" rx="8" fill="#1E293B" stroke="#475569" stroke-width="1" filter="url(#shadow)"/>
+      <text x="160" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC">HNSW Indexing</text>
+      <text x="160" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Navigates high-dimensional space instantly</text>
+    </g>
+
+    <!-- Internal Flow Arrow 3 -->
+    <line x1="180" y1="390" x2="180" y2="415" stroke="#475569" stroke-width="2" marker-end="url(#arrow-down-slate)" />
+
+    <!-- Layer 4: Vector Storage -->
+    <g transform="translate(20, 420)">
+      <rect width="320" height="80" rx="8" fill="#1E293B" stroke="#475569" stroke-width="1" filter="url(#shadow)"/>
+      <text x="160" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC">Vector Storage</text>
+      <text x="160" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Persists dense embeddings with high I/O</text>
+    </g>
   </g>
 
-  <!-- CONNECTION FLOWS (ARROWS) -->
-  <g fill="none" stroke="#60A5FA" stroke-width="2.5" marker-end="url(#arrow)">
-    <!-- Left Flows -->
-    <path d="M 396 340 C 350 340, 360 270, 322 270"/>
-    <path d="M 396 410 L 322 410"/>
-    <path d="M 396 480 C 350 480, 360 550, 322 550"/>
+  <!-- ========================================== -->
+  <!-- FLOW ROUTING (BUS LINES)                   -->
+  <!-- ========================================== -->
+  <g id="flow-lines">
+    <!-- LEFT BUS -->
+    <!-- Trunk -->
+    <path d="M 420 290 L 390 290 L 390 620" fill="none" stroke="#F59E0B" stroke-width="2" />
+    <!-- Branches -->
+    <line x1="420" y1="290" x2="275" y2="290" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow-left-amber)" />
+    <line x1="390" y1="455" x2="275" y2="455" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow-left-amber)" />
+    <line x1="390" y1="620" x2="275" y2="620" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow-left-amber)" />
     
-    <!-- Right Flows -->
-    <path d="M 804 340 C 850 340, 840 270, 878 270"/>
-    <path d="M 804 410 L 878 410"/>
-    <path d="M 804 480 C 850 480, 840 550, 878 550"/>
+    <!-- Left Flow Labels -->
+    <text x="330" y="280" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#E2E8F0">Semantic Queries</text>
+    <text x="330" y="445" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#E2E8F0">Distance Metrics</text>
+    <text x="330" y="610" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#E2E8F0">Context Retrieval</text>
+
+    <!-- RIGHT BUS -->
+    <!-- Trunk -->
+    <path d="M 780 290 L 810 290 L 810 620" fill="none" stroke="#F59E0B" stroke-width="2" />
+    <!-- Branches -->
+    <line x1="780" y1="290" x2="925" y2="290" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow-right-amber)" />
+    <line x1="810" y1="455" x2="925" y2="455" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow-right-amber)" />
+    <line x1="810" y1="620" x2="925" y2="620" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow-right-amber)" />
+
+    <!-- Right Flow Labels -->
+    <text x="870" y="280" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#E2E8F0">Behavior Vectors</text>
+    <text x="870" y="445" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#E2E8F0">Relationship Data</text>
+    <text x="870" y="610" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#E2E8F0">Instant Updates</text>
   </g>
 
-  <!-- FLOW LABELS (With stroke-based background for legibility) -->
-  <g font-size="13" font-weight="bold" fill="#38BDF8" text-anchor="middle" paint-order="stroke fill" stroke="#0B1426" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
-    <text x="355" y="295">Semantic Queries</text>
-    <text x="355" y="402">Similarity Matching</text>
-    <text x="355" y="525">Distance Metrics</text>
-    
-    <text x="845" y="295">Context Retrieval</text>
-    <text x="845" y="402">Relationship Maps</text>
-    <text x="845" y="525">Live Embeddings</text>
+  <!-- ========================================== -->
+  <!-- LEFT APPLICATIONS                          -->
+  <!-- ========================================== -->
+  <g id="apps-left">
+    <!-- App 1: Semantic Search -->
+    <g transform="translate(30, 235)">
+      <rect width="240" height="110" rx="8" fill="#1E293B" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)" />
+      <text x="120" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC">Semantic Search</text>
+      <text x="120" y="65" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Find content by meaning,</text>
+      <text x="120" y="87" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">not exact keywords.</text>
+    </g>
+
+    <!-- App 2: Anomaly Detection -->
+    <g transform="translate(30, 400)">
+      <rect width="240" height="110" rx="8" fill="#1E293B" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)" />
+      <text x="120" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC">Anomaly Detection</text>
+      <text x="120" y="65" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Spot structural outliers</text>
+      <text x="120" y="87" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">in high-dimensional data.</text>
+    </g>
+
+    <!-- App 3: RAG Pipelines -->
+    <g transform="translate(30, 565)">
+      <rect width="240" height="110" rx="8" fill="#1E293B" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)" />
+      <text x="120" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC">RAG Pipelines</text>
+      <text x="120" y="65" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Ground LLM responses</text>
+      <text x="120" y="87" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">in real enterprise data.</text>
+    </g>
   </g>
 
-  <!-- APPLICATION NODES (LEFT) -->
-  <!-- Node 1: Semantic Search -->
-  <g transform="translate(40, 220)">
-    <rect x="0" y="0" width="270" height="100" rx="12" fill="#1E293B" stroke="#334155" stroke-width="2" filter="url(#lightShadow)"/>
-    <circle cx="20" cy="28" r="7" fill="#38BDF8"/>
-    <text x="38" y="34" font-size="18" font-weight="bold" fill="#F8FAFC">Semantic Search</text>
-    <text x="38" y="60" font-size="14" fill="#CBD5E1">Find content by meaning,</text>
-    <text x="38" y="80" font-size="14" fill="#CBD5E1">not rigid keywords</text>
-  </g>
+  <!-- ========================================== -->
+  <!-- RIGHT APPLICATIONS                         -->
+  <!-- ========================================== -->
+  <g id="apps-right">
+    <!-- App 4: Recommendations -->
+    <g transform="translate(930, 235)">
+      <rect width="240" height="110" rx="8" fill="#1E293B" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)" />
+      <text x="120" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC">Recommendations</text>
+      <text x="120" y="65" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Match users to items based</text>
+      <text x="120" y="87" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">on behavioral similarity.</text>
+    </g>
 
-  <!-- Node 2: Recommendations -->
-  <g transform="translate(40, 360)">
-    <rect x="0" y="0" width="270" height="100" rx="12" fill="#1E293B" stroke="#334155" stroke-width="2" filter="url(#lightShadow)"/>
-    <circle cx="20" cy="28" r="7" fill="#38BDF8"/>
-    <text x="38" y="34" font-size="18" font-weight="bold" fill="#F8FAFC">Recommendations</text>
-    <text x="38" y="60" font-size="14" fill="#CBD5E1">Match users to items based</text>
-    <text x="38" y="80" font-size="14" fill="#CBD5E1">on deep behavioral similarity</text>
-  </g>
+    <!-- App 5: Knowledge Graphs -->
+    <g transform="translate(930, 400)">
+      <rect width="240" height="110" rx="8" fill="#1E293B" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)" />
+      <text x="120" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC">Knowledge Graphs</text>
+      <text x="120" y="65" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Map semantic relationships</text>
+      <text x="120" y="87" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">between concepts.</text>
+    </g>
 
-  <!-- Node 3: Anomaly Detection -->
-  <g transform="translate(40, 500)">
-    <rect x="0" y="0" width="270" height="100" rx="12" fill="#1E293B" stroke="#334155" stroke-width="2" filter="url(#lightShadow)"/>
-    <circle cx="20" cy="28" r="7" fill="#38BDF8"/>
-    <text x="38" y="34" font-size="18" font-weight="bold" fill="#F8FAFC">Anomaly Detection</text>
-    <text x="38" y="60" font-size="14" fill="#CBD5E1">Spot structural outliers in</text>
-    <text x="38" y="80" font-size="14" fill="#CBD5E1">high-dimensional data streams</text>
-  </g>
-
-  <!-- APPLICATION NODES (RIGHT) -->
-  <!-- Node 4: RAG Pipelines -->
-  <g transform="translate(890, 220)">
-    <rect x="0" y="0" width="270" height="100" rx="12" fill="#1E293B" stroke="#334155" stroke-width="2" filter="url(#lightShadow)"/>
-    <circle cx="20" cy="28" r="7" fill="#38BDF8"/>
-    <text x="38" y="34" font-size="18" font-weight="bold" fill="#F8FAFC">RAG Pipelines</text>
-    <text x="38" y="60" font-size="14" fill="#CBD5E1">Ground LLM responses in</text>
-    <text x="38" y="80" font-size="14" fill="#CBD5E1">real enterprise data</text>
-  </g>
-
-  <!-- Node 5: Knowledge Graphs -->
-  <g transform="translate(890, 360)">
-    <rect x="0" y="0" width="270" height="100" rx="12" fill="#1E293B" stroke="#334155" stroke-width="2" filter="url(#lightShadow)"/>
-    <circle cx="20" cy="28" r="7" fill="#38BDF8"/>
-    <text x="38" y="34" font-size="18" font-weight="bold" fill="#F8FAFC">Knowledge Graphs</text>
-    <text x="38" y="60" font-size="14" fill="#CBD5E1">Map complex semantic</text>
-    <text x="38" y="80" font-size="14" fill="#CBD5E1">relationships between concepts</text>
-  </g>
-
-  <!-- Node 6: Real-time Personalization -->
-  <g transform="translate(890, 500)">
-    <rect x="0" y="0" width="270" height="100" rx="12" fill="#1E293B" stroke="#334155" stroke-width="2" filter="url(#lightShadow)"/>
-    <circle cx="20" cy="28" r="7" fill="#38BDF8"/>
-    <text x="38" y="34" font-size="18" font-weight="bold" fill="#F8FAFC">Real-time Personalization</text>
-    <text x="38" y="60" font-size="14" fill="#CBD5E1">Adapt user experiences</text>
-    <text x="38" y="80" font-size="14" fill="#CBD5E1">instantly based on behavior</text>
-  </g>
-
-  <!-- BOTTOM CORE INSIGHT BOX -->
-  <g transform="translate(200, 660)">
-    <rect x="0" y="0" width="800" height="90" rx="16" fill="#1E293B" stroke="#F59E0B" stroke-width="1.5" filter="url(#shadow)"/>
-    <circle cx="50" cy="45" r="16" fill="#F59E0B" opacity="0.2"/>
-    <text x="50" y="51" text-anchor="middle" font-size="22" fill="#F59E0B" font-weight="bold">!</text>
-    <text x="80" y="38" font-size="18" font-weight="bold" fill="#F8FAFC">The Core Insight: Think of RuVector as a semantic librarian.</text>
-    <text x="80" y="62" font-size="15" fill="#CBD5E1">Instead of matching exact keywords, it understands what your data is <tspan font-weight="bold" fill="#F59E0B">ABOUT</tspan>,</text>
-    <text x="80" y="82" font-size="15" fill="#CBD5E1">powering entirely different applications from the same underlying meaning.</text>
+    <!-- App 6: Real-time Personalization -->
+    <g transform="translate(930, 565)">
+      <rect width="240" height="110" rx="8" fill="#1E293B" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)" />
+      <text x="120" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC">Real-time Personalization</text>
+      <text x="120" y="65" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Adapt user experiences</text>
+      <text x="120" y="87" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">instantly based on behavior.</text>
+    </g>
   </g>
 
 </svg>
