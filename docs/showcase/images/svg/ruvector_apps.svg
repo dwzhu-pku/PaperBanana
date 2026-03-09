@@ -1,0 +1,272 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="1200">
+  <defs>
+    <!-- Background Grid Pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E293B" stroke-width="0.5" opacity="0.4"/>
+    </pattern>
+
+    <!-- Drop Shadows -->
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Core Gradients -->
+    <linearGradient id="topFaceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.2" />
+    </linearGradient>
+    <linearGradient id="leftFaceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#0B1426" stop-opacity="0.6" />
+    </linearGradient>
+    <linearGradient id="rightFaceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#0B1426" stop-opacity="0.6" />
+    </linearGradient>
+
+    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+      <stop offset="30%" stop-color="#2DD4BF" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#2DD4BF" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Color-coded beam gradients matching each app -->
+    <linearGradient id="beam1Grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2DD4BF" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+    <linearGradient id="beam2Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2DD4BF" />
+      <stop offset="100%" stop-color="#FBBF24" />
+    </linearGradient>
+    <linearGradient id="beam3Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF" />
+      <stop offset="100%" stop-color="#F472B6" />
+    </linearGradient>
+    <linearGradient id="beam4Grad" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF" />
+      <stop offset="100%" stop-color="#A78BFA" />
+    </linearGradient>
+    <linearGradient id="beam5Grad" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#2DD4BF" />
+      <stop offset="100%" stop-color="#34D399" />
+    </linearGradient>
+    <linearGradient id="beam6Grad" x1="100%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#2DD4BF" />
+      <stop offset="100%" stop-color="#FB7185" />
+    </linearGradient>
+
+    <!-- Pill gradient for Unified API badge -->
+    <linearGradient id="pillGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2DD4BF" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.25" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#0B1426" />
+  <rect width="1200" height="800" fill="url(#grid)" />
+
+  <!-- ========================================== -->
+  <!-- COLOR-CODED BEAMS (PRISM ENERGY PATHWAYS)  -->
+  <!-- ========================================== -->
+  <g id="beams" fill="none" stroke-linecap="round">
+    <!-- Beam 1: Semantic Search (Ice Blue) -->
+    <path d="M 600 400 C 660 320, 710 180, 780 180" stroke="url(#beam1Grad)" stroke-width="12" opacity="0.12" />
+    <path d="M 600 400 C 660 320, 710 180, 780 180" stroke="url(#beam1Grad)" stroke-width="3" opacity="0.85" />
+    <path d="M 600 400 C 660 320, 710 180, 780 180" stroke="#38BDF8" stroke-width="1" opacity="0.5" />
+
+    <!-- Beam 2: Recommendations (Warm Sand) -->
+    <path d="M 600 400 C 700 350, 840 350, 940 400" stroke="url(#beam2Grad)" stroke-width="12" opacity="0.12" />
+    <path d="M 600 400 C 700 350, 840 350, 940 400" stroke="url(#beam2Grad)" stroke-width="3" opacity="0.85" />
+    <path d="M 600 400 C 700 350, 840 350, 940 400" stroke="#FBBF24" stroke-width="1" opacity="0.5" />
+
+    <!-- Beam 3: Anomaly Detection (Soft Pink) -->
+    <path d="M 600 400 C 660 480, 710 620, 780 620" stroke="url(#beam3Grad)" stroke-width="12" opacity="0.12" />
+    <path d="M 600 400 C 660 480, 710 620, 780 620" stroke="url(#beam3Grad)" stroke-width="3" opacity="0.85" />
+    <path d="M 600 400 C 660 480, 710 620, 780 620" stroke="#F472B6" stroke-width="1" opacity="0.5" />
+
+    <!-- Beam 4: Knowledge Graphs (Lavender) -->
+    <path d="M 600 400 C 540 480, 490 620, 420 620" stroke="url(#beam4Grad)" stroke-width="12" opacity="0.12" />
+    <path d="M 600 400 C 540 480, 490 620, 420 620" stroke="url(#beam4Grad)" stroke-width="3" opacity="0.85" />
+    <path d="M 600 400 C 540 480, 490 620, 420 620" stroke="#A78BFA" stroke-width="1" opacity="0.5" />
+
+    <!-- Beam 5: RAG Pipelines (Mint) -->
+    <path d="M 600 400 C 500 450, 360 450, 260 400" stroke="url(#beam5Grad)" stroke-width="12" opacity="0.12" />
+    <path d="M 600 400 C 500 450, 360 450, 260 400" stroke="url(#beam5Grad)" stroke-width="3" opacity="0.85" />
+    <path d="M 600 400 C 500 450, 360 450, 260 400" stroke="#34D399" stroke-width="1" opacity="0.5" />
+
+    <!-- Beam 6: Personalization (Soft Coral) -->
+    <path d="M 600 400 C 540 320, 490 180, 420 180" stroke="url(#beam6Grad)" stroke-width="12" opacity="0.12" />
+    <path d="M 600 400 C 540 320, 490 180, 420 180" stroke="url(#beam6Grad)" stroke-width="3" opacity="0.85" />
+    <path d="M 600 400 C 540 320, 490 180, 420 180" stroke="#FB7185" stroke-width="1" opacity="0.5" />
+  </g>
+
+  <!-- ========================================== -->
+  <!-- CENTRAL ENGINE HUB (RUVECTOR CORE)         -->
+  <!-- ========================================== -->
+  <g id="core_hexagon" filter="url(#dropShadow)">
+    <!-- Central Energy Source -->
+    <circle cx="600" cy="400" r="45" fill="url(#centerGlow)" />
+
+    <!-- Vector Matrix Interior -->
+    <g id="matrix_interior" stroke="#94A3B8" stroke-width="0.75" opacity="0.5">
+      <path d="M 600 300 L 650 330 L 550 330 Z" fill="none" />
+      <path d="M 650 330 L 680 350 L 600 360 L 520 350 L 550 330" fill="none" />
+      <path d="M 680 350 L 640 380 L 560 380 L 520 350" fill="none" />
+      <path d="M 600 360 L 640 380 M 600 360 L 560 380" fill="none" />
+      <path d="M 640 380 L 600 400 L 560 380" fill="none" />
+      <path d="M 650 330 L 650 430 M 550 330 L 550 430 M 600 360 L 600 480 M 680 350 L 680 410 M 520 350 L 520 410" stroke-dasharray="2 2" />
+      <g fill="#FFFFFF" stroke="none" opacity="0.8">
+        <circle cx="600" cy="300" r="1.5" />
+        <circle cx="650" cy="330" r="1.5" />
+        <circle cx="550" cy="330" r="1.5" />
+        <circle cx="680" cy="350" r="1.5" />
+        <circle cx="520" cy="350" r="1.5" />
+        <circle cx="600" cy="360" r="1.5" />
+        <circle cx="640" cy="380" r="1.5" />
+        <circle cx="560" cy="380" r="1.5" />
+        <circle cx="600" cy="400" r="2.5" fill="#2DD4BF" />
+        <circle cx="650" cy="430" r="1" />
+        <circle cx="550" cy="430" r="1" />
+        <circle cx="600" cy="480" r="1.5" />
+        <circle cx="680" cy="410" r="1" />
+        <circle cx="520" cy="410" r="1" />
+      </g>
+    </g>
+
+    <!-- Isometric Hexagon Faces -->
+    <path d="M 600 400 L 721 330 L 600 260 L 479 330 Z" fill="url(#topFaceGrad)" stroke="#2DD4BF" stroke-width="2" stroke-linejoin="round" />
+    <path d="M 600 400 L 721 330 L 721 470 L 600 540 Z" fill="url(#rightFaceGrad)" stroke="#2DD4BF" stroke-width="2" stroke-linejoin="round" />
+    <path d="M 600 400 L 479 330 L 479 470 L 600 540 Z" fill="url(#leftFaceGrad)" stroke="#2DD4BF" stroke-width="2" stroke-linejoin="round" />
+
+    <!-- Surface Reflections -->
+    <path d="M 490 336 L 590 278" stroke="#FFFFFF" stroke-width="1.5" opacity="0.4" stroke-linecap="round" />
+    <path d="M 710 336 L 610 394" stroke="#FFFFFF" stroke-width="1" opacity="0.2" stroke-linecap="round" />
+  </g>
+
+  <!-- Core Label: RuVector Core pill -->
+  <g transform="translate(530, 485)" filter="url(#dropShadow)">
+    <rect x="0" y="0" width="140" height="32" rx="16" fill="#0B1426" stroke="#2DD4BF" stroke-width="1.5" opacity="0.95" />
+    <text x="70" y="21" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="bold" font-family="system-ui, -apple-system, sans-serif" letter-spacing="0.5">RuVector Core</text>
+  </g>
+
+  <!-- Tagline under core -->
+  <text x="600" y="536" text-anchor="middle" fill="#94A3B8" font-size="11" font-family="system-ui, -apple-system, sans-serif" letter-spacing="0.3">Billions of vectors, sub-ms latency</text>
+
+  <!-- HNSW Badge (top-left of core) -->
+  <g transform="translate(470, 268)">
+    <rect x="0" y="0" width="52" height="20" rx="10" fill="#1E293B" stroke="#7C3AED" stroke-width="1" opacity="0.9" />
+    <text x="26" y="14" text-anchor="middle" fill="#A78BFA" font-size="10" font-weight="bold" font-family="system-ui, -apple-system, sans-serif" letter-spacing="0.8">HNSW</text>
+  </g>
+
+  <!-- Unified API Badge (prominent pill, right side of core) -->
+  <g transform="translate(725, 385)">
+    <rect x="0" y="0" width="116" height="30" rx="15" fill="url(#pillGrad)" stroke="#2DD4BF" stroke-width="1.5" filter="url(#softGlow)" />
+    <circle cx="18" cy="15" r="4" fill="#2DD4BF" opacity="0.8" />
+    <text x="66" y="20" text-anchor="middle" fill="#E2E8F0" font-size="13" font-weight="600" font-family="system-ui, -apple-system, sans-serif" letter-spacing="0.5">Unified API</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- APPLICATION NODES                           -->
+  <!-- ========================================== -->
+
+  <!-- Node 1: Semantic Search (Top Right) -->
+  <g transform="translate(780, 180)">
+    <circle cx="0" cy="0" r="72" fill="none" stroke="#38BDF8" stroke-width="2" stroke-dasharray="5 5" opacity="0.5" />
+    <circle cx="0" cy="0" r="60" fill="#38BDF8" fill-opacity="0.15" stroke="#38BDF8" stroke-width="1.5" filter="url(#glow)" />
+    <g transform="translate(0, -18)">
+      <path d="M -15 -15 L 5 -15 L 5 5 L -15 5 Z" fill="none" stroke="#38BDF8" stroke-width="1.5" />
+      <line x1="-10" y1="-10" x2="0" y2="-10" stroke="#38BDF8" stroke-width="1.5" />
+      <line x1="-10" y1="-5" x2="0" y2="-5" stroke="#38BDF8" stroke-width="1.5" />
+      <circle cx="5" cy="5" r="8" fill="#0B1426" stroke="#38BDF8" stroke-width="2" />
+      <line x1="11" y1="11" x2="17" y2="17" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round" />
+    </g>
+    <text x="0" y="20" text-anchor="middle" fill="#E2E8F0" font-size="13" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Semantic Search</text>
+    <text x="0" y="36" text-anchor="middle" fill="#64748B" font-size="11" font-family="system-ui, -apple-system, sans-serif">Find by meaning, not keywords</text>
+  </g>
+
+  <!-- Node 2: Recommendations (Right) -->
+  <g transform="translate(940, 400)">
+    <circle cx="0" cy="0" r="72" fill="none" stroke="#FBBF24" stroke-width="2" stroke-dasharray="5 5" opacity="0.5" />
+    <circle cx="0" cy="0" r="60" fill="#FBBF24" fill-opacity="0.15" stroke="#FBBF24" stroke-width="1.5" filter="url(#glow)" />
+    <g transform="translate(0, -18)">
+      <path d="M 0 -15 Q 0 0 15 0 Q 0 0 0 15 Q 0 0 -15 0 Q 0 0 0 -15 Z" fill="#FBBF24" />
+      <path d="M -18 -18 Q -18 -10 -10 -10 Q -18 -10 -18 -2 Q -18 -10 -26 -10 Q -18 -10 -18 -18 Z" fill="#FBBF24" opacity="0.8" />
+      <path d="M 16 10 Q 16 15 21 15 Q 16 15 16 20 Q 16 15 11 15 Q 16 15 16 10 Z" fill="#FBBF24" opacity="0.6" />
+    </g>
+    <text x="0" y="20" text-anchor="middle" fill="#E2E8F0" font-size="13" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Recommendations</text>
+    <text x="0" y="36" text-anchor="middle" fill="#64748B" font-size="11" font-family="system-ui, -apple-system, sans-serif">Surface what users want next</text>
+  </g>
+
+  <!-- Node 3: Anomaly Detection (Bottom Right) -->
+  <g transform="translate(780, 620)">
+    <circle cx="0" cy="0" r="72" fill="none" stroke="#F472B6" stroke-width="2" stroke-dasharray="5 5" opacity="0.5" />
+    <circle cx="0" cy="0" r="60" fill="#F472B6" fill-opacity="0.15" stroke="#F472B6" stroke-width="1.5" filter="url(#glow)" />
+    <g transform="translate(0, -18)">
+      <path d="M -20 10 C -10 10, -5 -15, 5 -15 C 15 -15, 20 10, 30 10" fill="none" stroke="#F472B6" stroke-width="2" />
+      <circle cx="5" cy="-15" r="3" fill="#0B1426" stroke="#F472B6" stroke-width="1.5" />
+      <circle cx="-5" cy="-28" r="4.5" fill="#F472B6" filter="url(#glow)" />
+      <line x1="-5" y1="-22" x2="2" y2="-15" stroke="#F472B6" stroke-width="1" stroke-dasharray="2 2" />
+    </g>
+    <text x="0" y="20" text-anchor="middle" fill="#E2E8F0" font-size="13" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Anomaly Detection</text>
+    <text x="0" y="36" text-anchor="middle" fill="#64748B" font-size="11" font-family="system-ui, -apple-system, sans-serif">Spot outliers in real time</text>
+  </g>
+
+  <!-- Node 4: Knowledge Graphs (Bottom Left) -->
+  <g transform="translate(420, 620)">
+    <circle cx="0" cy="0" r="72" fill="none" stroke="#A78BFA" stroke-width="2" stroke-dasharray="5 5" opacity="0.5" />
+    <circle cx="0" cy="0" r="60" fill="#A78BFA" fill-opacity="0.15" stroke="#A78BFA" stroke-width="1.5" filter="url(#glow)" />
+    <g transform="translate(0, -18)">
+      <path d="M 0 -20 L -15 5 L 15 5 Z" fill="none" stroke="#A78BFA" stroke-width="1.5" />
+      <path d="M 0 -5 L 0 -20 M 0 -5 L -15 5 M 0 -5 L 15 5" fill="none" stroke="#A78BFA" stroke-width="1.5" opacity="0.6" />
+      <circle cx="0" cy="-20" r="4" fill="#A78BFA" />
+      <circle cx="-15" cy="5" r="4" fill="#A78BFA" />
+      <circle cx="15" cy="5" r="4" fill="#A78BFA" />
+      <circle cx="0" cy="-5" r="3" fill="#A78BFA" />
+    </g>
+    <text x="0" y="20" text-anchor="middle" fill="#E2E8F0" font-size="13" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Knowledge Graphs</text>
+    <text x="0" y="36" text-anchor="middle" fill="#64748B" font-size="11" font-family="system-ui, -apple-system, sans-serif">Connect entities and relations</text>
+  </g>
+
+  <!-- Node 5: RAG Pipelines (Left) -->
+  <g transform="translate(260, 400)">
+    <circle cx="0" cy="0" r="72" fill="none" stroke="#34D399" stroke-width="2" stroke-dasharray="5 5" opacity="0.5" />
+    <circle cx="0" cy="0" r="60" fill="#34D399" fill-opacity="0.15" stroke="#34D399" stroke-width="1.5" filter="url(#glow)" />
+    <g transform="translate(0, -18)">
+      <path d="M -15 -15 L 2 -15 L 2 5 L -15 5 Z" fill="none" stroke="#34D399" stroke-width="2" />
+      <circle cx="8" cy="0" r="7" fill="#0B1426" stroke="#34D399" stroke-width="2" />
+      <path d="M 8 -10 L 8 -7 M 8 7 L 8 10 M -2 0 L 1 0 M 15 0 L 18 0 M 1 -7 L 3 -5 M 13 5 L 15 7 M 13 -7 L 15 -5 M 1 5 L 3 7" stroke="#34D399" stroke-width="1.5" />
+      <circle cx="8" cy="0" r="2" fill="#34D399" />
+    </g>
+    <text x="0" y="20" text-anchor="middle" fill="#E2E8F0" font-size="13" font-weight="600" font-family="system-ui, -apple-system, sans-serif">RAG Pipelines</text>
+    <text x="0" y="36" text-anchor="middle" fill="#64748B" font-size="11" font-family="system-ui, -apple-system, sans-serif">Ground LLMs in your data</text>
+  </g>
+
+  <!-- Node 6: Personalization (Top Left) -->
+  <g transform="translate(420, 180)">
+    <circle cx="0" cy="0" r="72" fill="none" stroke="#FB7185" stroke-width="2" stroke-dasharray="5 5" opacity="0.5" />
+    <circle cx="0" cy="0" r="60" fill="#FB7185" fill-opacity="0.15" stroke="#FB7185" stroke-width="1.5" filter="url(#glow)" />
+    <g transform="translate(0, -18)">
+      <circle cx="-10" cy="-10" r="5" fill="none" stroke="#FB7185" stroke-width="2" />
+      <path d="M -20 5 C -20 -3, 0 -3, 0 5" fill="none" stroke="#FB7185" stroke-width="2" />
+      <line x1="8" y1="-8" x2="24" y2="-8" stroke="#FB7185" stroke-width="1.5" stroke-linecap="round" />
+      <circle cx="18" cy="-8" r="2.5" fill="#FB7185" />
+      <line x1="8" y1="0" x2="24" y2="0" stroke="#FB7185" stroke-width="1.5" stroke-linecap="round" />
+      <circle cx="12" cy="0" r="2.5" fill="#FB7185" />
+    </g>
+    <text x="0" y="20" text-anchor="middle" fill="#E2E8F0" font-size="13" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Personalization</text>
+    <text x="0" y="36" text-anchor="middle" fill="#64748B" font-size="11" font-family="system-ui, -apple-system, sans-serif">Tailor every user experience</text>
+  </g>
+
+</svg>

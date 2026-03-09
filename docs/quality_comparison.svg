@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" font-family="system-ui, -apple-system, sans-serif">
+  <title>Quality Score Comparison: Storytelling vs Standard Approach</title>
+  <desc>Bar chart comparing storytelling pipeline (93.5 avg) vs standard pipeline (71.75 avg) across 4 scenarios</desc>
+
+  <!-- Background -->
+  <rect width="720" height="380" fill="#fafbfc" rx="8"/>
+
+  <!-- Title -->
+  <text x="360" y="32" text-anchor="middle" font-size="16" font-weight="600" fill="#1a1a2e">Quality Score Comparison (same image model)</text>
+  <text x="360" y="52" text-anchor="middle" font-size="11" fill="#6b7280">Higher is better. Scored on communication clarity, visual hierarchy, and professional polish.</text>
+
+  <!-- Chart area -->
+  <g transform="translate(60, 70)">
+    <!-- Y-axis grid lines and labels -->
+    <line x1="0" y1="0" x2="600" y2="0" stroke="#e5e7eb" stroke-dasharray="4"/>
+    <text x="-8" y="4" text-anchor="end" font-size="10" fill="#9ca3af">100</text>
+
+    <line x1="0" y1="50" x2="600" y2="50" stroke="#e5e7eb" stroke-dasharray="4"/>
+    <text x="-8" y="54" text-anchor="end" font-size="10" fill="#9ca3af">80</text>
+
+    <line x1="0" y1="100" x2="600" y2="100" stroke="#e5e7eb" stroke-dasharray="4"/>
+    <text x="-8" y="104" text-anchor="end" font-size="10" fill="#9ca3af">60</text>
+
+    <line x1="0" y1="150" x2="600" y2="150" stroke="#e5e7eb" stroke-dasharray="4"/>
+    <text x="-8" y="154" text-anchor="end" font-size="10" fill="#9ca3af">40</text>
+
+    <line x1="0" y1="200" x2="600" y2="200" stroke="#e5e7eb" stroke-dasharray="4"/>
+    <text x="-8" y="204" text-anchor="end" font-size="10" fill="#9ca3af">20</text>
+
+    <line x1="0" y1="250" x2="600" y2="250" stroke="#4b5563"/>
+    <text x="-8" y="254" text-anchor="end" font-size="10" fill="#9ca3af">0</text>
+
+    <!-- Scenario 1: Application Ecosystem -->
+    <g transform="translate(30, 0)">
+      <!-- Standard bar: 68 -->
+      <rect x="0" y="80" width="50" height="170" fill="#d1d5db" rx="3"/>
+      <text x="25" y="74" text-anchor="middle" font-size="12" font-weight="600" fill="#6b7280">68</text>
+      <!-- Storytelling bar: 93 -->
+      <rect x="58" y="17.5" width="50" height="232.5" fill="#6366f1" rx="3"/>
+      <text x="83" y="12" text-anchor="middle" font-size="12" font-weight="700" fill="#4f46e5">93</text>
+      <!-- Delta -->
+      <rect x="115" y="6" width="32" height="18" fill="#dcfce7" rx="9"/>
+      <text x="131" y="18" text-anchor="middle" font-size="9" font-weight="600" fill="#16a34a">+25</text>
+      <!-- Label -->
+      <text x="54" y="270" text-anchor="middle" font-size="10" fill="#374151">App Ecosystem</text>
+    </g>
+
+    <!-- Scenario 2: Product Overview -->
+    <g transform="translate(180, 0)">
+      <!-- Standard bar: 78 -->
+      <rect x="0" y="55" width="50" height="195" fill="#d1d5db" rx="3"/>
+      <text x="25" y="49" text-anchor="middle" font-size="12" font-weight="600" fill="#6b7280">78</text>
+      <!-- Storytelling bar: 94 -->
+      <rect x="58" y="15" width="50" height="235" fill="#6366f1" rx="3"/>
+      <text x="83" y="9" text-anchor="middle" font-size="12" font-weight="700" fill="#4f46e5">94</text>
+      <!-- Delta -->
+      <rect x="115" y="6" width="32" height="18" fill="#dcfce7" rx="9"/>
+      <text x="131" y="18" text-anchor="middle" font-size="9" font-weight="600" fill="#16a34a">+16</text>
+      <!-- Label -->
+      <text x="54" y="270" text-anchor="middle" font-size="10" fill="#374151">Product Overview</text>
+    </g>
+
+    <!-- Scenario 3: Technical Architecture -->
+    <g transform="translate(330, 0)">
+      <!-- Standard bar: 65 -->
+      <rect x="0" y="87.5" width="50" height="162.5" fill="#d1d5db" rx="3"/>
+      <text x="25" y="82" text-anchor="middle" font-size="12" font-weight="600" fill="#6b7280">65</text>
+      <!-- Storytelling bar: 95 -->
+      <rect x="58" y="12.5" width="50" height="237.5" fill="#6366f1" rx="3"/>
+      <text x="83" y="7" text-anchor="middle" font-size="12" font-weight="700" fill="#4f46e5">95</text>
+      <!-- Delta -->
+      <rect x="115" y="6" width="32" height="18" fill="#dcfce7" rx="9"/>
+      <text x="131" y="18" text-anchor="middle" font-size="9" font-weight="600" fill="#16a34a">+30</text>
+      <!-- Label -->
+      <text x="54" y="270" text-anchor="middle" font-size="10" fill="#374151">Architecture</text>
+    </g>
+
+    <!-- Scenario 4: Abstract Concepts -->
+    <g transform="translate(480, 0)">
+      <!-- Standard bar: 76 -->
+      <rect x="0" y="60" width="50" height="190" fill="#d1d5db" rx="3"/>
+      <text x="25" y="54" text-anchor="middle" font-size="12" font-weight="600" fill="#6b7280">76</text>
+      <!-- Storytelling bar: 92 -->
+      <rect x="58" y="20" width="50" height="230" fill="#6366f1" rx="3"/>
+      <text x="83" y="14" text-anchor="middle" font-size="12" font-weight="700" fill="#4f46e5">92</text>
+      <!-- Delta -->
+      <rect x="115" y="6" width="32" height="18" fill="#dcfce7" rx="9"/>
+      <text x="131" y="18" text-anchor="middle" font-size="9" font-weight="600" fill="#16a34a">+16</text>
+      <!-- Label -->
+      <text x="54" y="270" text-anchor="middle" font-size="10" fill="#374151">Abstract Concepts</text>
+    </g>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(200, 356)">
+    <rect x="0" y="-10" width="14" height="14" fill="#6366f1" rx="2"/>
+    <text x="20" y="2" font-size="11" fill="#374151">Storytelling (avg 93.5)</text>
+    <rect x="170" y="-10" width="14" height="14" fill="#d1d5db" rx="2"/>
+    <text x="190" y="2" font-size="11" fill="#374151">Standard (avg 71.75)</text>
+    <rect x="330" y="-13" width="52" height="20" fill="#dcfce7" rx="10"/>
+    <text x="356" y="2" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">+21.75</text>
+  </g>
+</svg>

@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" font-family="system-ui, -apple-system, sans-serif">
+  <title>Standard vs Storytelling Approach</title>
+  <desc>Visual comparison of the standard labeled-box approach versus the storytelling visual metaphor approach</desc>
+
+  <!-- Background -->
+  <rect width="720" height="280" fill="#fafbfc" rx="8"/>
+
+  <!-- Divider -->
+  <line x1="360" y1="20" x2="360" y2="260" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="6"/>
+
+  <!-- LEFT: Standard Approach -->
+  <g transform="translate(20, 20)">
+    <rect width="320" height="240" fill="#fff7ed" rx="8" stroke="#fed7aa"/>
+
+    <text x="160" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="#9a3412">Standard Approach</text>
+    <text x="160" y="44" text-anchor="middle" font-size="10" fill="#c2410c">avg 71.75/100</text>
+
+    <!-- Step 1 -->
+    <g transform="translate(20, 60)">
+      <circle cx="12" cy="12" r="12" fill="#fdba74"/>
+      <text x="12" y="16" text-anchor="middle" font-size="10" font-weight="600" fill="white">1</text>
+      <text x="32" y="16" font-size="11" fill="#374151">List all components</text>
+    </g>
+
+    <!-- Step 2 -->
+    <g transform="translate(20, 96)">
+      <circle cx="12" cy="12" r="12" fill="#fdba74"/>
+      <text x="12" y="16" text-anchor="middle" font-size="10" font-weight="600" fill="white">2</text>
+      <text x="32" y="16" font-size="11" fill="#374151">Draw labeled boxes</text>
+    </g>
+
+    <!-- Step 3 -->
+    <g transform="translate(20, 132)">
+      <circle cx="12" cy="12" r="12" fill="#fdba74"/>
+      <text x="12" y="16" text-anchor="middle" font-size="10" font-weight="600" fill="white">3</text>
+      <text x="32" y="16" font-size="11" fill="#374151">Connect with arrows</text>
+    </g>
+
+    <!-- Result -->
+    <g transform="translate(20, 172)">
+      <rect width="280" height="48" fill="#fef3c7" rx="6"/>
+      <text x="140" y="20" text-anchor="middle" font-size="11" font-weight="600" fill="#92400e">Result: Technically accurate</text>
+      <text x="140" y="36" text-anchor="middle" font-size="10" fill="#a16207">but forgettable. Reader thinks "ok, boxes."</text>
+    </g>
+  </g>
+
+  <!-- RIGHT: Storytelling Approach -->
+  <g transform="translate(380, 20)">
+    <rect width="320" height="240" fill="#f0fdf4" rx="8" stroke="#86efac"/>
+
+    <text x="160" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="#166534">Storytelling Approach</text>
+    <text x="160" y="44" text-anchor="middle" font-size="10" fill="#16a34a">avg 93.5/100 (+22)</text>
+
+    <!-- Step 1 -->
+    <g transform="translate(20, 60)">
+      <circle cx="12" cy="12" r="12" fill="#4ade80"/>
+      <text x="12" y="16" text-anchor="middle" font-size="10" font-weight="600" fill="white">1</text>
+      <text x="32" y="10" font-size="11" font-weight="600" fill="#374151">"What is this LIKE?"</text>
+      <text x="32" y="24" font-size="9" fill="#6b7280">Find a real-world metaphor first</text>
+    </g>
+
+    <!-- Step 2 -->
+    <g transform="translate(20, 100)">
+      <circle cx="12" cy="12" r="12" fill="#4ade80"/>
+      <text x="12" y="16" text-anchor="middle" font-size="10" font-weight="600" fill="white">2</text>
+      <text x="32" y="10" font-size="11" font-weight="600" fill="#374151">"What's the ONE insight?"</text>
+      <text x="32" y="24" font-size="9" fill="#6b7280">Distill to one sentence anyone gets</text>
+    </g>
+
+    <!-- Step 3 -->
+    <g transform="translate(20, 140)">
+      <circle cx="12" cy="12" r="12" fill="#4ade80"/>
+      <text x="12" y="16" text-anchor="middle" font-size="10" font-weight="600" fill="white">3</text>
+      <text x="32" y="10" font-size="11" font-weight="600" fill="#374151">"What should they FEEL?"</text>
+      <text x="32" y="24" font-size="9" fill="#6b7280">The metaphor evokes the right emotion</text>
+    </g>
+
+    <!-- Result -->
+    <g transform="translate(20, 176)">
+      <rect width="280" height="48" fill="#dcfce7" rx="6"/>
+      <text x="140" y="20" text-anchor="middle" font-size="11" font-weight="600" fill="#166534">Result: Concept clicks in 5 seconds</text>
+      <text x="140" y="36" text-anchor="middle" font-size="10" fill="#15803d">Reader thinks "oh, I GET IT."</text>
+    </g>
+  </g>
+</svg>

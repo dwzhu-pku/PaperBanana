@@ -1,0 +1,255 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Background Filter -->
+    <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <filter id="heavy-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="25" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Luminous Pathway Gradient -->
+    <linearGradient id="pathGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="25%" stop-color="#0D9488"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="75%" stop-color="#EA580C"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+
+    <!-- Node 1: Identity Gradient -->
+    <radialGradient id="blueGlass" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#93C5FD" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#1E3A8A" stop-opacity="0.3"/>
+    </radialGradient>
+
+    <!-- Node 2: Contribution Gradient -->
+    <radialGradient id="tealGlass" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#5EEAD4" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#115E59" stop-opacity="0.3"/>
+    </radialGradient>
+
+    <!-- Node 3: Collective Gradient -->
+    <radialGradient id="goldGlass" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FDE68A" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#B45309" stop-opacity="0.5"/>
+    </radialGradient>
+
+    <!-- Node 4: Graph Gradient -->
+    <linearGradient id="coralGlass" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDBA74" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#9A3412" stop-opacity="0.3"/>
+    </linearGradient>
+
+    <!-- Node 5: Transfer Gradients -->
+    <linearGradient id="purpleGlassLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C4B5FD" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#5B21B6" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="purpleGlassDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A78BFA" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#4C1D95" stop-opacity="0.2"/>
+    </linearGradient>
+
+    <!-- Beam Gradient -->
+    <linearGradient id="beamGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A78BFA" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#A78BFA" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#0B1426"/>
+
+  <!-- Ambient Center Glow -->
+  <circle cx="600" cy="400" r="180" fill="#F59E0B" opacity="0.1" filter="url(#heavy-glow)"/>
+
+  <!-- ================= THE LUMINOUS PATHWAY ================= -->
+  <g id="luminous-pathway">
+    <!-- Filled Ribbon -->
+    <path d="M -50 380 
+             C 50 380, 100 350, 150 350 
+             C 250 350, 250 410, 350 410 
+             C 450 410, 500 380, 600 380 
+             C 700 380, 750 350, 850 350 
+             C 950 350, 950 410, 1050 410 
+             C 1150 410, 1200 380, 1250 380
+             L 1250 420 
+             C 1200 420, 1150 450, 1050 450 
+             C 950 450, 950 390, 850 390 
+             C 750 390, 700 420, 600 420 
+             C 500 420, 450 450, 350 450 
+             C 250 450, 250 390, 150 390 
+             C 100 390, 50 420, -50 420 Z" 
+          fill="url(#pathGrad)" opacity="0.3" filter="url(#drop-shadow)"/>
+
+    <!-- Top Border -->
+    <path d="M -50 380 
+             C 50 380, 100 350, 150 350 
+             C 250 350, 250 410, 350 410 
+             C 450 410, 500 380, 600 380 
+             C 700 380, 750 350, 850 350 
+             C 950 350, 950 410, 1050 410 
+             C 1150 410, 1200 380, 1250 380" 
+          fill="none" stroke="url(#pathGrad)" stroke-width="2" opacity="0.8"/>
+
+    <!-- Bottom Border -->
+    <path d="M -50 420 
+             C 50 420, 100 390, 150 390 
+             C 250 390, 250 450, 350 450 
+             C 450 450, 500 420, 600 420 
+             C 700 420, 750 390, 850 390 
+             C 950 390, 950 450, 1050 450 
+             C 1150 450, 1200 420, 1250 420" 
+          fill="none" stroke="url(#pathGrad)" stroke-width="2" opacity="0.8"/>
+
+    <!-- Path Particles -->
+    <g fill="#FFFFFF" stroke="#D1D5DB" stroke-width="0.5" filter="url(#glow)">
+      <circle cx="60" cy="385" r="2.5" opacity="0.9"/>
+      <circle cx="250" cy="400" r="2" opacity="0.7"/>
+      <circle cx="475" cy="415" r="2.5" opacity="0.8"/>
+      <circle cx="725" cy="385" r="2" opacity="0.9"/>
+      <circle cx="950" cy="400" r="2.5" opacity="0.7"/>
+      <circle cx="1150" cy="415" r="2" opacity="0.8"/>
+    </g>
+  </g>
+
+  <!-- ================= STAGE 1: IDENTITY ================= -->
+  <g id="node-identity" filter="url(#drop-shadow)">
+    <circle cx="150" cy="370" r="45" fill="url(#blueGlass)" stroke="#3B82F6" stroke-width="1.5"/>
+    
+    <!-- Fingerprint Texture -->
+    <path d="M 135 355 Q 150 335 165 355" fill="none" stroke="#60A5FA" stroke-width="1.5" opacity="0.6"/>
+    <path d="M 125 365 Q 150 335 175 365" fill="none" stroke="#60A5FA" stroke-width="1.5" opacity="0.5"/>
+    <path d="M 115 375 Q 150 335 185 375" fill="none" stroke="#60A5FA" stroke-width="1.5" opacity="0.4"/>
+    <path d="M 125 385 Q 150 355 175 385" fill="none" stroke="#60A5FA" stroke-width="1.5" opacity="0.3"/>
+    
+    <text x="150" y="380" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="26" fill="#FFFFFF">π</text>
+  </g>
+
+  <!-- ================= STAGE 2: CONTRIBUTION ================= -->
+  <g id="node-contribution" filter="url(#drop-shadow)">
+    <!-- Converging Spheres -->
+    <circle cx="270" cy="400" r="14" fill="url(#tealGlass)" stroke="#0D9488" stroke-width="1"/>
+    <circle cx="260" cy="450" r="18" fill="url(#tealGlass)" stroke="#0D9488" stroke-width="1"/>
+    <circle cx="295" cy="430" r="10" fill="url(#tealGlass)" stroke="#0D9488" stroke-width="1"/>
+    
+    <!-- Stylized Funnel -->
+    <path d="M 320 390 Q 360 390 380 415 L 380 445 Q 360 470 320 470 Z" fill="url(#tealGlass)" stroke="#0D9488" stroke-width="1.5"/>
+    <ellipse cx="320" cy="430" rx="10" ry="40" fill="url(#tealGlass)" stroke="#0D9488" stroke-width="1.5"/>
+    
+    <text x="345" y="438" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="22" fill="#FFFFFF">Σ</text>
+  </g>
+
+  <!-- ================= STAGE 3: COLLECTIVE ================= -->
+  <g id="node-collective" filter="url(#drop-shadow)">
+    <!-- Outer Thick Infinity -->
+    <path d="M 600 400 
+             C 540 310, 440 330, 440 400 
+             C 440 470, 540 490, 600 400 
+             C 660 310, 760 330, 760 400 
+             C 760 470, 660 490, 600 400 Z" 
+          fill="url(#goldGlass)" stroke="#F59E0B" stroke-width="2"/>
+          
+    <!-- Inner Swirl 1 -->
+    <path d="M 600 400 
+             C 560 340, 480 340, 480 400 
+             C 480 460, 560 460, 600 400 
+             C 640 340, 720 340, 720 400 
+             C 720 460, 640 460, 600 400 Z" 
+          fill="none" stroke="#FBBF24" stroke-width="4" opacity="0.8"/>
+          
+    <!-- Inner Swirl 2 -->
+    <path d="M 600 400 
+             C 570 360, 510 360, 510 400 
+             C 510 440, 570 440, 600 400 
+             C 630 360, 690 360, 690 400 
+             C 690 440, 630 440, 600 400 Z" 
+          fill="none" stroke="#FDE68A" stroke-width="1.5" opacity="0.9"/>
+          
+    <text x="600" y="412" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-weight="bold" font-size="36" fill="#FFFFFF">∞</text>
+  </g>
+
+  <!-- ================= STAGE 4: GRAPH ================= -->
+  <g id="node-graph" filter="url(#drop-shadow)">
+    <!-- Inverted Triangle Base -->
+    <polygon points="790,320 910,320 850,440" fill="url(#coralGlass)" stroke="#EA580C" stroke-width="1.5"/>
+    
+    <!-- Internal Network Mesh -->
+    <line x1="850" y1="360" x2="810" y2="340" stroke="#FB923C" stroke-width="1.5" opacity="0.8"/>
+    <line x1="850" y1="360" x2="890" y2="340" stroke="#FB923C" stroke-width="1.5" opacity="0.8"/>
+    <line x1="850" y1="360" x2="850" y2="410" stroke="#FB923C" stroke-width="1.5" opacity="0.8"/>
+    <line x1="810" y1="340" x2="830" y2="380" stroke="#FB923C" stroke-width="1.5" opacity="0.8"/>
+    <line x1="890" y1="340" x2="870" y2="380" stroke="#FB923C" stroke-width="1.5" opacity="0.8"/>
+    <line x1="850" y1="410" x2="830" y2="380" stroke="#FB923C" stroke-width="1.5" opacity="0.8"/>
+    <line x1="850" y1="410" x2="870" y2="380" stroke="#FB923C" stroke-width="1.5" opacity="0.8"/>
+    <line x1="830" y1="380" x2="870" y2="380" stroke="#FB923C" stroke-width="1.5" opacity="0.8"/>
+    
+    <!-- Glowing Nodes -->
+    <g fill="#FFFFFF" stroke="#EA580C" stroke-width="1">
+      <circle cx="810" cy="340" r="3.5"/>
+      <circle cx="890" cy="340" r="3.5"/>
+      <circle cx="850" cy="410" r="3.5"/>
+      <circle cx="850" cy="360" r="4.5"/>
+      <circle cx="830" cy="380" r="3"/>
+      <circle cx="870" cy="380" r="3"/>
+    </g>
+    
+    <text x="850" y="345" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="22" fill="#FFFFFF">∇</text>
+  </g>
+
+  <!-- ================= STAGE 5: TRANSFER ================= -->
+  <g id="node-transfer">
+    <!-- Projecting Beam -->
+    <polygon points="1075,400 1200,340 1200,460" fill="url(#beamGrad)"/>
+    
+    <!-- 3D Prism -->
+    <g filter="url(#drop-shadow)">
+      <polygon points="1050,340 1000,460 1050,460" fill="url(#purpleGlassDark)" stroke="#8B5CF6" stroke-width="1.5"/>
+      <polygon points="1050,340 1050,460 1100,460" fill="url(#purpleGlassLight)" stroke="#8B5CF6" stroke-width="1.5"/>
+    </g>
+    
+    <text x="1050" y="440" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="26" fill="#FFFFFF">Δ</text>
+  </g>
+
+  <!-- ================= STAGE LABELS ================= -->
+  <g id="stage-labels" text-anchor="middle">
+    <!-- Label 1 -->
+    <text x="150" y="540">
+      <tspan font-family="Georgia, serif" font-style="italic" font-size="22" fill="#60A5FA">π </tspan>
+      <tspan font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#D1D5DB" font-weight="500">Identity</tspan>
+    </text>
+    
+    <!-- Label 2 -->
+    <text x="350" y="540">
+      <tspan font-family="Georgia, serif" font-style="italic" font-size="22" fill="#2DD4BF">Σ </tspan>
+      <tspan font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#D1D5DB" font-weight="500">Contribution</tspan>
+    </text>
+    
+    <!-- Label 3 -->
+    <text x="600" y="540">
+      <tspan font-family="Georgia, serif" font-style="italic" font-size="22" fill="#FBBF24">∞ </tspan>
+      <tspan font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#D1D5DB" font-weight="500">Collective</tspan>
+    </text>
+    
+    <!-- Label 4 -->
+    <text x="850" y="540">
+      <tspan font-family="Georgia, serif" font-style="italic" font-size="22" fill="#FB923C">∇ </tspan>
+      <tspan font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#D1D5DB" font-weight="500">Graph</tspan>
+    </text>
+    
+    <!-- Label 5 -->
+    <text x="1050" y="540">
+      <tspan font-family="Georgia, serif" font-style="italic" font-size="22" fill="#A78BFA">Δ </tspan>
+      <tspan font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#D1D5DB" font-weight="500">Transfer</tspan>
+    </text>
+  </g>
+
+</svg>

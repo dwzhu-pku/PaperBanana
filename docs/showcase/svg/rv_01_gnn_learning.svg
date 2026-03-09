@@ -1,0 +1,248 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Grid Pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E293B" stroke-width="0.5" />
+    </pattern>
+
+    <!-- Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    
+    <filter id="glow-strong" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Arrow Markers -->
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,1 L8,5 L0,9 Z" fill="#3B82F6" />
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,1 L8,5 L0,9 Z" fill="#8B5CF6" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,1 L8,5 L0,9 Z" fill="#10B981" />
+    </marker>
+    
+    <!-- Gradients -->
+    <linearGradient id="center-bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#1E1B4B" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#0B1426" />
+  <rect width="1200" height="800" fill="url(#grid)" />
+
+  <!-- Header Section -->
+  <g id="header">
+    <text x="600" y="55" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="bold" fill="#F8FAFC" text-anchor="middle">RuVector's GNN Self-Learning Loop</text>
+    
+    <!-- Core Insight Callout -->
+    <rect x="150" y="75" width="900" height="40" rx="8" fill="#1E293B" stroke="#F59E0B" stroke-width="1" />
+    <text x="600" y="100" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="bold" fill="#FDBA74" text-anchor="middle">Core Insight: The graph physically reshapes itself with every interaction, turning usage into intelligence.</text>
+  </g>
+
+  <!-- CENTERPIECE: Evolving Knowledge Graph -->
+  <g id="center-graph">
+    <!-- Base Circle -->
+    <circle cx="600" cy="440" r="190" fill="url(#center-bg)" stroke="#334155" stroke-width="3" />
+    
+    <!-- Radar Rings -->
+    <circle cx="600" cy="440" r="130" fill="none" stroke="#1E293B" stroke-width="2" />
+    <circle cx="600" cy="440" r="70" fill="none" stroke="#1E293B" stroke-width="2" />
+    
+    <!-- Divider -->
+    <line x1="600" y1="250" x2="600" y2="630" stroke="#475569" stroke-width="2" stroke-dasharray="6,6" />
+    
+    <!-- Labels -->
+    <rect x="450" y="260" width="120" height="26" rx="13" fill="#0F172A" stroke="#475569" />
+    <text x="510" y="278" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#94A3B8" text-anchor="middle">Static / Sparse</text>
+    
+    <rect x="630" y="260" width="140" height="26" rx="13" fill="#2E1065" stroke="#8B5CF6" />
+    <text x="700" y="278" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#C4B5FD" text-anchor="middle">Dense / Self-Learned</text>
+
+    <!-- LEFT SIDE: Sparse / Static Graph -->
+    <g id="graph-left">
+      <!-- Edges -->
+      <line x1="600" y1="440" x2="520" y2="360" stroke="#475569" stroke-width="1.5" />
+      <line x1="520" y1="360" x2="450" y2="400" stroke="#475569" stroke-width="1.5" />
+      <line x1="600" y1="440" x2="480" y2="500" stroke="#475569" stroke-width="1.5" />
+      <line x1="480" y1="500" x2="530" y2="560" stroke="#475569" stroke-width="1.5" />
+      <line x1="520" y1="360" x2="480" y2="500" stroke="#475569" stroke-width="1" />
+      
+      <!-- Nodes -->
+      <circle cx="520" cy="360" r="5" fill="#64748B" />
+      <circle cx="450" cy="400" r="4" fill="#64748B" />
+      <circle cx="480" cy="500" r="5" fill="#64748B" />
+      <circle cx="530" cy="560" r="4" fill="#64748B" />
+    </g>
+
+    <!-- RIGHT SIDE: Dense / Evolving Graph -->
+    <g id="graph-right">
+      <!-- Thick Glowing Edges -->
+      <line x1="600" y1="440" x2="680" y2="350" stroke="#8B5CF6" stroke-width="3" filter="url(#glow)" />
+      <line x1="680" y1="350" x2="750" y2="390" stroke="#F59E0B" stroke-width="4" filter="url(#glow)" />
+      <line x1="600" y1="440" x2="710" y2="460" stroke="#8B5CF6" stroke-width="3" filter="url(#glow)" />
+      <line x1="710" y1="460" x2="760" y2="510" stroke="#F59E0B" stroke-width="3" filter="url(#glow)" />
+      <line x1="680" y1="350" x2="710" y2="460" stroke="#8B5CF6" stroke-width="2.5" />
+      <line x1="750" y1="390" x2="710" y2="460" stroke="#F59E0B" stroke-width="2.5" />
+      <line x1="600" y1="440" x2="660" y2="540" stroke="#8B5CF6" stroke-width="3" filter="url(#glow)" />
+      <line x1="660" y1="540" x2="710" y2="460" stroke="#8B5CF6" stroke-width="2" />
+      <line x1="680" y1="350" x2="730" y2="310" stroke="#8B5CF6" stroke-width="2" />
+      
+      <!-- Highlight Nodes -->
+      <circle cx="680" cy="350" r="7" fill="#F8FAFC" stroke="#8B5CF6" stroke-width="2" />
+      <circle cx="750" cy="390" r="9" fill="#F59E0B" filter="url(#glow)" />
+      <circle cx="710" cy="460" r="8" fill="#F8FAFC" stroke="#8B5CF6" stroke-width="2" />
+      <circle cx="760" cy="510" r="6" fill="#F59E0B" />
+      <circle cx="660" cy="540" r="7" fill="#F8FAFC" stroke="#8B5CF6" stroke-width="2" />
+      <circle cx="730" cy="310" r="5" fill="#C4B5FD" />
+    </g>
+
+    <!-- Center Node -->
+    <circle cx="600" cy="440" r="28" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4,4" filter="url(#glow)" />
+    <circle cx="600" cy="440" r="14" fill="#F8FAFC" filter="url(#glow)" />
+  </g>
+
+  <!-- CIRCULAR LOOP ARROWS -->
+  <g id="loop-arrows">
+    <!-- Arrow 3: TL to TR (Query Signals) -->
+    <path d="M 430 250 C 500 150, 700 150, 770 250" fill="none" stroke="#3B82F6" stroke-width="6" marker-end="url(#arrow-blue)" />
+    <rect x="530" y="150" width="140" height="28" rx="6" fill="#0B1426" stroke="#3B82F6" stroke-width="1" />
+    <text x="600" y="169" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#93C5FD" text-anchor="middle">Query Signals</text>
+
+    <!-- Arrow 1: TR to B (Ranked Results) -->
+    <path d="M 900 340 C 900 550, 850 700, 740 720" fill="none" stroke="#8B5CF6" stroke-width="6" marker-end="url(#arrow-purple)" />
+    <rect x="800" y="550" width="140" height="28" rx="6" fill="#0B1426" stroke="#8B5CF6" stroke-width="1" />
+    <text x="870" y="569" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#C4B5FD" text-anchor="middle">Ranked Results</text>
+
+    <!-- Arrow 2: B to TL (User Clicks) -->
+    <path d="M 460 720 C 350 700, 300 550, 300 340" fill="none" stroke="#10B981" stroke-width="6" marker-end="url(#arrow-green)" />
+    <rect x="260" y="550" width="120" height="28" rx="6" fill="#0B1426" stroke="#10B981" stroke-width="1" />
+    <text x="320" y="569" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#6EE7B7" text-anchor="middle">User Clicks</text>
+  </g>
+
+  <!-- STEP 1: MESSAGE PASSING (Top Right) -->
+  <g id="step-1" transform="translate(790, 180)">
+    <rect width="230" height="150" rx="12" fill="#1E3A8A" stroke="#3B82F6" stroke-width="2" />
+    
+    <!-- Icon: Network -->
+    <g transform="translate(115, 50)">
+      <line x1="-20" y1="10" x2="20" y2="10" stroke="#93C5FD" stroke-width="2" />
+      <line x1="0" y1="-20" x2="-20" y2="10" stroke="#93C5FD" stroke-width="2" />
+      <line x1="0" y1="-20" x2="20" y2="10" stroke="#93C5FD" stroke-width="2" />
+      
+      <!-- Signal pulses -->
+      <circle cx="-10" cy="-5" r="3" fill="#F8FAFC" />
+      <circle cx="10" cy="-5" r="3" fill="#F8FAFC" />
+      <circle cx="0" cy="10" r="3" fill="#F8FAFC" />
+      
+      <circle cx="-20" cy="10" r="8" fill="#3B82F6" stroke="#F8FAFC" stroke-width="2" />
+      <circle cx="20" cy="10" r="8" fill="#3B82F6" stroke="#F8FAFC" stroke-width="2" />
+      <circle cx="0" cy="-20" r="10" fill="#F59E0B" filter="url(#glow)" />
+    </g>
+
+    <text x="115" y="105" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC" text-anchor="middle">Message Passing</text>
+    <text x="115" y="130" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#93C5FD" text-anchor="middle">Nodes query neighbors</text>
+  </g>
+
+  <!-- STEP 2: ATTENTION WEIGHTING (Bottom Center) -->
+  <g id="step-2" transform="translate(480, 650)">
+    <rect width="240" height="140" rx="12" fill="#4C1D95" stroke="#8B5CF6" stroke-width="2" />
+    
+    <!-- Metric Badge Overlay -->
+    <rect x="40" y="-15" width="160" height="30" rx="15" fill="#F59E0B" stroke="#0B1426" stroke-width="3" />
+    <text x="120" y="4" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#000000" text-anchor="middle">46 Attention Heads</text>
+
+    <!-- Icon: Stylized Eye / Attention -->
+    <g transform="translate(120, 55)">
+      <path d="M -30 0 C -15 -20, 15 -20, 30 0 C 15 20, -15 20, -30 0 Z" fill="none" stroke="#C4B5FD" stroke-width="3" />
+      <circle cx="0" cy="0" r="12" fill="none" stroke="#8B5CF6" stroke-width="2" />
+      <circle cx="0" cy="0" r="6" fill="#F59E0B" filter="url(#glow)" />
+      
+      <!-- MoE Router dots -->
+      <circle cx="-20" cy="-25" r="4" fill="#3B82F6" />
+      <circle cx="0" cy="-30" r="4" fill="#10B981" />
+      <circle cx="20" cy="-25" r="4" fill="#F59E0B" />
+      <path d="M -18 -20 L -8 -10 M 0 -25 L 0 -15 M 18 -20 L 8 -10" stroke="#C4B5FD" stroke-width="1.5" marker-end="url(#arrow-purple)" />
+    </g>
+
+    <text x="120" y="105" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC" text-anchor="middle">Attention Weighting</text>
+    <text x="120" y="125" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#C4B5FD" text-anchor="middle">MoE router selects best</text>
+  </g>
+
+  <!-- STEP 3: FEEDBACK INTEGRATION (Top Left) -->
+  <g id="step-3" transform="translate(180, 180)">
+    <rect width="230" height="150" rx="12" fill="#064E3B" stroke="#10B981" stroke-width="2" />
+    
+    <!-- Icon: Cursor & Target -->
+    <g transform="translate(115, 50)">
+      <!-- Target Rings -->
+      <circle cx="-10" cy="-5" r="18" fill="none" stroke="#10B981" stroke-width="2" stroke-dasharray="4,4" />
+      <circle cx="-10" cy="-5" r="10" fill="none" stroke="#10B981" stroke-width="2" />
+      <circle cx="-10" cy="-5" r="5" fill="#10B981" filter="url(#glow)" />
+      
+      <!-- Cursor -->
+      <path d="M -2 0 L 14 24 L 6 25 L 12 36 L 4 39 L -2 28 L -10 33 Z" fill="#F8FAFC" stroke="#064E3B" stroke-width="2" />
+    </g>
+
+    <text x="115" y="105" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold" fill="#F8FAFC" text-anchor="middle">Feedback Integration</text>
+    <text x="115" y="130" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#6EE7B7" text-anchor="middle">Clicks strengthen edges</text>
+  </g>
+
+  <!-- BOTTOM LEFT: Comparison Panel -->
+  <g id="comparison-panel" transform="translate(40, 640)">
+    <rect width="360" height="130" rx="12" fill="#0F172A" stroke="#334155" stroke-width="2" />
+    <text x="180" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="bold" fill="#E2E8F0" text-anchor="middle">Architecture Comparison</text>
+    
+    <!-- Static DB -->
+    <g transform="translate(80, 75)">
+      <ellipse cx="0" cy="-15" rx="24" ry="8" fill="#475569" />
+      <rect x="-24" y="-15" width="48" height="30" fill="#475569" />
+      <ellipse cx="0" cy="15" rx="24" ry="8" fill="#334155" />
+      <text x="0" y="40" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#94A3B8" text-anchor="middle">Static DB</text>
+    </g>
+
+    <text x="180" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="bold" fill="#64748B" text-anchor="middle">VS</text>
+
+    <!-- Self-Learning Graph -->
+    <g transform="translate(280, 75)">
+      <line x1="-15" y1="-15" x2="15" y2="-5" stroke="#8B5CF6" stroke-width="2" />
+      <line x1="15" y1="-5" x2="-5" y2="15" stroke="#F59E0B" stroke-width="2" />
+      <line x1="-15" y1="-15" x2="-5" y2="15" stroke="#8B5CF6" stroke-width="2" />
+      
+      <circle cx="-15" cy="-15" r="5" fill="#F8FAFC" />
+      <circle cx="15" cy="-5" r="6" fill="#F59E0B" filter="url(#glow)" />
+      <circle cx="-5" cy="15" r="5" fill="#F8FAFC" />
+      
+      <text x="0" y="40" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#F59E0B" text-anchor="middle">Self-Learning</text>
+    </g>
+  </g>
+
+  <!-- BOTTOM RIGHT: Metrics Panel -->
+  <g id="metrics-panel" transform="translate(800, 640)">
+    <rect width="360" height="130" rx="12" fill="#0F172A" stroke="#334155" stroke-width="2" />
+    <text x="180" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="bold" fill="#E2E8F0" text-anchor="middle">System Impact</text>
+    
+    <!-- Metric 1 -->
+    <g transform="translate(90, 75)">
+      <text x="0" y="0" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="bold" fill="#10B981" text-anchor="middle">23x</text>
+      <text x="0" y="25" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#94A3B8" text-anchor="middle">Faster Resolution</text>
+    </g>
+
+    <!-- Divider -->
+    <line x1="180" y1="50" x2="180" y2="100" stroke="#334155" stroke-width="1" />
+
+    <!-- Metric 2 -->
+    <g transform="translate(270, 75)">
+      <text x="0" y="0" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="bold" fill="#8B5CF6" text-anchor="middle">87%</text>
+      <text x="0" y="25" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#94A3B8" text-anchor="middle">Auto-Routing</text>
+    </g>
+  </g>
+
+</svg>

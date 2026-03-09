@@ -1,0 +1,296 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+    <defs>
+        <!-- Background Grid Pattern -->
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E293B" stroke-width="0.5"/>
+        </pattern>
+
+        <!-- Funnel 3D Gradient -->
+        <linearGradient id="funnelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#081A2D" />
+            <stop offset="15%" stop-color="#123456" />
+            <stop offset="50%" stop-color="#1E4D7A" />
+            <stop offset="85%" stop-color="#123456" />
+            <stop offset="100%" stop-color="#081A2D" />
+        </linearGradient>
+
+        <!-- Glow Effect for Verified Data -->
+        <radialGradient id="greenGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#10B981" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#10B981" stop-opacity="0"/>
+        </radialGradient>
+
+        <!-- Arrow Markers -->
+        <marker id="red-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <polygon points="0,0 6,3 0,6" fill="#EF4444" />
+        </marker>
+        <marker id="green-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <polygon points="0,0 6,3 0,6" fill="#10B981" />
+        </marker>
+        <marker id="gray-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <polygon points="0,0 6,3 0,6" fill="#94A3B8" />
+        </marker>
+    </defs>
+
+    <!-- Background -->
+    <rect width="100%" height="100%" fill="#0B1426"/>
+    <rect width="100%" height="100%" fill="url(#grid)"/>
+
+    <!-- ========================================== -->
+    <!-- HEADERS & CORE INSIGHT                     -->
+    <!-- ========================================== -->
+    <text x="50" y="60" fill="#F8FAFC" font-size="24" font-weight="bold" font-family="system-ui, sans-serif">Pi's 7-Layer Defense Pipeline</text>
+    <text x="50" y="85" fill="#94A3B8" font-size="14" font-family="system-ui, sans-serif">Progressively filters 99.8% of malicious</text>
+    <text x="50" y="105" fill="#94A3B8" font-size="14" font-family="system-ui, sans-serif">inputs before reaching the core network.</text>
+
+    <!-- Section Labels -->
+    <text x="332" y="125" fill="#38BDF8" font-size="12" font-weight="bold" letter-spacing="1" text-anchor="end" font-family="system-ui, sans-serif">PIPELINE LAYERS</text>
+    <text x="875" y="130" fill="#EF4444" font-size="12" font-weight="bold" letter-spacing="1" font-family="system-ui, sans-serif">THREATS BLOCKED</text>
+
+    <!-- ========================================== -->
+    <!-- TOP INPUT SECTION (Untrusted Data)         -->
+    <!-- ========================================== -->
+    <rect x="500" y="30" width="200" height="40" rx="20" fill="#0F172A" stroke="#64748B" stroke-dasharray="4 4"/>
+    <text x="600" y="55" fill="#CBD5E1" font-size="16" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Untrusted Inputs</text>
+
+    <!-- Falling Input Particles -->
+    <circle cx="530" cy="85" r="4" fill="#EF4444"/>
+    <circle cx="550" cy="100" r="3" fill="#64748B"/>
+    <circle cx="570" cy="80" r="5" fill="#EF4444"/>
+    <circle cx="590" cy="98" r="4" fill="#3B82F6"/>
+    <circle cx="610" cy="90" r="3" fill="#F59E0B"/>
+    <circle cx="630" cy="102" r="4" fill="#EF4444"/>
+    <circle cx="650" cy="85" r="5" fill="#64748B"/>
+    <circle cx="670" cy="100" r="3" fill="#10B981"/>
+
+    <!-- Input Arrow -->
+    <line x1="600" y1="106" x2="600" y2="118" stroke="#94A3B8" stroke-width="2" marker-end="url(#gray-arrow)"/>
+    <text x="612" y="116" fill="#94A3B8" font-size="12" font-family="system-ui, sans-serif">raw data</text>
+
+    <!-- Central Data Flow Line (Behind Funnel) -->
+    <line x1="600" y1="120" x2="600" y2="676" stroke="#38BDF8" stroke-width="2" stroke-dasharray="6 6" opacity="0.3"/>
+
+    <!-- ========================================== -->
+    <!-- THE 7-LAYER FUNNEL                         -->
+    <!-- ========================================== -->
+    
+    <!-- LAYER 1: Input Validation -->
+    <path d="M350,120 L850,120 L826.25,196 L373.75,196 Z" fill="url(#funnelGrad)" stroke="#38BDF8" stroke-width="1.5"/>
+    <line x1="350" y1="120" x2="850" y2="120" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1.5"/>
+    
+    <!-- LAYER 2: Cryptography -->
+    <path d="M375,200 L825,200 L801.25,276 L398.75,276 Z" fill="url(#funnelGrad)" stroke="#38BDF8" stroke-width="1.5"/>
+    <line x1="375" y1="200" x2="825" y2="200" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1.5"/>
+    
+    <!-- LAYER 3: Bounds Checking -->
+    <path d="M400,280 L800,280 L776.25,356 L423.75,356 Z" fill="url(#funnelGrad)" stroke="#38BDF8" stroke-width="1.5"/>
+    <line x1="400" y1="280" x2="800" y2="280" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1.5"/>
+    
+    <!-- LAYER 4: Rate Limiting -->
+    <path d="M425,360 L775,360 L751.25,436 L448.75,436 Z" fill="url(#funnelGrad)" stroke="#38BDF8" stroke-width="1.5"/>
+    <line x1="425" y1="360" x2="775" y2="360" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1.5"/>
+    
+    <!-- LAYER 5: Byzantine Exclusion -->
+    <path d="M450,440 L750,440 L726.25,516 L473.75,516 Z" fill="url(#funnelGrad)" stroke="#38BDF8" stroke-width="1.5"/>
+    <line x1="450" y1="440" x2="750" y2="440" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1.5"/>
+    
+    <!-- LAYER 6: Reputation Scoring -->
+    <path d="M475,520 L725,520 L701.25,596 L498.75,596 Z" fill="url(#funnelGrad)" stroke="#38BDF8" stroke-width="1.5"/>
+    <line x1="475" y1="520" x2="725" y2="520" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1.5"/>
+    
+    <!-- LAYER 7: Drift Detection -->
+    <path d="M500,600 L700,600 L676.25,676 L523.75,676 Z" fill="url(#funnelGrad)" stroke="#38BDF8" stroke-width="1.5"/>
+    <line x1="500" y1="600" x2="700" y2="600" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1.5"/>
+
+
+    <!-- ========================================== -->
+    <!-- ICONS INSIDE FUNNEL                        -->
+    <!-- ========================================== -->
+    
+    <!-- L1: Filter -->
+    <polygon points="590,150 610,150 603,160 603,168 597,168 597,160" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linejoin="round"/>
+    
+    <!-- L2: Lock -->
+    <rect x="593" y="234" width="14" height="10" rx="2" fill="none" stroke="#38BDF8" stroke-width="2"/>
+    <path d="M596,234 v-3 a4,4 0 0,1 8,0 v3" fill="none" stroke="#38BDF8" stroke-width="2"/>
+    
+    <!-- L3: Ruler -->
+    <rect x="588" y="312" width="24" height="12" rx="2" fill="none" stroke="#38BDF8" stroke-width="2"/>
+    <line x1="594" y1="312" x2="594" y2="316" stroke="#38BDF8" stroke-width="2"/>
+    <line x1="600" y1="312" x2="600" y2="318" stroke="#38BDF8" stroke-width="2"/>
+    <line x1="606" y1="312" x2="606" y2="316" stroke="#38BDF8" stroke-width="2"/>
+    
+    <!-- L4: Clock -->
+    <circle cx="600" cy="398" r="10" fill="none" stroke="#38BDF8" stroke-width="2"/>
+    <polyline points="600,392 600,398 604,402" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linejoin="round"/>
+    
+    <!-- L5: Shield -->
+    <path d="M592,472 L600,466 L608,472 L608,480 C608,486 600,490 600,490 C600,490 592,486 592,480 Z" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linejoin="round"/>
+    
+    <!-- L6: Star -->
+    <path d="M 600 545 L 603 553 L 611 553 L 605 558 L 607 566 L 600 561 L 593 566 L 595 558 L 589 553 L 597 553 Z" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linejoin="round"/>
+    
+    <!-- L7: Wave -->
+    <path d="M588,635 Q594,627 600,635 T612,635 M588,641 Q594,633 600,641 T612,641" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/>
+
+
+    <!-- ========================================== -->
+    <!-- LEFT SIDE: LAYER DESCRIPTIONS              -->
+    <!-- ========================================== -->
+    
+    <!-- Connecting Lines -->
+    <g stroke="#475569" stroke-width="1.5" stroke-dasharray="2 2">
+        <line x1="340" y1="158" x2="360" y2="158"/>
+        <line x1="365" y1="238" x2="385" y2="238"/>
+        <line x1="390" y1="318" x2="410" y2="318"/>
+        <line x1="415" y1="398" x2="435" y2="398"/>
+        <line x1="440" y1="478" x2="460" y2="478"/>
+        <line x1="465" y1="558" x2="485" y2="558"/>
+        <line x1="490" y1="638" x2="510" y2="638"/>
+    </g>
+
+    <g fill="#475569">
+        <circle cx="340" cy="158" r="2"/>
+        <circle cx="365" cy="238" r="2"/>
+        <circle cx="390" cy="318" r="2"/>
+        <circle cx="415" cy="398" r="2"/>
+        <circle cx="440" cy="478" r="2"/>
+        <circle cx="465" cy="558" r="2"/>
+        <circle cx="490" cy="638" r="2"/>
+    </g>
+
+    <g fill="#38BDF8">
+        <circle cx="360" cy="158" r="2"/>
+        <circle cx="385" cy="238" r="2"/>
+        <circle cx="410" cy="318" r="2"/>
+        <circle cx="435" cy="398" r="2"/>
+        <circle cx="460" cy="478" r="2"/>
+        <circle cx="485" cy="558" r="2"/>
+        <circle cx="510" cy="638" r="2"/>
+    </g>
+
+    <!-- Text Labels -->
+    <g text-anchor="end" font-family="system-ui, sans-serif">
+        <!-- L1 -->
+        <text x="332" y="153" fill="#F8FAFC" font-size="18" font-weight="bold">Input Validation</text>
+        <text x="332" y="173" fill="#94A3B8" font-size="14">PII strip, JSON, limits</text>
+        
+        <!-- L2 -->
+        <text x="357" y="233" fill="#F8FAFC" font-size="18" font-weight="bold">Cryptography</text>
+        <text x="357" y="253" fill="#94A3B8" font-size="14">SHAKE-256, Ed25519, witness</text>
+        
+        <!-- L3 -->
+        <text x="382" y="313" fill="#F8FAFC" font-size="18" font-weight="bold">Bounds Checking</text>
+        <text x="382" y="333" fill="#94A3B8" font-size="14">Rejects NaN, Infinity, outliers</text>
+        
+        <!-- L4 -->
+        <text x="407" y="393" fill="#F8FAFC" font-size="18" font-weight="bold">Rate Limiting</text>
+        <text x="407" y="413" fill="#94A3B8" font-size="14">Token bucket &amp; nonces</text>
+        
+        <!-- L5 -->
+        <text x="432" y="473" fill="#F8FAFC" font-size="18" font-weight="bold">Byzantine Exclusion</text>
+        <text x="432" y="493" fill="#94A3B8" font-size="14">2-sigma statistical filter</text>
+        
+        <!-- L6 -->
+        <text x="457" y="553" fill="#F8FAFC" font-size="18" font-weight="bold">Reputation Scoring</text>
+        <text x="457" y="573" fill="#94A3B8" font-size="14">accuracy² × uptime × stake</text>
+        
+        <!-- L7 -->
+        <text x="482" y="633" fill="#F8FAFC" font-size="18" font-weight="bold">Drift Detection</text>
+        <text x="482" y="653" fill="#94A3B8" font-size="14">SNN distribution monitor</text>
+    </g>
+
+
+    <!-- ========================================== -->
+    <!-- RIGHT SIDE: BLOCKED THREATS                -->
+    <!-- ========================================== -->
+    
+    <!-- Red Arrows -->
+    <g stroke="#EF4444" stroke-width="2" marker-end="url(#red-arrow)">
+        <line x1="843" y1="158" x2="865" y2="158"/>
+        <line x1="818" y1="238" x2="840" y2="238"/>
+        <line x1="793" y1="318" x2="815" y2="318"/>
+        <line x1="768" y1="398" x2="790" y2="398"/>
+        <line x1="743" y1="478" x2="765" y2="478"/>
+        <line x1="718" y1="558" x2="740" y2="558"/>
+        <line x1="693" y1="638" x2="715" y2="638"/>
+    </g>
+
+    <!-- Threat Boxes -->
+    <g fill="#450A0A" stroke="#B91C1C" stroke-width="1.5">
+        <rect x="875" y="142" width="165" height="32" rx="4"/>
+        <rect x="850" y="222" width="165" height="32" rx="4"/>
+        <rect x="825" y="302" width="165" height="32" rx="4"/>
+        <rect x="800" y="382" width="165" height="32" rx="4"/>
+        <rect x="775" y="462" width="165" height="32" rx="4"/>
+        <rect x="750" y="542" width="165" height="32" rx="4"/>
+        <rect x="725" y="622" width="165" height="32" rx="4"/>
+    </g>
+
+    <!-- Red X Icons -->
+    <g stroke="#EF4444" stroke-width="2" stroke-linecap="round">
+        <path d="M 885 154 L 893 162 M 885 162 L 893 154"/>
+        <path d="M 860 234 L 868 242 M 860 242 L 868 234"/>
+        <path d="M 835 314 L 843 322 M 835 322 L 843 314"/>
+        <path d="M 810 394 L 818 402 M 810 402 L 818 394"/>
+        <path d="M 785 474 L 793 482 M 785 482 L 793 474"/>
+        <path d="M 760 554 L 768 562 M 760 562 L 768 554"/>
+        <path d="M 735 634 L 743 642 M 735 642 L 743 634"/>
+    </g>
+
+    <!-- Threat Texts -->
+    <g fill="#FCA5A5" font-size="14" font-weight="bold" font-family="system-ui, sans-serif">
+        <text x="902" y="163">Malformed Data</text>
+        <text x="877" y="243">Impersonation</text>
+        <text x="852" y="323">Overflow Exploits</text>
+        <text x="827" y="403">DDoS &amp; Replay</text>
+        <text x="802" y="483">Poisoning Attacks</text>
+        <text x="777" y="563">Sybil &amp; Flooding</text>
+        <text x="752" y="643">Slow Poisoning</text>
+    </g>
+
+
+    <!-- ========================================== -->
+    <!-- BOTTOM OUTPUT SECTION (Verified Data)      -->
+    <!-- ========================================== -->
+    
+    <!-- Output Arrow & Particles -->
+    <line x1="600" y1="680" x2="600" y2="705" stroke="#10B981" stroke-width="2" marker-end="url(#green-arrow)"/>
+    <text x="625" y="697" fill="#10B981" font-size="12" font-family="system-ui, sans-serif">verified</text>
+    
+    <circle cx="590" cy="690" r="3" fill="#10B981"/>
+    <circle cx="605" cy="710" r="4" fill="#10B981"/>
+    <circle cx="615" cy="695" r="3" fill="#10B981"/>
+    <circle cx="595" cy="720" r="3" fill="#10B981"/>
+
+    <!-- Glowing Background for Database -->
+    <circle cx="600" cy="755" r="60" fill="url(#greenGlow)"/>
+
+    <!-- Core Network Database Cylinder -->
+    <path d="M530,740 v30 a70,15 0 0,0 140,0 v-30 m-140,0 a70,15 0 0,0 140,0 a70,15 0 0,0 -140,0" fill="#064E3B" stroke="#10B981" stroke-width="2"/>
+    
+    <text x="600" y="760" fill="#34D399" font-size="16" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Verified Data</text>
+    
+    <!-- Large Green Checkmark -->
+    <path d="M 675 745 L 685 755 L 700 735" stroke="#10B981" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+
+    <!-- ========================================== -->
+    <!-- METRIC BADGES (Bottom Corners)             -->
+    <!-- ========================================== -->
+    
+    <!-- Rejection Metric Badge (Moved to Bottom Left) -->
+    <rect x="50" y="630" width="180" height="30" rx="15" fill="#1E293B" stroke="#38BDF8" stroke-width="1.5"/>
+    <text x="140" y="650" fill="#38BDF8" font-size="14" font-weight="bold" font-family="system-ui, sans-serif" text-anchor="middle">99.8% Threat Rejection</text>
+
+    <!-- Bottom Left Badge -->
+    <rect x="50" y="680" width="200" height="80" rx="8" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+    <text x="150" y="715" fill="#94A3B8" font-size="12" text-anchor="middle" font-family="system-ui, sans-serif" letter-spacing="1">DEFENSE ARCHITECTURE</text>
+    <text x="150" y="740" fill="#10B981" font-size="20" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Zero-Trust Flow</text>
+
+    <!-- Bottom Right Badge -->
+    <rect x="950" y="680" width="200" height="80" rx="8" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+    <text x="1050" y="715" fill="#94A3B8" font-size="12" text-anchor="middle" font-family="system-ui, sans-serif" letter-spacing="1">PROCESSING SPEED</text>
+    <text x="1050" y="740" fill="#38BDF8" font-size="24" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">&lt; 50ms</text>
+
+</svg>

@@ -1,0 +1,278 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" style="background-color: #0B1426; font-family: system-ui, -apple-system, sans-serif;">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bg-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1E3A5F" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0B1426" stop-opacity="1"/>
+    </radialGradient>
+
+    <!-- Bell Curve Fill Gradient -->
+    <linearGradient id="curve-fill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0.0"/>
+    </linearGradient>
+
+    <!-- Arrow Markers -->
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#10B981"/>
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#EF4444"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#3B82F6"/>
+    </marker>
+    <marker id="arrow-gold" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#F59E0B"/>
+    </marker>
+
+    <!-- Drop Shadows -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <filter id="glow-gold" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#bg-glow)"/>
+
+  <!-- Title -->
+  <text x="600" y="60" font-size="28" font-weight="bold" fill="#F8FAFC" text-anchor="middle">Byzantine Fault Tolerant Consensus in Pi</text>
+  <text x="600" y="90" font-size="16" fill="#94A3B8" text-anchor="middle">Self-healing network architecture via statistical filtering and reputation weighting</text>
+
+  <!-- ========================================== -->
+  <!-- STEP 1: AGENTS (Left Column)               -->
+  <!-- ========================================== -->
+  
+  <!-- Agent 1 (Honest) -->
+  <g transform="translate(120, 200)">
+    <circle cx="0" cy="0" r="28" fill="#064E3B" stroke="#10B981" stroke-width="3" filter="url(#shadow)"/>
+    <path d="M -8 -4 A 8 8 0 0 1 8 -4 V 4 A 8 8 0 0 1 -8 4 Z" fill="#34D399"/>
+    <circle cx="0" cy="-8" r="4" fill="#34D399"/>
+    <text x="40" y="-4" font-size="14" font-weight="bold" fill="#F8FAFC">Agent A</text>
+    <rect x="40" y="6" width="55" height="20" rx="4" fill="#1E293B" stroke="#334155"/>
+    <text x="45" y="20" font-size="11" fill="#10B981" font-weight="bold">val: 1.02</text>
+  </g>
+
+  <!-- Agent 2 (Honest) -->
+  <g transform="translate(120, 300)">
+    <circle cx="0" cy="0" r="28" fill="#064E3B" stroke="#10B981" stroke-width="3" filter="url(#shadow)"/>
+    <path d="M -8 -4 A 8 8 0 0 1 8 -4 V 4 A 8 8 0 0 1 -8 4 Z" fill="#34D399"/>
+    <circle cx="0" cy="-8" r="4" fill="#34D399"/>
+    <text x="40" y="-4" font-size="14" font-weight="bold" fill="#F8FAFC">Agent B</text>
+    <rect x="40" y="6" width="55" height="20" rx="4" fill="#1E293B" stroke="#334155"/>
+    <text x="45" y="20" font-size="11" fill="#10B981" font-weight="bold">val: 0.98</text>
+  </g>
+
+  <!-- Agent 3 (Honest) -->
+  <g transform="translate(120, 400)">
+    <circle cx="0" cy="0" r="28" fill="#064E3B" stroke="#10B981" stroke-width="3" filter="url(#shadow)"/>
+    <path d="M -8 -4 A 8 8 0 0 1 8 -4 V 4 A 8 8 0 0 1 -8 4 Z" fill="#34D399"/>
+    <circle cx="0" cy="-8" r="4" fill="#34D399"/>
+    <text x="40" y="-4" font-size="14" font-weight="bold" fill="#F8FAFC">Agent C</text>
+    <rect x="40" y="6" width="55" height="20" rx="4" fill="#1E293B" stroke="#334155"/>
+    <text x="45" y="20" font-size="11" fill="#10B981" font-weight="bold">val: 1.05</text>
+  </g>
+
+  <!-- Agent 4 (Attacker) -->
+  <g transform="translate(120, 500)">
+    <circle cx="0" cy="0" r="32" fill="#450A0A" stroke="#EF4444" stroke-width="3" filter="url(#shadow)"/>
+    <!-- Devil/Attacker Icon -->
+    <path d="M -10 -2 L -14 -12 L -4 -6 M 10 -2 L 14 -12 L 4 -6" stroke="#F87171" stroke-width="2" fill="none"/>
+    <path d="M -10 0 A 10 10 0 0 1 10 0 V 6 A 10 10 0 0 1 -10 6 Z" fill="#F87171"/>
+    <text x="45" y="-4" font-size="14" font-weight="bold" fill="#EF4444">Attacker</text>
+    <rect x="45" y="6" width="55" height="20" rx="4" fill="#1E293B" stroke="#EF4444"/>
+    <text x="50" y="20" font-size="11" fill="#F87171" font-weight="bold">val: 95.0</text>
+  </g>
+
+  <!-- Flow Arrows into Filter -->
+  <path d="M 160 200 L 280 230" stroke="#10B981" stroke-width="2" marker-end="url(#arrow-green)" fill="none" opacity="0.7"/>
+  <path d="M 160 300 L 280 300" stroke="#10B981" stroke-width="2" marker-end="url(#arrow-green)" fill="none" opacity="0.7"/>
+  <path d="M 160 400 L 280 370" stroke="#10B981" stroke-width="2" marker-end="url(#arrow-green)" fill="none" opacity="0.7"/>
+  <path d="M 165 500 L 280 440" stroke="#EF4444" stroke-width="3" marker-end="url(#arrow-red)" stroke-dasharray="6,4" fill="none"/>
+
+  <!-- ========================================== -->
+  <!-- STEP 2: 2-SIGMA FILTERING (Middle-Left)    -->
+  <!-- ========================================== -->
+  
+  <rect x="290" y="150" width="260" height="390" rx="16" fill="#13233F" stroke="#1E3A5F" stroke-width="2" filter="url(#shadow)"/>
+  
+  <!-- Header -->
+  <text x="420" y="185" font-size="18" font-weight="bold" fill="#F8FAFC" text-anchor="middle">2-Sigma Filtering</text>
+  <text x="420" y="205" font-size="13" fill="#94A3B8" text-anchor="middle">Excludes statistical outliers</text>
+
+  <!-- Bell Curve Visual -->
+  <g transform="translate(0, 30)">
+    <!-- Filled Area -->
+    <path d="M 310 440 C 350 440, 370 260, 420 260 C 470 260, 490 440, 530 440 Z" fill="url(#curve-fill)"/>
+    <!-- Curve Line -->
+    <path d="M 310 440 C 350 440, 370 260, 420 260 C 470 260, 490 440, 530 440" stroke="#2DD4BF" stroke-width="3" fill="none"/>
+    <!-- Baseline -->
+    <line x1="300" y1="440" x2="540" y2="440" stroke="#475569" stroke-width="2"/>
+    
+    <!-- Sigma Lines -->
+    <line x1="360" y1="280" x2="360" y2="440" stroke="#64748B" stroke-dasharray="4,4" stroke-width="2"/>
+    <line x1="480" y1="280" x2="480" y2="440" stroke="#64748B" stroke-dasharray="4,4" stroke-width="2"/>
+    <text x="360" y="270" font-size="12" fill="#94A3B8" text-anchor="middle">-2σ</text>
+    <text x="480" y="270" font-size="12" fill="#94A3B8" text-anchor="middle">+2σ</text>
+
+    <!-- Data Points -->
+    <circle cx="410" cy="440" r="6" fill="#10B981"/>
+    <circle cx="425" cy="440" r="6" fill="#10B981"/>
+    <circle cx="440" cy="440" r="6" fill="#10B981"/>
+    
+    <!-- Outlier Point -->
+    <circle cx="515" cy="440" r="8" fill="#EF4444"/>
+    <!-- Red X over outlier -->
+    <line x1="505" y1="430" x2="525" y2="450" stroke="#F87171" stroke-width="3"/>
+    <line x1="525" y1="430" x2="505" y2="450" stroke="#F87171" stroke-width="3"/>
+    <text x="515" y="420" font-size="12" font-weight="bold" fill="#EF4444" text-anchor="middle">Rejected</text>
+  </g>
+
+  <!-- Flow Arrow from Filter to Averaging -->
+  <path d="M 550 345 L 615 345" stroke="#3B82F6" stroke-width="4" marker-end="url(#arrow-blue)" fill="none"/>
+  <text x="585" y="335" font-size="12" font-weight="bold" fill="#60A5FA" text-anchor="middle">Valid Data</text>
+
+  <!-- ========================================== -->
+  <!-- STEP 3: FEDERATED AVERAGING (Middle-Right) -->
+  <!-- ========================================== -->
+  
+  <rect x="630" y="150" width="260" height="390" rx="16" fill="#13233F" stroke="#1E3A5F" stroke-width="2" filter="url(#shadow)"/>
+  
+  <!-- Header -->
+  <text x="760" y="185" font-size="18" font-weight="bold" fill="#F8FAFC" text-anchor="middle">Federated Averaging</text>
+  <text x="760" y="205" font-size="13" fill="#94A3B8" text-anchor="middle">Weighted by agent reputation</text>
+
+  <!-- Weighting Network Visual -->
+  <g transform="translate(0, 20)">
+    <!-- High Rep Input -->
+    <circle cx="670" cy="240" r="5" fill="#10B981"/>
+    <path d="M 670 240 C 710 240, 720 300, 760 300" stroke="#3B82F6" stroke-width="6" fill="none" opacity="0.9"/>
+    <text x="685" y="235" font-size="11" fill="#94A3B8">High Rep</text>
+    
+    <!-- Med Rep Input -->
+    <circle cx="670" cy="300" r="5" fill="#10B981"/>
+    <path d="M 670 300 L 760 300" stroke="#3B82F6" stroke-width="3" fill="none" opacity="0.6"/>
+    
+    <!-- Low Rep Input -->
+    <circle cx="670" cy="360" r="5" fill="#10B981"/>
+    <path d="M 670 360 C 710 360, 720 300, 760 300" stroke="#3B82F6" stroke-width="1" fill="none" opacity="0.4"/>
+    <text x="685" y="375" font-size="11" fill="#94A3B8">Low Rep</text>
+
+    <!-- Central Merge Node -->
+    <circle cx="760" cy="300" r="22" fill="#1E3A5F" stroke="#60A5FA" stroke-width="3" filter="url(#shadow)"/>
+    <circle cx="760" cy="300" r="10" fill="#3B82F6"/>
+    
+    <!-- Scale/Balance Icon -->
+    <g transform="translate(760, 370)">
+      <path d="M 0 15 L -12 35 L 12 35 Z" fill="#475569"/>
+      <rect x="-3" y="-5" width="6" height="25" fill="#64748B"/>
+      <line x1="-30" y1="-5" x2="30" y2="-5" stroke="#CBD5E1" stroke-width="3"/>
+      <!-- Left Pan -->
+      <line x1="-30" y1="-5" x2="-40" y2="15" stroke="#64748B" stroke-width="1"/>
+      <line x1="-30" y1="-5" x2="-20" y2="15" stroke="#64748B" stroke-width="1"/>
+      <path d="M -40 15 L -20 15 L -30 20 Z" fill="#3B82F6"/>
+      <!-- Right Pan -->
+      <line x1="30" y1="-5" x2="20" y2="15" stroke="#64748B" stroke-width="1"/>
+      <line x1="30" y1="-5" x2="40" y2="15" stroke="#64748B" stroke-width="1"/>
+      <path d="M 20 15 L 40 15 L 30 20 Z" fill="#3B82F6"/>
+    </g>
+
+    <!-- Formula Badge -->
+    <rect x="660" y="430" width="200" height="36" rx="6" fill="#0B1426" stroke="#334155"/>
+    <text x="760" y="453" font-size="14" font-family="monospace" font-weight="bold" fill="#FCD34D" text-anchor="middle">W = acc² × up × stake</text>
+  </g>
+
+  <!-- Flow Arrow from Averaging to Chain -->
+  <path d="M 890 345 L 955 345" stroke="#F59E0B" stroke-width="4" marker-end="url(#arrow-gold)" fill="none"/>
+  <text x="925" y="335" font-size="12" font-weight="bold" fill="#FCD34D" text-anchor="middle">Consensus</text>
+
+  <!-- ========================================== -->
+  <!-- STEP 4: WITNESS CHAIN (Right Column)       -->
+  <!-- ========================================== -->
+  
+  <rect x="970" y="150" width="180" height="390" rx="16" fill="#13233F" stroke="#1E3A5F" stroke-width="2" filter="url(#shadow)"/>
+  
+  <!-- Header -->
+  <text x="1060" y="185" font-size="18" font-weight="bold" fill="#F8FAFC" text-anchor="middle">Witness Chain</text>
+  <text x="1060" y="205" font-size="13" fill="#94A3B8" text-anchor="middle">Tamper-proof ledger</text>
+
+  <!-- Chain Blocks -->
+  <g transform="translate(0, 10)">
+    <!-- Block 1 -->
+    <rect x="990" y="220" width="140" height="50" rx="8" fill="#1E293B" stroke="#334155" stroke-width="2"/>
+    <text x="1060" y="250" font-size="14" fill="#94A3B8" text-anchor="middle">Block #8492</text>
+    
+    <!-- Link 1 -->
+    <rect x="1030" y="270" width="12" height="20" fill="#475569" rx="2"/>
+    <rect x="1078" y="270" width="12" height="20" fill="#475569" rx="2"/>
+
+    <!-- Block 2 (Highlighted) -->
+    <rect x="990" y="290" width="140" height="70" rx="8" fill="#451A03" stroke="#F59E0B" stroke-width="2" filter="url(#glow-gold)"/>
+    <!-- Lock Icon -->
+    <path d="M 1010 325 V 320 A 6 6 0 0 1 1022 320 V 325" stroke="#FCD34D" stroke-width="2" fill="none"/>
+    <rect x="1006" y="325" width="20" height="14" rx="3" fill="#FCD34D"/>
+    <text x="1070" y="320" font-size="14" font-weight="bold" fill="#FCD34D" text-anchor="middle">Result Written</text>
+    <text x="1070" y="340" font-size="11" fill="#FEF3C7" text-anchor="middle">Hash: 0x4f9a...</text>
+
+    <!-- Link 2 -->
+    <rect x="1030" y="360" width="12" height="20" fill="#475569" rx="2"/>
+    <rect x="1078" y="360" width="12" height="20" fill="#475569" rx="2"/>
+
+    <!-- Block 3 -->
+    <rect x="990" y="380" width="140" height="50" rx="8" fill="#1E293B" stroke="#334155" stroke-width="2"/>
+    <text x="1060" y="410" font-size="14" fill="#94A3B8" text-anchor="middle">Block #8494</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- STEP 5: REPUTATION FEEDBACK LOOP (Bottom)  -->
+  <!-- ========================================== -->
+  
+  <!-- Main Feedback Trunk -->
+  <path d="M 1060 540 L 1060 620 Q 1060 640 1040 640 L 80 640 Q 60 640 60 620 L 60 200" stroke="#60A5FA" stroke-width="3" stroke-dasharray="8,6" fill="none" opacity="0.8"/>
+  
+  <!-- Feedback Badge -->
+  <rect x="480" y="625" width="240" height="30" rx="15" fill="#1E3A5F" stroke="#3B82F6"/>
+  <!-- Cycle Icon inside badge -->
+  <path d="M 500 635 A 6 6 0 1 1 495 640 L 495 635 M 495 640 L 500 645" stroke="#60A5FA" stroke-width="2" fill="none"/>
+  <text x="600" y="645" font-size="14" font-weight="bold" fill="#F8FAFC" text-anchor="middle">Reputation Feedback Loop</text>
+
+  <!-- Branches to Agents -->
+  <!-- To Agent 1 -->
+  <path d="M 60 200 L 80 200" stroke="#10B981" stroke-width="3" marker-end="url(#arrow-green)" fill="none"/>
+  <rect x="65" y="175" width="50" height="18" rx="4" fill="#064E3B"/>
+  <text x="90" y="188" font-size="10" font-weight="bold" fill="#34D399" text-anchor="middle">+ Trust</text>
+
+  <!-- To Agent 2 -->
+  <path d="M 60 300 L 80 300" stroke="#10B981" stroke-width="3" marker-end="url(#arrow-green)" fill="none"/>
+  <rect x="65" y="275" width="50" height="18" rx="4" fill="#064E3B"/>
+  <text x="90" y="288" font-size="10" font-weight="bold" fill="#34D399" text-anchor="middle">+ Trust</text>
+
+  <!-- To Agent 3 -->
+  <path d="M 60 400 L 80 400" stroke="#10B981" stroke-width="3" marker-end="url(#arrow-green)" fill="none"/>
+  <rect x="65" y="375" width="50" height="18" rx="4" fill="#064E3B"/>
+  <text x="90" y="388" font-size="10" font-weight="bold" fill="#34D399" text-anchor="middle">+ Trust</text>
+
+  <!-- To Agent 4 (Attacker) -->
+  <path d="M 60 500 L 75 500" stroke="#EF4444" stroke-width="3" marker-end="url(#arrow-red)" fill="none"/>
+  <rect x="60" y="475" width="60" height="18" rx="4" fill="#450A0A"/>
+  <text x="90" y="488" font-size="10" font-weight="bold" fill="#F87171" text-anchor="middle">- Penalty</text>
+
+  <!-- ========================================== -->
+  <!-- CORE INSIGHT BOX (Bottom Center)           -->
+  <!-- ========================================== -->
+  
+  <rect x="200" y="700" width="800" height="60" rx="12" fill="#13233F" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)"/>
+  
+  <!-- Lightbulb / Insight Icon -->
+  <circle cx="230" cy="730" r="16" fill="#451A03"/>
+  <path d="M 230 720 L 235 730 L 245 730 L 237 736 L 240 745 L 230 740 L 220 745 L 223 736 L 215 730 L 225 730 Z" fill="#FCD34D"/>
+  
+  <text x="265" y="736" font-size="16" font-weight="bold" fill="#FCD34D">CORE INSIGHT:</text>
+  <text x="395" y="735" font-size="16" fill="#F8FAFC">The system is self-correcting. Malicious agents lose reputation,</text>
+  <text x="830" y="735" font-size="16" font-weight="bold" fill="#F8FAFC">neutralizing future attacks.</text>
+
+</svg>

@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Background Grid Pattern -->
+    <pattern id="dotGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#1E293B" />
+    </pattern>
+
+    <!-- Gradients -->
+    <linearGradient id="orbGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDBA74" />
+      <stop offset="50%" stop-color="#F97316" />
+      <stop offset="100%" stop-color="#EA580C" />
+    </linearGradient>
+
+    <linearGradient id="beamGrad" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#F97316" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#FCD34D" stop-opacity="0.05" />
+    </linearGradient>
+
+    <linearGradient id="targetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#D97706" stop-opacity="0.05" />
+    </linearGradient>
+
+    <linearGradient id="natureGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.02" />
+    </linearGradient>
+
+    <linearGradient id="spaceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#4F46E5" stop-opacity="0.02" />
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Base Environment -->
+  <rect width="1200" height="800" fill="#0B1426" />
+  <rect width="1200" height="800" fill="url(#dotGrid)" opacity="0.6" />
+
+  <!-- Vector Space Label -->
+  <text x="1140" y="60" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#475569" letter-spacing="4" text-anchor="end">VECTOR SPACE</text>
+
+  <!-- HNSW Graph Background Network (Organic spatial connections) -->
+  <g stroke="#334155" stroke-width="2" fill="none" opacity="0.6" stroke-linecap="round">
+    <!-- Connections between clusters -->
+    <path d="M 780 280 C 820 200, 880 180, 960 180" stroke-dasharray="6 6" />
+    <path d="M 780 560 C 820 640, 880 660, 960 660" stroke-dasharray="6 6" />
+    <path d="M 960 260 C 920 420, 920 420, 960 580" stroke-dasharray="6 6" />
+    
+    <!-- Deep space nodes -->
+    <path d="M 500 150 Q 600 100 700 150 T 900 80" />
+    <path d="M 500 650 Q 600 700 700 650 T 900 720" />
+    <circle cx="500" cy="150" r="4" fill="#475569" />
+    <circle cx="700" cy="150" r="4" fill="#475569" />
+    <circle cx="900" cy="80" r="4" fill="#475569" />
+    <circle cx="500" cy="650" r="4" fill="#475569" />
+    <circle cx="700" cy="650" r="4" fill="#475569" />
+    <circle cx="900" cy="720" r="4" fill="#475569" />
+  </g>
+
+  <!-- Semantic Clusters Label -->
+  <text x="1050" y="420" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="500" fill="#64748B" text-anchor="middle" letter-spacing="1">SEMANTIC CLUSTERS</text>
+
+  <!-- Meaning Beam (The core narrative flow) -->
+  <path d="M 300 420 L 660 240 A 220 220 0 0 1 660 600 Z" fill="url(#beamGrad)" filter="url(#glow)" />
+  <path d="M 300 420 Q 480 420 660 420" fill="none" stroke="#FDBA74" stroke-width="3" stroke-dasharray="8 8" opacity="0.6" />
+
+  <!-- Target Semantic Cluster (Primary Focal Point) -->
+  <g transform="translate(680, 260)" filter="url(#dropShadow)">
+    <!-- Glowing Aura -->
+    <rect x="0" y="0" width="280" height="320" rx="40" fill="url(#targetGrad)" stroke="#F59E0B" stroke-width="3" filter="url(#glow)" />
+    <rect x="0" y="0" width="280" height="320" rx="40" fill="none" stroke="#FCD34D" stroke-width="1" opacity="0.5" />
+    
+    <!-- Meaning Match Label -->
+    <g transform="translate(-140, 160)">
+      <line x1="0" y1="0" x2="120" y2="0" stroke="#FCD34D" stroke-width="2" stroke-dasharray="4 4" />
+      <circle cx="120" cy="0" r="4" fill="#FCD34D" />
+      <rect x="-10" y="-15" width="110" height="30" rx="15" fill="#0F172A" stroke="#F59E0B" stroke-width="1" />
+      <text x="45" y="4" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#FDE68A" text-anchor="middle">Meaning Match</text>
+    </g>
+
+    <!-- Internal Nodes Connecting the diverse formats -->
+    <path d="M 80 100 L 180 140 L 110 230 Z" fill="none" stroke="#F59E0B" stroke-width="2" opacity="0.4" stroke-dasharray="4 4" />
+
+    <!-- Miniature Icon: Document (Text) -->
+    <g transform="translate(40, 50)">
+      <rect x="0" y="0" width="60" height="76" rx="6" fill="#1E293B" stroke="#FCD34D" stroke-width="2" />
+      <line x1="12" y1="20" x2="48" y2="20" stroke="#FCD34D" stroke-width="3" stroke-linecap="round" />
+      <line x1="12" y1="36" x2="48" y2="36" stroke="#FCD34D" stroke-width="3" stroke-linecap="round" />
+      <line x1="12" y1="52" x2="36" y2="52" stroke="#FCD34D" stroke-width="3" stroke-linecap="round" />
+    </g>
+
+    <!-- Miniature Icon: Polaroid (Image of Dog) -->
+    <g transform="translate(140, 90) rotate(8)">
+      <rect x="0" y="0" width="70" height="86" rx="4" fill="#F8FAFC" filter="url(#dropShadow)" />
+      <rect x="6" y="6" width="58" height="54" rx="2" fill="#0F172A" />
+      <!-- Minimalist Dog Silhouette -->
+      <path d="M 20 46 L 26 28 L 35 34 L 44 28 L 50 46 Z" fill="#F59E0B" />
+      <circle cx="35" cy="46" r="6" fill="#F8FAFC" />
+    </g>
+
+    <!-- Miniature Icon: Audio Waveform -->
+    <g transform="translate(60, 190)">
+      <rect x="0" y="0" width="80" height="60" rx="10" fill="#1E293B" stroke="#FCD34D" stroke-width="2" />
+      <line x1="16" y1="30" x2="16" y2="30" stroke="#F59E0B" stroke-width="4" stroke-linecap="round" />
+      <line x1="28" y1="20" x2="28" y2="40" stroke="#F59E0B" stroke-width="4" stroke-linecap="round" />
+      <line x1="40" y1="12" x2="40" y2="48" stroke="#F59E0B" stroke-width="4" stroke-linecap="round" />
+      <line x1="52" y1="22" x2="52" y2="38" stroke="#F59E0B" stroke-width="4" stroke-linecap="round" />
+      <line x1="64" y1="28" x2="64" y2="32" stroke="#F59E0B" stroke-width="4" stroke-linecap="round" />
+    </g>
+  </g>
+
+  <!-- Secondary Cluster: Nature (Top Right) -->
+  <g transform="translate(880, 100)">
+    <rect x="0" y="0" width="160" height="160" rx="30" fill="url(#natureGrad)" stroke="#10B981" stroke-width="2" opacity="0.8" />
+    
+    <!-- Nature Nodes -->
+    <path d="M 50 60 L 110 100" fill="none" stroke="#34D399" stroke-width="2" opacity="0.4" stroke-dasharray="4 4" />
+    
+    <!-- Tree Icon -->
+    <g transform="translate(30, 30)">
+      <rect x="16" y="24" width="8" height="20" fill="#1E293B" />
+      <circle cx="20" cy="14" r="14" fill="#34D399" />
+      <circle cx="10" cy="22" r="10" fill="#34D399" />
+      <circle cx="30" cy="22" r="10" fill="#34D399" />
+    </g>
+    
+    <!-- Leaf Icon -->
+    <g transform="translate(90, 80)">
+      <path d="M 20 30 C 0 30, 0 10, 10 0 C 30 0, 30 20, 20 30 Z" fill="#34D399" />
+      <path d="M 10 35 L 20 20" stroke="#1E293B" stroke-width="2" stroke-linecap="round" />
+    </g>
+  </g>
+
+  <!-- Secondary Cluster: Space (Bottom Right) -->
+  <g transform="translate(880, 540)">
+    <rect x="0" y="0" width="160" height="160" rx="30" fill="url(#spaceGrad)" stroke="#6366F1" stroke-width="2" opacity="0.8" />
+    
+    <!-- Space Nodes -->
+    <path d="M 60 60 L 100 110" fill="none" stroke="#818CF8" stroke-width="2" opacity="0.4" stroke-dasharray="4 4" />
+    
+    <!-- Moon Icon -->
+    <g transform="translate(35, 30)">
+      <path d="M 15 35 A 16 16 0 1 0 35 15 A 20 20 0 1 1 15 35 Z" fill="#818CF8" />
+    </g>
+    
+    <!-- Star Icon -->
+    <g transform="translate(90, 85)">
+      <polygon points="15,0 19,10 30,10 21,17 24,28 15,21 6,28 9,17 0,10 11,10" fill="#818CF8" />
+    </g>
+  </g>
+
+  <!-- The RuVector Librarian (Friendly AI Agent) -->
+  <g transform="translate(80, 320)" filter="url(#dropShadow)">
+    <!-- Hover Base (Anti-gravity rings) -->
+    <ellipse cx="90" cy="240" rx="40" ry="8" fill="none" stroke="#3B82F6" stroke-width="2" opacity="0.5" />
+    <ellipse cx="90" cy="250" rx="25" ry="5" fill="none" stroke="#60A5FA" stroke-width="2" opacity="0.3" />
+
+    <!-- Robot Body (Pastel blue vest/torso) -->
+    <rect x="40" y="100" width="100" height="120" rx="35" fill="#1E293B" stroke="#3B82F6" stroke-width="3" />
+    <path d="M 40 135 C 40 115, 140 115, 140 135 L 140 195 C 140 215, 40 215, 40 195 Z" fill="rgba(59, 130, 246, 0.15)" />
+    
+    <!-- Robot Neck -->
+    <rect x="80" y="80" width="20" height="25" fill="#334155" />
+    
+    <!-- Robot Head -->
+    <rect x="25" y="0" width="130" height="90" rx="25" fill="#0F172A" stroke="#3B82F6" stroke-width="3" filter="url(#softGlow)" />
+    
+    <!-- Friendly Face -->
+    <circle cx="65" cy="40" r="8" fill="#60A5FA" filter="url(#softGlow)" />
+    <circle cx="115" cy="40" r="8" fill="#60A5FA" filter="url(#softGlow)" />
+    <path d="M 75 60 Q 90 70 105 60" fill="none" stroke="#60A5FA" stroke-width="3" stroke-linecap="round" />
+    
+    <!-- Antenna -->
+    <line x1="90" y1="0" x2="90" y2="-25" stroke="#3B82F6" stroke-width="3" stroke-linecap="round" />
+    <circle cx="90" cy="-25" r="6" fill="#F97316" filter="url(#softGlow)" />
+
+    <!-- Robot Arm reaching out -->
+    <path d="M 120 140 Q 180 140 200 100" fill="none" stroke="#3B82F6" stroke-width="10" stroke-linecap="round" />
+    
+    <!-- RuVector AI Label -->
+    <text x="90" y="280" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">RuVector AI</text>
+  </g>
+
+  <!-- Query Concept Orb (Held by Librarian) -->
+  <g transform="translate(300, 420)">
+    <!-- Label above orb -->
+    <g transform="translate(0, -60)">
+      <rect x="-70" y="-15" width="140" height="30" rx="15" fill="#F8FAFC" filter="url(#dropShadow)" />
+      <text x="0" y="4" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#0F172A" text-anchor="middle">Query: Concept</text>
+    </g>
+    
+    <!-- The Glowing Orb -->
+    <circle cx="0" cy="0" r="32" fill="url(#orbGrad)" filter="url(#glow)" />
+    <circle cx="0" cy="0" r="32" fill="none" stroke="#FFF" stroke-width="2" opacity="0.8" />
+    
+    <!-- Inner Energy Core -->
+    <circle cx="0" cy="0" r="15" fill="#FFF" opacity="0.9" filter="url(#softGlow)" />
+  </g>
+
+</svg>

@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "lastSync": "2026-03-09T04:30:00Z",
+  "diagrams": [
+    {
+      "id": "project-structure",
+      "sourceFile": "README.md",
+      "sourceLine": 611,
+      "svgFile": "assets/diagrams/project-structure.svg",
+      "asciiHash": "sha256:43e6193bc45a1df81eca71973f3cc28574db1d780467db1c4e2f34b90dd11fec",
+      "lastConverted": "2026-03-09T04:30:00Z"
+    }
+  ]
+}

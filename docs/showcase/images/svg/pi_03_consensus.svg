@@ -1,0 +1,206 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#172554" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#0B1426" stop-opacity="1"/>
+    </radialGradient>
+
+    <!-- Core Element Gradients -->
+    <linearGradient id="crystalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE68A" stop-opacity="0.9"/>
+      <stop offset="30%" stop-color="#F59E0B" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#EA580C" stop-opacity="0.9"/>
+    </linearGradient>
+
+    <linearGradient id="diamondGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#7DD3FC" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#2563EB" stop-opacity="0.9"/>
+    </linearGradient>
+
+    <linearGradient id="beamGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#5EEAD4" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#0D9488" stop-opacity="0.9"/>
+    </linearGradient>
+
+    <!-- Glow Filters -->
+    <filter id="glowOrange" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="glowTeal" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="glowBlue" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+
+    <!-- Arrow Markers -->
+    <marker id="arrowGrey" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#64748B"/>
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#3B82F6"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#bgGlow)"/>
+
+  <!-- ========================================== -->
+  <!-- FLOW PATHS                                 -->
+  <!-- ========================================== -->
+  
+  <!-- Proposer to Raw Claim -->
+  <path d="M 160 400 L 210 400" stroke="#64748B" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowGrey)"/>
+  
+  <!-- Raw Claim to Crucible -->
+  <path d="M 350 400 L 420 400" stroke="#64748B" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowGrey)"/>
+  
+  <!-- Crucible to Verified Truth -->
+  <path d="M 770 400 L 890 400" stroke="#3B82F6" stroke-width="4" marker-end="url(#arrowBlue)" filter="url(#glowBlue)"/>
+
+  <!-- ========================================== -->
+  <!-- STAGE 1: PROPOSING NODE (FAR LEFT)         -->
+  <!-- ========================================== -->
+  <g transform="translate(0, 0)">
+    <!-- Robot Chassis -->
+    <circle cx="100" cy="400" r="45" fill="#1E293B" stroke="#475569" stroke-width="3" filter="url(#dropShadow)"/>
+    <circle cx="100" cy="400" r="30" fill="#020617"/>
+    <!-- Glowing Core -->
+    <circle cx="100" cy="400" r="12" fill="#F59E0B" filter="url(#glowOrange)"/>
+    <!-- Antennas -->
+    <path d="M 45 400 L 55 400 M 145 400 L 155 400" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- Labels -->
+    <text x="100" y="500" text-anchor="middle" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="20" font-weight="700">1. Propose Claim</text>
+    <text x="100" y="525" text-anchor="middle" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="15">Raw idea generated.</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- STAGE 1.5: RAW CLAIM                       -->
+  <!-- ========================================== -->
+  <g transform="translate(0, 0)">
+    <!-- Asymmetrical Rough Crystal -->
+    <polygon points="240,350 300,345 330,390 310,450 250,440 220,390" fill="url(#crystalGrad)" stroke="#EA580C" stroke-width="3" filter="url(#dropShadow)"/>
+    <!-- Facet Lines -->
+    <path d="M 240 350 L 280 400 L 310 450 M 300 345 L 280 400 L 250 440 M 330 390 L 280 400 L 220 390" stroke="#F97316" stroke-width="2" fill="none"/>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- STAGE 2: THE DEBATE CRUCIBLE (CENTER)      -->
+  <!-- ========================================== -->
+  <g transform="translate(0, 0)">
+    <!-- Crucible Energy Rings -->
+    <circle cx="600" cy="400" r="160" fill="#0F172A" fill-opacity="0.6" stroke="#1E293B" stroke-width="6" filter="url(#dropShadow)"/>
+    <circle cx="600" cy="400" r="140" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-dasharray="12 8" filter="url(#glowTeal)"/>
+    <circle cx="600" cy="400" r="120" fill="#2DD4BF" fill-opacity="0.05"/>
+
+    <!-- Intense Energy Beams (Behind Crystal) -->
+    <line x1="465" y1="210" x2="570" y2="355" stroke="#2DD4BF" stroke-width="8" filter="url(#glowTeal)"/>
+    <line x1="465" y1="210" x2="570" y2="355" stroke="#CCFBF1" stroke-width="3"/>
+
+    <line x1="735" y1="210" x2="630" y2="350" stroke="#2DD4BF" stroke-width="8" filter="url(#glowTeal)"/>
+    <line x1="735" y1="210" x2="630" y2="350" stroke="#CCFBF1" stroke-width="3"/>
+
+    <line x1="600" y1="585" x2="600" y2="445" stroke="#2DD4BF" stroke-width="8" filter="url(#glowTeal)"/>
+    <line x1="600" y1="585" x2="600" y2="445" stroke="#CCFBF1" stroke-width="3"/>
+
+    <!-- Crystal Under Scrutiny -->
+    <polygon points="570,355 620,350 650,395 630,445 570,435 550,395" fill="url(#crystalGrad)" stroke="#EA580C" stroke-width="3" filter="url(#glowOrange)"/>
+    <path d="M 570 355 L 600 400 L 630 445 M 620 350 L 600 400 L 570 435 M 650 395 L 600 400 L 550 395" stroke="#F97316" stroke-width="2" fill="none"/>
+
+    <!-- Refinement Sparks (Flaws being destroyed) -->
+    <!-- Top Left Impact -->
+    <polygon points="555,345 562,348 558,354" fill="#F59E0B" filter="url(#glowOrange)"/>
+    <circle cx="580" cy="340" r="3" fill="#F59E0B" filter="url(#glowOrange)"/>
+    <circle cx="550" cy="365" r="4" fill="#F59E0B" filter="url(#glowOrange)"/>
+    <!-- Top Right Impact -->
+    <polygon points="640,340 645,346 638,348" fill="#F59E0B" filter="url(#glowOrange)"/>
+    <circle cx="625" cy="335" r="3" fill="#F59E0B" filter="url(#glowOrange)"/>
+    <circle cx="655" cy="360" r="4" fill="#F59E0B" filter="url(#glowOrange)"/>
+    <!-- Bottom Impact -->
+    <polygon points="585,455 592,452 590,460" fill="#F59E0B" filter="url(#glowOrange)"/>
+    <circle cx="615" cy="455" r="4" fill="#F59E0B" filter="url(#glowOrange)"/>
+    <circle cx="605" cy="465" r="3" fill="#F59E0B" filter="url(#glowOrange)"/>
+
+    <!-- Challenger Node 1 (Top Left) -->
+    <g transform="translate(440, 180)">
+      <circle cx="0" cy="0" r="40" fill="#1E293B" stroke="#475569" stroke-width="3" filter="url(#dropShadow)"/>
+      <circle cx="0" cy="0" r="25" fill="#020617"/>
+      <circle cx="0" cy="0" r="10" fill="#2DD4BF" filter="url(#glowTeal)"/>
+      <path d="M -40 0 L -50 0 M 40 0 L 50 0" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+    </g>
+
+    <!-- Challenger Node 2 (Top Right) -->
+    <g transform="translate(760, 180)">
+      <circle cx="0" cy="0" r="40" fill="#1E293B" stroke="#475569" stroke-width="3" filter="url(#dropShadow)"/>
+      <circle cx="0" cy="0" r="25" fill="#020617"/>
+      <circle cx="0" cy="0" r="10" fill="#2DD4BF" filter="url(#glowTeal)"/>
+      <path d="M -40 0 L -50 0 M 40 0 L 50 0" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+    </g>
+
+    <!-- Challenger Node 3 (Bottom) -->
+    <g transform="translate(600, 620)">
+      <circle cx="0" cy="0" r="40" fill="#1E293B" stroke="#475569" stroke-width="3" filter="url(#dropShadow)"/>
+      <circle cx="0" cy="0" r="25" fill="#020617"/>
+      <circle cx="0" cy="0" r="10" fill="#2DD4BF" filter="url(#glowTeal)"/>
+      <path d="M -40 0 L -50 0 M 40 0 L 50 0" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+    </g>
+
+    <!-- Labels -->
+    <text x="600" y="710" text-anchor="middle" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="20" font-weight="700">2. Challenge &amp; Debate</text>
+    <text x="600" y="735" text-anchor="middle" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="15">Agents attack flaws.</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- STAGE 3: VERIFIED TRUTH (FAR RIGHT)        -->
+  <!-- ========================================== -->
+  <g transform="translate(0, 0)">
+    <!-- Truth Pedestal -->
+    <g filter="url(#dropShadow)">
+      <!-- Base Cylinder -->
+      <path d="M 920 450 L 920 480 A 60 15 0 0 0 1040 480 L 1040 450 Z" fill="#0F172A" stroke="#334155" stroke-width="2"/>
+      <!-- Top Surface -->
+      <ellipse cx="980" cy="450" rx="60" ry="15" fill="#1E293B" stroke="#475569" stroke-width="2"/>
+    </g>
+
+    <!-- Flawless Blue Diamond -->
+    <g filter="url(#glowBlue)">
+      <!-- Main Diamond Shape -->
+      <polygon points="950,330 1010,330 1030,370 980,440 930,370" fill="url(#diamondGrad)" stroke="#93C5FD" stroke-width="2"/>
+      <!-- Inner Facets -->
+      <path d="M 950 330 L 980 370 L 1010 330" stroke="#BFDBFE" stroke-width="1.5" fill="none"/>
+      <path d="M 930 370 L 1030 370" stroke="#BFDBFE" stroke-width="1.5" fill="none"/>
+      <path d="M 980 370 L 980 440" stroke="#BFDBFE" stroke-width="1.5" fill="none"/>
+      <path d="M 950 330 L 930 370" stroke="#BFDBFE" stroke-width="1.5" fill="none"/>
+      <path d="M 1010 330 L 1030 370" stroke="#BFDBFE" stroke-width="1.5" fill="none"/>
+      <!-- Bright Glint -->
+      <path d="M 1005 320 L 1008 328 L 1016 331 L 1008 334 L 1005 342 L 1002 334 L 994 331 L 1002 328 Z" fill="#FFFFFF"/>
+    </g>
+
+    <!-- Labels -->
+    <text x="980" y="540" text-anchor="middle" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="20" font-weight="700">3. Verified Truth</text>
+    <text x="980" y="565" text-anchor="middle" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="15">Only facts survive.</text>
+  </g>
+
+</svg>

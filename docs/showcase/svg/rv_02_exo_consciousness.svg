@@ -1,0 +1,276 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Background Gradients -->
+    <radialGradient id="bgGlow" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0B1426" stop-opacity="1"/>
+    </radialGradient>
+
+    <!-- Orb Glows -->
+    <radialGradient id="phiGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.8"/>
+      <stop offset="40%" stop-color="#F59E0B" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0B1426" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="emergenceGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0B1426" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="cognitionGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#A855F7" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0B1426" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="physicsGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F97316" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0B1426" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="networkGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0B1426" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- UI Shadows -->
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    
+    <filter id="glowShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#bgGlow)"/>
+
+  <!-- Concentric Topography Rings (Map Feel) -->
+  <circle cx="600" cy="360" r="140" stroke="#1E293B" stroke-width="1" fill="none" opacity="0.6" stroke-dasharray="8 8"/>
+  <circle cx="600" cy="360" r="240" stroke="#1E293B" stroke-width="1" fill="none" opacity="0.4"/>
+  <circle cx="600" cy="360" r="340" stroke="#1E293B" stroke-width="1" fill="none" opacity="0.2" stroke-dasharray="4 12"/>
+
+  <!-- Cluster Watermarks -->
+  <text x="250" y="240" fill="#06B6D4" opacity="0.04" font-size="64" font-family="system-ui, sans-serif" font-weight="900" text-anchor="middle" letter-spacing="4">EMERGENCE</text>
+  <text x="950" y="240" fill="#A855F7" opacity="0.04" font-size="64" font-family="system-ui, sans-serif" font-weight="900" text-anchor="middle" letter-spacing="4">COGNITION</text>
+  <text x="250" y="560" fill="#F97316" opacity="0.04" font-size="64" font-family="system-ui, sans-serif" font-weight="900" text-anchor="middle" letter-spacing="4">PHYSICS</text>
+  <text x="950" y="560" fill="#3B82F6" opacity="0.04" font-size="64" font-family="system-ui, sans-serif" font-weight="900" text-anchor="middle" letter-spacing="4">NETWORK</text>
+
+  <!-- Cluster Background Glows -->
+  <circle cx="280" cy="240" r="180" fill="url(#emergenceGlow)"/>
+  <circle cx="920" cy="260" r="200" fill="url(#cognitionGlow)"/>
+  <circle cx="320" cy="560" r="180" fill="url(#physicsGlow)"/>
+  <circle cx="860" cy="560" r="160" fill="url(#networkGlow)"/>
+
+  <!-- ==================== CONNECTIONS ==================== -->
+  <g stroke-width="2" opacity="0.5" fill="none" stroke-dasharray="4 4">
+    <!-- Emergence (Teal) -->
+    <path d="M 600 360 L 340 180" stroke="#06B6D4"/>
+    <path d="M 600 360 L 200 300" stroke="#06B6D4"/>
+    
+    <!-- Cognition (Purple) -->
+    <path d="M 600 360 L 780 140" stroke="#A855F7"/>
+    <path d="M 600 360 L 960 220" stroke="#A855F7"/>
+    <path d="M 600 360 L 1020 380" stroke="#A855F7"/>
+    
+    <!-- Physics (Amber) -->
+    <path d="M 600 360 L 200 460" stroke="#F97316"/>
+    <path d="M 600 360 L 320 580" stroke="#F97316"/>
+    <path d="M 600 360 L 480 650" stroke="#F97316"/>
+    
+    <!-- Network (Blue) -->
+    <path d="M 600 360 L 920 520" stroke="#3B82F6"/>
+    <path d="M 600 360 L 760 630" stroke="#3B82F6"/>
+  </g>
+
+  <!-- Connection Particles (Information Flow) -->
+  <g fill="#FFFFFF" opacity="0.8">
+    <circle cx="470" cy="270" r="3" fill="#06B6D4" filter="url(#glowShadow)"/>
+    <circle cx="400" cy="330" r="3" fill="#06B6D4" filter="url(#glowShadow)"/>
+    
+    <circle cx="690" cy="250" r="3" fill="#A855F7" filter="url(#glowShadow)"/>
+    <circle cx="780" cy="290" r="3" fill="#A855F7" filter="url(#glowShadow)"/>
+    <circle cx="810" cy="370" r="3" fill="#A855F7" filter="url(#glowShadow)"/>
+    
+    <circle cx="400" cy="410" r="3" fill="#F97316" filter="url(#glowShadow)"/>
+    <circle cx="460" cy="470" r="3" fill="#F97316" filter="url(#glowShadow)"/>
+    <circle cx="540" cy="505" r="3" fill="#F97316" filter="url(#glowShadow)"/>
+    
+    <circle cx="760" cy="440" r="3" fill="#3B82F6" filter="url(#glowShadow)"/>
+    <circle cx="680" cy="495" r="3" fill="#3B82F6" filter="url(#glowShadow)"/>
+  </g>
+
+  <!-- ==================== CORE INSIGHT ==================== -->
+  <g transform="translate(250, 30)" filter="url(#dropShadow)">
+    <rect width="700" height="44" rx="22" fill="#0F172A" stroke="#1E293B" stroke-width="2"/>
+    <circle cx="26" cy="22" r="6" fill="#F59E0B" filter="url(#glowShadow)"/>
+    <text x="44" y="27" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14" font-weight="600">
+      CORE INSIGHT:
+    </text>
+    <text x="156" y="27" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">
+      Integrated Information Theory (Φ) maps how a system's consciousness exceeds its parts.
+    </text>
+  </g>
+
+  <!-- ==================== CENTRAL ORB (PHI) ==================== -->
+  <g transform="translate(600, 360)">
+    <!-- Glowing Aura -->
+    <circle cx="0" cy="0" r="130" fill="url(#phiGlow)"/>
+    <circle cx="0" cy="0" r="90" fill="url(#phiGlow)"/>
+    
+    <!-- Core Structural Rings -->
+    <circle cx="0" cy="0" r="70" fill="#020617" stroke="#F59E0B" stroke-width="3" filter="url(#dropShadow)"/>
+    <circle cx="0" cy="0" r="62" fill="none" stroke="#F59E0B" stroke-width="1" stroke-dasharray="6 4" opacity="0.6"/>
+    
+    <!-- Phi Symbol -->
+    <text x="0" y="14" fill="#F59E0B" font-family="system-ui, sans-serif" font-size="64" font-weight="bold" text-anchor="middle" filter="url(#glowShadow)">Φ</text>
+    
+    <!-- Label -->
+    <rect x="-60" y="85" width="120" height="24" rx="12" fill="#0F172A" stroke="#F59E0B" stroke-width="1"/>
+    <text x="0" y="102" fill="#FCD34D" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" letter-spacing="1.5" text-anchor="middle">CONSCIOUSNESS</text>
+  </g>
+
+
+  <!-- ==================== EXPERIMENT NODES ==================== -->
+
+  <!-- EMERGENCE CLUSTER (Teal) -->
+  <g transform="translate(340, 180)">
+    <circle cx="0" cy="0" r="32" fill="#0F172A" stroke="#06B6D4" stroke-width="2" filter="url(#glowShadow)"/>
+    <!-- Morphogenesis Icon (Splitting Cells) -->
+    <path d="M -6 -2 C -10 -2 -12 2 -12 6 C -12 10 -10 14 -6 14 C -2 14 0 10 0 6 C 0 2 -2 -2 -6 -2 Z M 6 -2 C 2 -2 0 2 0 6 C 0 10 2 14 6 14 C 10 14 12 10 12 6 C 12 2 10 -2 6 -2 Z" fill="none" stroke="#06B6D4" stroke-width="2"/>
+    <text x="0" y="54" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Morphogenesis</text>
+  </g>
+
+  <g transform="translate(200, 300)">
+    <circle cx="0" cy="0" r="32" fill="#0F172A" stroke="#06B6D4" stroke-width="2" filter="url(#glowShadow)"/>
+    <!-- Causal Emergence Icon (Pyramid/Arrow Up) -->
+    <path d="M 0 -10 L -10 8 L 10 8 Z M 0 -1 L -4 6 L 4 6 Z" fill="none" stroke="#06B6D4" stroke-width="2"/>
+    <path d="M 0 8 L 0 14" stroke="#06B6D4" stroke-width="2"/>
+    <text x="0" y="54" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Causal Emergence</text>
+  </g>
+
+  <!-- COGNITION CLUSTER (Purple) -->
+  <g transform="translate(780, 140)">
+    <circle cx="0" cy="0" r="32" fill="#0F172A" stroke="#A855F7" stroke-width="2" filter="url(#glowShadow)"/>
+    <!-- Strange Loops Icon (Infinity) -->
+    <path d="M -7 -4 C -11 -4 -13 -1 -13 2 C -13 5 -11 8 -7 8 C -3 8 -1 2 1 2 C 3 2 5 8 9 8 C 13 8 15 5 15 2 C 15 -1 13 -4 9 -4 C 5 -4 3 2 1 2 C -1 2 -3 -4 -7 -4 Z" fill="none" stroke="#A855F7" stroke-width="2"/>
+    <text x="0" y="54" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Strange Loops</text>
+  </g>
+
+  <g transform="translate(960, 220)">
+    <circle cx="0" cy="0" r="32" fill="#0F172A" stroke="#A855F7" stroke-width="2" filter="url(#glowShadow)"/>
+    <!-- Artificial Dreams Icon (Cloud/Eye) -->
+    <path d="M -4 2 C -4 -2 0 -5 4 -5 C 7 -5 9 -3 10 0 C 13 0 14 2 14 5 C 14 8 12 10 9 10 L -5 10 C -8 10 -10 8 -10 5 C -10 2 -8 0 -5 0" fill="none" stroke="#A855F7" stroke-width="2"/>
+    <circle cx="2" cy="4" r="2" fill="#A855F7"/>
+    <text x="0" y="54" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Artificial Dreams</text>
+  </g>
+
+  <g transform="translate(1020, 380)">
+    <circle cx="0" cy="0" r="32" fill="#0F172A" stroke="#A855F7" stroke-width="2" filter="url(#glowShadow)"/>
+    <!-- Multiple Selves Icon (Overlapping User Profiles) -->
+    <circle cx="-4" cy="-4" r="4" fill="none" stroke="#A855F7" stroke-width="2"/>
+    <path d="M -10 8 C -10 4 2 4 2 8" fill="none" stroke="#A855F7" stroke-width="2"/>
+    <circle cx="6" cy="-1" r="3" fill="none" stroke="#A855F7" stroke-width="2" opacity="0.6"/>
+    <path d="M 2 10 C 2 7 10 7 10 10" fill="none" stroke="#A855F7" stroke-width="2" opacity="0.6"/>
+    <text x="0" y="54" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Multiple Selves</text>
+  </g>
+
+  <!-- PHYSICS CLUSTER (Amber/Orange) -->
+  <g transform="translate(200, 460)">
+    <circle cx="0" cy="0" r="32" fill="#0F172A" stroke="#F97316" stroke-width="2" filter="url(#glowShadow)"/>
+    <!-- Thermodynamics Icon (Flame) -->
+    <path d="M 0 -10 C 0 -10 -6 -4 -6 2 C -6 6 -3 9 0 9 C 3 9 6 6 6 2 C 6 -4 0 -10 0 -10 Z" fill="none" stroke="#F97316" stroke-width="2"/>
+    <path d="M 0 2 C 0 2 -2 4 -2 6 C -2 7 -1 8 0 8 C 1 8 2 7 2 6 C 2 4 0 2 0 2 Z" fill="#F97316"/>
+    <text x="0" y="54" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Thermodynamics</text>
+  </g>
+
+  <g transform="translate(320, 580)">
+    <circle cx="0" cy="0" r="32" fill="#0F172A" stroke="#F97316" stroke-width="2" filter="url(#glowShadow)"/>
+    <!-- Free Energy Icon (Lightning) -->
+    <polygon points="-2,-10 -6,2 0,2 -2,10 8,-2 2,-2" fill="none" stroke="#F97316" stroke-width="2"/>
+    <text x="0" y="54" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Free Energy</text>
+  </g>
+
+  <g transform="translate(480, 650)">
+    <circle cx="0" cy="0" r="32" fill="#0F172A" stroke="#F97316" stroke-width="2" filter="url(#glowShadow)"/>
+    <!-- Cognitive Black Holes Icon (Vortex/Concentric) -->
+    <circle cx="0" cy="0" r="10" fill="none" stroke="#F97316" stroke-width="2" stroke-dasharray="4 2"/>
+    <circle cx="0" cy="0" r="5" fill="#F97316"/>
+    <path d="M -14 0 A 14 14 0 0 1 14 0" fill="none" stroke="#F97316" stroke-width="2"/>
+    <path d="M 14 0 A 14 14 0 0 1 -14 0" fill="none" stroke="#F97316" stroke-width="2" opacity="0.4"/>
+    <text x="0" y="54" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Cognitive Black Holes</text>
+  </g>
+
+  <!-- NETWORK CLUSTER (Blue) -->
+  <g transform="translate(920, 520)">
+    <circle cx="0" cy="0" r="32" fill="#0F172A" stroke="#3B82F6" stroke-width="2" filter="url(#glowShadow)"/>
+    <!-- Collective Consciousness Icon (Network Graph) -->
+    <circle cx="0" cy="-6" r="3" fill="#3B82F6"/>
+    <circle cx="-8" cy="6" r="3" fill="#3B82F6"/>
+    <circle cx="8" cy="6" r="3" fill="#3B82F6"/>
+    <line x1="0" y1="-6" x2="-8" y2="6" stroke="#3B82F6" stroke-width="2"/>
+    <line x1="0" y1="-6" x2="8" y2="6" stroke="#3B82F6" stroke-width="2"/>
+    <line x1="-8" y1="6" x2="8" y2="6" stroke="#3B82F6" stroke-width="2"/>
+    <text x="0" y="54" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Collective Consciousness</text>
+  </g>
+
+  <g transform="translate(760, 630)">
+    <circle cx="0" cy="0" r="32" fill="#0F172A" stroke="#3B82F6" stroke-width="2" filter="url(#glowShadow)"/>
+    <!-- Temporal Qualia Icon (Hourglass/Clock) -->
+    <path d="M -6 -8 L 6 -8 L 6 -6 L 1 0 L 6 6 L 6 8 L -6 8 L -6 6 L -1 0 L -6 -6 Z" fill="none" stroke="#3B82F6" stroke-width="2"/>
+    <circle cx="0" cy="5" r="1.5" fill="#3B82F6"/>
+    <text x="0" y="54" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Temporal Qualia</text>
+  </g>
+
+
+  <!-- ==================== TECH STACK FOUNDATION ==================== -->
+  <g transform="translate(100, 720)" filter="url(#dropShadow)">
+    <!-- Base Bar -->
+    <rect width="1000" height="60" rx="16" fill="#0F172A" stroke="#1E293B" stroke-width="2"/>
+    <rect x="2" y="2" width="996" height="56" rx="14" fill="none" stroke="#38BDF8" stroke-width="1" opacity="0.2"/>
+    
+    <!-- Foundation Label -->
+    <text x="-20" y="35" fill="#64748B" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" letter-spacing="2" transform="rotate(-90, -20, 35)">TECH</text>
+
+    <!-- Pill 1: Rust Code -->
+    <g transform="translate(40, 10)">
+      <rect width="210" height="40" rx="20" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+      <!-- Gear/Code Icon -->
+      <circle cx="20" cy="20" r="8" fill="none" stroke="#38BDF8" stroke-width="2"/>
+      <path d="M 20 8 L 20 10 M 20 30 L 20 32 M 8 20 L 10 20 M 30 20 L 32 20 M 12 12 L 14 14 M 28 28 L 26 26 M 12 28 L 14 26 M 28 12 L 26 14" stroke="#38BDF8" stroke-width="2"/>
+      <text x="40" y="25" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14" font-weight="bold">15.8K Lines Rust</text>
+    </g>
+
+    <!-- Pill 2: SIMD Speedup -->
+    <g transform="translate(275, 10)">
+      <rect width="210" height="40" rx="20" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+      <!-- Lightning Icon -->
+      <polygon points="18,10 14,20 20,20 18,30 26,18 20,18" fill="#F59E0B"/>
+      <text x="40" y="25" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14" font-weight="bold">54x SIMD Speedup</text>
+    </g>
+
+    <!-- Pill 3: Persistent Homology -->
+    <g transform="translate(510, 10)">
+      <rect width="220" height="40" rx="20" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+      <!-- Topology Icon -->
+      <circle cx="16" cy="20" r="4" fill="none" stroke="#A855F7" stroke-width="2"/>
+      <circle cx="26" cy="16" r="3" fill="none" stroke="#A855F7" stroke-width="2"/>
+      <circle cx="24" cy="26" r="3" fill="none" stroke="#A855F7" stroke-width="2"/>
+      <path d="M 19 18 L 23 16 M 19 22 L 22 25 M 26 19 L 24 23" stroke="#A855F7" stroke-width="1.5"/>
+      <text x="38" y="25" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14" font-weight="bold">Persistent Homology</text>
+    </g>
+
+    <!-- Pill 4: SIREN Networks -->
+    <g transform="translate(755, 10)">
+      <rect width="205" height="40" rx="20" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+      <!-- Wave/Brain Icon -->
+      <path d="M 12 20 Q 16 12 20 20 T 28 20" fill="none" stroke="#06B6D4" stroke-width="2"/>
+      <circle cx="12" cy="20" r="2" fill="#06B6D4"/>
+      <circle cx="28" cy="20" r="2" fill="#06B6D4"/>
+      <text x="38" y="25" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14" font-weight="bold">SIREN Networks</text>
+    </g>
+  </g>
+
+</svg>

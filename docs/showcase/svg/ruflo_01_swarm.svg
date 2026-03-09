@@ -1,0 +1,345 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0B1426" />
+    </radialGradient>
+
+    <!-- Node Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    
+    <filter id="glow-subtle" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Arrow Marker for Ring Topology -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B" />
+    </marker>
+    
+    <!-- Blueprint Grid Pattern -->
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#334155" stroke-width="0.5" stroke-opacity="0.3" />
+    </pattern>
+
+    <!-- Agent Node Gradients -->
+    <linearGradient id="grad-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </linearGradient>
+    <linearGradient id="grad-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A78BFA" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="grad-slate" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#94A3B8" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#bg-grad)" />
+
+  <!-- HEADER -->
+  <text x="600" y="60" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="32" font-weight="800" text-anchor="middle" letter-spacing="1">Ruflo Swarm Coordination</text>
+  
+  <!-- Core Insight Callout -->
+  <rect x="140" y="85" width="920" height="40" rx="20" fill="#1E293B" stroke="#3B82F6" stroke-width="1.5" />
+  <path d="M 160 105 L 170 95 L 170 115 Z" fill="#3B82F6" />
+  <text x="190" y="111" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="16" font-weight="500">60+ specialized AI agents dynamically organizing into optimal topologies for complex software engineering.</text>
+
+  <!-- ========================================== -->
+  <!-- TOPOLOGIES SECTION (The Star of the Show)  -->
+  <!-- ========================================== -->
+  
+  <rect x="40" y="150" width="1120" height="300" rx="16" fill="#0F172A" stroke="#334155" stroke-width="2" />
+  <rect x="40" y="150" width="1120" height="300" rx="16" fill="url(#grid)" />
+  
+  <!-- Section Title -->
+  <rect x="40" y="150" width="220" height="40" rx="16" fill="#1E293B" />
+  <text x="65" y="175" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="2">SWARM TOPOLOGIES</text>
+
+  <!-- 1. HIERARCHICAL -->
+  <g transform="translate(0, 0)">
+    <!-- Edges -->
+    <line x1="152" y1="210" x2="102" y2="290" stroke="#475569" stroke-width="3" />
+    <line x1="152" y1="210" x2="152" y2="290" stroke="#475569" stroke-width="3" />
+    <line x1="152" y1="210" x2="202" y2="290" stroke="#475569" stroke-width="3" />
+    
+    <!-- Nodes -->
+    <circle cx="102" cy="290" r="14" fill="url(#grad-blue)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="152" cy="290" r="14" fill="url(#grad-blue)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="202" cy="290" r="14" fill="url(#grad-blue)" stroke="#0F172A" stroke-width="3" />
+    
+    <!-- Queen Node -->
+    <circle cx="152" cy="210" r="18" fill="url(#grad-amber)" stroke="#FFFFFF" stroke-width="2" filter="url(#glow)" />
+    <circle cx="152" cy="210" r="6" fill="#FFFFFF" />
+    
+    <!-- Labels -->
+    <text x="152" y="360" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="18" font-weight="700" text-anchor="middle">HIERARCHICAL</text>
+    <rect x="92" y="375" width="120" height="24" rx="12" fill="#1E293B" stroke="#334155" />
+    <text x="152" y="392" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13" font-weight="500" text-anchor="middle">Defined Tasks</text>
+  </g>
+
+  <!-- 2. MESH -->
+  <g transform="translate(224, 0)">
+    <!-- Edges (All-to-All) -->
+    <!-- Points: P1(152,200) P2(199,235) P3(181,290) P4(123,290) P5(105,235) -->
+    <path d="M 152 200 L 199 235 L 181 290 L 123 290 L 105 235 Z" fill="none" stroke="#475569" stroke-width="2" />
+    <path d="M 152 200 L 181 290 M 152 200 L 123 290 M 199 235 L 123 290 M 199 235 L 105 235 M 181 290 L 105 235" fill="none" stroke="#475569" stroke-width="2" />
+    
+    <!-- Nodes -->
+    <circle cx="152" cy="200" r="14" fill="url(#grad-purple)" stroke="#0F172A" stroke-width="3" filter="url(#glow-subtle)" />
+    <circle cx="199" cy="235" r="14" fill="url(#grad-purple)" stroke="#0F172A" stroke-width="3" filter="url(#glow-subtle)" />
+    <circle cx="181" cy="290" r="14" fill="url(#grad-purple)" stroke="#0F172A" stroke-width="3" filter="url(#glow-subtle)" />
+    <circle cx="123" cy="290" r="14" fill="url(#grad-purple)" stroke="#0F172A" stroke-width="3" filter="url(#glow-subtle)" />
+    <circle cx="105" cy="235" r="14" fill="url(#grad-purple)" stroke="#0F172A" stroke-width="3" filter="url(#glow-subtle)" />
+    
+    <!-- Labels -->
+    <text x="152" y="360" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="18" font-weight="700" text-anchor="middle">MESH</text>
+    <rect x="72" y="375" width="160" height="24" rx="12" fill="#1E293B" stroke="#334155" />
+    <text x="152" y="392" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13" font-weight="500" text-anchor="middle">Exploratory Research</text>
+  </g>
+
+  <!-- 3. RING -->
+  <g transform="translate(448, 0)">
+    <!-- Edges (Sequential with arrows) -->
+    <line x1="152" y1="200" x2="199" y2="235" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)" />
+    <line x1="199" y1="235" x2="181" y2="290" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)" />
+    <line x1="181" y1="290" x2="123" y2="290" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)" />
+    <line x1="123" y1="290" x2="105" y2="235" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)" />
+    <line x1="105" y1="235" x2="152" y2="200" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)" />
+    
+    <!-- Nodes -->
+    <circle cx="152" cy="200" r="14" fill="url(#grad-green)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="199" cy="235" r="14" fill="url(#grad-green)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="181" cy="290" r="14" fill="url(#grad-green)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="123" cy="290" r="14" fill="url(#grad-green)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="105" cy="235" r="14" fill="url(#grad-green)" stroke="#0F172A" stroke-width="3" />
+    
+    <!-- Labels -->
+    <text x="152" y="360" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="18" font-weight="700" text-anchor="middle">RING</text>
+    <rect x="72" y="375" width="160" height="24" rx="12" fill="#1E293B" stroke="#334155" />
+    <text x="152" y="392" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13" font-weight="500" text-anchor="middle">Pipeline Processing</text>
+  </g>
+
+  <!-- 4. STAR -->
+  <g transform="translate(672, 0)">
+    <!-- Edges -->
+    <line x1="152" y1="250" x2="152" y2="190" stroke="#475569" stroke-width="3" />
+    <line x1="152" y1="250" x2="209" y2="231" stroke="#475569" stroke-width="3" />
+    <line x1="152" y1="250" x2="187" y2="298" stroke="#475569" stroke-width="3" />
+    <line x1="152" y1="250" x2="117" y2="298" stroke="#475569" stroke-width="3" />
+    <line x1="152" y1="250" x2="95" y2="231" stroke="#475569" stroke-width="3" />
+    
+    <!-- Outer Nodes -->
+    <circle cx="152" cy="190" r="12" fill="url(#grad-blue)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="209" cy="231" r="12" fill="url(#grad-blue)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="187" cy="298" r="12" fill="url(#grad-blue)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="117" cy="298" r="12" fill="url(#grad-blue)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="95" cy="231" r="12" fill="url(#grad-blue)" stroke="#0F172A" stroke-width="3" />
+    
+    <!-- Hub Node -->
+    <circle cx="152" cy="250" r="18" fill="url(#grad-purple)" stroke="#FFFFFF" stroke-width="2" filter="url(#glow)" />
+    <circle cx="152" cy="250" r="6" fill="#FFFFFF" />
+    
+    <!-- Labels -->
+    <text x="152" y="360" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="18" font-weight="700" text-anchor="middle">STAR</text>
+    <rect x="72" y="375" width="160" height="24" rx="12" fill="#1E293B" stroke="#334155" />
+    <text x="152" y="392" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13" font-weight="500" text-anchor="middle">Parallel Independent</text>
+  </g>
+
+  <!-- 5. CUSTOM -->
+  <g transform="translate(896, 0)">
+    <!-- Custom Dashed Boundary -->
+    <rect x="90" y="180" width="124" height="130" rx="20" fill="#1E293B" fill-opacity="0.5" stroke="#64748B" stroke-width="2" stroke-dasharray="6 6" />
+    
+    <!-- Edges -->
+    <line x1="152" y1="200" x2="115" y2="245" stroke="#475569" stroke-width="3" />
+    <line x1="152" y1="200" x2="189" y2="245" stroke="#475569" stroke-width="3" />
+    <line x1="115" y1="245" x2="152" y2="290" stroke="#475569" stroke-width="3" />
+    <line x1="189" y1="245" x2="152" y2="290" stroke="#475569" stroke-width="3" />
+    <line x1="215" y1="200" x2="189" y2="245" stroke="#475569" stroke-width="3" />
+    
+    <!-- Nodes -->
+    <circle cx="152" cy="200" r="14" fill="url(#grad-slate)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="115" cy="245" r="14" fill="url(#grad-amber)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="189" cy="245" r="14" fill="url(#grad-purple)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="152" cy="290" r="14" fill="url(#grad-green)" stroke="#0F172A" stroke-width="3" />
+    <circle cx="215" cy="200" r="10" fill="url(#grad-blue)" stroke="#0F172A" stroke-width="2" />
+    
+    <!-- Labels -->
+    <text x="152" y="360" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="18" font-weight="700" text-anchor="middle">CUSTOM</text>
+    <rect x="92" y="375" width="120" height="24" rx="12" fill="#1E293B" stroke="#334155" />
+    <text x="152" y="392" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13" font-weight="500" text-anchor="middle">User-Defined</text>
+  </g>
+
+
+  <!-- ========================================== -->
+  <!-- BOTTOM LEFT: CONSENSUS MECHANISMS          -->
+  <!-- ========================================== -->
+  
+  <rect x="40" y="480" width="540" height="280" rx="16" fill="#0F172A" stroke="#334155" stroke-width="2" />
+  <text x="70" y="520" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="2">CONSENSUS PROTOCOLS</text>
+  
+  <!-- Raft Badge -->
+  <g transform="translate(100, 560)">
+    <rect x="0" y="0" width="100" height="100" rx="24" fill="#1E293B" stroke="#3B82F6" stroke-width="1.5" />
+    <!-- Crown Icon -->
+    <path d="M 25 70 L 75 70 L 75 62 L 25 62 Z M 25 58 L 75 58 L 65 30 L 50 45 L 35 30 Z" fill="#3B82F6" />
+    <circle cx="35" cy="25" r="3" fill="#3B82F6" />
+    <circle cx="50" cy="40" r="3" fill="#3B82F6" />
+    <circle cx="65" cy="25" r="3" fill="#3B82F6" />
+    
+    <text x="50" y="130" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="18" font-weight="700" text-anchor="middle">Raft</text>
+    <text x="50" y="150" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13" font-weight="500" text-anchor="middle">Leader Election</text>
+  </g>
+
+  <!-- Byzantine Badge -->
+  <g transform="translate(260, 560)">
+    <rect x="0" y="0" width="100" height="100" rx="24" fill="#1E293B" stroke="#10B981" stroke-width="1.5" />
+    <!-- Shield Icon -->
+    <path d="M 50 25 L 75 35 L 75 55 C 75 70 50 80 50 80 C 50 80 25 70 25 55 L 25 35 Z" fill="none" stroke="#10B981" stroke-width="4" stroke-linejoin="round" />
+    <path d="M 40 55 L 48 63 L 62 45" fill="none" stroke="#10B981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    
+    <text x="50" y="130" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="18" font-weight="700" text-anchor="middle">Byzantine</text>
+    <text x="50" y="150" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13" font-weight="500" text-anchor="middle">Fault Tolerance</text>
+  </g>
+
+  <!-- Gossip Badge -->
+  <g transform="translate(420, 560)">
+    <rect x="0" y="0" width="100" height="100" rx="24" fill="#1E293B" stroke="#F59E0B" stroke-width="1.5" />
+    <!-- Broadcast Icon -->
+    <circle cx="50" cy="55" r="6" fill="#F59E0B" />
+    <path d="M 38 43 A 18 18 0 0 1 62 43 M 30 35 A 30 30 0 0 1 70 35 M 22 27 A 42 42 0 0 1 78 27" fill="none" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" />
+    
+    <text x="50" y="130" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="18" font-weight="700" text-anchor="middle">Gossip</text>
+    <text x="50" y="150" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13" font-weight="500" text-anchor="middle">Epidemic Spread</text>
+  </g>
+
+
+  <!-- ========================================== -->
+  <!-- BOTTOM RIGHT: AGENT POOL                   -->
+  <!-- ========================================== -->
+  
+  <rect x="620" y="480" width="540" height="280" rx="16" fill="#0F172A" stroke="#334155" stroke-width="2" />
+  <text x="650" y="520" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="2">AGENT POOL</text>
+  
+  <rect x="1030" y="502" width="100" height="24" rx="12" fill="#3B82F6" fill-opacity="0.2" stroke="#3B82F6" stroke-width="1" />
+  <text x="1080" y="519" fill="#60A5FA" font-family="system-ui, sans-serif" font-size="13" font-weight="700" text-anchor="middle">60+ AGENTS</text>
+
+  <!-- Legend (Left side of pool box) -->
+  <g transform="translate(650, 560)">
+    <!-- Col 1 -->
+    <circle cx="10" cy="10" r="6" fill="#F59E0B" /> <text x="25" y="15" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14">Architect</text>
+    <circle cx="10" cy="45" r="6" fill="#3B82F6" /> <text x="25" y="50" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14">Backend</text>
+    <circle cx="10" cy="80" r="6" fill="#10B981" /> <text x="25" y="85" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14">Frontend</text>
+    <circle cx="10" cy="115" r="6" fill="#F43F5E" /> <text x="25" y="120" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14">Test</text>
+    <circle cx="10" cy="150" r="6" fill="#8B5CF6" /> <text x="25" y="155" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14">Security</text>
+    
+    <!-- Col 2 -->
+    <circle cx="120" cy="10" r="6" fill="#06B6D4" /> <text x="135" y="15" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14">Performance</text>
+    <circle cx="120" cy="45" r="6" fill="#F97316" /> <text x="135" y="50" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14">DevOps</text>
+    <circle cx="120" cy="80" r="6" fill="#94A3B8" /> <text x="135" y="85" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14">Docs</text>
+  </g>
+
+  <!-- Swarm Visualization (Right side of pool box) -->
+  <!-- Honeycomb cluster of ~60 glowing dots -->
+  <g transform="translate(880, 550)">
+    <!-- Row 1 -->
+    <circle cx="70" cy="0" r="5" fill="#F59E0B" filter="url(#glow-subtle)" />
+    <circle cx="90" cy="0" r="4" fill="#3B82F6" />
+    <circle cx="110" cy="0" r="6" fill="#10B981" filter="url(#glow-subtle)" />
+    <circle cx="130" cy="0" r="4" fill="#8B5CF6" />
+    <circle cx="150" cy="0" r="5" fill="#06B6D4" />
+    
+    <!-- Row 2 -->
+    <circle cx="60" cy="18" r="4" fill="#F43F5E" />
+    <circle cx="80" cy="18" r="5" fill="#94A3B8" />
+    <circle cx="100" cy="18" r="6" fill="#3B82F6" filter="url(#glow-subtle)" />
+    <circle cx="120" cy="18" r="4" fill="#F97316" />
+    <circle cx="140" cy="18" r="5" fill="#F59E0B" />
+    <circle cx="160" cy="18" r="4" fill="#10B981" />
+    
+    <!-- Row 3 -->
+    <circle cx="50" cy="36" r="6" fill="#8B5CF6" filter="url(#glow-subtle)" />
+    <circle cx="70" cy="36" r="4" fill="#06B6D4" />
+    <circle cx="90" cy="36" r="5" fill="#F43F5E" />
+    <circle cx="110" cy="36" r="4" fill="#3B82F6" />
+    <circle cx="130" cy="36" r="6" fill="#94A3B8" filter="url(#glow-subtle)" />
+    <circle cx="150" cy="36" r="4" fill="#F97316" />
+    <circle cx="170" cy="36" r="5" fill="#F59E0B" />
+    
+    <!-- Row 4 -->
+    <circle cx="40" cy="54" r="4" fill="#10B981" />
+    <circle cx="60" cy="54" r="5" fill="#3B82F6" />
+    <circle cx="80" cy="54" r="6" fill="#F59E0B" filter="url(#glow-subtle)" />
+    <circle cx="100" cy="54" r="4" fill="#8B5CF6" />
+    <circle cx="120" cy="54" r="5" fill="#06B6D4" />
+    <circle cx="140" cy="54" r="4" fill="#F43F5E" />
+    <circle cx="160" cy="54" r="6" fill="#3B82F6" filter="url(#glow-subtle)" />
+    <circle cx="180" cy="54" r="4" fill="#94A3B8" />
+    
+    <!-- Row 5 (Center, widest) -->
+    <circle cx="30" cy="72" r="5" fill="#F97316" />
+    <circle cx="50" cy="72" r="6" fill="#10B981" filter="url(#glow-subtle)" />
+    <circle cx="70" cy="72" r="4" fill="#F59E0B" />
+    <circle cx="90" cy="72" r="5" fill="#3B82F6" />
+    <circle cx="110" cy="72" r="6" fill="#8B5CF6" filter="url(#glow-subtle)" />
+    <circle cx="130" cy="72" r="4" fill="#06B6D4" />
+    <circle cx="150" cy="72" r="5" fill="#F43F5E" />
+    <circle cx="170" cy="72" r="4" fill="#3B82F6" />
+    <circle cx="190" cy="72" r="5" fill="#F97316" />
+    
+    <!-- Row 6 -->
+    <circle cx="40" cy="90" r="4" fill="#94A3B8" />
+    <circle cx="60" cy="90" r="5" fill="#10B981" />
+    <circle cx="80" cy="90" r="6" fill="#F59E0B" filter="url(#glow-subtle)" />
+    <circle cx="100" cy="90" r="4" fill="#3B82F6" />
+    <circle cx="120" cy="90" r="5" fill="#8B5CF6" />
+    <circle cx="140" cy="90" r="4" fill="#06B6D4" />
+    <circle cx="160" cy="90" r="6" fill="#F43F5E" filter="url(#glow-subtle)" />
+    <circle cx="180" cy="90" r="4" fill="#3B82F6" />
+    
+    <!-- Row 7 -->
+    <circle cx="50" cy="108" r="6" fill="#F97316" filter="url(#glow-subtle)" />
+    <circle cx="70" cy="108" r="4" fill="#94A3B8" />
+    <circle cx="90" cy="108" r="5" fill="#10B981" />
+    <circle cx="110" cy="108" r="4" fill="#F59E0B" />
+    <circle cx="130" cy="108" r="6" fill="#3B82F6" filter="url(#glow-subtle)" />
+    <circle cx="150" cy="108" r="4" fill="#8B5CF6" />
+    <circle cx="170" cy="108" r="5" fill="#06B6D4" />
+    
+    <!-- Row 8 -->
+    <circle cx="60" cy="126" r="4" fill="#F43F5E" />
+    <circle cx="80" cy="126" r="5" fill="#3B82F6" />
+    <circle cx="100" cy="126" r="6" fill="#F97316" filter="url(#glow-subtle)" />
+    <circle cx="120" cy="126" r="4" fill="#94A3B8" />
+    <circle cx="140" cy="126" r="5" fill="#10B981" />
+    <circle cx="160" cy="126" r="4" fill="#F59E0B" />
+    
+    <!-- Row 9 -->
+    <circle cx="70" cy="144" r="5" fill="#3B82F6" />
+    <circle cx="90" cy="144" r="4" fill="#8B5CF6" />
+    <circle cx="110" cy="144" r="6" fill="#06B6D4" filter="url(#glow-subtle)" />
+    <circle cx="130" cy="144" r="4" fill="#F43F5E" />
+    <circle cx="150" cy="144" r="5" fill="#3B82F6" />
+    
+    <!-- Connecting visual lines (faint) to show swarm communication -->
+    <path d="M 110 72 L 80 54 M 110 72 L 130 108 M 110 72 L 140 54 M 80 54 L 60 90 M 140 54 L 160 90" fill="none" stroke="#FFFFFF" stroke-opacity="0.15" stroke-width="1" />
+  </g>
+
+</svg>

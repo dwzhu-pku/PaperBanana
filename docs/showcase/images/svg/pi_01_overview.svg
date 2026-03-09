@@ -1,0 +1,246 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="1200">
+  <defs>
+    <!-- Filters -->
+    <filter id="core-shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="25" flood-color="#F59E0B" flood-opacity="0.9"/>
+    </filter>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="text-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Core Gradients -->
+    <radialGradient id="core-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FEF08A" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#F59E0B" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#D97706" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="core-body" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#FEF08A" stop-opacity="0.9"/>
+      <stop offset="80%" stop-color="#F59E0B" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#B45309" stop-opacity="0.4"/>
+    </radialGradient>
+    <radialGradient id="core-center" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#FEF08A" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Agent Orb Gradients -->
+    <radialGradient id="orb-purple" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="40%" stop-color="#C4B5FD" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </radialGradient>
+    <radialGradient id="orb-teal" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="40%" stop-color="#99F6E4" />
+      <stop offset="100%" stop-color="#0D9488" />
+    </radialGradient>
+    <radialGradient id="orb-blue" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="40%" stop-color="#BFDBFE" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </radialGradient>
+
+    <!-- Beam Gradients -->
+    <linearGradient id="beam-glow-1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A78BFA" stop-opacity="0.15"/>
+      <stop offset="60%" stop-color="#F59E0B" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#FEF08A" stop-opacity="0.8"/>
+    </linearGradient>
+    <linearGradient id="beam-glow-2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5EEAD4" stop-opacity="0.15"/>
+      <stop offset="60%" stop-color="#F59E0B" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#FEF08A" stop-opacity="0.8"/>
+    </linearGradient>
+    <linearGradient id="beam-glow-3" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#93C5FD" stop-opacity="0.15"/>
+      <stop offset="60%" stop-color="#F59E0B" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#FEF08A" stop-opacity="0.8"/>
+    </linearGradient>
+
+    <!-- Beam flow gradients -->
+    <linearGradient id="solid-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C4B5FD" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#F59E0B" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#FEF08A" stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="solid-grad-2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#99F6E4" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#F59E0B" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#FEF08A" stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="solid-grad-3" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#BFDBFE" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#F59E0B" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#FEF08A" stop-opacity="1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Space Background -->
+  <rect width="1200" height="800" fill="#0B1426" />
+
+  <!-- ============================================ -->
+  <!-- CONCENTRIC RINGS with LABELS                 -->
+  <!-- ============================================ -->
+
+  <!-- Ring 3: Outer - Edge Network (r=320) -->
+  <circle cx="600" cy="390" r="320" fill="rgba(110, 231, 183, 0.03)" stroke="#6EE7B7" stroke-width="1.5" stroke-opacity="0.35"/>
+  <circle cx="600" cy="390" r="316" fill="none" stroke="#6EE7B7" stroke-width="1" stroke-dasharray="4 6" stroke-opacity="0.2"/>
+  <!-- Edge Network label (right side of ring) -->
+  <text x="935" y="290" fill="#6EE7B7" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="start" opacity="0.6" letter-spacing="0.5">EDGE</text>
+  <text x="935" y="303" fill="#6EE7B7" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="start" opacity="0.6" letter-spacing="0.5">NETWORK</text>
+
+  <!-- Ring 2: Middle - Security Layers (r=220) -->
+  <circle cx="600" cy="390" r="220" fill="rgba(147, 197, 253, 0.04)" stroke="#93C5FD" stroke-width="1.5" stroke-opacity="0.4"/>
+  <circle cx="600" cy="390" r="216" fill="none" stroke="#93C5FD" stroke-width="1" stroke-dasharray="4 6" stroke-opacity="0.25"/>
+  <!-- Security Layers label (top of ring) -->
+  <text x="600" y="160" fill="#93C5FD" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" opacity="0.65" letter-spacing="1">SECURITY LAYERS</text>
+
+  <!-- Ring 1: Inner - Consensus Zone (r=130) -->
+  <circle cx="600" cy="390" r="130" fill="rgba(251, 191, 36, 0.04)" stroke="#FBBF24" stroke-width="1.5" stroke-opacity="0.4"/>
+  <circle cx="600" cy="390" r="126" fill="none" stroke="#FBBF24" stroke-width="1" stroke-dasharray="4 6" stroke-opacity="0.3"/>
+  <!-- Consensus Zone label (top of ring) -->
+  <text x="600" y="250" fill="#FBBF24" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" opacity="0.75" letter-spacing="1">CONSENSUS ZONE</text>
+
+  <!-- ============================================ -->
+  <!-- AGENT CLUSTERS (all labeled)                 -->
+  <!-- ============================================ -->
+
+  <!-- Cluster 1 (Top Left) - Purple -->
+  <g id="cluster-1">
+    <circle cx="310" cy="195" r="55" fill="none" stroke="#A78BFA" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.4"/>
+    <path d="M 310 195 L 280 175 M 310 195 L 335 160 M 310 195 L 345 215 M 310 195 L 275 225" stroke="#A78BFA" stroke-width="1.5" opacity="0.35" fill="none"/>
+    <circle cx="310" cy="195" r="11" fill="url(#orb-purple)" filter="url(#glow)"/>
+    <circle cx="280" cy="175" r="7" fill="url(#orb-purple)"/>
+    <circle cx="335" cy="160" r="8" fill="url(#orb-purple)"/>
+    <circle cx="345" cy="215" r="7" fill="url(#orb-purple)"/>
+    <circle cx="275" cy="225" r="6" fill="url(#orb-purple)"/>
+    <text x="310" y="260" fill="#C4B5FD" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" text-anchor="middle" opacity="0.8">Agent Team A</text>
+  </g>
+
+  <!-- Cluster 2 (Top Right) - Teal -->
+  <g id="cluster-2">
+    <circle cx="890" cy="195" r="60" fill="none" stroke="#5EEAD4" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.45"/>
+    <path d="M 890 195 L 920 168 M 890 195 L 850 178 M 890 195 L 870 235 M 890 195 L 925 225 M 890 195 L 900 148" stroke="#5EEAD4" stroke-width="1.5" opacity="0.35" fill="none"/>
+    <circle cx="890" cy="195" r="12" fill="url(#orb-teal)" filter="url(#glow)"/>
+    <circle cx="920" cy="168" r="8" fill="url(#orb-teal)"/>
+    <circle cx="850" cy="178" r="8" fill="url(#orb-teal)"/>
+    <circle cx="870" cy="235" r="7" fill="url(#orb-teal)"/>
+    <circle cx="925" cy="225" r="9" fill="url(#orb-teal)"/>
+    <circle cx="900" cy="148" r="6" fill="url(#orb-teal)"/>
+    <text x="890" y="268" fill="#5EEAD4" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" text-anchor="middle" opacity="0.8">Agent Team B</text>
+  </g>
+
+  <!-- Cluster 3 (Bottom Center) - Blue -->
+  <g id="cluster-3">
+    <circle cx="600" cy="700" r="44" fill="none" stroke="#93C5FD" stroke-width="1" stroke-dasharray="3 4" opacity="0.4"/>
+    <path d="M 600 700 L 575 684 M 600 700 L 625 684 M 600 700 L 582 726 M 600 700 L 618 726" stroke="#93C5FD" stroke-width="1.5" opacity="0.35" fill="none"/>
+    <circle cx="600" cy="700" r="11" fill="url(#orb-blue)" filter="url(#glow)"/>
+    <circle cx="575" cy="684" r="7" fill="url(#orb-blue)"/>
+    <circle cx="625" cy="684" r="7" fill="url(#orb-blue)"/>
+    <circle cx="582" cy="726" r="6" fill="url(#orb-blue)"/>
+    <circle cx="618" cy="726" r="6" fill="url(#orb-blue)"/>
+    <text x="600" y="752" fill="#93C5FD" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" text-anchor="middle" opacity="0.8">Agent Team C</text>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- CONSENSUS BEAMS (flowing inward)             -->
+  <!-- ============================================ -->
+  <g id="beams">
+    <!-- Beam 1 (Top Left to Core) -->
+    <path d="M 275 180 Q 430 200 600 390 Q 400 300 350 218 Z" fill="url(#beam-glow-1)" opacity="0.4"/>
+    <path d="M 310 195 Q 455 275 600 390" fill="none" stroke="url(#solid-grad-1)" stroke-width="3" />
+    <path d="M 295 185 Q 445 260 600 390" fill="none" stroke="url(#solid-grad-1)" stroke-width="1.5" />
+
+    <!-- Beam 2 (Top Right to Core) -->
+    <path d="M 925 180 Q 770 200 600 390 Q 800 300 845 218 Z" fill="url(#beam-glow-2)" opacity="0.4"/>
+    <path d="M 890 195 Q 745 275 600 390" fill="none" stroke="url(#solid-grad-2)" stroke-width="3" />
+    <path d="M 905 185 Q 755 260 600 390" fill="none" stroke="url(#solid-grad-2)" stroke-width="1.5" />
+
+    <!-- Beam 3 (Bottom to Core) -->
+    <path d="M 548 710 Q 575 550 600 390 Q 625 550 652 710 Z" fill="url(#beam-glow-3)" opacity="0.4"/>
+    <path d="M 600 700 Q 600 545 600 390" fill="none" stroke="url(#solid-grad-3)" stroke-width="3" />
+    <path d="M 585 698 Q 592 545 600 390" fill="none" stroke="url(#solid-grad-3)" stroke-width="1.5" />
+  </g>
+
+  <!-- ============================================ -->
+  <!-- LIVING KNOWLEDGE CORE                        -->
+  <!-- ============================================ -->
+  <g id="core" filter="url(#core-shadow)">
+    <circle cx="600" cy="390" r="85" fill="url(#core-glow)" />
+    <path d="M 600 330 C 638 330, 665 358, 660 390 C 655 428, 628 452, 600 452 C 562 452, 535 428, 540 390 C 545 358, 562 330, 600 330 Z" fill="url(#core-body)"/>
+    <circle cx="600" cy="390" r="32" fill="url(#core-center)" />
+    <path d="M 578 390 L 622 390 M 600 368 L 600 412 M 584 374 L 616 406 M 584 406 L 616 374" stroke="#FFFFFF" stroke-width="2" opacity="0.55" fill="none"/>
+    <circle cx="600" cy="390" r="14" fill="#FFFFFF" filter="url(#glow)" opacity="0.9"/>
+  </g>
+
+  <!-- VERIFIED TRUTH label - large and bold (issue #4) -->
+  <text x="600" y="492" fill="#FDE68A" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="800" text-anchor="middle" letter-spacing="3" filter="url(#text-glow)">VERIFIED TRUTH</text>
+  <text x="600" y="512" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="400" text-anchor="middle" letter-spacing="0.5" opacity="0.6">Living Knowledge Core</text>
+
+  <!-- ============================================ -->
+  <!-- MATHEMATICAL PILLARS with TEXT LABELS         -->
+  <!-- (issue #1 - symbols + visible names)          -->
+  <!-- ============================================ -->
+  <g id="math-pillars" font-family="system-ui, -apple-system, sans-serif">
+
+    <!-- Pillar 1: pi - Identity (top, on outer ring) -->
+    <g>
+      <circle cx="600" cy="70" r="18" fill="#0B1426" stroke="#5EEAD4" stroke-width="2"/>
+      <text x="600" y="70" dy="0.35em" fill="#5EEAD4" font-family="Georgia, serif" font-style="italic" font-size="22" text-anchor="middle">&#960;</text>
+      <text x="600" y="102" fill="#5EEAD4" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle" letter-spacing="0.5">Identity</text>
+    </g>
+
+    <!-- Pillar 2: Sigma - Contribution (upper left) -->
+    <g>
+      <circle cx="310" cy="390" r="18" fill="#0B1426" stroke="#C4B5FD" stroke-width="2"/>
+      <text x="310" y="390" dy="0.35em" fill="#C4B5FD" font-family="Georgia, serif" font-style="italic" font-size="22" text-anchor="middle">&#931;</text>
+      <text x="310" y="420" fill="#C4B5FD" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle" letter-spacing="0.5">Contribution</text>
+    </g>
+
+    <!-- Pillar 3: Infinity - Collective (upper right) -->
+    <g>
+      <circle cx="890" cy="390" r="18" fill="#0B1426" stroke="#93C5FD" stroke-width="2"/>
+      <text x="890" y="390" dy="0.35em" fill="#93C5FD" font-family="Georgia, serif" font-style="italic" font-size="22" text-anchor="middle">&#8734;</text>
+      <text x="890" y="420" fill="#93C5FD" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle" letter-spacing="0.5">Collective</text>
+    </g>
+
+    <!-- Pillar 4: Nabla - Graph (lower left) -->
+    <g>
+      <circle cx="410" cy="600" r="18" fill="#0B1426" stroke="#FDBA74" stroke-width="2"/>
+      <text x="410" y="600" dy="0.35em" fill="#FDBA74" font-family="'Apple Symbols', 'Segoe UI Symbol', Georgia, serif" font-size="22" text-anchor="middle">&#x2207;</text>
+      <text x="410" y="630" fill="#FDBA74" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle" letter-spacing="0.5">Graph</text>
+    </g>
+
+    <!-- Pillar 5: Delta - Transfer (lower right) -->
+    <g>
+      <circle cx="790" cy="600" r="18" fill="#0B1426" stroke="#6EE7B7" stroke-width="2"/>
+      <text x="790" y="600" dy="0.35em" fill="#6EE7B7" font-family="Georgia, serif" font-style="italic" font-size="22" text-anchor="middle">&#916;</text>
+      <text x="790" y="630" fill="#6EE7B7" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle" letter-spacing="0.5">Transfer</text>
+    </g>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- TOP LABEL                                     -->
+  <!-- ============================================ -->
+  <rect x="470" y="14" width="260" height="30" rx="15" fill="#0F172A" stroke="#475569" stroke-width="1"/>
+  <text x="600" y="34" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle" letter-spacing="1">MATHEMATICAL PILLARS</text>
+
+  <!-- Consensus Flow label -->
+  <g>
+    <path d="M 755 308 L 720 310 L 705 322" stroke="#94A3B8" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <text x="818" y="313" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="500" text-anchor="middle" opacity="0.7">Consensus Flow</text>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- TAGLINE (issue #5)                            -->
+  <!-- ============================================ -->
+  <text x="600" y="783" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="300" text-anchor="middle" letter-spacing="2" font-style="italic" opacity="0.6">Knowledge is not stored. It's alive.</text>
+
+</svg>

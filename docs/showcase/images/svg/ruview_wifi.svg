@@ -1,0 +1,340 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="1200">
+  <defs>
+    <radialGradient id="bg-glow" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#0B1426" stop-opacity="1"/>
+    </radialGradient>
+
+    <linearGradient id="wall-glass" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#0F172A" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.2"/>
+    </linearGradient>
+
+    <linearGradient id="csi-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+
+    <linearGradient id="nn-plane" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#4F46E5" stop-opacity="0.1"/>
+    </linearGradient>
+
+    <linearGradient id="pose-glow-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#EC4899"/>
+      <stop offset="50%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="neon-glow-pink" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur1"/>
+      <feGaussianBlur stdDeviation="12" result="blur2"/>
+      <feMerge>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="neon-glow-gold" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur1"/>
+      <feMerge>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="neon-glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur1"/>
+      <feMerge>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="neon-glow-green" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur1"/>
+      <feMerge>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="signal-glow-blue" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="signal-glow-orange" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="drop-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+
+    <filter id="tagline-glow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Arrowhead Markers -->
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0,0 L 10,5 L 0,10 Z" fill="#F59E0B"/>
+    </marker>
+    <marker id="arrow-pink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0,0 L 10,5 L 0,10 Z" fill="#EC4899"/>
+    </marker>
+    <marker id="arrow-blue-big" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 0,0 L 12,6 L 0,12 Z" fill="#60A5FA"/>
+    </marker>
+    <marker id="arrow-pink-big" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 0,0 L 12,6 L 0,12 Z" fill="#EC4899"/>
+    </marker>
+  </defs>
+
+  <!-- 1. BACKGROUND -->
+  <rect width="1200" height="800" fill="url(#bg-glow)"/>
+  <path d="M 0,650 L 1200,650 L 1050,450 L 150,450 Z" fill="#1E293B" opacity="0.3"/>
+  <path d="M 0,650 L 1200,650" stroke="#334155" stroke-width="1" opacity="0.5"/>
+
+  <!-- 2. TAGLINE (top center) -->
+  <text x="600" y="42" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="400" text-anchor="middle" letter-spacing="3" filter="url(#tagline-glow)" opacity="0.9">See through walls. No cameras needed.</text>
+
+  <!-- 3. NO CAMERAS icon (top-right corner) -->
+  <g transform="translate(1100, 60)">
+    <!-- Camera body -->
+    <rect x="-22" y="-14" width="30" height="22" rx="4" fill="none" stroke="#EF4444" stroke-width="2" opacity="0.9"/>
+    <!-- Lens -->
+    <circle cx="-4" cy="-3" r="6" fill="none" stroke="#EF4444" stroke-width="1.5" opacity="0.9"/>
+    <!-- Flash bump -->
+    <rect x="-20" y="-18" width="10" height="6" rx="2" fill="none" stroke="#EF4444" stroke-width="1.5" opacity="0.9"/>
+    <!-- Strike-through (diagonal red line) -->
+    <line x1="-30" y1="-22" x2="16" y2="16" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/>
+    <text x="-4" y="28" fill="#EF4444" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="1">NO CAMERAS</text>
+  </g>
+
+  <!-- 4. LEFT: WIFI TX & RX -->
+  <g id="routers" transform="translate(80, 0)">
+    <!-- TX Router -->
+    <g transform="translate(0, 180)" filter="url(#drop-shadow)">
+      <rect x="0" y="0" width="90" height="110" rx="12" fill="#1E293B" stroke="#3B82F6" stroke-width="2"/>
+      <line x1="20" y1="0" x2="10" y2="-30" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"/>
+      <line x1="70" y1="0" x2="80" y2="-30" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="45" cy="20" r="4" fill="#38BDF8" filter="url(#signal-glow-blue)"/>
+      <text x="45" y="58" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" text-anchor="middle">WiFi TX</text>
+      <text x="45" y="78" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="12" text-anchor="middle">Transmitter</text>
+    </g>
+
+    <!-- RX Router -->
+    <g transform="translate(0, 360)" filter="url(#drop-shadow)">
+      <rect x="0" y="0" width="90" height="110" rx="12" fill="#1E293B" stroke="#F97316" stroke-width="2"/>
+      <line x1="20" y1="0" x2="10" y2="-30" stroke="#F97316" stroke-width="3" stroke-linecap="round"/>
+      <line x1="70" y1="0" x2="80" y2="-30" stroke="#F97316" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="45" cy="20" r="4" fill="#FBBF24" filter="url(#signal-glow-orange)"/>
+      <text x="45" y="58" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" text-anchor="middle">WiFi RX</text>
+      <text x="45" y="78" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="12" text-anchor="middle">Receiver</text>
+    </g>
+  </g>
+
+  <!-- 5. WIFI WAVES (emitted and reflected, MORE lines passing through wall) -->
+  <g id="waves">
+    <!-- Blue Emitted Waves (TX toward wall and through to Human) -->
+    <g stroke="#3B82F6" stroke-width="2.5" fill="none" stroke-dasharray="8 8" filter="url(#signal-glow-blue)" opacity="0.7">
+      <path d="M 180,230 Q 400,100 700,180"/>
+      <path d="M 180,230 Q 400,180 700,220"/>
+      <path d="M 180,230 Q 400,230 700,260"/>
+      <path d="M 180,230 Q 400,280 700,300"/>
+      <path d="M 180,230 Q 400,340 700,340"/>
+    </g>
+
+    <!-- Orange Reflected Waves (Human back to RX, through wall) -->
+    <g stroke="#F97316" stroke-width="3" fill="none" stroke-dasharray="10 8" filter="url(#signal-glow-orange)" opacity="0.85">
+      <path d="M 700,180 Q 400,220 180,410"/>
+      <path d="M 700,220 Q 400,270 180,410"/>
+      <path d="M 700,260 Q 400,310 180,410"/>
+      <path d="M 700,300 Q 400,360 180,410"/>
+      <path d="M 700,340 Q 400,400 180,410"/>
+    </g>
+
+    <!-- Wave Labels -->
+    <g transform="translate(260, 145)">
+      <rect x="-10" y="-14" width="160" height="24" rx="4" fill="#0B1426" opacity="0.85"/>
+      <text x="70" y="2" fill="#38BDF8" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle" letter-spacing="1">EMITTED SIGNAL</text>
+    </g>
+    <g transform="translate(260, 370)">
+      <rect x="-10" y="-14" width="160" height="24" rx="4" fill="#0B1426" opacity="0.85"/>
+      <text x="70" y="2" fill="#FBBF24" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle" letter-spacing="1">REFLECTED SIGNAL</text>
+    </g>
+  </g>
+
+  <!-- 6. SOLID BARRIER (WALL) with HORIZONTAL label -->
+  <g id="wall" transform="translate(460, 80)" filter="url(#drop-shadow)">
+    <!-- 3D Side Extrusion -->
+    <path d="M 60,0 L 80,-20 L 80,400 L 60,420 Z" fill="#020617" stroke="#0EA5E9" stroke-width="1.5" opacity="0.8"/>
+    <!-- Top Extrusion -->
+    <path d="M 0,0 L 20,-20 L 80,-20 L 60,0 Z" fill="#0F172A" stroke="#0EA5E9" stroke-width="1.5" opacity="0.8"/>
+    <!-- Front Face -->
+    <rect x="0" y="0" width="60" height="420" fill="url(#wall-glass)" stroke="#38BDF8" stroke-width="2"/>
+    <!-- Brick-like texture lines -->
+    <g stroke="#38BDF8" stroke-width="0.5" opacity="0.2">
+      <line x1="0" y1="60" x2="60" y2="60"/>
+      <line x1="0" y1="120" x2="60" y2="120"/>
+      <line x1="0" y1="180" x2="60" y2="180"/>
+      <line x1="0" y1="240" x2="60" y2="240"/>
+      <line x1="0" y1="300" x2="60" y2="300"/>
+      <line x1="0" y1="360" x2="60" y2="360"/>
+      <line x1="30" y1="0" x2="30" y2="60"/>
+      <line x1="30" y1="120" x2="30" y2="180"/>
+      <line x1="30" y1="240" x2="30" y2="300"/>
+      <line x1="30" y1="360" x2="30" y2="420"/>
+    </g>
+  </g>
+  <!-- Wall label: HORIZONTAL, below the wall -->
+  <text x="500" y="530" fill="#38BDF8" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="bold" text-anchor="middle" letter-spacing="4" opacity="0.9">SOLID BARRIER</text>
+
+  <!-- 7. HUMAN SILHOUETTE (right side, realistic body shape) -->
+  <g id="physical-subject" transform="translate(700, 130)">
+    <!-- Outer shadow/rim glow -->
+    <g opacity="0.3" filter="url(#signal-glow-orange)">
+      <!-- Head -->
+      <ellipse cx="0" cy="0" rx="26" ry="30" fill="#F97316"/>
+      <!-- Neck -->
+      <rect x="-8" y="28" width="16" height="14" fill="#F97316"/>
+      <!-- Torso (tapered) -->
+      <path d="M -28,42 Q -32,80 -26,130 L 26,130 Q 32,80 28,42 Z" fill="#F97316"/>
+      <!-- Left arm -->
+      <path d="M -28,48 Q -50,70 -55,110 Q -56,130 -48,135" fill="#F97316" stroke="none"/>
+      <!-- Right arm -->
+      <path d="M 28,48 Q 50,70 55,110 Q 56,130 48,135" fill="#F97316" stroke="none"/>
+      <!-- Left leg -->
+      <path d="M -20,130 Q -24,180 -26,230 Q -28,250 -18,255" fill="#F97316" stroke="none"/>
+      <!-- Right leg -->
+      <path d="M 20,130 Q 24,180 26,230 Q 28,250 18,255" fill="#F97316" stroke="none"/>
+    </g>
+    <!-- Core dark silhouette -->
+    <g opacity="1">
+      <!-- Head -->
+      <ellipse cx="0" cy="0" rx="22" ry="26" fill="#0F172A"/>
+      <!-- Neck -->
+      <rect x="-7" y="24" width="14" height="12" fill="#0F172A"/>
+      <!-- Torso -->
+      <path d="M -24,36 Q -28,74 -22,125 L 22,125 Q 28,74 24,36 Z" fill="#0F172A"/>
+      <!-- Left arm -->
+      <path d="M -24,42 Q -44,64 -48,104 Q -50,124 -42,128" fill="#0F172A" stroke="none"/>
+      <!-- Right arm -->
+      <path d="M 24,42 Q 44,64 48,104 Q 50,124 42,128" fill="#0F172A" stroke="none"/>
+      <!-- Left leg -->
+      <path d="M -16,125 Q -20,174 -22,222 Q -24,244 -14,248" fill="#0F172A" stroke="none"/>
+      <!-- Right leg -->
+      <path d="M 16,125 Q 20,174 22,222 Q 24,244 14,248" fill="#0F172A" stroke="none"/>
+    </g>
+    <!-- Label -->
+    <text x="0" y="-44" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="bold" text-anchor="middle" letter-spacing="2">HIDDEN PERSON</text>
+    <text x="0" y="272" fill="#64748B" font-family="system-ui, -apple-system, sans-serif" font-size="11" text-anchor="middle">(behind wall, invisible)</text>
+  </g>
+
+  <!-- 8. BOTTOM PIPELINE -->
+  <g id="pipeline">
+    <!-- Data Stream from RX down to pipeline -->
+    <path d="M 125,470 L 125,660 L 230,660" stroke="#F97316" stroke-width="3" fill="none" stroke-dasharray="6 4" marker-end="url(#arrow-orange)"/>
+
+    <!-- CSI Extraction Box -->
+    <g transform="translate(240, 590)" filter="url(#drop-shadow)">
+      <rect x="0" y="0" width="180" height="140" rx="12" fill="url(#csi-grad)" stroke="#F59E0B" stroke-width="2"/>
+      <!-- Waveform -->
+      <path d="M 20,70 L 40,70 L 55,35 L 70,105 L 85,45 L 100,90 L 115,60 L 130,80 L 145,70 L 160,70" stroke="#FBBF24" stroke-width="3" fill="none" stroke-linejoin="round" filter="url(#signal-glow-orange)"/>
+      <!-- Matrix dots -->
+      <g fill="#F59E0B" opacity="0.5">
+        <circle cx="40" cy="35" r="2"/><circle cx="70" cy="35" r="2"/><circle cx="100" cy="35" r="2"/><circle cx="130" cy="35" r="2"/>
+        <circle cx="40" cy="105" r="2"/><circle cx="70" cy="105" r="2"/><circle cx="100" cy="105" r="2"/><circle cx="130" cy="105" r="2"/>
+      </g>
+      <text x="90" y="130" fill="#FBBF24" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" text-anchor="middle">CSI Extraction</text>
+    </g>
+
+    <!-- PROMINENT Arrow: CSI to DensePose -->
+    <line x1="420" y1="660" x2="498" y2="660" stroke="#60A5FA" stroke-width="4" marker-end="url(#arrow-blue-big)"/>
+    <line x1="420" y1="660" x2="498" y2="660" stroke="#60A5FA" stroke-width="2" opacity="0.4" filter="url(#signal-glow-blue)"/>
+
+    <!-- DensePose Net Box -->
+    <g transform="translate(510, 590)" filter="url(#drop-shadow)">
+      <rect x="0" y="0" width="220" height="140" rx="12" fill="#1E293B" stroke="#6366F1" stroke-width="2"/>
+      <!-- Isometric neural net planes -->
+      <g transform="translate(40, 35)">
+        <path d="M 25,25 L 105,65 M 65,25 L 145,65 M 25,65 L 105,105 M 65,65 L 145,105" stroke="#818CF8" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5"/>
+        <polygon points="10,40 50,0 90,0 50,40" fill="url(#nn-plane)" stroke="#818CF8" stroke-width="1.5"/>
+        <circle cx="50" cy="20" r="4" fill="#A5B4FC" filter="url(#signal-glow-blue)"/>
+        <polygon points="50,60 90,20 130,20 90,60" fill="url(#nn-plane)" stroke="#818CF8" stroke-width="1.5"/>
+        <circle cx="90" cy="40" r="4" fill="#A5B4FC" filter="url(#signal-glow-blue)"/>
+        <polygon points="90,80 130,40 170,40 130,80" fill="url(#nn-plane)" stroke="#818CF8" stroke-width="1.5"/>
+        <circle cx="130" cy="60" r="4" fill="#A5B4FC" filter="url(#signal-glow-blue)"/>
+      </g>
+      <text x="110" y="130" fill="#A5B4FC" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" text-anchor="middle">DensePose Net</text>
+    </g>
+
+    <!-- PROMINENT Arrow: DensePose to Output -->
+    <line x1="730" y1="660" x2="808" y2="660" stroke="#EC4899" stroke-width="4" marker-end="url(#arrow-pink-big)"/>
+    <line x1="730" y1="660" x2="808" y2="660" stroke="#EC4899" stroke-width="2" opacity="0.4" filter="url(#neon-glow-pink)"/>
+
+    <!-- 3D POSE OUTPUT (the payoff, with colorful DensePose-style skeleton) -->
+    <g transform="translate(820, 500)" filter="url(#drop-shadow)">
+      <rect x="0" y="0" width="280" height="280" rx="12" fill="#0B1426" stroke="#EC4899" stroke-width="2.5"/>
+
+      <!-- Colorful Skeleton (DensePose style: different colors per body part) -->
+      <g transform="translate(140, 40)">
+        <!-- Torso: magenta/pink gradient -->
+        <line x1="0" y1="30" x2="0" y2="100" stroke="#EC4899" stroke-width="7" filter="url(#neon-glow-pink)"/>
+
+        <!-- Left Arm: gold/yellow -->
+        <path d="M 0,38 L -36,10 L -42,-12" stroke="#FBBF24" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#neon-glow-gold)"/>
+
+        <!-- Right Arm: cyan -->
+        <path d="M 0,38 L 36,68 L 42,96" stroke="#06B6D4" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#neon-glow-cyan)"/>
+
+        <!-- Left Leg: green -->
+        <path d="M 0,100 L -28,148 L -32,186" stroke="#22C55E" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#neon-glow-green)"/>
+
+        <!-- Right Leg: purple -->
+        <path d="M 0,100 L 28,148 L 32,186" stroke="#A855F7" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#neon-glow-pink)"/>
+
+        <!-- Head: gold wireframe sphere -->
+        <circle cx="0" cy="0" r="18" fill="none" stroke="#FBBF24" stroke-width="3" filter="url(#neon-glow-gold)"/>
+        <path d="M -18,0 Q 0,10 18,0 M 0,-18 Q -10,0 0,18" fill="none" stroke="#FBBF24" stroke-width="1.5" opacity="0.7"/>
+
+        <!-- Joint Nodes: each a distinct color matching its limb -->
+        <!-- Head/neck -->
+        <circle cx="0" cy="30" r="5" fill="#EC4899" filter="url(#neon-glow-pink)"/>
+        <!-- Pelvis -->
+        <circle cx="0" cy="100" r="5" fill="#EC4899" filter="url(#neon-glow-pink)"/>
+        <!-- Left arm joints (gold) -->
+        <circle cx="-36" cy="10" r="4" fill="#FBBF24" filter="url(#neon-glow-gold)"/>
+        <circle cx="-42" cy="-12" r="4" fill="#FBBF24" filter="url(#neon-glow-gold)"/>
+        <!-- Right arm joints (cyan) -->
+        <circle cx="36" cy="68" r="4" fill="#06B6D4" filter="url(#neon-glow-cyan)"/>
+        <circle cx="42" cy="96" r="4" fill="#06B6D4" filter="url(#neon-glow-cyan)"/>
+        <!-- Left leg joints (green) -->
+        <circle cx="-28" cy="148" r="5" fill="#22C55E" filter="url(#neon-glow-green)"/>
+        <circle cx="-32" cy="186" r="4" fill="#22C55E" filter="url(#neon-glow-green)"/>
+        <!-- Right leg joints (purple) -->
+        <circle cx="28" cy="148" r="5" fill="#A855F7" filter="url(#neon-glow-pink)"/>
+        <circle cx="32" cy="186" r="4" fill="#A855F7" filter="url(#neon-glow-pink)"/>
+      </g>
+
+      <!-- Output Label -->
+      <text x="140" y="258" fill="#FBCFE8" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" text-anchor="middle" letter-spacing="2" filter="url(#neon-glow-pink)">3D POSE OUTPUT</text>
+    </g>
+  </g>
+
+</svg>

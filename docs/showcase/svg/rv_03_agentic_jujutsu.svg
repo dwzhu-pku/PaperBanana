@@ -1,0 +1,274 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0B1426" />
+      <stop offset="100%" stop-color="#060913" />
+    </linearGradient>
+    
+    <linearGradient id="git-panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#141E30" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+    
+    <linearGradient id="aj-panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A1D3A" />
+      <stop offset="100%" stop-color="#130E24" />
+    </linearGradient>
+
+    <!-- UI Element Gradients -->
+    <linearGradient id="badge-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#EA580C" />
+    </linearGradient>
+
+    <linearGradient id="transition-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#475569" stop-opacity="0.3" />
+      <stop offset="50%" stop-color="#F59E0B" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0.3" />
+    </linearGradient>
+
+    <!-- Glow Effects -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    
+    <filter id="subtle-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+
+    <!-- Arrow Markers -->
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#3B82F6" />
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#8B5CF6" />
+    </marker>
+  </defs>
+
+  <!-- Base Background -->
+  <rect width="1200" height="800" fill="url(#bg-grad)" />
+
+  <!-- Header Section -->
+  <text x="600" y="50" font-family="system-ui, sans-serif" font-size="34" font-weight="900" fill="#F8FAFC" text-anchor="middle" letter-spacing="1">Agentic Jujutsu vs Traditional Git</text>
+  <text x="600" y="85" font-family="system-ui, sans-serif" font-size="18" font-weight="400" fill="#94A3B8" text-anchor="middle">Quantum-resistant, concurrent version control built for AI agents, not just human developers.</text>
+
+  <!-- Split Panels -->
+  <!-- Left Panel: Traditional Git -->
+  <rect x="40" y="120" width="460" height="520" rx="16" fill="url(#git-panel)" stroke="#334155" stroke-width="2" />
+  
+  <!-- Right Panel: Agentic Jujutsu -->
+  <rect x="700" y="120" width="460" height="520" rx="16" fill="url(#aj-panel)" stroke="#6366F1" stroke-width="2" />
+
+  <!-- Center Divider Line -->
+  <line x1="600" y1="130" x2="600" y2="630" stroke="#334155" stroke-width="2" stroke-dasharray="8,8" />
+  <circle cx="600" cy="120" r="22" fill="#0F172A" stroke="#475569" stroke-width="2" />
+  <text x="600" y="126" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#94A3B8" text-anchor="middle">VS</text>
+
+  <!-- Transition Connecting Lines (Behind Badges) -->
+  <line x1="480" y1="272" x2="720" y2="272" stroke="url(#transition-grad)" stroke-width="6" />
+  <line x1="480" y1="372" x2="720" y2="372" stroke="url(#transition-grad)" stroke-width="6" />
+  <line x1="480" y1="472" x2="720" y2="472" stroke="url(#transition-grad)" stroke-width="6" />
+
+  <!-- ================= LEFT COLUMN: TRADITIONAL GIT ================= -->
+  
+  <!-- Row 1: Actor -->
+  <g transform="translate(60, 140)">
+    <rect x="0" y="0" width="64" height="64" rx="12" fill="#1E293B" stroke="#475569" stroke-width="1" />
+    <!-- Single Person Icon -->
+    <circle cx="32" cy="24" r="10" fill="#94A3B8" />
+    <path d="M16,48 C16,36 48,36 48,48" fill="#94A3B8" />
+    
+    <text x="84" y="28" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="#F1F5F9">Single Developer</text>
+    <text x="84" y="50" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Sequential, human-speed</text>
+  </g>
+
+  <!-- Row 2: Speed -->
+  <g transform="translate(60, 240)">
+    <rect x="0" y="0" width="64" height="64" rx="12" fill="#1E293B" stroke="#475569" stroke-width="1" />
+    <!-- Low Gauge Icon -->
+    <path d="M16,42 A 16,16 0 0,1 48,42" fill="none" stroke="#475569" stroke-width="4" stroke-linecap="round" />
+    <line x1="32" y1="42" x2="22" y2="30" stroke="#EF4444" stroke-width="3" stroke-linecap="round" />
+    <circle cx="32" cy="42" r="4" fill="#94A3B8" />
+    
+    <text x="84" y="28" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="#F1F5F9">15 ops/s Limit</text>
+    <text x="84" y="50" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Bottlenecked throughput</text>
+  </g>
+
+  <!-- Row 3: Commits -->
+  <g transform="translate(60, 340)">
+    <rect x="0" y="0" width="64" height="64" rx="12" fill="#1E293B" stroke="#475569" stroke-width="1" />
+    <!-- Locked Icon -->
+    <rect x="20" y="30" width="24" height="18" rx="3" fill="#EF4444" />
+    <path d="M24,30 L24,22 A 8,8 0 0,1 40,22 L40,30" fill="none" stroke="#EF4444" stroke-width="4" />
+    
+    <text x="84" y="28" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="#F1F5F9">Blocking Commits</text>
+    <text x="84" y="50" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">State locking delays</text>
+  </g>
+
+  <!-- Row 4: Conflicts -->
+  <g transform="translate(60, 440)">
+    <rect x="0" y="0" width="64" height="64" rx="12" fill="#1E293B" stroke="#475569" stroke-width="1" />
+    <!-- Manual Merge / Conflict Icon -->
+    <path d="M16,50 C 32,50 32,14 48,14" fill="none" stroke="#94A3B8" stroke-width="3" />
+    <path d="M16,14 C 32,14 32,50 48,50" fill="none" stroke="#94A3B8" stroke-width="3" />
+    <path d="M26,26 L38,38 M26,38 L38,26" stroke="#EF4444" stroke-width="4" stroke-linecap="round" />
+    
+    <text x="84" y="28" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="#F1F5F9">Manual Conflicts</text>
+    <text x="84" y="50" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Requires human resolution</text>
+  </g>
+
+  <!-- Row 5: Security -->
+  <g transform="translate(60, 540)">
+    <rect x="0" y="0" width="64" height="64" rx="12" fill="#1E293B" stroke="#475569" stroke-width="1" />
+    <!-- Broken Shield Icon -->
+    <path d="M32,12 L46,18 L46,32 C46,44 32,54 32,54 C32,54 18,44 18,32 L18,18 Z" fill="none" stroke="#EF4444" stroke-width="3" />
+    <path d="M32,12 L28,26 L36,36 L30,54" fill="none" stroke="#EF4444" stroke-width="3" />
+    
+    <text x="84" y="28" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="#F1F5F9">SHA-1 Vulnerable</text>
+    <text x="84" y="50" font-family="system-ui, sans-serif" font-size="14" fill="#94A3B8">Cryptographically weak</text>
+  </g>
+
+
+  <!-- ================= RIGHT COLUMN: AGENTIC JUJUTSU ================= -->
+
+  <!-- Row 1: Actor -->
+  <g transform="translate(720, 140)">
+    <rect x="0" y="0" width="64" height="64" rx="12" fill="#2E1065" stroke="#8B5CF6" stroke-width="1" filter="url(#glow)" />
+    <!-- Concurrent Agents Icon (Connected Nodes) -->
+    <circle cx="32" cy="20" r="7" fill="#10B981" />
+    <circle cx="18" cy="42" r="7" fill="#3B82F6" />
+    <circle cx="46" cy="42" r="7" fill="#F59E0B" />
+    <path d="M32,20 L18,42 L46,42 Z" fill="none" stroke="#8B5CF6" stroke-width="2" />
+    
+    <text x="84" y="28" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="#F8FAFC">Concurrent Agents</text>
+    <text x="84" y="50" font-family="system-ui, sans-serif" font-size="14" fill="#C4B5FD">Parallel autonomous workflows</text>
+  </g>
+
+  <!-- Row 2: Speed -->
+  <g transform="translate(720, 240)">
+    <rect x="0" y="0" width="64" height="64" rx="12" fill="#064E3B" stroke="#10B981" stroke-width="1" filter="url(#glow)" />
+    <!-- High Gauge Icon -->
+    <path d="M16,42 A 16,16 0 0,1 48,42" fill="none" stroke="#3B82F6" stroke-width="4" stroke-linecap="round" />
+    <line x1="32" y1="42" x2="44" y2="28" stroke="#10B981" stroke-width="3" stroke-linecap="round" />
+    <circle cx="32" cy="42" r="4" fill="#F8FAFC" />
+    
+    <text x="84" y="28" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="#F8FAFC">350 ops/s Speed</text>
+    <text x="84" y="50" font-family="system-ui, sans-serif" font-size="14" fill="#A7F3D0">High-throughput execution</text>
+  </g>
+
+  <!-- Row 3: Commits -->
+  <g transform="translate(720, 340)">
+    <rect x="0" y="0" width="64" height="64" rx="12" fill="#1E3A8A" stroke="#3B82F6" stroke-width="1" filter="url(#glow)" />
+    <!-- Unlocked / Flow Icon -->
+    <rect x="20" y="30" width="24" height="18" rx="3" fill="#3B82F6" />
+    <path d="M24,30 L24,22 A 8,8 0 0,1 40,22" fill="none" stroke="#3B82F6" stroke-width="4" stroke-linecap="round" />
+    
+    <text x="84" y="28" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="#F8FAFC">Lock-Free Commits</text>
+    <text x="84" y="50" font-family="system-ui, sans-serif" font-size="14" fill="#BFDBFE">Optimistic concurrency</text>
+  </g>
+
+  <!-- Row 4: Conflicts -->
+  <g transform="translate(720, 440)">
+    <rect x="0" y="0" width="64" height="64" rx="12" fill="#064E3B" stroke="#10B981" stroke-width="1" filter="url(#glow)" />
+    <!-- Smooth Merge Icon -->
+    <path d="M16,48 C 28,48 32,32 48,32" fill="none" stroke="#10B981" stroke-width="3" />
+    <path d="M16,16 C 28,16 32,32 48,32" fill="none" stroke="#10B981" stroke-width="3" />
+    <!-- Sparkle/Magic Icon at merge -->
+    <path d="M48,22 L50,28 L56,30 L50,32 L48,38 L46,32 L40,30 L46,28 Z" fill="#F59E0B" />
+    
+    <text x="84" y="28" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="#F8FAFC">Semantic Merging</text>
+    <text x="84" y="50" font-family="system-ui, sans-serif" font-size="14" fill="#A7F3D0">87% auto-resolve rate</text>
+  </g>
+
+  <!-- Row 5: Security -->
+  <g transform="translate(720, 540)">
+    <rect x="0" y="0" width="64" height="64" rx="12" fill="#2E1065" stroke="#8B5CF6" stroke-width="1" filter="url(#glow)" />
+    <!-- Quantum Safe Shield -->
+    <path d="M32,12 L46,18 L46,32 C46,44 32,54 32,54 C32,54 18,44 18,32 L18,18 Z" fill="#8B5CF6" stroke="#C4B5FD" stroke-width="2" />
+    <!-- Atom inside shield -->
+    <ellipse cx="32" cy="32" rx="10" ry="4" transform="rotate(45 32 32)" fill="none" stroke="#F8FAFC" stroke-width="1.5" />
+    <ellipse cx="32" cy="32" rx="10" ry="4" transform="rotate(-45 32 32)" fill="none" stroke="#F8FAFC" stroke-width="1.5" />
+    <circle cx="32" cy="32" r="2" fill="#F59E0B" />
+    
+    <text x="84" y="28" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="#F8FAFC">Quantum-Safe</text>
+    <text x="84" y="50" font-family="system-ui, sans-serif" font-size="14" fill="#C4B5FD">SHA3-512 + HQC-128</text>
+  </g>
+
+
+  <!-- ================= CENTER METRIC BADGES ================= -->
+
+  <!-- Badge 1: 23x Faster -->
+  <g transform="translate(600, 272)" filter="url(#subtle-shadow)">
+    <rect x="-70" y="-32" width="140" height="64" rx="32" fill="url(#badge-grad)" stroke="#FFFFFF" stroke-width="2" />
+    <text x="0" y="-2" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#FFFFFF" text-anchor="middle">23x</text>
+    <text x="0" y="18" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#FFF7ED" text-anchor="middle" letter-spacing="1">FASTER</text>
+  </g>
+
+  <!-- Badge 2: 10x Context Switch -->
+  <g transform="translate(600, 372)" filter="url(#subtle-shadow)">
+    <rect x="-80" y="-32" width="160" height="64" rx="32" fill="url(#badge-grad)" stroke="#FFFFFF" stroke-width="2" />
+    <text x="0" y="-2" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#FFFFFF" text-anchor="middle">10x</text>
+    <text x="0" y="18" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#FFF7ED" text-anchor="middle" letter-spacing="1">CONTEXT SWITCH</text>
+  </g>
+
+  <!-- Badge 3: 87% Auto-Resolve -->
+  <g transform="translate(600, 472)" filter="url(#subtle-shadow)">
+    <rect x="-70" y="-32" width="140" height="64" rx="32" fill="url(#badge-grad)" stroke="#FFFFFF" stroke-width="2" />
+    <text x="0" y="-2" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#FFFFFF" text-anchor="middle">87%</text>
+    <text x="0" y="18" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#FFF7ED" text-anchor="middle" letter-spacing="1">AUTO-RESOLVE</text>
+  </g>
+
+
+  <!-- ================= BOTTOM SECTION: REASONINGBANK ================= -->
+  
+  <g transform="translate(40, 670)">
+    <rect x="0" y="0" width="1120" height="100" rx="16" fill="#13102B" stroke="#8B5CF6" stroke-width="2" filter="url(#glow)" />
+    
+    <!-- Left Icon: Brain + Database -->
+    <g transform="translate(30, 20)">
+      <rect x="0" y="0" width="60" height="60" rx="12" fill="#2E1065" />
+      <!-- DB Base -->
+      <ellipse cx="30" cy="42" rx="14" ry="5" fill="#8B5CF6" />
+      <rect x="16" y="28" width="28" height="14" fill="#8B5CF6" />
+      <ellipse cx="30" cy="28" rx="14" ry="5" fill="#C4B5FD" />
+      <!-- Brain Overlay -->
+      <circle cx="30" cy="18" r="8" fill="#F59E0B" opacity="0.9" />
+    </g>
+
+    <!-- Text Content -->
+    <text x="110" y="44" font-family="system-ui, sans-serif" font-size="22" font-weight="bold" fill="#F8FAFC">ReasoningBank</text>
+    <text x="110" y="72" font-family="system-ui, sans-serif" font-size="15" fill="#C4B5FD">Tracks agent actions and semantic decisions as vector embeddings.</text>
+
+    <!-- Visual Flow Diagram -->
+    <!-- Node (Agent Action) -->
+    <circle cx="580" cy="50" r="18" fill="#3B82F6" stroke="#60A5FA" stroke-width="2" />
+    <circle cx="580" cy="50" r="6" fill="#1E3A8A" />
+    <text x="580" y="86" font-family="system-ui, sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">Action</text>
+
+    <!-- Arrow 1 -->
+    <path d="M 610 50 L 660 50" fill="none" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrow-blue)" />
+    <text x="635" y="40" font-family="system-ui, sans-serif" font-size="12" fill="#60A5FA" text-anchor="middle">embed</text>
+
+    <!-- Embeddings Array -->
+    <rect x="680" y="30" width="180" height="40" rx="6" fill="#0F172A" stroke="#8B5CF6" stroke-width="1" />
+    <text x="770" y="55" font-family="monospace" font-size="16" fill="#A78BFA" text-anchor="middle">[0.82, -0.14, 0.95]</text>
+    <text x="770" y="86" font-family="system-ui, sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">Vector State</text>
+
+    <!-- Arrow 2 -->
+    <path d="M 870 50 L 930 50" fill="none" stroke="#8B5CF6" stroke-width="2" marker-end="url(#arrow-purple)" />
+    <text x="900" y="40" font-family="system-ui, sans-serif" font-size="12" fill="#A78BFA" text-anchor="middle">commit</text>
+
+    <!-- Immutable Ledger (Graph DB) -->
+    <g transform="translate(950, 20)">
+      <circle cx="30" cy="15" r="10" fill="#10B981" />
+      <circle cx="15" cy="45" r="10" fill="#10B981" />
+      <circle cx="45" cy="45" r="10" fill="#10B981" />
+      <circle cx="75" cy="45" r="10" fill="#10B981" />
+      <path d="M 30 25 L 15 35 M 30 25 L 45 35 M 45 45 L 75 45" stroke="#34D399" stroke-width="2" />
+      <text x="45" y="66" font-family="system-ui, sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">Immutable Graph</text>
+    </g>
+  </g>
+
+</svg>

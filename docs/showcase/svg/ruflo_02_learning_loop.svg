@@ -1,0 +1,286 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Gradients -->
+    <radialGradient id="kb-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.25"/>
+      <stop offset="60%" stop-color="#06B6D4" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="kb-core" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0B1426" stop-opacity="0.8"/>
+    </radialGradient>
+    
+    <!-- Shadows -->
+    <filter id="drop-shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="glow-heavy" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Arrow Markers -->
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 Z" fill="#3B82F6"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 Z" fill="#8B5CF6"/>
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 Z" fill="#F59E0B"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 Z" fill="#10B981"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 Z" fill="#F97316"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#0B1426"/>
+  
+  <!-- Subtle Background Rings -->
+  <g stroke="#1E293B" stroke-width="1" fill="none" opacity="0.6">
+    <circle cx="600" cy="480" r="260"/>
+    <circle cx="600" cy="480" r="360"/>
+    <circle cx="600" cy="480" r="460"/>
+  </g>
+
+  <!-- ==================== HEADER & INSIGHT ==================== -->
+  <text x="600" y="45" font-family="system-ui, sans-serif" font-size="24" font-weight="bold" fill="#F8FAFC" text-anchor="middle" letter-spacing="2">RUFLO'S CONTINUOUS LEARNING LOOP</text>
+  
+  <rect x="150" y="65" width="900" height="44" rx="12" fill="#152033" stroke="#334155" stroke-width="1.5" filter="url(#drop-shadow)"/>
+  
+  <!-- Fixed Subtitle: Separated text elements to prevent Cairo tspan overlap and centered properly -->
+  <text x="190" y="92" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#F59E0B" text-anchor="start">Key Insight:</text>
+  <text x="285" y="92" font-family="system-ui, sans-serif" font-size="16" fill="#F8FAFC" text-anchor="start">Ruflo remembers past outcomes, compressing and merging them via EWC++ to prevent catastrophic forgetting.</text>
+
+  <!-- ==================== ANTI-DRIFT GUARDIAN ==================== -->
+  <g id="guardian">
+    <!-- Beams and Reticle -->
+    <path d="M 600 185 L 600 360" stroke="#EF4444" stroke-width="2" stroke-dasharray="6 6" opacity="0.4"/>
+    <circle cx="600" cy="360" r="20" fill="none" stroke="#EF4444" stroke-width="1.5" opacity="0.4"/>
+    <line x1="575" y1="360" x2="625" y2="360" stroke="#EF4444" stroke-width="1.5" opacity="0.4"/>
+    <line x1="600" y1="335" x2="600" y2="385" stroke="#EF4444" stroke-width="1.5" opacity="0.4"/>
+    
+    <!-- Guardian Icon -->
+    <circle cx="600" cy="160" r="28" fill="#152033" stroke="#EF4444" stroke-width="2" filter="url(#drop-shadow)"/>
+    <path d="M 584 160 Q 600 146 616 160 Q 600 174 584 160 Z" fill="none" stroke="#EF4444" stroke-width="2.5"/>
+    <circle cx="600" cy="160" r="4" fill="#EF4444" filter="url(#glow-heavy)"/>
+    
+    <!-- Fixed Label: Increased height and adjusted Y to prevent stroke overlap -->
+    <rect x="525" y="113" width="150" height="28" rx="14" fill="#0B1426" stroke="#EF4444" stroke-width="1"/>
+    <text x="600" y="132" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#EF4444" text-anchor="middle" letter-spacing="1">ANTI-DRIFT MONITOR</text>
+  </g>
+
+  <!-- ==================== CENTER: KNOWLEDGE BASE ==================== -->
+  <g id="knowledge-base">
+    <!-- Glow and Rings -->
+    <circle cx="600" cy="480" r="220" fill="url(#kb-glow)"/>
+    <circle cx="600" cy="480" r="160" fill="none" stroke="#06B6D4" stroke-width="2" stroke-dasharray="8 8" opacity="0.4"/>
+    <circle cx="600" cy="480" r="120" fill="url(#kb-core)" stroke="#06B6D4" stroke-width="1.5" opacity="0.8"/>
+    
+    <!-- Network Graph inside KB -->
+    <g stroke="#06B6D4" stroke-width="1.5" opacity="0.6">
+      <!-- Edges -->
+      <line x1="600" y1="480" x2="550" y2="440"/>
+      <line x1="600" y1="480" x2="650" y2="440"/>
+      <line x1="600" y1="480" x2="530" y2="500"/>
+      <line x1="600" y1="480" x2="670" y2="500"/>
+      <line x1="600" y1="480" x2="600" y2="550"/>
+      <line x1="550" y1="440" x2="650" y2="440"/>
+      <line x1="550" y1="440" x2="530" y2="500"/>
+      <line x1="650" y1="440" x2="670" y2="500"/>
+      <line x1="530" y1="500" x2="600" y2="550"/>
+      <line x1="670" y1="500" x2="600" y2="550"/>
+    </g>
+    <!-- Nodes -->
+    <g fill="#06B6D4" filter="url(#glow-heavy)">
+      <circle cx="600" cy="480" r="8" fill="#F8FAFC"/>
+      <circle cx="550" cy="440" r="5"/>
+      <circle cx="650" cy="440" r="5"/>
+      <circle cx="530" cy="500" r="5"/>
+      <circle cx="670" cy="500" r="5"/>
+      <circle cx="600" cy="550" r="5"/>
+    </g>
+    
+    <!-- KB Label -->
+    <rect x="510" y="465" width="180" height="30" rx="15" fill="#0B1426" stroke="#06B6D4" stroke-width="1.5" opacity="0.85"/>
+    <text x="600" y="485" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#F8FAFC" text-anchor="middle" letter-spacing="1">KNOWLEDGE BASE</text>
+  </g>
+
+  <!-- ==================== CYCLE ARROWS (THE LOOP) ==================== -->
+  <g id="cycle-arrows" fill="none" stroke-width="3.5" opacity="0.9">
+    <!-- 1 -> 2 (Retrieve to Judge) -->
+    <path d="M 510 235 Q 600 180 680 235" stroke="#3B82F6" marker-end="url(#arrow-blue)"/>
+    <!-- 2 -> 3 (Judge to Distill) -->
+    <path d="M 820 290 Q 960 380 960 480" stroke="#8B5CF6" marker-end="url(#arrow-purple)"/>
+    <!-- 3 -> 4 (Distill to Consolidate) -->
+    <path d="M 960 600 Q 900 735 735 735" stroke="#F59E0B" marker-end="url(#arrow-amber)"/>
+    <!-- 4 -> 5 (Consolidate to Route) -->
+    <path d="M 465 735 Q 240 735 240 605" stroke="#10B981" marker-end="url(#arrow-green)"/>
+    <!-- 5 -> 1 (Route to Retrieve) -->
+    <path d="M 240 490 Q 240 380 375 290" stroke="#F97316" marker-end="url(#arrow-orange)"/>
+  </g>
+
+  <!-- Inner Arrows (KB Integration) -->
+  <g id="inner-arrows" fill="none" stroke-width="3" stroke-dasharray="6 4" opacity="0.8">
+    <!-- Consolidate -> KB -->
+    <path d="M 600 680 L 600 615" stroke="#10B981" marker-end="url(#arrow-green)"/>
+    <!-- KB -> Retrieve -->
+    <path d="M 510 420 L 450 305" stroke="#3B82F6" marker-end="url(#arrow-blue)"/>
+  </g>
+
+  <!-- Arrow Labels -->
+  <g font-family="system-ui, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">
+    <!-- 1->2 -->
+    <rect x="560" y="195" width="80" height="24" rx="12" fill="#0B1426" stroke="#334155"/>
+    <text x="600" y="212" fill="#94A3B8">patterns</text>
+    
+    <!-- 2->3 -->
+    <rect x="910" y="380" width="70" height="24" rx="12" fill="#0B1426" stroke="#334155"/>
+    <text x="945" y="397" fill="#94A3B8">scored</text>
+    
+    <!-- 3->4 -->
+    <rect x="830" y="675" width="60" height="24" rx="12" fill="#0B1426" stroke="#334155"/>
+    <text x="860" y="692" fill="#94A3B8">rules</text>
+    
+    <!-- 4->5 -->
+    <rect x="310" y="675" width="90" height="24" rx="12" fill="#0B1426" stroke="#334155"/>
+    <text x="355" y="692" fill="#94A3B8">updated KB</text>
+    
+    <!-- 5->1 -->
+    <rect x="250" y="380" width="80" height="24" rx="12" fill="#0B1426" stroke="#334155"/>
+    <text x="290" y="397" fill="#94A3B8">new task</text>
+    
+    <!-- Inner Consolidate -> KB -->
+    <rect x="610" y="635" width="60" height="24" rx="12" fill="#0B1426" stroke="#10B981" opacity="0.9"/>
+    <text x="640" y="652" fill="#10B981">merge</text>
+    
+    <!-- Inner KB -> Retrieve -->
+    <rect x="440" y="355" width="90" height="24" rx="12" fill="#0B1426" stroke="#3B82F6" opacity="0.9"/>
+    <text x="485" y="372" fill="#3B82F6">similar tasks</text>
+  </g>
+
+  <!-- ==================== THE 5 STEPS (BOXES) ==================== -->
+  <g font-family="system-ui, sans-serif">
+    
+    <!-- STEP 1: RETRIEVE -->
+    <g id="step1-retrieve" transform="translate(260, 190)">
+      <rect x="0" y="0" width="240" height="100" rx="12" fill="#152033" stroke="#1E293B" stroke-width="2" filter="url(#drop-shadow)"/>
+      <path d="M 12 0 L 228 0" stroke="#3B82F6" stroke-width="4" stroke-linecap="round"/>
+      
+      <!-- Icon Background -->
+      <circle cx="40" cy="50" r="24" fill="#1E3A8A" opacity="0.4"/>
+      <!-- Icon: Magnifying Glass + Sparkles -->
+      <circle cx="36" cy="46" r="12" stroke="#3B82F6" stroke-width="2.5" fill="none"/>
+      <line x1="45" y1="55" x2="52" y2="62" stroke="#3B82F6" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="48" cy="36" r="2" fill="#60A5FA"/>
+      <circle cx="24" cy="40" r="1.5" fill="#60A5FA"/>
+      
+      <!-- Fixed Text: Shortened to 1-2 words -->
+      <text x="80" y="45" font-size="18" font-weight="bold" fill="#F8FAFC">1. RETRIEVE</text>
+      <text x="80" y="68" font-size="14" fill="#94A3B8">Search KB</text>
+    </g>
+
+    <!-- STEP 2: JUDGE -->
+    <g id="step2-judge" transform="translate(700, 190)">
+      <rect x="0" y="0" width="240" height="100" rx="12" fill="#152033" stroke="#1E293B" stroke-width="2" filter="url(#drop-shadow)"/>
+      <path d="M 12 0 L 228 0" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+      
+      <!-- Icon Background -->
+      <circle cx="40" cy="50" r="24" fill="#4C1D95" opacity="0.4"/>
+      <!-- Icon: Balance Scale -->
+      <line x1="40" y1="35" x2="40" y2="65" stroke="#8B5CF6" stroke-width="2.5"/>
+      <line x1="30" y1="65" x2="50" y2="65" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="22" y1="42" x2="58" y2="42" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 22 42 L 16 56 L 28 56 Z" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M 58 42 L 52 56 L 64 56 Z" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linejoin="round"/>
+      
+      <!-- Fixed Text: Shortened to 1-2 words -->
+      <text x="80" y="38" font-size="18" font-weight="bold" fill="#F8FAFC">2. JUDGE</text>
+      <text x="80" y="58" font-size="14" fill="#94A3B8">Score Patterns</text>
+      
+      <!-- Badges -->
+      <rect x="80" y="70" width="60" height="18" rx="4" fill="#2E1065" stroke="#7C3AED" stroke-width="1"/>
+      <text x="110" y="83" font-size="10" font-weight="bold" fill="#C4B5FD" text-anchor="middle">Recency</text>
+      
+      <rect x="148" y="70" width="60" height="18" rx="4" fill="#2E1065" stroke="#7C3AED" stroke-width="1"/>
+      <text x="178" y="83" font-size="10" font-weight="bold" fill="#C4B5FD" text-anchor="middle">Success</text>
+    </g>
+
+    <!-- STEP 3: DISTILL -->
+    <g id="step3-distill" transform="translate(840, 500)">
+      <rect x="0" y="0" width="240" height="100" rx="12" fill="#152033" stroke="#1E293B" stroke-width="2" filter="url(#drop-shadow)"/>
+      <path d="M 12 0 L 228 0" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
+      
+      <!-- Icon Background -->
+      <circle cx="40" cy="50" r="24" fill="#78350F" opacity="0.4"/>
+      <!-- Icon: Funnel -->
+      <polygon points="25,36 55,36 44,54 44,64 36,64 36,54" fill="none" stroke="#F59E0B" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle cx="40" cy="70" r="2" fill="#F59E0B"/>
+      <line x1="30" y1="42" x2="50" y2="42" stroke="#F59E0B" stroke-width="1.5"/>
+      
+      <!-- Fixed Text: Shortened to 1-2 words -->
+      <text x="80" y="45" font-size="18" font-weight="bold" fill="#F8FAFC">3. DISTILL</text>
+      <text x="80" y="68" font-size="14" fill="#94A3B8">Compress Rules</text>
+    </g>
+
+    <!-- STEP 4: CONSOLIDATE -->
+    <g id="step4-consolidate" transform="translate(480, 690)">
+      <rect x="0" y="0" width="240" height="100" rx="12" fill="#152033" stroke="#1E293B" stroke-width="2" filter="url(#drop-shadow)"/>
+      <path d="M 12 0 L 228 0" stroke="#10B981" stroke-width="4" stroke-linecap="round"/>
+      
+      <!-- Icon Background -->
+      <circle cx="40" cy="50" r="24" fill="#064E3B" opacity="0.4"/>
+      <!-- Icon: Database + Plus -->
+      <ellipse cx="36" cy="40" rx="14" ry="5" fill="none" stroke="#10B981" stroke-width="2.5"/>
+      <path d="M 22 40 L 22 60 A 14 5 0 0 0 50 60 L 50 40" fill="none" stroke="#10B981" stroke-width="2.5"/>
+      <path d="M 22 50 A 14 5 0 0 0 50 50" fill="none" stroke="#10B981" stroke-width="2.5"/>
+      <circle cx="50" cy="60" r="8" fill="#152033" stroke="#10B981" stroke-width="2"/>
+      <path d="M 46 60 L 54 60 M 50 56 L 50 64" stroke="#10B981" stroke-width="2"/>
+      
+      <!-- Fixed Text: Shortened to 1-2 words -->
+      <text x="80" y="38" font-size="18" font-weight="bold" fill="#F8FAFC">4. CONSOLIDATE</text>
+      <text x="80" y="58" font-size="14" fill="#94A3B8">Merge</text>
+      
+      <!-- EWC++ Badge -->
+      <rect x="80" y="70" width="56" height="20" rx="6" fill="#064E3B" stroke="#10B981" stroke-width="1"/>
+      <text x="108" y="84" font-size="11" font-weight="bold" fill="#34D399" text-anchor="middle">EWC++</text>
+    </g>
+
+    <!-- STEP 5: ROUTE -->
+    <g id="step5-route" transform="translate(120, 500)">
+      <rect x="0" y="0" width="240" height="100" rx="12" fill="#152033" stroke="#1E293B" stroke-width="2" filter="url(#drop-shadow)"/>
+      <path d="M 12 0 L 228 0" stroke="#F97316" stroke-width="4" stroke-linecap="round"/>
+      
+      <!-- Icon Background -->
+      <circle cx="40" cy="50" r="24" fill="#7C2D12" opacity="0.4"/>
+      <!-- Icon: Signpost / Router -->
+      <line x1="40" y1="65" x2="40" y2="35" stroke="#F97316" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 40 40 L 52 40 L 52 37 L 58 42 L 52 47 L 52 44 L 40 44 Z" fill="#F97316"/>
+      <path d="M 40 50 L 28 50 L 28 47 L 22 52 L 28 57 L 28 54 L 40 54 Z" fill="#F97316"/>
+      <path d="M 40 60 L 48 60 L 48 57 L 54 62 L 48 67 L 48 64 L 40 64 Z" fill="#F97316"/>
+      
+      <!-- Fixed Text: Shortened to 1-2 words -->
+      <text x="80" y="38" font-size="18" font-weight="bold" fill="#F8FAFC">5. ROUTE</text>
+      <text x="80" y="58" font-size="14" fill="#94A3B8">Assign Tier</text>
+      
+      <!-- Badges -->
+      <rect x="80" y="70" width="45" height="18" rx="4" fill="#064E3B" stroke="#10B981" stroke-width="1"/>
+      <text x="102" y="83" font-size="10" font-weight="bold" fill="#34D399" text-anchor="middle">WASM</text>
+      
+      <rect x="130" y="70" width="45" height="18" rx="4" fill="#78350F" stroke="#F59E0B" stroke-width="1"/>
+      <text x="152" y="83" font-size="10" font-weight="bold" fill="#FBBF24" text-anchor="middle">Haiku</text>
+      
+      <rect x="180" y="70" width="42" height="18" rx="4" fill="#7F1D1D" stroke="#EF4444" stroke-width="1"/>
+      <text x="201" y="83" font-size="10" font-weight="bold" fill="#F87171" text-anchor="middle">Opus</text>
+    </g>
+
+  </g>
+</svg>

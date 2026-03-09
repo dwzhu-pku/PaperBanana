@@ -1,0 +1,296 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" style="background-color: #0B1426; font-family: system-ui, -apple-system, sans-serif;">
+  <defs>
+    <!-- Shadows -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    
+    <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <filter id="glow-amber" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Gradients -->
+    <linearGradient id="transport-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="50%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+
+    <!-- Arrow Markers -->
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B82F6"/>
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E0B"/>
+    </marker>
+    <marker id="arrow-transport" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E0B"/>
+    </marker>
+  </defs>
+
+  <!-- ================= BACKGROUND & HEADER ================= -->
+  <rect width="1200" height="800" fill="#0B1426"/>
+  
+  <text x="40" y="55" fill="#F8FAFC" font-size="28" font-weight="bold" letter-spacing="1">Pi's Secure Knowledge Assimilation Pipeline</text>
+  
+  <!-- Core Insight Callout -->
+  <rect x="40" y="75" width="130" height="28" rx="6" fill="#451A03" stroke="#B45309" stroke-width="1"/>
+  <text x="50" y="94" fill="#FBBF24" font-size="14" font-weight="bold">CORE INSIGHT</text>
+  <text x="185" y="94" fill="#CBD5E1" font-size="15">End-to-end zero-trust architecture ensures raw user data is anonymized, embedded, and signed before leaving the client.</text>
+
+  <!-- ================= ZONE CONTAINERS ================= -->
+  <!-- Client Zone -->
+  <rect x="20" y="130" width="420" height="450" rx="16" fill="#0F172A" stroke="#1E3A8A" stroke-width="2"/>
+  <text x="40" y="165" fill="#60A5FA" font-size="14" font-weight="bold" letter-spacing="2">INBOUND (CLIENT)</text>
+  
+  <!-- Server Zone -->
+  <rect x="520" y="130" width="660" height="450" rx="16" fill="#171717" stroke="#78350F" stroke-width="2"/>
+  <text x="540" y="165" fill="#FBBF24" font-size="14" font-weight="bold" letter-spacing="2">ASSIMILATION (SERVER)</text>
+
+  <!-- Persistence Zone -->
+  <rect x="520" y="610" width="660" height="150" rx="16" fill="#064E3B" fill-opacity="0.15" stroke="#059669" stroke-width="2"/>
+  <text x="540" y="640" fill="#34D399" font-size="14" font-weight="bold" letter-spacing="2">PERSISTENCE VAULT</text>
+
+  <!-- ================= PIPELINE CONNECTIONS (DRAWN FIRST SO THEY ARE UNDER CARDS) ================= -->
+  <g fill="none" stroke-width="3">
+    <!-- Client Flow (Blue) -->
+    <path d="M 130 255 L 130 320" stroke="#3B82F6" marker-end="url(#arrow-blue)"/>
+    <path d="M 130 395 L 130 460" stroke="#3B82F6" marker-end="url(#arrow-blue)"/>
+    <path d="M 220 497.5 L 260 497.5" stroke="#3B82F6" marker-end="url(#arrow-blue)"/>
+    <path d="M 350 460 L 350 395" stroke="#3B82F6" marker-end="url(#arrow-blue)"/>
+    <path d="M 350 320 L 350 255" stroke="#3B82F6" marker-end="url(#arrow-blue)"/>
+    
+    <!-- Transport Flow (Gradient) -->
+    <path d="M 440 217.5 L 530 217.5" stroke="url(#transport-grad)" stroke-width="6" stroke-dasharray="8 4" marker-end="url(#arrow-transport)"/>
+    
+    <!-- Server Flow (Amber) -->
+    <path d="M 720 217.5 L 750 217.5" stroke="#F59E0B" marker-end="url(#arrow-amber)"/>
+    <path d="M 940 217.5 L 970 217.5" stroke="#F59E0B" marker-end="url(#arrow-amber)"/>
+    <path d="M 1070 255 L 1070 310" stroke="#F59E0B" marker-end="url(#arrow-amber)"/>
+    <path d="M 980 357.5 L 950 357.5" stroke="#F59E0B" marker-end="url(#arrow-amber)"/>
+    <path d="M 760 357.5 L 730 357.5" stroke="#F59E0B" marker-end="url(#arrow-amber)"/>
+    <path d="M 630 395 L 630 450" stroke="#F59E0B" marker-end="url(#arrow-amber)"/>
+    <path d="M 720 497.5 L 750 497.5" stroke="#F59E0B" marker-end="url(#arrow-amber)"/>
+    <path d="M 950 535 L 950 600" stroke="#10B981" marker-end="url(#arrow-amber)"/>
+  </g>
+
+  <!-- Transport Labels -->
+  <rect x="445" y="175" width="80" height="24" rx="4" fill="#1E1B4B" stroke="#6366F1" stroke-width="1"/>
+  <text x="462" y="191" fill="#A5B4FC" font-size="12" font-weight="bold">HTTPS</text>
+  
+  <rect x="445" y="230" width="80" height="24" rx="4" fill="#451A03" stroke="#F59E0B" stroke-width="1"/>
+  <text x="453" y="246" fill="#FDBA74" font-size="12" font-weight="bold">Signed RVF</text>
+
+  <!-- ================= CARDS: CLIENT ZONE ================= -->
+  <!-- 1. Session Input -->
+  <g transform="translate(40, 180)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#172554" stroke="#3B82F6" stroke-width="1"/>
+    <path d="M20 37s4-8 12-8 12 8 12 8-4 8-12 8-12-8-12-8z" fill="none" stroke="#60A5FA" stroke-width="2"/>
+    <circle cx="32" cy="37" r="3" fill="#60A5FA"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">Session Input</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">Raw client data</text>
+  </g>
+
+  <!-- 2. PII Stripping -->
+  <g transform="translate(40, 320)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#064E3B" stroke="#10B981" stroke-width="1"/>
+    <path d="M32 22s8-4 8-10V7l-8-3-8 3v5c0 6 8 10 8 10z" fill="none" stroke="#34D399" stroke-width="2"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">PII Stripping</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">Anonymization</text>
+    <!-- Badge -->
+    <rect x="130" y="-12" width="85" height="20" rx="10" fill="#064E3B" stroke="#10B981" stroke-width="1"/>
+    <text x="138" y="2" fill="#34D399" font-size="11" font-weight="bold">100% Redacted</text>
+  </g>
+
+  <!-- 3. SONA Embedding -->
+  <g transform="translate(40, 460)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#3B0764" stroke="#A855F7" stroke-width="1"/>
+    <circle cx="32" cy="32" r="2" fill="#D8B4FE"/><circle cx="24" cy="42" r="2" fill="#D8B4FE"/><circle cx="40" cy="42" r="2" fill="#D8B4FE"/>
+    <path d="M32 34l-8 6m8-6l8 6m-16 0h16" stroke="#D8B4FE" stroke-width="1.5"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">SONA Embed</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">Neural projection</text>
+  </g>
+
+  <!-- 4. DP Noise -->
+  <g transform="translate(260, 460)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#083344" stroke="#06B6D4" stroke-width="1"/>
+    <path d="M20 37h5l3-8 4 16 3-8h5" fill="none" stroke="#67E8F9" stroke-width="2"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">DP Noise</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">Differential privacy</text>
+  </g>
+
+  <!-- 5. RVF Packaging -->
+  <g transform="translate(260, 320)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#451A03" stroke="#F97316" stroke-width="1"/>
+    <path d="M40 32v-8l-8-4-8 4v8l8 4 8-4z" fill="none" stroke="#FDBA74" stroke-width="2"/>
+    <path d="M24 24l8 4 8-4M32 40v-12" fill="none" stroke="#FDBA74" stroke-width="2"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">RVF Package</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">Object container</text>
+  </g>
+
+  <!-- 6. Ed25519 Signing -->
+  <g transform="translate(260, 180)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#451A03" stroke="#F59E0B" stroke-width="1"/>
+    <path d="M38 22l-3 3m-11 11a5.5 5.5 0 1 1-7.7-7.7 5.5 5.5 0 0 1 7.7 7.7zm0 0L30 30m0 0l3 3L38 28l-3-3m-3.5 3.5L28 25" fill="none" stroke="#FCD34D" stroke-width="2"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">Ed25519 Sign</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">Crypto proof</text>
+  </g>
+
+
+  <!-- ================= CARDS: SERVER ZONE ================= -->
+  <!-- 7. Signature Verify -->
+  <g transform="translate(540, 180)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#064E3B" stroke="#10B981" stroke-width="1"/>
+    <rect x="25" y="32" width="14" height="10" rx="2" fill="none" stroke="#34D399" stroke-width="2"/>
+    <path d="M27 32v-4a5 5 0 0 1 10 0v4" fill="none" stroke="#34D399" stroke-width="2"/>
+    <path d="M38 22l4-4" fill="none" stroke="#34D399" stroke-width="2"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">Sig Verify</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">Authenticate</text>
+  </g>
+
+  <!-- 8. Witness Chain -->
+  <g transform="translate(760, 180)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#172554" stroke="#3B82F6" stroke-width="1"/>
+    <path d="M28 34a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5M36 30a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.5-1.5" fill="none" stroke="#60A5FA" stroke-width="2"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">Witness Chain</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">Provenance</text>
+  </g>
+
+  <!-- 9. Rate Limiting -->
+  <g transform="translate(980, 180)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#450A0A" stroke="#EF4444" stroke-width="1"/>
+    <path d="M22 37a10 10 0 0 1 20 0" fill="none" stroke="#F87171" stroke-width="2"/>
+    <circle cx="32" cy="37" r="2" fill="#F87171"/>
+    <path d="M32 37l-6-8" fill="none" stroke="#F87171" stroke-width="2"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">Rate Limiting</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">Token bucket</text>
+  </g>
+
+  <!-- 10. Storage Cache -->
+  <g transform="translate(980, 320)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#1E293B" stroke="#64748B" stroke-width="1"/>
+    <path d="M22 26c0 2 4.5 3 10 3s10-1 10-3-4.5-3-10-3-10 1-10 3zm0 0v12c0 2 4.5 3 10 3s10-1 10-3V26" fill="none" stroke="#94A3B8" stroke-width="2"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">Storage Cache</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">Fast retrieval</text>
+  </g>
+
+  <!-- 11. Graph Integration -->
+  <g transform="translate(760, 320)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#3B0764" stroke="#A855F7" stroke-width="1"/>
+    <circle cx="32" cy="24" r="3" fill="#D8B4FE"/><circle cx="24" cy="40" r="3" fill="#D8B4FE"/><circle cx="40" cy="40" r="3" fill="#D8B4FE"/>
+    <path d="M30 27l-4 10m12-10l-4 10m-10 0h8" fill="none" stroke="#D8B4FE" stroke-width="1.5"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">Graph Integr.</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">Topology map</text>
+    <!-- Badge -->
+    <rect x="110" y="-10" width="80" height="20" rx="10" fill="#3B0764" stroke="#A855F7" stroke-width="1"/>
+    <text x="122" y="4" fill="#D8B4FE" font-size="11" font-weight="bold">GNN+HNSW</text>
+  </g>
+
+  <!-- 12. Quality Ranking -->
+  <g transform="translate(540, 320)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#451A03" stroke="#F59E0B" stroke-width="1"/>
+    <polygon points="32 20 35 28 44 29 38 35 40 43 32 39 24 43 26 35 20 29 29 28 32 20" fill="none" stroke="#FCD34D" stroke-width="1.5"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">Quality Rank</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">Attention scoring</text>
+    <!-- Badge -->
+    <rect x="115" y="-10" width="75" height="20" rx="10" fill="#451A03" stroke="#F59E0B" stroke-width="1"/>
+    <text x="125" y="4" fill="#FCD34D" font-size="11" font-weight="bold">46 Heads</text>
+  </g>
+
+  <!-- 13. Anomaly Monitor -->
+  <g transform="translate(540, 460)" filter="url(#shadow)">
+    <rect width="180" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="17" width="40" height="40" rx="8" fill="#450A0A" stroke="#EF4444" stroke-width="1"/>
+    <path d="M20 37s4-8 12-8 12 8 12 8-4 8-12 8-12-8-12-8z" fill="none" stroke="#F87171" stroke-width="2"/>
+    <circle cx="32" cy="37" r="3" fill="#F87171"/>
+    <text x="65" y="32" fill="#F8FAFC" font-size="15" font-weight="bold">Anomaly Mon.</text>
+    <text x="65" y="52" fill="#94A3B8" font-size="12">SNN detection</text>
+  </g>
+
+  <!-- 14. Byzantine FedAvg Aggregation -->
+  <g transform="translate(760, 460)" filter="url(#shadow)">
+    <rect width="400" height="75" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <rect x="16" y="17" width="40" height="40" rx="8" fill="#1E1B4B" stroke="#6366F1" stroke-width="1"/>
+    <polygon points="44 22 20 22 28 32 28 40 36 42 36 32 44 22" fill="none" stroke="#A5B4FC" stroke-width="2"/>
+    <text x="75" y="32" fill="#F8FAFC" font-size="16" font-weight="bold">Byzantine FedAvg Aggregation</text>
+    <text x="75" y="54" fill="#94A3B8" font-size="13">Decentralized consensus</text>
+    <!-- Badge -->
+    <rect x="300" y="20" width="80" height="24" rx="12" fill="#1E1B4B" stroke="#6366F1" stroke-width="1"/>
+    <text x="312" y="36" fill="#A5B4FC" font-size="12" font-weight="bold">Consensus</text>
+  </g>
+
+  <!-- ================= PERSISTENCE LAYER CARDS ================= -->
+  <g transform="translate(560, 660)" filter="url(#shadow)">
+    <rect width="180" height="60" rx="8" fill="#064E3B" stroke="#10B981" stroke-width="1"/>
+    <path d="M25 15h10v30H20V20l5-5z" fill="none" stroke="#34D399" stroke-width="2"/>
+    <path d="M25 15v5h-5" fill="none" stroke="#34D399" stroke-width="2"/>
+    <text x="55" y="35" fill="#F8FAFC" font-size="15" font-weight="bold">Documents</text>
+  </g>
+
+  <g transform="translate(760, 660)" filter="url(#shadow)">
+    <rect width="180" height="60" rx="8" fill="#064E3B" stroke="#10B981" stroke-width="1"/>
+    <path d="M38 22v-6l-6-3-6 3v6l6 3 6-3z" fill="none" stroke="#34D399" stroke-width="2"/>
+    <path d="M26 19l6 3 6-3M32 31v-9" fill="none" stroke="#34D399" stroke-width="2"/>
+    <text x="55" y="35" fill="#F8FAFC" font-size="15" font-weight="bold">Objects (.rvf)</text>
+  </g>
+
+  <g transform="translate(960, 660)" filter="url(#shadow)">
+    <rect width="180" height="60" rx="8" fill="#064E3B" stroke="#10B981" stroke-width="1"/>
+    <path d="M36 22l-3 3m-9 9a4.5 4.5 0 1 1-6.3-6.3 4.5 4.5 0 0 1 6.3 6.3zm0 0l6-6m0 0l2 2l3-3l-2-2m-2.5 2.5L26 24" fill="none" stroke="#34D399" stroke-width="2"/>
+    <text x="55" y="35" fill="#F8FAFC" font-size="15" font-weight="bold">Vault (Keys)</text>
+  </g>
+
+  <!-- ================= DECORATIVE DOTS AT CONNECTIONS ================= -->
+  <g fill="#0B1426" stroke-width="2">
+    <!-- Client Dots -->
+    <circle cx="130" cy="255" r="4" stroke="#3B82F6"/>
+    <circle cx="130" cy="320" r="4" stroke="#3B82F6"/>
+    <circle cx="130" cy="395" r="4" stroke="#3B82F6"/>
+    <circle cx="130" cy="460" r="4" stroke="#3B82F6"/>
+    <circle cx="220" cy="497.5" r="4" stroke="#3B82F6"/>
+    <circle cx="260" cy="497.5" r="4" stroke="#3B82F6"/>
+    <circle cx="350" cy="460" r="4" stroke="#3B82F6"/>
+    <circle cx="350" cy="395" r="4" stroke="#3B82F6"/>
+    <circle cx="350" cy="320" r="4" stroke="#3B82F6"/>
+    <circle cx="350" cy="255" r="4" stroke="#3B82F6"/>
+    <circle cx="440" cy="217.5" r="4" stroke="#3B82F6"/>
+    
+    <!-- Server Dots -->
+    <circle cx="540" cy="217.5" r="4" stroke="#F59E0B"/>
+    <circle cx="720" cy="217.5" r="4" stroke="#F59E0B"/>
+    <circle cx="760" cy="217.5" r="4" stroke="#F59E0B"/>
+    <circle cx="940" cy="217.5" r="4" stroke="#F59E0B"/>
+    <circle cx="980" cy="217.5" r="4" stroke="#F59E0B"/>
+    <circle cx="1070" cy="255" r="4" stroke="#F59E0B"/>
+    <circle cx="1070" cy="320" r="4" stroke="#F59E0B"/>
+    <circle cx="980" cy="357.5" r="4" stroke="#F59E0B"/>
+    <circle cx="940" cy="357.5" r="4" stroke="#F59E0B"/>
+    <circle cx="760" cy="357.5" r="4" stroke="#F59E0B"/>
+    <circle cx="720" cy="357.5" r="4" stroke="#F59E0B"/>
+    <circle cx="630" cy="395" r="4" stroke="#F59E0B"/>
+    <circle cx="630" cy="460" r="4" stroke="#F59E0B"/>
+    <circle cx="720" cy="497.5" r="4" stroke="#F59E0B"/>
+    <circle cx="760" cy="497.5" r="4" stroke="#F59E0B"/>
+    <circle cx="950" cy="535" r="4" stroke="#F59E0B"/>
+    <circle cx="950" cy="610" r="4" stroke="#10B981"/>
+  </g>
+
+</svg>

@@ -1,0 +1,333 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#0B1426" />
+    </radialGradient>
+
+    <!-- Plane Gradients -->
+    <linearGradient id="planeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#0F172A" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#020617" stop-opacity="0.9" />
+    </linearGradient>
+
+    <linearGradient id="planeStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.1" />
+      <stop offset="50%" stop-color="#3B82F6" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0.1" />
+    </linearGradient>
+
+    <!-- Path Glow Effect -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    
+    <filter id="glow-strong" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComponentTransfer in="blur" result="glow">
+        <feFuncA type="linear" slope="1.5"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Arrow Markers -->
+    <marker id="arrowPath" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#F59E0B" />
+    </marker>
+    
+    <marker id="arrowDrop" viewBox="0 0 10 10" refX="5" refY="8" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 1 0 L 5 8 L 9 0 z" fill="#F97316" />
+    </marker>
+
+    <marker id="arrowZ" viewBox="0 0 10 10" refX="5" refY="8" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M 1 0 L 5 8 L 9 0 z" fill="#64748B" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#bgGrad)" />
+
+  <!-- ========================================== -->
+  <!-- 3D PLANES (HNSW LAYERS)                    -->
+  <!-- ========================================== -->
+  
+  <g id="hnsw-planes">
+    <!-- Layer 0 (Bottom - Dense) -->
+    <polygon points="450,610 750,530 1150,610 850,690" fill="url(#planeGrad)" stroke="url(#planeStroke)" stroke-width="2" />
+    
+    <!-- Layer 1 (Fine Search) -->
+    <polygon points="450,460 750,380 1150,460 850,540" fill="url(#planeGrad)" stroke="url(#planeStroke)" stroke-width="2" />
+    
+    <!-- Layer 2 (Coarse Search) -->
+    <polygon points="450,310 750,230 1150,310 850,390" fill="url(#planeGrad)" stroke="url(#planeStroke)" stroke-width="2" />
+    
+    <!-- Layer 3 (Top - Entry) -->
+    <polygon points="450,160 750,80 1150,160 850,240" fill="url(#planeGrad)" stroke="url(#planeStroke)" stroke-width="2" />
+  </g>
+
+  <!-- ========================================== -->
+  <!-- GRAPH EDGES (BACKGROUND MESH)              -->
+  <!-- ========================================== -->
+  
+  <!-- Layer 0 Edges (Dense) -->
+  <path d="M850,610 L820,580 L790,620 L850,610 L880,630 L920,590 L850,610 L860,560 L800,550 L790,620 M880,630 L900,650 L950,620 L920,590 M860,560 L910,550 L950,580 L920,590 M800,550 L750,580 L790,620 M750,580 L700,600 L650,620 L680,650 L740,640 L790,620 M650,620 L600,600 L550,630 L620,660 L680,650 M950,620 L1000,600 L1050,630 L980,660 L900,650 M950,580 L1020,560 L1080,590 L1050,630" stroke="#1E293B" stroke-width="1.5" fill="none" />
+  <path d="M820,580 L860,620 L880,600 L840,570 Z M700,600 L740,640 M910,550 L880,600" stroke="#1E293B" stroke-width="1" fill="none" />
+
+  <!-- Layer 1 Edges (Fine) -->
+  <path d="M780,480 L730,450 L680,480 L730,510 L780,480 L820,450 L860,470 L820,500 L780,480 M860,470 L910,440 L960,470 L910,500 L860,470 M680,480 L620,460 L570,490 L640,520 L730,510 M960,470 L1020,450 L1070,480 L1000,510 L910,500 M730,450 L770,420 L820,450 M910,440 L880,410 L820,450" stroke="#334155" stroke-width="1.5" fill="none" />
+
+  <!-- Layer 2 Edges (Medium) -->
+  <path d="M650,320 L720,300 L780,330 L720,360 L650,320 M650,320 L580,290 L520,320 L600,350 L720,360 M780,330 L850,300 L920,330 L850,370 L780,330 M720,300 L760,260 L850,300 M580,290 L640,260 L720,300 M920,330 L990,300 L1050,340 L970,370 L850,370" stroke="#475569" stroke-width="1.5" fill="none" />
+
+  <!-- Layer 3 Edges (Sparse) -->
+  <path d="M550,160 L650,170 L750,130 L850,170 L750,210 Z M650,170 L750,210 M550,160 L620,120 L750,130 M850,170 L950,150 L1020,180 L900,210 L750,210" stroke="#64748B" stroke-width="2" fill="none" />
+
+
+  <!-- ========================================== -->
+  <!-- BACKGROUND NODES                           -->
+  <!-- ========================================== -->
+  <g fill="#0F172A" stroke="#38BDF8" stroke-width="1.5">
+    <!-- L3 Nodes -->
+    <circle cx="750" cy="130" r="4" />
+    <circle cx="850" cy="170" r="4" />
+    <circle cx="750" cy="210" r="4" />
+    <circle cx="620" cy="120" r="4" />
+    <circle cx="950" cy="150" r="4" />
+    <circle cx="1020" cy="180" r="4" />
+    <circle cx="900" cy="210" r="4" />
+    
+    <!-- L2 Nodes -->
+    <circle cx="720" cy="300" r="3.5" />
+    <circle cx="720" cy="360" r="3.5" />
+    <circle cx="580" cy="290" r="3.5" />
+    <circle cx="520" cy="320" r="3.5" />
+    <circle cx="600" cy="350" r="3.5" />
+    <circle cx="850" cy="300" r="3.5" />
+    <circle cx="920" cy="330" r="3.5" />
+    <circle cx="850" cy="370" r="3.5" />
+    <circle cx="760" cy="260" r="3.5" />
+    <circle cx="640" cy="260" r="3.5" />
+    <circle cx="990" cy="300" r="3.5" />
+    <circle cx="1050" cy="340" r="3.5" />
+    <circle cx="970" cy="370" r="3.5" />
+
+    <!-- L1 Nodes -->
+    <circle cx="730" cy="450" r="3" />
+    <circle cx="680" cy="480" r="3" />
+    <circle cx="730" cy="510" r="3" />
+    <circle cx="820" cy="500" r="3" />
+    <circle cx="910" cy="440" r="3" />
+    <circle cx="960" cy="470" r="3" />
+    <circle cx="910" cy="500" r="3" />
+    <circle cx="620" cy="460" r="3" />
+    <circle cx="570" cy="490" r="3" />
+    <circle cx="640" cy="520" r="3" />
+    <circle cx="1020" cy="450" r="3" />
+    <circle cx="1070" cy="480" r="3" />
+    <circle cx="1000" cy="510" r="3" />
+    <circle cx="770" cy="420" r="3" />
+    <circle cx="880" cy="410" r="3" />
+
+    <!-- L0 Nodes -->
+    <circle cx="820" cy="580" r="2.5" />
+    <circle cx="790" cy="620" r="2.5" />
+    <circle cx="880" cy="630" r="2.5" />
+    <circle cx="920" cy="590" r="2.5" />
+    <circle cx="800" cy="550" r="2.5" />
+    <circle cx="900" cy="650" r="2.5" />
+    <circle cx="950" cy="620" r="2.5" />
+    <circle cx="910" cy="550" r="2.5" />
+    <circle cx="950" cy="580" r="2.5" />
+    <circle cx="750" cy="580" r="2.5" />
+    <circle cx="700" cy="600" r="2.5" />
+    <circle cx="650" cy="620" r="2.5" />
+    <circle cx="680" cy="650" r="2.5" />
+    <circle cx="740" cy="640" r="2.5" />
+    <circle cx="600" cy="600" r="2.5" />
+    <circle cx="550" cy="630" r="2.5" />
+    <circle cx="620" cy="660" r="2.5" />
+    <circle cx="1000" cy="600" r="2.5" />
+    <circle cx="1050" cy="630" r="2.5" />
+    <circle cx="980" cy="660" r="2.5" />
+    <circle cx="1020" cy="560" r="2.5" />
+    <circle cx="1080" cy="590" r="2.5" />
+    <circle cx="880" cy="600" r="2.5" />
+    <circle cx="840" cy="570" r="2.5" />
+  </g>
+
+
+  <!-- ========================================== -->
+  <!-- SEARCH PATH (THE CORE VISUAL)              -->
+  <!-- ========================================== -->
+  
+  <g filter="url(#glow)">
+    <!-- Inter-layer Drops (Dashed) -->
+    <line x1="650" y1="170" x2="650" y2="315" stroke="#F97316" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#arrowDrop)" />
+    <line x1="780" y1="330" x2="780" y2="475" stroke="#F97316" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#arrowDrop)" />
+    <line x1="860" y1="470" x2="860" y2="615" stroke="#F97316" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#arrowDrop)" />
+
+    <!-- L3 Hop -->
+    <polyline points="550,160 645,169" stroke="#F59E0B" stroke-width="4" fill="none" marker-end="url(#arrowPath)" />
+    
+    <!-- L2 Hops -->
+    <polyline points="650,320 775,329" stroke="#F59E0B" stroke-width="4" fill="none" marker-end="url(#arrowPath)" />
+    
+    <!-- L1 Hops -->
+    <polyline points="780,480 815,452" stroke="#F59E0B" stroke-width="4" fill="none" marker-end="url(#arrowPath)" />
+    <polyline points="820,450 855,468" stroke="#F59E0B" stroke-width="4" fill="none" marker-end="url(#arrowPath)" />
+    
+    <!-- L0 Hop to Target -->
+    <polyline points="860,620 852,612" stroke="#10B981" stroke-width="4" fill="none" marker-end="url(#arrowPath)" />
+  </g>
+
+  <!-- Path Nodes (Active) -->
+  <g filter="url(#glow)">
+    <!-- Start Node -->
+    <circle cx="550" cy="160" r="7" fill="#F59E0B" stroke="#FFFFFF" stroke-width="2" />
+    
+    <!-- L3 Visited -->
+    <circle cx="650" cy="170" r="6" fill="#F59E0B" stroke="#FFFFFF" stroke-width="2" />
+    
+    <!-- L2 Visited -->
+    <circle cx="650" cy="320" r="6" fill="#F59E0B" stroke="#FFFFFF" stroke-width="2" />
+    <circle cx="780" cy="330" r="6" fill="#F59E0B" stroke="#FFFFFF" stroke-width="2" />
+    
+    <!-- L1 Visited -->
+    <circle cx="780" cy="480" r="6" fill="#F59E0B" stroke="#FFFFFF" stroke-width="2" />
+    <circle cx="820" cy="450" r="6" fill="#F59E0B" stroke="#FFFFFF" stroke-width="2" />
+    <circle cx="860" cy="470" r="6" fill="#F59E0B" stroke="#FFFFFF" stroke-width="2" />
+    
+    <!-- L0 Visited -->
+    <circle cx="860" cy="620" r="6" fill="#10B981" stroke="#FFFFFF" stroke-width="2" />
+    
+    <!-- Target Node -->
+    <circle cx="850" cy="610" r="8" fill="#10B981" stroke="#FFFFFF" stroke-width="3" filter="url(#glow-strong)" />
+    
+    <!-- Target Crosshair rings -->
+    <circle cx="850" cy="610" r="16" fill="none" stroke="#10B981" stroke-width="1.5" stroke-dasharray="4,4" />
+    <circle cx="850" cy="610" r="24" fill="none" stroke="#10B981" stroke-width="1" opacity="0.5" />
+  </g>
+
+
+  <!-- ========================================== -->
+  <!-- ANNOTATIONS & LABELS                       -->
+  <!-- ========================================== -->
+
+  <!-- Query Label -->
+  <g transform="translate(420, 110)">
+    <rect x="0" y="0" width="110" height="34" rx="17" fill="#0F172A" stroke="#F59E0B" stroke-width="1.5" />
+    <path d="M 18 17 A 5 5 0 1 0 28 17 A 5 5 0 1 0 18 17 M 26 21 L 30 25" stroke="#F59E0B" stroke-width="2" fill="none" stroke-linecap="round" />
+    <text x="38" y="22" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#F8FAFC">Query Vector</text>
+    <path d="M 110 17 L 125 45" stroke="#F59E0B" stroke-width="1.5" fill="none" stroke-dasharray="3,3" />
+  </g>
+
+  <!-- Target Label -->
+  <g transform="translate(900, 580)">
+    <rect x="0" y="0" width="145" height="34" rx="17" fill="#064E3B" stroke="#10B981" stroke-width="1.5" />
+    <path d="M 15 17 A 6 6 0 1 0 27 17 A 6 6 0 1 0 15 17 M 21 9 L 21 13 M 21 21 L 21 25 M 13 17 L 17 17 M 25 17 L 29 17" stroke="#10B981" stroke-width="1.5" fill="none" stroke-linecap="round" />
+    <text x="35" y="22" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#F8FAFC">Nearest Neighbor</text>
+    <path d="M 0 17 L -40 25" stroke="#10B981" stroke-width="1.5" fill="none" stroke-dasharray="3,3" />
+  </g>
+
+  <!-- Action Labels -->
+  <text x="590" y="150" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#FCD34D" filter="url(#glow)">greedy hop</text>
+  <text x="660" y="250" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#FDBA74">drop down</text>
+  <text x="700" y="315" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#FCD34D">greedy hop</text>
+
+
+  <!-- ========================================== -->
+  <!-- LEFT PANEL UI (Title, Insight, Layers)     -->
+  <!-- ========================================== -->
+
+  <!-- Title -->
+  <text x="50" y="70" font-family="system-ui, sans-serif" font-size="36" font-weight="bold" fill="#F8FAFC" letter-spacing="-0.5">HNSW Vector Search</text>
+  
+  <!-- Core Insight Box -->
+  <rect x="50" y="95" width="360" height="70" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1" />
+  <path d="M 65 115 A 8 8 0 1 0 81 115 A 8 8 0 1 0 65 115 M 73 115 L 73 135" stroke="#818CF8" stroke-width="2" fill="none" />
+  <circle cx="73" cy="115" r="3" fill="#818CF8" />
+  <circle cx="73" cy="135" r="3" fill="#818CF8" />
+  <text x="95" y="120" font-family="system-ui, sans-serif" font-size="15" fill="#E2E8F0">Search enters the sparse top layer, hops</text>
+  <text x="95" y="142" font-family="system-ui, sans-serif" font-size="15" fill="#E2E8F0">down, and repeats until finding the target.</text>
+
+  <!-- Layer Labels -->
+  
+  <!-- L3 Label -->
+  <g transform="translate(50, 180)">
+    <rect x="0" y="0" width="220" height="50" rx="6" fill="#0F172A" stroke="#334155" stroke-width="1" />
+    <text x="15" y="20" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#F8FAFC">Layer 3: Entry Point</text>
+    <text x="15" y="40" font-family="system-ui, sans-serif" font-size="13" fill="#94A3B8">Sparse, long-range links</text>
+    <line x1="220" y1="25" x2="420" y2="25" stroke="#334155" stroke-width="1.5" stroke-dasharray="4,4" />
+  </g>
+
+  <!-- L2 Label -->
+  <g transform="translate(50, 310)">
+    <rect x="0" y="0" width="220" height="50" rx="6" fill="#0F172A" stroke="#334155" stroke-width="1" />
+    <text x="15" y="20" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#F8FAFC">Layer 2: Coarse Search</text>
+    <text x="15" y="40" font-family="system-ui, sans-serif" font-size="13" fill="#94A3B8">Medium density graph</text>
+    <line x1="220" y1="25" x2="420" y2="25" stroke="#334155" stroke-width="1.5" stroke-dasharray="4,4" />
+  </g>
+
+  <!-- L1 Label -->
+  <g transform="translate(50, 440)">
+    <rect x="0" y="0" width="220" height="50" rx="6" fill="#0F172A" stroke="#334155" stroke-width="1" />
+    <text x="15" y="20" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#F8FAFC">Layer 1: Fine Search</text>
+    <text x="15" y="40" font-family="system-ui, sans-serif" font-size="13" fill="#94A3B8">High density graph</text>
+    <line x1="220" y1="25" x2="420" y2="25" stroke="#334155" stroke-width="1.5" stroke-dasharray="4,4" />
+  </g>
+
+  <!-- L0 Label -->
+  <g transform="translate(50, 570)">
+    <rect x="0" y="0" width="220" height="50" rx="6" fill="#0F172A" stroke="#334155" stroke-width="1" />
+    <text x="15" y="20" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#F8FAFC">Layer 0: Base Layer</text>
+    <text x="15" y="40" font-family="system-ui, sans-serif" font-size="13" fill="#94A3B8">Dense, all raw vectors</text>
+    <line x1="220" y1="25" x2="420" y2="25" stroke="#334155" stroke-width="1.5" stroke-dasharray="4,4" />
+  </g>
+
+  <!-- Vertical Z-Axis Arrow -->
+  <g transform="translate(20, 205)">
+    <line x1="0" y1="0" x2="0" y2="390" stroke="#475569" stroke-width="2" marker-end="url(#arrowZ)" />
+    <text x="-15" y="200" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#64748B" transform="rotate(-90, -15, 200)" letter-spacing="2">INCREASING PRECISION</text>
+  </g>
+
+
+  <!-- ========================================== -->
+  <!-- SPEED COMPARISON CHART (Bottom Left)       -->
+  <!-- ========================================== -->
+
+  <g transform="translate(50, 660)">
+    <!-- Chart Background -->
+    <rect x="0" y="0" width="550" height="110" rx="12" fill="#0F172A" stroke="#1E293B" stroke-width="2" />
+    
+    <!-- Title -->
+    <text x="25" y="30" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#F8FAFC">Search Speed: 1 Billion Vectors</text>
+    
+    <!-- HNSW Row -->
+    <text x="25" y="62" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#94A3B8">HNSW</text>
+    <rect x="120" y="50" width="12" height="16" rx="4" fill="#10B981" filter="url(#glow)" />
+    <text x="142" y="63" font-family="system-ui, sans-serif" font-size="15" font-weight="bold" fill="#10B981">&lt; 2 ms</text>
+    
+    <!-- HNSW Badge -->
+    <rect x="210" y="49" width="65" height="18" rx="4" fill="#064E3B" stroke="#10B981" stroke-width="1" />
+    <text x="218" y="62" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#34D399">O(log N)</text>
+
+    <!-- Lightning Icon -->
+    <path d="M 285 48 L 293 48 L 289 55 L 295 55 L 287 65 L 289 58 L 283 58 Z" fill="#FCD34D" />
+
+    <!-- Brute Force Row -->
+    <text x="25" y="92" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#94A3B8">Brute Force</text>
+    <rect x="120" y="80" width="320" height="16" rx="4" fill="#EF4444" />
+    <text x="450" y="93" font-family="system-ui, sans-serif" font-size="15" font-weight="bold" fill="#EF4444">Hours</text>
+    
+    <!-- Brute Force Badge -->
+    <rect x="210" y="79" width="45" height="18" rx="4" fill="#7F1D1D" stroke="#EF4444" stroke-width="1" />
+    <text x="218" y="92" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#FCA5A5">O(N)</text>
+  </g>
+
+</svg>
