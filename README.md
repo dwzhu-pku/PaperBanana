@@ -19,13 +19,13 @@ This fork adds a **storytelling-enhanced SVG pipeline** with a **vision-based se
 
 - **100% text accuracy** — text is rendered by Cairo, not predicted by a neural net
 - **Vision critic loop** — renders SVG to PNG, sends to multimodal Gemini for visual evaluation, applies spatial fixes automatically
-- **Explanatory, not decorative** — every element MUST have a label AND description (enforced by prompt rules)
+- **Visual-first design** — 50% icons/shapes/spatial layout, 50% short text labels (infographic style, not text documents)
 - **Cairo-safe rendering** — documented and prevented 4 Cairo-specific bugs (tspan overlap, emoji squares, unicode arrows, text spacing)
 - **10x faster** — ~30 seconds per diagram vs 3-5 minutes for raster
 - **20x cheaper** — ~$0.05 per diagram vs $0.50-2.00 for multi-agent raster
 - **Fully editable** — output is SVG code, version-controllable and diffable
 
-The pipeline: LLM generates SVG code with mandatory labels+descriptions on every element, Cairo renders to PNG, a vision critic evaluates the rendered output and sends specific spatial fixes back to the SVG code. The result is diagrams that teach complex concepts in 15 seconds with zero text rendering artifacts.
+The pipeline: LLM generates visual-first SVG code with icons, shapes, and short labels, Cairo renders to PNG, a vision critic evaluates visual/text balance and sends spatial fixes back. The result is infographic-style diagrams that communicate through visuals first, with zero text rendering artifacts.
 
 **[View the showcase](https://stuinfla.github.io/paperbanana/)** to see example outputs across Pi, RuVector, and Ruflo.
 
@@ -607,6 +607,12 @@ Costs scale linearly with the number of candidates and critic rounds. Using `gem
 ---
 
 ## Project Structure
+
+![Project Structure](assets/diagrams/project-structure.svg)
+
+<details>
+<summary>ASCII Version (for AI/accessibility)</summary>
+
 ```
 ├── agents/
 │   ├── planner_agent.py      # Visual metaphor discovery + description
@@ -637,6 +643,8 @@ Costs scale linearly with the number of candidates and critic rounds. Using `gem
 ├── ENHANCED_PIPELINE.md       # Detailed enhancement documentation
 └── README.md
 ```
+
+</details>
 
 ## Key Features
 
