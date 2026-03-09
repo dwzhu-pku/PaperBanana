@@ -2,10 +2,9 @@
 
 <div align="center">
 
-**Original research by** Dawei Zhu, Rui Meng, Yale Song, Xiyu Wei, Sujian Li, Tomas Pfister, Jinsung Yoon
-*(Peking University + Google Cloud AI Research)*
+**AI-powered academic diagrams that actually communicate ideas — not just labeled boxes.**
 
-**Enhanced by** [Stuart Kerr](https://github.com/stuinfla) — SVG pipeline, visual storytelling, vision critic, 10x speed, 20x cost reduction
+10x faster | 20x cheaper | 95.8/100 quality (self-evaluated via vision critic)
 
 <a href="https://huggingface.co/papers/2601.23265"><img src="assets/paper-page-xl.svg" alt="Paper page on HF"></a>
 <a href="https://huggingface.co/datasets/dwzhu/PaperBananaBench"><img src="assets/dataset-on-hf-xl.svg" alt="Dataset on HF"></a>
@@ -14,13 +13,62 @@
 
 ---
 
+<div align="center">
+<img src="assets/quickstart-banner.svg" alt="Quick Start - 3 ways to get started" width="800"/>
+</div>
+
+### Option A: Claude Code Skill (Recommended — no install needed)
+
+```bash
+mkdir -p ~/.claude/skills/paperbanana
+curl -sL https://raw.githubusercontent.com/stuinfla/paperbanana/main/docs/SKILL.md > ~/.claude/skills/paperbanana/SKILL.md
+```
+
+Type **`/paperbanana`** in Claude Code and start describing diagrams. That's it.
+
+### Option B: MCP Server (for Claude Code / AI assistants)
+
+Clone the repo ([see below](#full-install)), then add to your project's `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "paperbanana": {
+      "command": "python3",
+      "args": ["-m", "mcp_server.server"],
+      "cwd": "/path/to/paperbanana",
+      "env": { "GOOGLE_API_KEY": "your-key-here" }
+    }
+  }
+}
+```
+
+Get a free API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey), then ask Claude: *"Generate a diagram showing how neural networks learn"*
+
+### Option C: Command Line
+
+```bash
+git clone https://github.com/stuinfla/paperbanana && cd paperbanana
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+export GOOGLE_API_KEY="your-key"  # Free at https://aistudio.google.com/apikey
+.venv/bin/python cli_generate.py --content "Your concept" --caption "Figure 1" --output diagram.png
+```
+
+> **Note:** These are **this fork's** Skill and MCP (SVG pipeline + visual storytelling). Different from the community `pip install paperbanana` package — see [Community Supports](#community-supports).
+
+---
+
+**[View the showcase](https://stuinfla.github.io/paperbanana/)** to see 10 example diagrams across Pi, RuVector, and Ruflo.
+
+---
+
 ### What They Built
 
 The PaperBanana team at Peking University and Google Cloud created a multi-agent framework for academic illustration — a pipeline of **Retriever, Planner, Stylist, Visualizer, and Critic** agents that transforms scientific text into diagrams using reference-driven in-context learning and iterative refinement. It was a strong foundation: technically accurate diagrams with NeurIPS-level aesthetics. Originally open-sourced as [PaperVizAgent](https://github.com/google-research/papervizagent).
 
-### What We Added
+**Enhanced by** [Stuart Kerr](https://github.com/stuinfla) — SVG pipeline, visual storytelling, vision critic, 10x speed, 20x cost reduction.
 
-This fork takes their pipeline and makes it **faster, cheaper, and more visually effective**:
+### What We Added
 
 | | Original | This Fork |
 |---|---|---|
@@ -33,52 +81,13 @@ This fork takes their pipeline and makes it **faster, cheaper, and more visually
 | **Output format** | Raster PNG only | Editable SVG + PNG (version-controllable, diffable) |
 | **Integration** | Streamlit UI only | Claude Code Skill, MCP Server, CLI, Streamlit, Python API |
 
-**Key innovations in this fork:**
+**Key innovations:**
 
-- **Visual storytelling** — the Planner discovers a visual metaphor before drawing anything ("What is this LIKE?"), so diagrams communicate through analogy, not just labels
-- **Vision critic loop** — renders SVG to PNG, sends to multimodal Gemini for visual evaluation, applies spatial fixes automatically until 95+/100
-- **Visual-first design** — 50% icons/shapes/spatial layout, 50% short text labels. Infographic style, not text documents with colored backgrounds
-- **Cairo-safe rendering** — discovered and prevented 4 Cairo-specific bugs (tspan overlap, emoji squares, unicode arrows, text spacing)
+- **Visual storytelling** — the Planner discovers a visual metaphor before drawing anything ("What is this LIKE?")
+- **Vision critic loop** — renders SVG to PNG, sends to multimodal Gemini for visual evaluation, applies spatial fixes until 95+/100
+- **Visual-first design** — 50% icons/shapes/spatial layout, 50% short text labels
+- **Cairo-safe rendering** — discovered and prevented 4 Cairo-specific bugs
 - **Claude Code integration** — 2-command skill install, copy-paste MCP setup, headless CLI
-
-**[View the showcase](https://stuinfla.github.io/paperbanana/)** to see 10 example diagrams across Pi, RuVector, and Ruflo.
-
----
-
-> [!TIP]
-> ## Quick Start — Generate Diagrams in 60 Seconds
->
-> **Option A: Claude Code Skill** (no clone needed — just 2 commands)
-> ```bash
-> mkdir -p ~/.claude/skills/paperbanana
-> curl -sL https://raw.githubusercontent.com/stuinfla/paperbanana/main/docs/SKILL.md > ~/.claude/skills/paperbanana/SKILL.md
-> ```
-> Then type **`/paperbanana`** in Claude Code and describe what you want.
->
-> **Option B: MCP Server** (clone repo, then paste into `.mcp.json`)
-> ```json
-> {
->   "mcpServers": {
->     "paperbanana": {
->       "command": "python3",
->       "args": ["-m", "mcp_server.server"],
->       "cwd": "/path/to/paperbanana",
->       "env": { "GOOGLE_API_KEY": "your-key-here" }
->     }
->   }
-> }
-> ```
-> Get a free API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey), then ask Claude: *"Generate a diagram showing how neural networks learn"*
->
-> **Option C: Command Line** (clone repo, then run)
-> ```bash
-> git clone https://github.com/stuinfla/paperbanana && cd paperbanana
-> python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-> export GOOGLE_API_KEY="your-key"
-> .venv/bin/python cli_generate.py --content "Your concept" --caption "Figure 1" --output diagram.png
-> ```
->
-> These are **this fork's tools** (SVG pipeline + visual storytelling). Different from the community `pip install paperbanana` package — see [Community Supports](#community-supports) below.
 
 ---
 

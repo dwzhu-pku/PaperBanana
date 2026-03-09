@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="280" viewBox="0 0 800 280">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="cardShadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="280" rx="12" ry="12" fill="url(#bg)"/>
+  <rect width="800" height="280" rx="12" ry="12" fill="url(#shine)"/>
+
+  <!-- Subtle grid dots decoration -->
+  <g opacity="0.06" fill="#ffffff">
+    <circle cx="50" cy="30" r="1"/><circle cx="80" cy="30" r="1"/><circle cx="110" cy="30" r="1"/>
+    <circle cx="50" cy="50" r="1"/><circle cx="80" cy="50" r="1"/><circle cx="110" cy="50" r="1"/>
+    <circle cx="690" cy="30" r="1"/><circle cx="720" cy="30" r="1"/><circle cx="750" cy="30" r="1"/>
+    <circle cx="690" cy="50" r="1"/><circle cx="720" cy="50" r="1"/><circle cx="750" cy="50" r="1"/>
+  </g>
+
+  <!-- Lightning bolt icon -->
+  <g transform="translate(310, 22)" filter="url(#glow)">
+    <polygon points="12,0 4,14 10,14 6,24 18,9 11,9 15,0" fill="#facc15" opacity="0.95"/>
+  </g>
+
+  <!-- Title -->
+  <text x="340" y="42" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="26" font-weight="700" fill="#ffffff" text-anchor="start" letter-spacing="0.5">Start Here</text>
+
+  <!-- Subtitle -->
+  <text x="400" y="68" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle">Generate publication-quality diagrams in 60 seconds</text>
+
+  <!-- ==================== Card 1: Claude Code Skill ==================== -->
+  <g transform="translate(42, 90)">
+    <!-- Card bg -->
+    <rect width="230" height="150" rx="10" ry="10" fill="#ffffff" fill-opacity="0.07" filter="url(#cardShadow)"/>
+    <!-- Green accent top bar -->
+    <rect width="230" height="3" rx="1.5" ry="1.5" fill="#4ade80"/>
+
+    <!-- Terminal icon -->
+    <g transform="translate(90, 24)">
+      <rect x="0" y="0" width="50" height="36" rx="4" ry="4" fill="none" stroke="#4ade80" stroke-width="1.8"/>
+      <!-- Title bar dots -->
+      <circle cx="9" cy="7" r="2" fill="#4ade80" opacity="0.6"/>
+      <circle cx="17" cy="7" r="2" fill="#4ade80" opacity="0.4"/>
+      <circle cx="25" cy="7" r="2" fill="#4ade80" opacity="0.25"/>
+      <!-- Prompt cursor -->
+      <line x1="10" y1="19" x2="16" y2="19" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="16" y1="19" x2="19" y2="23" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="10" y1="28" x2="22" y2="28" stroke="#4ade80" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+    </g>
+
+    <!-- Card text -->
+    <text x="115" y="80" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">Claude Code Skill</text>
+    <text x="115" y="100" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">2 commands, no install</text>
+
+    <!-- Recommended badge -->
+    <rect x="62" y="112" width="106" height="22" rx="11" ry="11" fill="#4ade80" fill-opacity="0.15"/>
+    <text x="115" y="127" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" font-weight="600" fill="#4ade80" text-anchor="middle">Recommended</text>
+  </g>
+
+  <!-- ==================== Card 2: MCP Server ==================== -->
+  <g transform="translate(285, 90)">
+    <!-- Card bg -->
+    <rect width="230" height="150" rx="10" ry="10" fill="#ffffff" fill-opacity="0.05" filter="url(#cardShadow)"/>
+    <!-- Blue accent top bar -->
+    <rect width="230" height="3" rx="1.5" ry="1.5" fill="#60a5fa"/>
+
+    <!-- Plug/connection icon -->
+    <g transform="translate(90, 24)">
+      <!-- Socket body -->
+      <rect x="10" y="4" width="30" height="28" rx="4" ry="4" fill="none" stroke="#60a5fa" stroke-width="1.8"/>
+      <!-- Prong left -->
+      <line x1="20" y1="12" x2="20" y2="20" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Prong right -->
+      <line x1="30" y1="12" x2="30" y2="20" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Cord -->
+      <path d="M25,32 Q25,40 20,40" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+      <!-- Connection spark dots -->
+      <circle cx="5" cy="18" r="1.5" fill="#60a5fa" opacity="0.5"/>
+      <circle cx="45" cy="18" r="1.5" fill="#60a5fa" opacity="0.5"/>
+    </g>
+
+    <!-- Card text -->
+    <text x="115" y="80" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">MCP Server</text>
+    <text x="115" y="100" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">Paste JSON config</text>
+  </g>
+
+  <!-- ==================== Card 3: Command Line ==================== -->
+  <g transform="translate(528, 90)">
+    <!-- Card bg -->
+    <rect width="230" height="150" rx="10" ry="10" fill="#ffffff" fill-opacity="0.05" filter="url(#cardShadow)"/>
+    <!-- Purple accent top bar -->
+    <rect width="230" height="3" rx="1.5" ry="1.5" fill="#a78bfa"/>
+
+    <!-- Code/terminal icon -->
+    <g transform="translate(90, 24)">
+      <rect x="0" y="0" width="50" height="36" rx="4" ry="4" fill="none" stroke="#a78bfa" stroke-width="1.8"/>
+      <!-- Angle bracket < -->
+      <polyline points="16,13 10,18 16,23" fill="none" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Angle bracket > -->
+      <polyline points="28,13 34,18 28,23" fill="none" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Slash / -->
+      <line x1="24" y1="12" x2="20" y2="24" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+    </g>
+
+    <!-- Card text -->
+    <text x="115" y="80" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">Command Line</text>
+    <text x="115" y="100" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">Clone and run</text>
+  </g>
+
+  <!-- Bottom decorative line -->
+  <line x1="100" y1="258" x2="700" y2="258" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1"/>
+
+  <!-- Bottom tagline -->
+  <text x="400" y="270" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="10" fill="#475569" text-anchor="middle">PaperBanana -- Multi-agent academic diagram generation</text>
+</svg>
