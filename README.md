@@ -1,33 +1,47 @@
 # <div align="center">PaperBanana 🍌</div>
-<div align="center">Dawei Zhu, Rui Meng, Yale Song, Xiyu Wei, Sujian Li, Tomas Pfister and Jinsung yoon
-<br><br></div>
 
-</div>
 <div align="center">
+
+**Original research by** Dawei Zhu, Rui Meng, Yale Song, Xiyu Wei, Sujian Li, Tomas Pfister, Jinsung Yoon
+*(Peking University + Google Cloud AI Research)*
+
+**Enhanced by** [Stuart Kerr](https://github.com/stuinfla) — SVG pipeline, visual storytelling, vision critic, 10x speed, 20x cost reduction
+
 <a href="https://huggingface.co/papers/2601.23265"><img src="assets/paper-page-xl.svg" alt="Paper page on HF"></a>
 <a href="https://huggingface.co/datasets/dwzhu/PaperBananaBench"><img src="assets/dataset-on-hf-xl.svg" alt="Dataset on HF"></a>
+
 </div>
 
-> Hi everyone! The original version of PaperBanana is already open-sourced under Google-Research as [PaperVizAgent](https://github.com/google-research/papervizagent).
-This repository forked the content of that repo and aims to keep evolving toward better support for academic paper illustration—though we have made solid progress, there is still a long way to go for more reliable generation and for more diverse, complex scenarios. PaperBanana is intended to be a fully open-source project dedicated to facilitating academic illustration for all researchers. Our goal is simply to benefit the community, so we currently have no plans to use it for commercial purposes.
+---
 
-**PaperBanana** is a reference-driven multi-agent framework for automated academic illustration generation. Acting like a creative team of specialized agents, it transforms raw scientific content into publication-quality diagrams and plots through an orchestrated pipeline of **Retriever, Planner, Stylist, Visualizer, and Critic** agents. The framework leverages in-context learning from reference examples and iterative refinement to produce aesthetically pleasing and semantically accurate scientific illustrations.
+### What They Built
 
-### What's New: SVG Pipeline with Vision Critic (Storytelling Fork)
+The PaperBanana team at Peking University and Google Cloud created a multi-agent framework for academic illustration — a pipeline of **Retriever, Planner, Stylist, Visualizer, and Critic** agents that transforms scientific text into diagrams using reference-driven in-context learning and iterative refinement. It was a strong foundation: technically accurate diagrams with NeurIPS-level aesthetics. Originally open-sourced as [PaperVizAgent](https://github.com/google-research/papervizagent).
 
-This fork adds a **storytelling-enhanced SVG pipeline** with a **vision-based self-correction loop** that produces vector diagrams scoring **95.8/100 average** across 10 test diagrams:
+### What We Added
 
-- **100% text accuracy** — text is rendered by Cairo, not predicted by a neural net
-- **Vision critic loop** — renders SVG to PNG, sends to multimodal Gemini for visual evaluation, applies spatial fixes automatically
-- **Visual-first design** — 50% icons/shapes/spatial layout, 50% short text labels (infographic style, not text documents)
-- **Cairo-safe rendering** — documented and prevented 4 Cairo-specific bugs (tspan overlap, emoji squares, unicode arrows, text spacing)
-- **10x faster** — ~30 seconds per diagram vs 3-5 minutes for raster
-- **20x cheaper** — ~$0.05 per diagram vs $0.50-2.00 for multi-agent raster
-- **Fully editable** — output is SVG code, version-controllable and diffable
+This fork takes their pipeline and makes it **faster, cheaper, and more visually effective**:
 
-The pipeline: LLM generates visual-first SVG code with icons, shapes, and short labels, Cairo renders to PNG, a vision critic evaluates visual/text balance and sends spatial fixes back. The result is infographic-style diagrams that communicate through visuals first, with zero text rendering artifacts.
+| | Original | This Fork |
+|---|---|---|
+| **Rendering** | Raster image generation (Gemini) | SVG code + Cairo render (100% text accuracy) |
+| **Speed** | 2-5 minutes per diagram | ~30 seconds (10x faster) |
+| **Cost** | $0.50-2.00 per diagram | ~$0.05 (20x cheaper) |
+| **Quality** | ~72/100 average | **95.8/100 average** (+34 points) |
+| **Design philosophy** | Labeled boxes and arrows | Visual-first: icons, shapes, spatial layout with short labels |
+| **Self-correction** | Text-based critic feedback | Vision critic sees the rendered PNG, sends spatial fixes |
+| **Output format** | Raster PNG only | Editable SVG + PNG (version-controllable, diffable) |
+| **Integration** | Streamlit UI only | Claude Code Skill, MCP Server, CLI, Streamlit, Python API |
 
-**[View the showcase](https://stuinfla.github.io/paperbanana/)** to see example outputs across Pi, RuVector, and Ruflo.
+**Key innovations in this fork:**
+
+- **Visual storytelling** — the Planner discovers a visual metaphor before drawing anything ("What is this LIKE?"), so diagrams communicate through analogy, not just labels
+- **Vision critic loop** — renders SVG to PNG, sends to multimodal Gemini for visual evaluation, applies spatial fixes automatically until 95+/100
+- **Visual-first design** — 50% icons/shapes/spatial layout, 50% short text labels. Infographic style, not text documents with colored backgrounds
+- **Cairo-safe rendering** — discovered and prevented 4 Cairo-specific bugs (tspan overlap, emoji squares, unicode arrows, text spacing)
+- **Claude Code integration** — 2-command skill install, copy-paste MCP setup, headless CLI
+
+**[View the showcase](https://stuinfla.github.io/paperbanana/)** to see 10 example diagrams across Pi, RuVector, and Ruflo.
 
 ---
 
@@ -206,9 +220,9 @@ Here are some example diagrams and plots generated by PaperBanana:
 
 ---
 
-## Community Enhancement: Visual Storytelling Pipeline
+## Deep Dive: Visual Storytelling Pipeline
 
-> **Contributed by** [@stuinfla](https://github.com/stuinfla) — building on the excellent foundation the PaperBanana team created. This enhancement works within the existing 5-agent architecture, improving what each agent does without changing the pipeline structure. All existing functionality (Streamlit demo, batch evaluation, all experiment modes) remains fully backward-compatible.
+> The enhancements below work within the existing 5-agent architecture — improving what each agent does without changing the pipeline structure. All original functionality (Streamlit demo, batch evaluation, all experiment modes) remains fully backward-compatible.
 
 ### The Idea
 
@@ -335,17 +349,18 @@ Each iteration built on the one before. The storytelling step (v6) produced the 
 
 ---
 
-## Overview of PaperBanana
+## Original Pipeline Architecture
 
 ![PaperBanana Framework](assets/method_diagram.png)
 
-PaperBanana achieves high-quality academic illustration generation by orchestrating five specialized agents in a structured pipeline:
+The original 5-agent pipeline (all agents enhanced in this fork):
 
-1. **Retriever Agent**: Identifies the most relevant reference diagrams from a curated collection to guide downstream agents
-2. **Planner Agent**: Translates method content and communicative intent into comprehensive textual descriptions using in-context learning
-3. **Stylist Agent**: Refines descriptions to adhere to academic aesthetic standards using automatically synthesized style guidelines
-4. **Visualizer Agent**: Transforms textual descriptions into visual outputs using state-of-the-art image generation models
-5. **Critic Agent**: Forms a closed-loop refinement mechanism with the Visualizer through multi-round iterative improvements
+1. **Retriever** — finds relevant reference diagrams to guide downstream agents
+2. **Planner** — discovers visual metaphors, then describes the diagram *(enhanced: storytelling-first approach)*
+3. **Stylist** — applies NeurIPS-level aesthetic guidelines *(enhanced: preserves metaphors)*
+4. **Visualizer** — generates images via Gemini *(enhanced: multi-candidate parallel generation)*
+5. **Critic** — iterative refinement loop *(enhanced: 7 mandatory visual excellence checks)*
+6. **SVG Visualizer** *(new)* — writes SVG code + Cairo render + vision critic self-correction
 
 ---
 
