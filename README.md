@@ -31,30 +31,30 @@ The pipeline: LLM generates visual-first SVG code with icons, shapes, and short 
 
 ---
 
-## How to Use PaperBanana
+## Quick Start
 
-### Rendering Modes
+**Step 1: Get a Gemini API key** (free) at [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
 
-| Mode | Output | Text Accuracy | Speed | Best For |
-|------|--------|---------------|-------|----------|
-| **SVG** (new, recommended) | Editable SVG + PNG render | 100% | ~30s | Technical diagrams, architecture, explanations |
-| **Raster** (original) | PNG via Gemini image gen | ~94% | 2-5 min | Artistic/photorealistic conceptual visuals |
+**Step 2: Install** (one command)
 
-### Quality Presets
+```bash
+git clone https://github.com/stuinfla/paperbanana && cd paperbanana && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && export GOOGLE_API_KEY="your-key-here"
+```
 
-| Preset | What It Does | Time | Cost | When to Use |
-|--------|-------------|------|------|-------------|
-| **Standard** (`--quality standard`) | Full storytelling pipeline with one review pass | ~30s (SVG) / ~2 min (raster) | ~$0.05 | **Default. Best for most users.** |
-| **Refined** (`--quality refined`) | 3 candidates, 3 review rounds, picks the best | ~90s (SVG) / ~5 min (raster) | ~$0.15 | Publications, presentations |
-| **Draft** (`--quality draft`) | Skip storytelling, generate directly | ~10s (SVG) / ~90s (raster) | ~$0.02 | Quick previews |
+**Step 3: Pick how you want to use it** — choose one:
 
-### Ways to Use PaperBanana
+### Option A: Claude Code Skill (2 commands, no clone needed)
 
-There are five ways to use PaperBanana, listed from easiest to most advanced.
+```bash
+mkdir -p ~/.claude/skills/paperbanana
+curl -sL https://raw.githubusercontent.com/stuinfla/paperbanana/feature/enhanced-pipeline/docs/SKILL.md > ~/.claude/skills/paperbanana/SKILL.md
+```
 
-#### A. Claude Code MCP Server (Easiest for Claude Users)
+Then type `/paperbanana` in Claude Code. Done.
 
-Add PaperBanana as an MCP server in your project's `.mcp.json` file. Claude can then generate diagrams conversationally -- just describe what you want.
+### Option B: MCP Server (for Claude Code / AI assistants)
+
+After cloning (Step 2), add to your project's `.mcp.json`:
 
 ```json
 {
@@ -69,87 +69,41 @@ Add PaperBanana as an MCP server in your project's `.mcp.json` file. Claude can 
 }
 ```
 
-Once configured, ask Claude naturally:
+Then just ask Claude: *"Generate a diagram showing how neural networks learn through backpropagation"*
 
-> "Generate a diagram showing how neural networks learn through backpropagation"
-
-The MCP server exposes four tools:
-
-| Tool | Purpose |
-|------|---------|
-| `generate_diagram(source_context, caption)` | Full storytelling pipeline for methodology diagrams |
-| `generate_plot(data_json, intent)` | Statistical plots from JSON data |
-| `about()` | Overview of PaperBanana and the storytelling approach |
-| `setup_guide()` | Step-by-step setup instructions |
-
-#### B. Claude Code Skill
-
-Install PaperBanana as a Claude Code skill for direct access via the `/paperbanana` slash command.
+### Option C: Command Line
 
 ```bash
-mkdir -p ~/.claude/skills/paperbanana
-curl -sL https://raw.githubusercontent.com/stuinfla/paperbanana/main/docs/SKILL.md \
-  > ~/.claude/skills/paperbanana/SKILL.md
-```
-
-Then type `/paperbanana` in Claude Code to trigger diagram generation. The skill provides the same pipeline as the CLI but integrates directly into your Claude Code workflow.
-
-#### C. Command Line (Single Image)
-
-Generate a single diagram from the terminal. This is the most flexible option -- all pipeline settings are exposed as flags.
-
-```bash
+# Generate a diagram
 .venv/bin/python cli_generate.py \
-  --content "Description of your concept or methodology" \
-  --caption "Figure 1: What this diagram shows" \
-  --output diagram.png \
-  --mode demo_full
-```
+  --content "Description of your concept" \
+  --caption "Figure 1: What this shows" \
+  --output diagram.png
 
-For longer content, read from a file:
-
-```bash
+# From a file
 .venv/bin/python cli_generate.py \
   --content-file method_section.md \
-  --caption "Figure 2: Overview of the proposed approach." \
-  --output diagram.png \
-  --mode demo_full \
-  --critic-rounds 3
-```
+  --caption "Figure 2: System architecture." \
+  --output diagram.png
 
-Generate multiple candidates and pick the best:
-
-```bash
+# Multiple candidates (picks the best)
 .venv/bin/python cli_generate.py \
   --content-file method_section.md \
-  --caption "Figure 1: Pipeline architecture." \
+  --caption "Figure 1" \
   --output diagram.png \
   --candidates 5
 ```
 
-Generate a statistical plot from JSON data:
+### Option D: Web UI (Streamlit)
 
 ```bash
-.venv/bin/python cli_generate.py \
-  --content '{"categories": ["A", "B", "C"], "accuracy": [92.3, 88.1, 95.7]}' \
-  --caption "Model performance comparison." \
-  --output plot.png \
-  --task plot
+.venv/bin/streamlit run demo.py
 ```
 
-See the [CLI Reference](#cli--single-image-generation) section below for the full list of flags.
+### Option E: Python API
 
-#### D. Web Demo (Streamlit)
-
-Launch the interactive web UI for a visual, point-and-click experience. Supports parallel candidate generation, pipeline visualization, and high-resolution refinement.
-
-```bash
-cd paperbanana && .venv/bin/streamlit run demo.py
-```
-
-#### E. Python API
-
-Import PaperBanana directly into your own Python code for programmatic control.
+<details>
+<summary>Show Python code</summary>
 
 ```python
 import asyncio
@@ -164,12 +118,8 @@ from agents.vanilla_agent import VanillaAgent
 from agents.polish_agent import PolishAgent
 
 exp_config = config.ExpConfig(
-    dataset_name="Demo",
-    task_name="diagram",
-    split_name="demo",
-    exp_mode="demo_full",
-    retrieval_setting="auto",
-    max_critic_rounds=3,
+    dataset_name="Demo", task_name="diagram", split_name="demo",
+    exp_mode="demo_full", retrieval_setting="auto", max_critic_rounds=3,
 )
 
 processor = PaperVizProcessor(
@@ -199,25 +149,31 @@ async def generate():
 asyncio.run(generate())
 ```
 
-### Quick Install
+</details>
 
-```bash
-# Clone and set up
-git clone https://github.com/stuinfla/paperbanana && cd paperbanana
-python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+---
 
-# Get a free API key at https://aistudio.google.com/apikey
-export GOOGLE_API_KEY="your-key-here"
+## CLI Reference
 
-# (Optional) Install FastMCP for MCP server support
-.venv/bin/pip install fastmcp
-```
+| Flag | Values | Default | Description |
+|------|--------|---------|-------------|
+| `--content` | text | required* | Inline content to visualize |
+| `--content-file` | path | required* | File containing content |
+| `--caption` | text | required | Figure caption / visual intent |
+| `--output` | path | output.png | Output image path |
+| `--task` | diagram, plot | diagram | Type of visualization |
+| `--mode` | demo_full, demo_planner_critic, vanilla | demo_full | Pipeline mode |
+| `--retrieval` | auto, manual, random, none | none | Reference retrieval strategy |
+| `--critic-rounds` | 1-5 | 3 | Max refinement iterations |
+| `--candidates` | 1-20 | 1 | Parallel candidates to generate |
+| `--aspect-ratio` | 16:9, 21:9, 3:2 | 16:9 | Output aspect ratio |
+| `--quiet` | flag | false | Suppress progress output |
+| `--model` | model name | config | Override reasoning model |
+| `--image-model` | model name | config | Override image generation model |
 
-For the best quality results, also download the [PaperBananaBench](https://huggingface.co/datasets/dwzhu/PaperBananaBench) reference dataset and place it under `data/PaperBananaBench/`. The pipeline works without it but skips reference retrieval, which reduces quality by roughly 15 points.
+*One of `--content` or `--content-file` is required.
 
-### Model Selection
-
-PaperBanana uses two model types: a **reasoning model** (Planner, Stylist, Critic) and an **image generation model** (Visualizer). You can mix and match based on your quality and budget needs.
+## Models and Cost
 
 | Model | Role | Quality | Speed | Cost |
 |-------|------|---------|-------|------|
@@ -226,26 +182,22 @@ PaperBanana uses two model types: a **reasoning model** (Planner, Stylist, Criti
 | `gemini-2.5-flash` | Reasoning | Good | ~5s/call | Lower |
 | `gemini-2.5-flash-image` | Image Gen | Good | ~30s/call | Lower |
 
-Switch models on the command line:
+Switch models: `--model gemini-2.5-flash --image-model gemini-2.5-flash-image`
 
-```bash
-.venv/bin/python cli_generate.py \
-  --model gemini-2.5-flash \
-  --image-model gemini-2.5-flash-image \
-  --content "Your content here" \
-  --caption "Figure 1" \
-  --output diagram.png
-```
-
-Or set them permanently in `configs/model_config.yaml`:
-
+Or set permanently in `configs/model_config.yaml`:
 ```yaml
 defaults:
   model_name: "gemini-2.5-flash"
   image_model_name: "gemini-2.5-flash-image"
 ```
 
-Using the Flash models roughly halves the per-call cost compared to Pro models.
+| Quality | Cost/image | Time |
+|---------|-----------|------|
+| SVG pipeline (best) | ~$0.05 | ~30s |
+| Full raster pipeline | ~$0.10 | ~2 min |
+| Draft (vanilla) | ~$0.02 | ~90s |
+
+Optional: download [PaperBananaBench](https://huggingface.co/datasets/dwzhu/PaperBananaBench) into `data/PaperBananaBench/` for +15 quality points via reference retrieval.
 
 ---
 
@@ -395,131 +347,11 @@ PaperBanana achieves high-quality academic illustration generation by orchestrat
 4. **Visualizer Agent**: Transforms textual descriptions into visual outputs using state-of-the-art image generation models
 5. **Critic Agent**: Forms a closed-loop refinement mechanism with the Visualizer through multi-round iterative improvements
 
-## Quick Start
+---
 
-### Step1: Clone the Repo
-```bash
-git clone https://github.com/dwzhu-pku/PaperBanana.git
-cd PaperBanana
-```
+<details>
+<summary><strong>Advanced: Batch Evaluation</strong></summary>
 
-### Step2: Configuration
-PaperBanana supports configuring API keys from a YAML configuration file or via environment variables.
-
-We recommend duplicate the `configs/model_config.template.yaml` file into `configs/model_config.yaml` to externalize all user configurations. This file is ignored by git to keep your api keys and configurations secret. In `model_config.yaml`, remember to fill in the two model names (`defaults.model_name` and `defaults.image_model_name`) and set at least one API key under `api_keys` (e.g. `google_api_key` for Gemini models).
-
-Note that if you need to generate many candidates simultaneously, you will require an API key that supports high concurrency.
-
-### Step3: Downloading the Dataset
-First download [PaperBananaBench](https://huggingface.co/datasets/dwzhu/PaperBananaBench), then place it under the `data` directory (e.g., `data/PaperBananaBench/`). The framework is designed to function gracefully without the dataset by bypassing the Retriever Agent's few-shot learning capability. If interested in the original PDFs, please download them from [PaperBananaDiagramPDFs](https://huggingface.co/datasets/dwzhu/PaperBananaDiagramPDFs).
-
-### Step4: Installing the Environment
-1. We use `uv` to manage Python packages. Please install `uv` following the instructions [here](https://docs.astral.sh/uv/getting-started/installation/).
-
-2. Create and activate a virtual environment
-    ```bash
-    uv venv # This will create a virtual environment in the current directory, under .venv/
-    source .venv/bin/activate  # or .venv\Scripts\activate on Windows
-    ```
-
-3. Install python 3.12
-    ```bash
-    uv python install 3.12
-    ```
-
-4. Install required packages
-    ```bash
-    uv pip install -r requirements.txt
-    ```
-
-### Launch PaperBanana
-
-#### Interactive Demo (Streamlit)
-The easiest way to launch PaperBanana is via the interactive Streamlit demo:
-```bash
-streamlit run demo.py
-```
-
-The web interface provides two main workflows:
-
-**1. Generate Candidates Tab**:
-- Paste your method section content (Markdown recommended) and provide the figure caption.
-- Configure settings (pipeline mode, retrieval setting, number of candidates, aspect ratio, critic rounds).
-- Click "Generate Candidates" and wait for parallel processing.
-- View results in a grid with evolution timelines and download individual images or batch ZIP.
-
-**2. Refine Image Tab**:
-- Upload a generated candidate or any diagram.
-- Describe desired changes or request upscaling.
-- Select resolution (2K/4K) and aspect ratio.
-- Download the refined high-resolution output.
-
-#### CLI — Single Image Generation
-
-```bash
-# Full pipeline with storytelling planner
-python cli_generate.py \
-  --content "Your methodology text here..." \
-  --caption "Figure 1: System architecture." \
-  --output diagram.png \
-  --mode demo_full \
-  --retrieval auto \
-  --critic-rounds 3
-
-# Generate from a file (recommended for longer content)
-python cli_generate.py \
-  --content-file method_section.md \
-  --caption "Figure 2: Overview of the proposed approach." \
-  --output diagram.png
-
-# Generate multiple candidates
-python cli_generate.py \
-  --content-file method_section.md \
-  --caption "Figure 1: Pipeline architecture." \
-  --output diagram.png \
-  --candidates 5
-
-# Statistical plot from JSON data
-python cli_generate.py \
-  --content '{"categories": ["A", "B", "C"], "accuracy": [92.3, 88.1, 95.7]}' \
-  --caption "Model performance comparison." \
-  --output plot.png \
-  --task plot
-
-# Quick draft (faster, lower quality)
-python cli_generate.py \
-  --content "Your content" \
-  --caption "Draft" \
-  --output draft.png \
-  --mode vanilla --quiet
-```
-
-| Flag | Values | Default | Description |
-|------|--------|---------|-------------|
-| `--content` | text | required* | Inline content to visualize |
-| `--content-file` | path | required* | File containing content |
-| `--caption` | text | required | Figure caption / visual intent |
-| `--output` | path | output.png | Output image path |
-| `--task` | diagram, plot | diagram | Type of visualization |
-| `--mode` | demo_full, demo_planner_critic, vanilla | demo_full | Pipeline mode |
-| `--retrieval` | auto, manual, random, none | none | Reference retrieval strategy |
-| `--critic-rounds` | 1-5 | 3 | Max refinement iterations |
-| `--candidates` | 1-20 | 1 | Parallel candidates to generate |
-| `--aspect-ratio` | 16:9, 21:9, 3:2 | 16:9 | Output aspect ratio |
-| `--quiet` | flag | false | Suppress progress output |
-
-*One of `--content` or `--content-file` is required.
-
-#### MCP Server (for AI Assistants)
-
-```bash
-pip install fastmcp
-python -m mcp_server.server
-```
-
-Tools: `generate_diagram(source_context, caption, ...)` and `generate_plot(data_json, intent, ...)`
-
-#### Command-Line Interface (Batch Evaluation)
 ```bash
 python main.py \
   --dataset_name "PaperBananaBench" \
@@ -529,80 +361,19 @@ python main.py \
   --retrieval_setting "auto"
 ```
 
-**Experiment Modes:**
-- `vanilla`: Direct generation without planning or refinement
-- `dev_planner`: Planner -> Visualizer only
-- `dev_planner_stylist`: Planner -> Stylist -> Visualizer
-- `dev_planner_critic`: Planner -> Visualizer -> Critic (multi-round)
-- `dev_full`: Full pipeline with all agents
-- `demo_planner_critic`: Demo mode (Planner -> Visualizer -> Critic) without evaluation
-- `demo_full`: Demo mode (full pipeline) without evaluation
+Modes: `vanilla`, `dev_planner`, `dev_planner_stylist`, `dev_planner_critic`, `dev_full`, `demo_planner_critic`, `demo_full`
 
-### Visualization Tools
+</details>
 
-View pipeline evolution and intermediate results:
-```bash
-streamlit run visualize/show_pipeline_evolution.py
-```
-View evaluation results:
-```bash
-streamlit run visualize/show_referenced_eval.py
-```
-
-## Model Selection & Cost Guide
-
-PaperBanana uses two types of models: a **reasoning model** (for the Planner, Stylist, and Critic agents) and an **image generation model** (for the Visualizer agent). You can mix and match depending on your quality and budget needs.
-
-### Supported Models
-
-| Model | Role | Quality | Speed | Cost | When to Use |
-|-------|------|---------|-------|------|-------------|
-| `gemini-3.1-pro-preview` | Reasoning (Planner/Stylist/Critic) | Best | ~15s/call | Higher | Default -- best quality |
-| `gemini-3-pro-image-preview` | Image Generation | Best | ~60s/call | Higher | Default -- best quality |
-| `gemini-2.5-flash` | Reasoning | Good | ~5s/call | Lower | Budget-conscious |
-| `gemini-2.5-flash-image` | Image Generation | Good | ~30s/call | Lower | Budget-conscious |
-
-### How to Switch Models
-
-Pass model flags on the CLI:
+<details>
+<summary><strong>Advanced: Visualization Tools</strong></summary>
 
 ```bash
-# Use budget-friendly models
-python cli_generate.py \
-  --model gemini-2.5-flash \
-  --image-model gemini-2.5-flash-image \
-  --content "Your content here" \
-  --caption "Figure 1" \
-  --output diagram.png
-
-# Or edit configs/model_config.yaml directly:
-# defaults:
-#   model_name: "gemini-2.5-flash"
-#   image_model_name: "gemini-2.5-flash-image"
+streamlit run visualize/show_pipeline_evolution.py   # Pipeline evolution
+streamlit run visualize/show_referenced_eval.py      # Evaluation results
 ```
 
-### Speed vs Quality Presets
-
-| Preset | Command Flags | Quality | Time per Image |
-|--------|---------------|---------|----------------|
-| **Maximum quality** | `--mode demo_full --critic-rounds 3 --candidates 3` | Best (~93/100) | ~5 min |
-| **Good quality** | `--mode demo_full --critic-rounds 1 --candidates 1` | Good (~85/100) | ~2 min |
-| **Fast draft** | `--mode vanilla` | Draft (~65/100) | ~90s |
-| **SVG pipeline** | SVG Visualizer agent with vision critic | Best (~96/100) | ~30-60s |
-
-Use maximum quality for final figures in a paper submission. Use fast draft for quick iteration while you are still refining your content and captions.
-
-### Cost Estimates
-
-These are approximate costs per image using Gemini API pricing as of early 2026:
-
-| Configuration | Estimated Cost |
-|---------------|----------------|
-| `demo_full`, 1 candidate, 1 critic round | ~$0.05 -- $0.10 |
-| `demo_full`, 3 candidates, 3 critic rounds | ~$0.25 -- $0.50 |
-| `vanilla` (single-shot, no refinement) | ~$0.01 -- $0.02 |
-
-Costs scale linearly with the number of candidates and critic rounds. Using `gemini-2.5-flash` models roughly halves the per-call cost compared to the Pro models.
+</details>
 
 ---
 

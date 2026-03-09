@@ -10,3 +10,6 @@ results/
 .claude-flow/
 .swarm/
 docs/claude-conversations/
+
+# Showcase zip
+*.zip
