@@ -235,6 +235,36 @@ We warmly welcome community contributions to make PaperBanana even better!
 Thanks to all contributors who helped improve PaperBanana, whether through code, bug reports, ideas, or feedback!
 
 <!-- ALL-CONTRIBUTORS-LIST:START -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/dwzhu-pku"><img src="https://github.com/dwzhu-pku.png?s=100" width="100px;" alt="Dawei Zhu"/><br /><sub><b>Dawei Zhu</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=dwzhu-pku" title="Code">💻</a> <a href="#ideas-dwzhu-pku" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=dwzhu-pku" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/lemon-prog123"><img src="https://github.com/lemon-prog123.png?s=100" width="100px;" alt="lemon-prog123"/><br /><sub><b>lemon-prog123</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=lemon-prog123" title="Code">💻</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/memray"><img src="https://github.com/memray.png?s=100" width="100px;" alt="memray"/><br /><sub><b>memray</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=memray" title="Code">💻</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/elpsykongloo"><img src="https://github.com/elpsykongloo.png?s=100" width="100px;" alt="elpsykongloo"/><br /><sub><b>elpsykongloo</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/issues?q=author%3Aelpsykongloo" title="Bug reports">🐛</a> <a href="#ideas-elpsykongloo" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/weathon"><img src="https://github.com/weathon.png?s=100" width="100px;" alt="weathon"/><br /><sub><b>weathon</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/issues?q=author%3Aweathon" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/arashabadi"><img src="https://github.com/arashabadi.png?s=100" width="100px;" alt="arashabadi"/><br /><sub><b>arashabadi</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=arashabadi" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/Ludobico"><img src="https://github.com/Ludobico.png?s=100" width="100px;" alt="Ludobico"/><br /><sub><b>Ludobico</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=Ludobico" title="Code">💻</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/haosenwang1018"><img src="https://github.com/haosenwang1018.png?s=100" width="100px;" alt="haosenwang1018"/><br /><sub><b>haosenwang1018</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=haosenwang1018" title="Code">💻</a> <a href="https://github.com/dwzhu-pku/PaperBanana/issues?q=author%3Ahaosenwang1018" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/stuinfla"><img src="https://github.com/stuinfla.png?s=100" width="100px;" alt="stuinfla"/><br /><sub><b>stuinfla</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=stuinfla" title="Code">💻</a> <a href="#ideas-stuinfla" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/ReturnYG"><img src="https://github.com/ReturnYG.png?s=100" width="100px;" alt="ReturnYG"/><br /><sub><b>ReturnYG</b></sub></a><br /><a href="#ideas-ReturnYG" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/Mylszd"><img src="https://github.com/Mylszd.png?s=100" width="100px;" alt="Mylszd"/><br /><sub><b>Mylszd</b></sub></a><br /><a href="#ideas-Mylszd" title="Ideas, Planning, & Feedback">🤔</a> <a href="#tool-Mylszd" title="Tools">🔧</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/NielsRogge"><img src="https://github.com/NielsRogge.png?s=100" width="100px;" alt="NielsRogge"/><br /><sub><b>NielsRogge</b></sub></a><br /><a href="#ideas-NielsRogge" title="Ideas, Planning, & Feedback">🤔</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/MinyuChan-vem"><img src="https://github.com/MinyuChan-vem.png?s=100" width="100px;" alt="MinyuChan-vem"/><br /><sub><b>MinyuChan-vem</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/issues?q=author%3AMinyuChan-vem" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/catallactics"><img src="https://avatars.githubusercontent.com/u/223395626?v=4?s=100" width="100px;" alt="catallactics"/><br /><sub><b>catallactics</b></sub></a><br /><a href="#ideas-catallactics" title="Ideas, Planning, & Feedback">🤔</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## License
