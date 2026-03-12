@@ -260,6 +260,7 @@ Thanks to all contributors who helped improve PaperBanana, whether through code,
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/MinyuChan-vem"><img src="https://github.com/MinyuChan-vem.png?s=100" width="100px;" alt="MinyuChan-vem"/><br /><sub><b>MinyuChan-vem</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/issues?q=author%3AMinyuChan-vem" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/catallactics"><img src="https://avatars.githubusercontent.com/u/223395626?v=4?s=100" width="100px;" alt="catallactics"/><br /><sub><b>catallactics</b></sub></a><br /><a href="#ideas-catallactics" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/ruiguo-bio"><img src="https://avatars.githubusercontent.com/u/20548903?v=4?s=100" width="100px;" alt="Rui Guo"/><br /><sub><b>Rui Guo</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/issues?q=author%3Aruiguo-bio" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/YXDBright"><img src="https://avatars.githubusercontent.com/u/144319486?v=4?s=100" width="100px;" alt="YXDBright"/><br /><sub><b>YXDBright</b></sub></a><br /><a href="#ideas-YXDBright" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>
 </table>
