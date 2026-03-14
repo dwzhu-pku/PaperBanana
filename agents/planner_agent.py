@@ -16,13 +16,17 @@
 Vanilla Agent - Directly rendering images based on the method section.
 """
 
+import asyncio
+import base64
+import io
 import json
-from typing import Dict, Any
+from typing import Any, Dict
+
 from google.genai import types
-import base64, io, asyncio
 from PIL import Image
 
 from utils import generation_utils
+
 from .base_agent import BaseAgent
 
 
@@ -56,36 +60,54 @@ class PlannerAgent(BaseAgent):
         Expects data['top10_references'] to be already populated by retriever.
         """
         cfg = self.task_config
-        
+
         raw_content = data["content"]
-        content = json.dumps(raw_content) if isinstance(raw_content, (dict, list)) else raw_content
+        content = (
+            json.dumps(raw_content)
+            if isinstance(raw_content, (dict, list))
+            else raw_content
+        )
         description = data["visual_intent"]
 
         content_list = []
-        
+
         # Check if retriever has already provided full examples (e.g., in manual mode)
         examples = data.get("retrieved_examples", [])
         if not examples:
             retrieved_ids = data.get("top10_references", [])
-            with open(self.exp_config.work_dir / f"data/PaperBananaBench/{cfg['task_name']}/ref.json", "r", encoding="utf-8") as f:
-                candidate_pool = json.load(f)
-            id_to_item = {item["id"]: item for item in candidate_pool}
-            examples = [id_to_item[ref_id] for ref_id in retrieved_ids if ref_id in id_to_item]
-        
+            if retrieved_ids:
+                with open(
+                    self.exp_config.work_dir
+                    / f"data/PaperBananaBench/{cfg['task_name']}/ref.json",
+                    "r",
+                    encoding="utf-8",
+                ) as f:
+                    candidate_pool = json.load(f)
+                id_to_item = {item["id"]: item for item in candidate_pool}
+                examples = [
+                    id_to_item[ref_id]
+                    for ref_id in retrieved_ids
+                    if ref_id in id_to_item
+                ]
+
         user_prompt = ""
         for idx, item in enumerate(examples):
-            user_prompt += f"Example {idx+1}:\n"
-            
+            user_prompt += f"Example {idx + 1}:\n"
+
             item_content = item["content"]
             if isinstance(item_content, (dict, list)):
                 item_content = json.dumps(item_content)
-            
+
             user_prompt += f"{cfg['content_label']}: {item_content}\n"
             user_prompt += f"{cfg['visual_intent_label']}: {item['visual_intent']}\nReference {cfg['task_name'].capitalize()}: "
             content_list.append({"type": "text", "text": user_prompt})
-            
+
             # Resolve relative path using work_dir
-            image_path = self.exp_config.work_dir / f"data/PaperBananaBench/{cfg['task_name']}" / item["path_to_gt_image"]
+            image_path = (
+                self.exp_config.work_dir
+                / f"data/PaperBananaBench/{cfg['task_name']}"
+                / item["path_to_gt_image"]
+            )
             with open(image_path, "rb") as f:
                 ref_image_base64 = base64.b64encode(f.read()).decode("utf-8")
             content_list.append({"type": "image", "image_base64": ref_image_base64})
@@ -112,13 +134,11 @@ class PlannerAgent(BaseAgent):
             max_attempts=5,
             retry_delay=5,
         )
-        
+
         for idx, response in enumerate(response_list):
             data[f"target_{cfg['task_name']}_desc{idx}"] = response.strip()
 
         return data
-
-
 
 
 DIAGRAM_PLANNER_AGENT_SYSTEM_PROMPT = """
@@ -138,4 +158,3 @@ To help you understand the task better, and grasp the principles for generating 
 ** IMPORTANT: **
 Your description should be as detailed as possible. For content, explain the precise mapping of variables to visual channels (x, y, hue) and explicitly enumerate every raw data point's coordinate to be drawn to ensure accuracy. For presentation, specify the exact aesthetic parameters, including specific HEX color codes, font sizes for all labels, line widths, marker dimensions, legend placement, and grid styles. You should learn from the examples' content presentation and aesthetic design (e.g., color schemes).
 """
-
