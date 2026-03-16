@@ -32,7 +32,6 @@ from datetime import datetime
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-print("DEBUG: Importing agents...")
 import yaml
 import shutil
 configs_dir = Path(__file__).parent / "configs"
@@ -40,21 +39,17 @@ config_path = configs_dir / "model_config.yaml"
 template_path = configs_dir / "model_config.template.yaml"
 
 if not config_path.exists() and template_path.exists():
-    print(f"DEBUG: {config_path.name} not found. Auto-generating from template")
     shutil.copy2(template_path, config_path)
 try:
     from agents.planner_agent import PlannerAgent
-    print("DEBUG: Imported PlannerAgent")
     from agents.visualizer_agent import VisualizerAgent
     from agents.stylist_agent import StylistAgent
     from agents.critic_agent import CriticAgent
     from agents.retriever_agent import RetrieverAgent
     from agents.vanilla_agent import VanillaAgent
     from agents.polish_agent import PolishAgent
-    print("DEBUG: Imported all agents")
     from utils import config
     from utils.paperviz_processor import PaperVizProcessor
-    print("DEBUG: Imported utils")
 
     model_config_data = {}
     if config_path.exists():
@@ -68,12 +63,10 @@ try:
         return val or default
 
 except ImportError as e:
-    print(f"DEBUG: ImportError: {e}")
     import traceback
     traceback.print_exc()
     raise e
 except Exception as e:
-    print(f"DEBUG: Exception during import: {e}")
     import traceback
     traceback.print_exc()
     raise e
@@ -105,7 +98,18 @@ def base64_to_image(b64_str):
     except Exception:
         return None
 
-def create_sample_inputs(method_content, caption, diagram_type="Pipeline", aspect_ratio="16:9", num_copies=10, max_critic_rounds=3):
+def create_sample_inputs(
+    method_content,
+    caption,
+    diagram_type="Pipeline",
+    aspect_ratio="16:9",
+    num_copies=10,
+    max_critic_rounds=3,
+    max_reference_examples=10,
+    retrieval_candidate_pool_limit=200,
+    text_model_max_attempts=5,
+    image_model_max_attempts=5,
+):
     """Create multiple copies of the input data for parallel processing."""
     base_input = {
         "filename": "demo_input",
@@ -115,7 +119,11 @@ def create_sample_inputs(method_content, caption, diagram_type="Pipeline", aspec
         "additional_info": {
             "rounded_ratio": aspect_ratio
         },
-        "max_critic_rounds": max_critic_rounds  # Add critic rounds control
+        "max_critic_rounds": max_critic_rounds,
+        "max_reference_examples": max_reference_examples,
+        "retrieval_candidate_pool_limit": retrieval_candidate_pool_limit,
+        "text_model_max_attempts": text_model_max_attempts,
+        "image_model_max_attempts": image_model_max_attempts,
     }
     
     # Create num_copies identical inputs, each with a unique identifier
@@ -128,7 +136,14 @@ def create_sample_inputs(method_content, caption, diagram_type="Pipeline", aspec
     
     return inputs
 
-async def process_parallel_candidates(data_list, exp_mode="dev_planner_critic", retrieval_setting="auto", main_model_name="", image_gen_model_name=""):
+async def process_parallel_candidates(
+    data_list,
+    exp_mode="dev_planner_critic",
+    retrieval_setting="auto",
+    main_model_name="",
+    image_gen_model_name="",
+    max_concurrent=3,
+):
     """Process multiple candidates in parallel using PaperVizProcessor."""
     # Create experiment config
     exp_config = config.ExpConfig(
@@ -155,7 +170,7 @@ async def process_parallel_candidates(data_list, exp_mode="dev_planner_critic", 
     
     # Process all candidates in parallel (concurrency controlled by processor)
     results = []
-    concurrent_num = 10  # Process all 10 in parallel
+    concurrent_num = max(1, min(max_concurrent, len(data_list)))
     
     async for result_data in processor.process_queries_batch(
         data_list, max_concurrent=concurrent_num, do_eval=False
@@ -184,7 +199,48 @@ async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9
     image_b64 = base64.b64encode(image_bytes).decode("utf-8")
     image_data_url = f"data:image/jpeg;base64,{image_b64}"
 
-    # --- Path 1: OpenRouter (preferred, matches main pipeline priority) ---
+    # --- Path 1: OpenAI-compatible chat/completions (custom third-party gateway) ---
+    try:
+        from utils.generation_utils import (
+            call_openai_compatible_image_generation_with_retry_async,
+            should_use_openai_compatible_image_generation,
+        )
+        _has_openai_compat_image = True
+    except ImportError:
+        _has_openai_compat_image = False
+    openai_api_key = get_config_val("api_keys", "openai_api_key", "OPENAI_API_KEY", "")
+    openai_base_url = get_config_val("api_endpoints", "openai_base_url", "OPENAI_BASE_URL", "")
+    if (
+        _has_openai_compat_image
+        and openai_api_key
+        and openai_base_url
+        and should_use_openai_compatible_image_generation(image_model)
+    ):
+        try:
+            contents = [
+                {"type": "image", "data": image_b64, "mime_type": "image/jpeg"},
+                {"type": "text", "text": edit_prompt},
+            ]
+            config = {
+                "system_prompt": "",
+                "temperature": 1.0,
+                "aspect_ratio": aspect_ratio,
+                "image_size": image_size,
+            }
+            result = await call_openai_compatible_image_generation_with_retry_async(
+                model_name=image_model,
+                contents=contents,
+                config=config,
+                max_attempts=3,
+                retry_delay=10,
+                error_context="refine_image",
+            )
+            if result and result[0] != "Error":
+                return base64.b64decode(result[0]), "✅ Image refined successfully! (via OpenAI-compatible gateway)"
+        except Exception as e:
+            print(f"OpenAI-compatible refine failed: {e}, falling back to OpenRouter/Google API key...")
+
+    # --- Path 2: OpenRouter (preferred when explicitly configured) ---
     try:
         from utils.generation_utils import call_openrouter_image_generation_with_retry_async
         _has_openrouter = True
@@ -216,7 +272,7 @@ async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9
         except Exception as e:
             print(f"OpenRouter refine failed: {e}, falling back to Google API key...")
 
-    # --- Path 2 & 3: Gemini native SDK (Google API key or Vertex AI ADC) ---
+    # --- Path 3 & 4: Gemini native SDK (Google API key or Vertex AI ADC) ---
     try:
         from google import genai
         from google.genai import types
@@ -234,7 +290,7 @@ async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9
         client = genai.Client(vertexai=True, project=project_id, location=location)
         via = "Vertex AI"
     else:
-        return None, "❌ Error: No API credentials configured. Set OPENROUTER_API_KEY, GOOGLE_API_KEY, or configure Vertex AI project in configs/model_config.yaml."
+        return None, "❌ Error: No API credentials configured. Set OPENAI_API_KEY + OPENAI_BASE_URL, OPENROUTER_API_KEY, GOOGLE_API_KEY, or configure Vertex AI project in configs/model_config.yaml."
 
     try:
         contents = [
@@ -408,6 +464,135 @@ def display_candidate_result(result, candidate_id, exp_mode):
             else:
                 st.info("No description available")
 
+
+def estimate_generation_usage(
+    exp_mode,
+    retrieval_setting,
+    num_candidates,
+    max_critic_rounds,
+    text_model_max_attempts,
+    image_model_max_attempts,
+    max_reference_examples,
+    retrieval_candidate_pool_limit,
+):
+    """Estimate model call counts and worst-case retry-expanded attempts."""
+    candidates = max(1, int(num_candidates))
+    rounds = max(0, int(max_critic_rounds))
+    has_retrieval = retrieval_setting != "none" and int(max_reference_examples) > 0
+
+    retrieval_calls = 1 if has_retrieval else 0
+    planner_calls = candidates
+    stylist_calls = candidates if exp_mode == "demo_full" else 0
+
+    if exp_mode in ("demo_planner_critic", "demo_full"):
+        critic_calls_min = candidates if rounds > 0 else 0
+        critic_calls_max = candidates * rounds
+        image_calls_min = candidates
+        image_calls_max = candidates * (1 + rounds)
+    else:
+        critic_calls_min = 0
+        critic_calls_max = 0
+        image_calls_min = candidates
+        image_calls_max = candidates
+
+    text_calls_min = retrieval_calls + planner_calls + stylist_calls + critic_calls_min
+    text_calls_max = retrieval_calls + planner_calls + stylist_calls + critic_calls_max
+    total_calls_min = text_calls_min + image_calls_min
+    total_calls_max = text_calls_max + image_calls_max
+
+    worst_case_attempts_min = (
+        retrieval_calls * int(text_model_max_attempts)
+        + (planner_calls + stylist_calls + critic_calls_min) * int(text_model_max_attempts)
+        + image_calls_min * int(image_model_max_attempts)
+    )
+    worst_case_attempts_max = (
+        retrieval_calls * int(text_model_max_attempts)
+        + (planner_calls + stylist_calls + critic_calls_max) * int(text_model_max_attempts)
+        + image_calls_max * int(image_model_max_attempts)
+    )
+
+    return {
+        "retrieval_calls": retrieval_calls,
+        "planner_calls": planner_calls,
+        "stylist_calls": stylist_calls,
+        "critic_calls_min": critic_calls_min,
+        "critic_calls_max": critic_calls_max,
+        "image_calls_min": image_calls_min,
+        "image_calls_max": image_calls_max,
+        "text_calls_min": text_calls_min,
+        "text_calls_max": text_calls_max,
+        "total_calls_min": total_calls_min,
+        "total_calls_max": total_calls_max,
+        "worst_case_attempts_min": worst_case_attempts_min,
+        "worst_case_attempts_max": worst_case_attempts_max,
+        "reference_examples": int(max_reference_examples),
+        "retrieval_candidate_pool_limit": int(retrieval_candidate_pool_limit),
+    }
+
+
+def infer_exp_mode_from_results(results):
+    """Best-effort inference for older saved JSON files that only store results."""
+    if not results:
+        return "dev_planner"
+    sample = results[0]
+    if "target_diagram_stylist_desc0" in sample:
+        return "demo_full"
+    if any(k.startswith("target_diagram_critic_desc") for k in sample):
+        return "demo_planner_critic"
+    return "dev_planner"
+
+
+def infer_timestamp_from_filename(file_path: Path) -> str:
+    """Convert demo_YYYYMMDD_HHMMSS.json into a readable timestamp if possible."""
+    stem = file_path.stem
+    prefix = "demo_"
+    if not stem.startswith(prefix):
+        return stem
+    raw = stem[len(prefix):]
+    try:
+        return datetime.strptime(raw, "%Y%m%d_%H%M%S").strftime("%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        return raw
+
+
+def load_saved_results(file_path: Path):
+    """Load saved results from disk, supporting both list-only and wrapped metadata formats."""
+    with open(file_path, "r", encoding="utf-8") as f:
+        payload = json.load(f)
+
+    if isinstance(payload, list):
+        results = payload
+        metadata = {}
+    elif isinstance(payload, dict):
+        results = payload.get("results", [])
+        metadata = payload.get("metadata", {})
+    else:
+        raise ValueError("Saved JSON must be a list or an object with 'results'.")
+
+    if not isinstance(results, list):
+        raise ValueError("Saved results payload has invalid format.")
+
+    exp_mode = metadata.get("exp_mode") or infer_exp_mode_from_results(results)
+    timestamp = metadata.get("timestamp") or infer_timestamp_from_filename(file_path)
+    method_content = metadata.get("method_content")
+    caption = metadata.get("caption")
+    if results:
+        first = results[0]
+        if method_content is None:
+            method_content = first.get("content", "")
+        if caption is None:
+            caption = first.get("caption", "")
+
+    return {
+        "results": results,
+        "exp_mode": exp_mode,
+        "timestamp": timestamp,
+        "method_content": method_content or "",
+        "caption": caption or "",
+        "json_file": str(file_path),
+    }
+
+
 def main():
     st.title("🍌 PaperVizAgent Demo")
     st.markdown("AI-powered scientific diagram generation and refinement")
@@ -425,17 +610,25 @@ def main():
             
             exp_mode = st.selectbox(
                 "Pipeline Mode",
-                ["demo_full", "demo_planner_critic"],
+                ["dev_planner", "demo_planner_critic", "demo_full"],
                 index=0,
                 key="tab1_exp_mode",
                 help="Select which agent pipeline to use"
             )
             
             mode_info = {
+                "dev_planner": "Retriever → Planner → Visualizer. Lowest-cost path with a single image generation call.",
                 "demo_planner_critic": "Planner → Visualizer → Critic → Visualizer",
                 "demo_full": "Retriever → Planner → Stylist → Visualizer → Critic → Visualizer. (The stylist can make the diagram more aesthetically pleasing, but prone to be overly simplied. So we recommend trying both modes and select the best one)"
             }
             st.info(f"**Pipeline:** {mode_info[exp_mode]}")
+
+            budget_mode = st.checkbox(
+                "Budget Mode",
+                value=True,
+                key="tab1_budget_mode",
+                help="Reduce token and image spend by using fewer references, fewer retries, and fewer critic rounds"
+            )
             
             retrieval_setting = st.selectbox(
                 "Retrieval Setting",
@@ -449,9 +642,19 @@ def main():
                 "Number of Candidates",
                 min_value=1,
                 max_value=20,
-                value=10,
+                value=1,
                 key="tab1_num_candidates",
                 help="How many parallel candidates to generate"
+            )
+
+            default_max_concurrent = 1 if budget_mode else min(3, int(num_candidates))
+            max_concurrent = st.number_input(
+                "Max Concurrent Requests",
+                min_value=1,
+                max_value=int(num_candidates),
+                value=default_max_concurrent,
+                key="tab1_max_concurrent",
+                help="Lower this when using a third-party API gateway that times out under heavy parallel load"
             )
             
             aspect_ratio = st.selectbox(
@@ -463,11 +666,48 @@ def main():
             
             max_critic_rounds = st.number_input(
                 "Max Critic Rounds",
-                min_value=1,
+                min_value=0,
                 max_value=5,
-                value=3,
+                value=1 if budget_mode else 3,
                 key="tab1_max_critic_rounds",
                 help="Maximum number of critic refinement iterations"
+            )
+
+            max_reference_examples = st.number_input(
+                "Reference Examples Used",
+                min_value=0,
+                max_value=10,
+                value=3 if budget_mode else 10,
+                key="tab1_max_reference_examples",
+                help="How many retrieved references the Planner sees. Lower values save tokens."
+            )
+
+            retrieval_candidate_pool_limit = st.number_input(
+                "Retriever Candidate Pool Limit",
+                min_value=10,
+                max_value=200,
+                value=50 if budget_mode else 200,
+                step=10,
+                key="tab1_retrieval_candidate_pool_limit",
+                help="How many reference candidates are shown to the Retriever. Lower values save tokens."
+            )
+
+            text_model_max_attempts = st.number_input(
+                "Text Model Retry Attempts",
+                min_value=1,
+                max_value=5,
+                value=2 if budget_mode else 5,
+                key="tab1_text_model_max_attempts",
+                help="Retries for Planner/Stylist/Critic/Retriever"
+            )
+
+            image_model_max_attempts = st.number_input(
+                "Image Model Retry Attempts",
+                min_value=1,
+                max_value=5,
+                value=2 if budget_mode else 5,
+                key="tab1_image_model_max_attempts",
+                help="Retries for image generation calls"
             )
             
             default_model = get_config_val("defaults", "main_model_name", "MAIN_MODEL_NAME", "gemini-3.1-pro-preview")
@@ -517,6 +757,149 @@ def main():
                 )
             else:
                 image_gen_model_name = image_model_selection
+
+            usage_preview = estimate_generation_usage(
+                exp_mode=exp_mode,
+                retrieval_setting=("none" if int(max_reference_examples) == 0 else retrieval_setting),
+                num_candidates=num_candidates,
+                max_critic_rounds=max_critic_rounds,
+                text_model_max_attempts=text_model_max_attempts,
+                image_model_max_attempts=image_model_max_attempts,
+                max_reference_examples=max_reference_examples,
+                retrieval_candidate_pool_limit=retrieval_candidate_pool_limit,
+            )
+
+            st.divider()
+            st.markdown("### Cost Preview")
+            st.caption(
+                f"Prompt size scales with {usage_preview['reference_examples']} reference examples "
+                f"and a retriever pool of {usage_preview['retrieval_candidate_pool_limit']} candidates."
+            )
+            st.caption(
+                f"Base model calls: {usage_preview['total_calls_min']}-{usage_preview['total_calls_max']} "
+                f"(text {usage_preview['text_calls_min']}-{usage_preview['text_calls_max']}, "
+                f"image {usage_preview['image_calls_min']}-{usage_preview['image_calls_max']})"
+            )
+            st.caption(
+                f"Worst-case API attempts with retries: "
+                f"{usage_preview['worst_case_attempts_min']}-{usage_preview['worst_case_attempts_max']}"
+            )
+
+            with st.expander("Manual Price Estimate", expanded=False):
+                text_input_price_per_mtok = st.number_input(
+                    "Text Input Price / 1M Tok (USD)",
+                    min_value=0.0,
+                    value=0.0,
+                    step=0.001,
+                    format="%.3f",
+                    key="tab1_text_input_price_per_mtok",
+                    help="Optional. Enter your third-party provider's input-token price."
+                )
+                text_output_price_per_mtok = st.number_input(
+                    "Text Output Price / 1M Tok (USD)",
+                    min_value=0.0,
+                    value=0.0,
+                    step=0.001,
+                    format="%.3f",
+                    key="tab1_text_output_price_per_mtok",
+                    help="Optional. Enter your third-party provider's output-token price."
+                )
+                avg_text_input_tokens = st.number_input(
+                    "Avg Input Tokens / Text Call",
+                    min_value=0,
+                    value=4000,
+                    step=500,
+                    key="tab1_avg_text_input_tokens",
+                    help="Manual estimate for average prompt size per text-model call."
+                )
+                avg_text_output_tokens = st.number_input(
+                    "Avg Output Tokens / Text Call",
+                    min_value=0,
+                    value=1200,
+                    step=100,
+                    key="tab1_avg_text_output_tokens",
+                    help="Manual estimate for average completion size per text-model call."
+                )
+                image_price_per_call = st.number_input(
+                    "Image Call Price (USD)",
+                    min_value=0.0,
+                    value=0.0,
+                    step=0.001,
+                    format="%.3f",
+                    key="tab1_image_price_per_call",
+                    help="Optional. Enter your third-party provider's estimated price per image generation call."
+                )
+                if (
+                    text_input_price_per_mtok > 0
+                    or text_output_price_per_mtok > 0
+                    or image_price_per_call > 0
+                ):
+                    text_cost_per_call = (
+                        (avg_text_input_tokens / 1_000_000) * text_input_price_per_mtok
+                        + (avg_text_output_tokens / 1_000_000) * text_output_price_per_mtok
+                    )
+                    base_cost_min = (
+                        usage_preview["text_calls_min"] * text_cost_per_call
+                        + usage_preview["image_calls_min"] * image_price_per_call
+                    )
+                    base_cost_max = (
+                        usage_preview["text_calls_max"] * text_cost_per_call
+                        + usage_preview["image_calls_max"] * image_price_per_call
+                    )
+                    retry_cost_min = (
+                        usage_preview["text_calls_min"] * text_model_max_attempts * text_cost_per_call
+                        + usage_preview["image_calls_min"] * image_model_max_attempts * image_price_per_call
+                    )
+                    retry_cost_max = (
+                        usage_preview["text_calls_max"] * text_model_max_attempts * text_cost_per_call
+                        + usage_preview["image_calls_max"] * image_model_max_attempts * image_price_per_call
+                    )
+                    est_text_input_min = usage_preview["text_calls_min"] * avg_text_input_tokens
+                    est_text_input_max = usage_preview["text_calls_max"] * avg_text_input_tokens
+                    est_text_output_min = usage_preview["text_calls_min"] * avg_text_output_tokens
+                    est_text_output_max = usage_preview["text_calls_max"] * avg_text_output_tokens
+                    st.caption(
+                        f"Estimated text tokens: input {est_text_input_min:,}-{est_text_input_max:,}, "
+                        f"output {est_text_output_min:,}-{est_text_output_max:,}"
+                    )
+                    st.caption(f"Base run estimate: ${base_cost_min:.3f}-${base_cost_max:.3f}")
+                    st.caption(f"Worst-case with retries: ${retry_cost_min:.3f}-${retry_cost_max:.3f}")
+
+            st.divider()
+            st.markdown("### Load Saved Results")
+            saved_results_dir = Path(__file__).parent / "results" / "demo"
+            saved_result_files = sorted(saved_results_dir.glob("demo_*.json"), reverse=True)
+            saved_result_labels = ["None"]
+            saved_result_map = {"None": None}
+            for file_path in saved_result_files:
+                label = f"{file_path.name} ({infer_timestamp_from_filename(file_path)})"
+                saved_result_labels.append(label)
+                saved_result_map[label] = file_path
+
+            selected_saved_result = st.selectbox(
+                "Saved Result File",
+                saved_result_labels,
+                index=0,
+                key="tab1_saved_result_file",
+                help="Load a previously generated demo JSON from results/demo"
+            )
+            if st.button("Load Saved Results", use_container_width=True, key="tab1_load_saved_results"):
+                selected_path = saved_result_map.get(selected_saved_result)
+                if selected_path is None:
+                    st.warning("Please select a saved result file first.")
+                else:
+                    try:
+                        loaded = load_saved_results(selected_path)
+                        st.session_state["results"] = loaded["results"]
+                        st.session_state["exp_mode"] = loaded["exp_mode"]
+                        st.session_state["timestamp"] = loaded["timestamp"]
+                        st.session_state["json_file"] = loaded["json_file"]
+                        st.session_state["method_content"] = loaded["method_content"]
+                        st.session_state["caption"] = loaded["caption"]
+                        st.success(f"Loaded {selected_path.name}")
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"Failed to load saved results: {e}")
         
         st.divider()
         
@@ -632,13 +1015,21 @@ The framework extends to statistical plots by adjusting the Visualizer and Criti
                 st.session_state["caption"] = caption
                 
                 with st.spinner(f"Generating {num_candidates} candidates in parallel... This may take a few minutes."):
+                    effective_retrieval_setting = retrieval_setting
+                    if int(max_reference_examples) == 0:
+                        effective_retrieval_setting = "none"
+
                     # Create input data list
                     input_data_list = create_sample_inputs(
                         method_content=method_content,
                         caption=caption,
                         aspect_ratio=aspect_ratio,
                         num_copies=num_candidates,
-                        max_critic_rounds=max_critic_rounds
+                        max_critic_rounds=max_critic_rounds,
+                        max_reference_examples=int(max_reference_examples),
+                        retrieval_candidate_pool_limit=int(retrieval_candidate_pool_limit),
+                        text_model_max_attempts=int(text_model_max_attempts),
+                        image_model_max_attempts=int(image_model_max_attempts),
                     )
                     
                     # Process in parallel
@@ -646,9 +1037,10 @@ The framework extends to statistical plots by adjusting the Visualizer and Criti
                         results = asyncio.run(process_parallel_candidates(
                             input_data_list,
                             exp_mode=exp_mode,
-                            retrieval_setting=retrieval_setting,
+                            retrieval_setting=effective_retrieval_setting,
                             main_model_name=main_model_name,
-                            image_gen_model_name=image_gen_model_name
+                            image_gen_model_name=image_gen_model_name,
+                            max_concurrent=int(max_concurrent),
                         ))
                         st.session_state["results"] = results
                         st.session_state["exp_mode"] = exp_mode
@@ -663,10 +1055,19 @@ The framework extends to statistical plots by adjusting the Visualizer and Criti
                             
                             # Generate filename with timestamp
                             json_filename = results_dir / f"demo_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                            save_payload = {
+                                "metadata": {
+                                    "timestamp": timestamp_str,
+                                    "exp_mode": exp_mode,
+                                    "method_content": method_content,
+                                    "caption": caption,
+                                },
+                                "results": results,
+                            }
                             
                             # Save to JSON with proper encoding handling (like main.py)
                             with open(json_filename, "w", encoding="utf-8", errors="surrogateescape") as f:
-                                json_string = json.dumps(results, ensure_ascii=False, indent=4)
+                                json_string = json.dumps(save_payload, ensure_ascii=False, indent=4)
                                 # Clean invalid UTF-8 characters
                                 json_string = json_string.encode("utf-8", "ignore").decode("utf-8")
                                 f.write(json_string)

@@ -87,6 +87,8 @@ class RetrieverAgent(BaseAgent):
                 print(f"Warning: Manual reference file not found at {manual_file}. Falling back to retrieval_setting='none'.")
                 retrieval_setting = "none"
         
+        max_reference_examples = max(0, int(data.get("max_reference_examples", 10)))
+
         if retrieval_setting == "none":
             # No retrieval, return empty list
             data["top10_references"] = []
@@ -109,6 +111,11 @@ class RetrieverAgent(BaseAgent):
             data["retrieved_examples"] = []  # Planner will load from ref.json
         else:
             raise ValueError(f"Unknown retrieval_setting: {retrieval_setting}")
+
+        if max_reference_examples >= 0:
+            data["top10_references"] = data.get("top10_references", [])[:max_reference_examples]
+            if "retrieved_examples" in data:
+                data["retrieved_examples"] = data.get("retrieved_examples", [])[:max_reference_examples]
         
         return data
     
@@ -147,8 +154,10 @@ class RetrieverAgent(BaseAgent):
         
         with open(self.exp_config.work_dir / f"data/PaperBananaBench/{cfg['task_name']}/ref.json", "r", encoding="utf-8") as f:
             candidate_pool = json.load(f)
+            candidate_pool_limit = int(data.get("retrieval_candidate_pool_limit", cfg["ref_limit"] or len(candidate_pool)))
             if cfg["ref_limit"]:
-                candidate_pool = candidate_pool[:cfg["ref_limit"]]
+                candidate_pool_limit = min(candidate_pool_limit, cfg["ref_limit"])
+            candidate_pool = candidate_pool[:candidate_pool_limit]
         
         for idx, item in enumerate(candidate_pool):
             user_prompt += f"Candidate {cfg['candidate_type']} {idx+1}:\n"
@@ -168,7 +177,7 @@ class RetrieverAgent(BaseAgent):
                 candidate_count=1,
                 max_output_tokens=50000,
             ),
-            max_attempts=5,
+            max_attempts=max(1, int(data.get("text_model_max_attempts", 5))),
             retry_delay=30,
         )
         
@@ -336,4 +345,3 @@ Provide your output strictly in the following JSON format, containing only the *
   ]
 }```
 """
-

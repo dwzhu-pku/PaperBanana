@@ -84,7 +84,7 @@ class StylistAgent(BaseAgent):
                 candidate_count=1,
                 max_output_tokens=50000,
             ),
-            max_attempts=5,
+            max_attempts=max(1, int(data.get("text_model_max_attempts", 5))),
             retry_delay=5,
         )
         
