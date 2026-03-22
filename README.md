@@ -263,6 +263,7 @@ Thanks to all contributors who helped improve PaperBanana, whether through code,
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/ruiguo-bio"><img src="https://avatars.githubusercontent.com/u/20548903?v=4?s=100" width="100px;" alt="Rui Guo"/><br /><sub><b>Rui Guo</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/issues?q=author%3Aruiguo-bio" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/YXDBright"><img src="https://avatars.githubusercontent.com/u/144319486?v=4?s=100" width="100px;" alt="YXDBright"/><br /><sub><b>YXDBright</b></sub></a><br /><a href="#ideas-YXDBright" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="16.66%"><a href="http://sites.google.com/view/yiming-shen"><img src="https://avatars.githubusercontent.com/u/89332218?v=4?s=100" width="100px;" alt="Yiming Shen"/><br /><sub><b>Yiming Shen</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=shenyimings" title="Code">💻</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="http://blog.sukisq.me"><img src="https://avatars.githubusercontent.com/u/87158944?v=4?s=100" width="100px;" alt="Edom"/><br /><sub><b>Edom</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=blessonism" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

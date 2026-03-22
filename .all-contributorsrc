@@ -169,6 +169,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "blessonism",
+      "name": "Edom",
+      "avatar_url": "https://avatars.githubusercontent.com/u/87158944?v=4",
+      "profile": "http://blog.sukisq.me",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitType": "docs"
