@@ -71,6 +71,8 @@ class PlannerAgent(BaseAgent):
                 candidate_pool = json.load(f)
             id_to_item = {item["id"]: item for item in candidate_pool}
             examples = [id_to_item[ref_id] for ref_id in retrieved_ids if ref_id in id_to_item]
+        max_reference_examples = max(0, int(data.get("max_reference_examples", 10)))
+        examples = examples[:max_reference_examples]
         
         user_prompt = ""
         for idx, item in enumerate(examples):
@@ -109,7 +111,7 @@ class PlannerAgent(BaseAgent):
                 candidate_count=1,
                 max_output_tokens=50000,
             ),
-            max_attempts=5,
+            max_attempts=max(1, int(data.get("text_model_max_attempts", 5))),
             retry_delay=5,
         )
         
@@ -138,4 +140,3 @@ To help you understand the task better, and grasp the principles for generating 
 ** IMPORTANT: **
 Your description should be as detailed as possible. For content, explain the precise mapping of variables to visual channels (x, y, hue) and explicitly enumerate every raw data point's coordinate to be drawn to ensure accuracy. For presentation, specify the exact aesthetic parameters, including specific HEX color codes, font sizes for all labels, line widths, marker dimensions, legend placement, and grid styles. You should learn from the examples' content presentation and aesthetic design (e.g., color schemes).
 """
-

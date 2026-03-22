@@ -137,6 +137,8 @@ class VisualizerAgent(BaseAgent):
         
         if not cfg["use_image_generation"]:
             loop = asyncio.get_running_loop()
+        image_model_max_attempts = max(1, int(data.get("image_model_max_attempts", 5)))
+        text_model_max_attempts = max(1, int(data.get("text_model_max_attempts", 5)))
         
         for desc_key in desc_keys_to_process:
             prompt_text = cfg["prompt_template"].format(desc=data[desc_key])
@@ -166,7 +168,21 @@ class VisualizerAgent(BaseAgent):
                         model_name=self.model_name,
                         prompt=prompt_text,
                         config=image_config,
-                        max_attempts=5,
+                        max_attempts=image_model_max_attempts,
+                        retry_delay=30,
+                    )
+                elif generation_utils.should_use_openai_compatible_image_generation(self.model_name):
+                    image_config = {
+                        "system_prompt": self.system_prompt,
+                        "temperature": self.exp_config.temperature,
+                        "aspect_ratio": aspect_ratio,
+                        "image_size": "1k",
+                    }
+                    response_list = await generation_utils.call_openai_compatible_image_generation_with_retry_async(
+                        model_name=self.model_name,
+                        contents=content_list,
+                        config=image_config,
+                        max_attempts=image_model_max_attempts,
                         retry_delay=30,
                     )
                 elif generation_utils.openrouter_client is not None:
@@ -181,7 +197,7 @@ class VisualizerAgent(BaseAgent):
                         model_name=self.model_name,
                         contents=content_list,
                         config=image_config,
-                        max_attempts=5,
+                        max_attempts=image_model_max_attempts,
                         retry_delay=30,
                     )
                 else:
@@ -195,7 +211,7 @@ class VisualizerAgent(BaseAgent):
                         model_name=self.model_name,
                         contents=content_list,
                         config=types.GenerateContentConfig(**gen_config_args),
-                        max_attempts=5,
+                        max_attempts=image_model_max_attempts,
                         retry_delay=30,
                     )
             else:
@@ -204,11 +220,11 @@ class VisualizerAgent(BaseAgent):
                     model_name=self.model_name,
                     contents=content_list,
                     config=types.GenerateContentConfig(**gen_config_args),
-                    max_attempts=5,
+                    max_attempts=text_model_max_attempts,
                     retry_delay=30,
                 )
             
-            if not response_list or not response_list[0]:
+            if not response_list or not response_list[0] or response_list[0] == "Error":
                 continue
             
             # Post-process based on task type
