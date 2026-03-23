@@ -51,41 +51,66 @@ def get_config_val(section, key, env_var, default=""):
     return val or default
 
 # Initialize clients lazily or with robust defaults
-api_key = get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", "")
-if api_key:
-    gemini_client = genai.Client(api_key=api_key)
-    print("Initialized Gemini Client with API Key")
-else:
-    print("Warning: Could not initialize Gemini Client. Missing credentials.")
-    gemini_client = None
+gemini_client = None
+anthropic_client = None
+openai_client = None
+openrouter_client = None
+openrouter_api_key = ""
 
 
-anthropic_api_key = get_config_val("api_keys", "anthropic_api_key", "ANTHROPIC_API_KEY", "")
-if anthropic_api_key:
-    anthropic_client = AsyncAnthropic(api_key=anthropic_api_key)
-    print("Initialized Anthropic Client with API Key")
-else:
-    print("Warning: Could not initialize Anthropic Client. Missing credentials.")
-    anthropic_client = None
+def reinitialize_clients():
+    """(Re)build all API clients from current env vars / config file.
 
-openai_api_key = get_config_val("api_keys", "openai_api_key", "OPENAI_API_KEY", "")
-if openai_api_key:
-    openai_client = AsyncOpenAI(api_key=openai_api_key)
-    print("Initialized OpenAI Client with API Key")
-else:
-    print("Warning: Could not initialize OpenAI Client. Missing credentials.")
-    openai_client = None
+    Called once at module load and can be called again at runtime
+    (e.g. after the user sets new API keys via the Gradio UI).
 
-openrouter_api_key = get_config_val("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY", "")
-if openrouter_api_key:
-    openrouter_client = AsyncOpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=openrouter_api_key,
-    )
-    print("Initialized OpenRouter Client with API Key")
-else:
-    print("Warning: Could not initialize OpenRouter Client. Missing credentials.")
-    openrouter_client = None
+    Returns a list of client names that were successfully initialized.
+    """
+    global gemini_client, anthropic_client, openai_client
+    global openrouter_client, openrouter_api_key
+
+    initialized = []
+
+    api_key = get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", "")
+    if api_key:
+        gemini_client = genai.Client(api_key=api_key)
+        print("Initialized Gemini Client with API Key")
+        initialized.append("Gemini")
+    else:
+        gemini_client = None
+
+    key = get_config_val("api_keys", "anthropic_api_key", "ANTHROPIC_API_KEY", "")
+    if key:
+        anthropic_client = AsyncAnthropic(api_key=key)
+        print("Initialized Anthropic Client with API Key")
+        initialized.append("Anthropic")
+    else:
+        anthropic_client = None
+
+    key = get_config_val("api_keys", "openai_api_key", "OPENAI_API_KEY", "")
+    if key:
+        openai_client = AsyncOpenAI(api_key=key)
+        print("Initialized OpenAI Client with API Key")
+        initialized.append("OpenAI")
+    else:
+        openai_client = None
+
+    openrouter_api_key = get_config_val("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY", "")
+    if openrouter_api_key:
+        openrouter_client = AsyncOpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=openrouter_api_key,
+        )
+        print("Initialized OpenRouter Client with API Key")
+        initialized.append("OpenRouter")
+    else:
+        openrouter_client = None
+
+    return initialized
+
+
+# Run once at import time (preserves original behaviour)
+reinitialize_clients()
 
 
 
