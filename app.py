@@ -160,7 +160,7 @@ async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9
     if _has_openrouter and openrouter_api_key:
         try:
             contents = [
-                {"type": "image", "data": image_b64, "mime_type": "image/jpeg"},
+                {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": image_b64}},
                 {"type": "text", "text": edit_prompt},
             ]
             cfg = {"system_prompt": "", "temperature": 1.0, "aspect_ratio": aspect_ratio, "image_size": image_size}
