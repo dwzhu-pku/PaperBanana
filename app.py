@@ -125,7 +125,7 @@ def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copie
 
 async def process_parallel_candidates(
     data_list, exp_mode="dev_planner_critic", retrieval_setting="auto",
-    main_model_name="", image_gen_model_name="",
+    main_model_name="", image_gen_model_name="", progress_callback=None,
 ):
     exp_config = config.ExpConfig(
         dataset_name="Demo",
@@ -147,9 +147,124 @@ async def process_parallel_candidates(
         polish_agent=PolishAgent(exp_config=exp_config),
     )
     results = []
-    async for result_data in processor.process_queries_batch(data_list, max_concurrent=10, do_eval=False):
+    async for result_data in processor.process_queries_batch(
+        data_list, max_concurrent=10, do_eval=False,
+        progress_callback=progress_callback,
+    ):
         results.append(result_data)
     return results
+
+
+# ---------------------------------------------------------------------------
+# Preflight image model check with caching
+# ---------------------------------------------------------------------------
+_preflight_cache: dict = {}
+
+
+async def preflight_check_image_model(image_gen_model_name: str) -> str:
+    """Test image model before running the full pipeline. Returns the working model name."""
+    if image_gen_model_name in _preflight_cache:
+        return _preflight_cache[image_gen_model_name]
+    from utils.generation_utils import (
+        ImageGenerationError, _get_fallback_model, _IMAGE_MODEL_FALLBACK_CHAIN,
+        fallback_events,
+    )
+    from google import genai
+    from google.genai import types
+
+    google_api_key = get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", "")
+    if not google_api_key:
+        raise ImageGenerationError("No Google API key configured.")
+
+    client = genai.Client(api_key=google_api_key)
+    model = image_gen_model_name
+
+    while True:
+        try:
+            response = await asyncio.to_thread(
+                client.models.generate_content,
+                model=model,
+                contents="Draw a small blue dot on white background",
+                config=types.GenerateContentConfig(
+                    response_modalities=["IMAGE"],
+                    image_config=types.ImageConfig(aspect_ratio="1:1", image_size="1k"),
+                ),
+            )
+            if response.candidates and response.candidates[0].content.parts:
+                for part in response.candidates[0].content.parts:
+                    if part.inline_data:
+                        _preflight_cache[image_gen_model_name] = model
+                        return model
+            raise Exception("Empty response from image model")
+
+        except Exception as e:
+            error_str = str(e)
+            error_lower = error_str.lower()
+            is_region = "400" in error_str and "location" in error_lower
+            is_overload = "503" in error_str or "unavailable" in error_lower
+
+            if is_region:
+                raise ImageGenerationError(
+                    f"❌ Model {model} blocked by region restriction (400). "
+                    f"Please check your proxy/VPN configuration."
+                )
+            if is_overload:
+                fallback = _get_fallback_model(model)
+                if fallback and fallback != model:
+                    fallback_events.append({
+                        "from": model, "to": fallback, "reason": "overloaded (503) in preflight",
+                    })
+                    model = fallback
+                    continue
+                else:
+                    raise ImageGenerationError(
+                        f"❌ All image models overloaded (503). Checked: {', '.join(_IMAGE_MODEL_FALLBACK_CHAIN)}"
+                    )
+            raise ImageGenerationError(f"❌ Image model preflight failed: {e}")
+
+
+# ---------------------------------------------------------------------------
+# Mock pipeline for testing without API calls
+# ---------------------------------------------------------------------------
+import random
+from utils.paperviz_processor import ProgressTracker, PaperVizProcessor as _PVP
+
+
+async def mock_process_parallel_candidates(data_list, exp_mode="dev_planner_critic", delay_per_stage=2.0, progress_callback=None):
+    """Mock pipeline that simulates stages with delays. No API calls."""
+    max_critic_rounds = data_list[0].get("max_critic_rounds", 3) if data_list else 3
+    stages = _PVP._get_pipeline_stages(exp_mode, max_critic_rounds)
+    tracker = ProgressTracker(len(data_list), stages, callback=progress_callback) if progress_callback else None
+
+    # Simulate Retriever (serial)
+    if tracker:
+        tracker.enter_stage(-1, "Retriever", "mock/text-model")
+    await asyncio.sleep(delay_per_stage * 0.5)
+    if tracker:
+        for cid in range(len(data_list)):
+            tracker.complete_stage(cid, "Retriever")
+
+    candidate_stages = [s for s in stages if s != "Retriever"]
+
+    async def run_candidate(cid, data):
+        for stage in candidate_stages:
+            model = "mock/image-model" if "Visualizer" in stage else "mock/text-model"
+            if tracker:
+                tracker.enter_stage(cid, stage, model)
+            await asyncio.sleep(delay_per_stage * (0.5 + random.random()))
+            if "Critic" in stage and random.random() < 0.3:
+                if tracker:
+                    tracker.complete_stage(cid, stage)
+                break
+            if tracker:
+                tracker.complete_stage(cid, stage)
+        data["target_diagram_desc0"] = "Mock description for testing"
+        data["target_diagram_desc0_base64_jpg"] = ""
+        return data
+
+    tasks = [asyncio.create_task(run_candidate(i, d)) for i, d in enumerate(data_list)]
+    results = await asyncio.gather(*tasks)
+    return list(results)
 
 
 async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9", image_size="2K"):
@@ -617,6 +732,21 @@ def build_app():
                             value="Arial",
                             info="Font for English text and numbers",
                         )
+                        mock_mode = gr.Checkbox(
+                            label="Mock Mode (no API calls)",
+                            value=False,
+                            info="Test UI with simulated delays",
+                        )
+                        mock_delay = gr.Slider(
+                            minimum=0.5, maximum=10, value=2, step=0.5,
+                            label="Mock Delay (seconds/stage)",
+                            visible=False,
+                        )
+                        mock_mode.change(
+                            lambda v: gr.update(visible=v),
+                            inputs=[mock_mode],
+                            outputs=[mock_delay],
+                        )
                         save_results = gr.Dropdown(
                             choices=["Yes", "No"],
                             value="Yes",
@@ -683,7 +813,7 @@ def build_app():
                 def run_generate(
                     method_text, caption_text, pipe_mode, ret_setting,
                     n_cands, ar, max_rounds, m_model, img_model,
-                    f_cn, f_en, figure_size, save_results,
+                    f_cn, f_en, is_mock, m_delay, figure_size, save_results,
                     progress=gr.Progress(track_tqdm=True),
                 ):
                     if not method_text or not caption_text:
@@ -693,26 +823,69 @@ def build_app():
                     max_rounds = int(max_rounds)
                     timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
 
+                    # --- Progress callback that feeds Gradio progress bar ---
+                    def _progress_cb(status):
+                        pct = status.get("overall_pct", 0)
+                        stage = status.get("stage", "")
+                        model = status.get("model", "")
+                        done = status.get("stage_done", 0)
+                        total = status.get("total", 0)
+                        desc = f"{stage} ({done}/{total})"
+                        if model:
+                            desc += f" [{model}]"
+                        progress(min(0.1 + pct * 0.8, 0.9), desc=desc)
+
                     progress(0, desc="Preparing inputs...")
                     input_data = create_sample_inputs(
                         method_content=method_text, caption=caption_text,
                         aspect_ratio=ar, num_copies=n_cands, max_critic_rounds=max_rounds,
                         font_cn=f_cn, font_en=f_en,
                     )
-                    params = {"figure_size": figure_size}
 
-                    progress(0.1, desc=f"Generating {n_cands} candidates in parallel...")
-                    try:
-                        loop = asyncio.new_event_loop()
-                        results = loop.run_until_complete(
-                            process_parallel_candidates(
-                                input_data, exp_mode=pipe_mode, retrieval_setting=ret_setting,
-                                main_model_name=m_model, image_gen_model_name=img_model,
+                    if is_mock:
+                        # --- Mock mode: no API calls ---
+                        progress(0.05, desc="Mock mode: simulating pipeline...")
+                        try:
+                            loop = asyncio.new_event_loop()
+                            results = loop.run_until_complete(
+                                mock_process_parallel_candidates(
+                                    input_data, exp_mode=pipe_mode,
+                                    delay_per_stage=float(m_delay),
+                                    progress_callback=_progress_cb,
+                                )
                             )
-                        )
-                        loop.close()
-                    except Exception as e:
-                        raise gr.Error(f"Generation failed: {e}")
+                            loop.close()
+                        except Exception as e:
+                            raise gr.Error(f"Mock generation failed: {e}")
+                    else:
+                        # --- Real pipeline ---
+                        # Preflight check for image model
+                        progress(0.02, desc="Preflight: checking image model...")
+                        try:
+                            loop = asyncio.new_event_loop()
+                            verified_model = loop.run_until_complete(
+                                preflight_check_image_model(img_model)
+                            )
+                            loop.close()
+                            if verified_model != img_model:
+                                progress(0.05, desc=f"Fallback: using {verified_model}")
+                                img_model = verified_model
+                        except Exception as e:
+                            raise gr.Error(f"Image model preflight failed: {e}")
+
+                        progress(0.1, desc=f"Generating {n_cands} candidates in parallel...")
+                        try:
+                            loop = asyncio.new_event_loop()
+                            results = loop.run_until_complete(
+                                process_parallel_candidates(
+                                    input_data, exp_mode=pipe_mode, retrieval_setting=ret_setting,
+                                    main_model_name=m_model, image_gen_model_name=img_model,
+                                    progress_callback=_progress_cb,
+                                )
+                            )
+                            loop.close()
+                        except Exception as e:
+                            raise gr.Error(f"Generation failed: {e}")
 
                     progress(0.9, desc="Saving results...")
 
@@ -786,7 +959,7 @@ def build_app():
                         method_content, caption_input, pipeline_mode, retrieval_setting,
                         num_candidates, aspect_ratio, max_critic_rounds,
                         main_model_name, image_model_name,
-                        font_cn, font_en, figure_size, save_results,
+                        font_cn, font_en, mock_mode, mock_delay, figure_size, save_results,
                     ],
                     outputs=[
                         results_gallery, evolution_html, zip_file_output, status_text,
