@@ -802,38 +802,54 @@ def build_app():
                             inputs=[image_model_dropdown],
                             outputs=[image_model_name],
                         )
-                        font_cn = gr.Dropdown(
-                            choices=[
-                                "思源黑体",        # Source Han Sans — 清晰现代，学术首选
-                                "思源宋体",        # Source Han Serif — 正式严谨
-                                "微软雅黑",        # Microsoft YaHei — Windows 标配
-                                "PingFang SC",    # 苹方 — macOS/iOS 原生
-                                "Noto Sans SC",   # Google Noto — 跨平台一致
-                                "HarmonyOS Sans SC",  # 华为鸿蒙字体
-                                "阿里巴巴普惠体",   # Alibaba PuHuiTi — 免费商用
-                                "Custom",
-                            ],
+                        _CN_FONT_CHOICES = [
+                            "思源黑体", "思源宋体", "微软雅黑", "PingFang SC",
+                            "Noto Sans SC", "HarmonyOS Sans SC", "阿里巴巴普惠体", "Custom",
+                        ]
+                        _EN_FONT_CHOICES = [
+                            "Arial", "Helvetica", "Roboto", "Inter", "SF Pro",
+                            "Times New Roman", "Georgia", "Fira Sans", "Custom",
+                        ]
+                        font_cn_dropdown = gr.Dropdown(
+                            choices=_CN_FONT_CHOICES,
                             value="思源黑体",
                             label="Chinese Font",
                             info="Font for Chinese text in diagrams",
-                            allow_custom_value=True,
                         )
-                        font_en = gr.Dropdown(
-                            choices=[
-                                "Arial",           # 经典无衬线，渲染清晰
-                                "Helvetica",       # 设计界标杆
-                                "Roboto",          # Google 主力字体
-                                "Inter",           # 现代 UI 字体，数字等宽
-                                "SF Pro",          # Apple 系统字体
-                                "Times New Roman", # 学术论文经典衬线
-                                "Georgia",         # 屏幕友好衬线体
-                                "Fira Sans",       # Mozilla 出品，技术文档常用
-                                "Custom",
-                            ],
+                        font_cn = gr.Textbox(
+                            label="Custom Chinese Font",
+                            value="思源黑体",
+                            interactive=False,
+                        )
+                        def _on_font_cn_select(choice):
+                            if choice == "Custom":
+                                return gr.update(interactive=True, value="")
+                            return gr.update(interactive=False, value=choice)
+                        font_cn_dropdown.change(
+                            _on_font_cn_select,
+                            inputs=[font_cn_dropdown],
+                            outputs=[font_cn],
+                        )
+
+                        font_en_dropdown = gr.Dropdown(
+                            choices=_EN_FONT_CHOICES,
                             value="Arial",
                             label="English Font",
                             info="Font for English text and numbers",
-                            allow_custom_value=True,
+                        )
+                        font_en = gr.Textbox(
+                            label="Custom English Font",
+                            value="Arial",
+                            interactive=False,
+                        )
+                        def _on_font_en_select(choice):
+                            if choice == "Custom":
+                                return gr.update(interactive=True, value="")
+                            return gr.update(interactive=False, value=choice)
+                        font_en_dropdown.change(
+                            _on_font_en_select,
+                            inputs=[font_en_dropdown],
+                            outputs=[font_en],
                         )
                         mock_mode = gr.Checkbox(
                             label="Mock Mode (no API calls)",
