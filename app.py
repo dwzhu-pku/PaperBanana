@@ -752,17 +752,30 @@ def build_app():
                             info="Select or type a custom model (prefixes: local/, proma/, openrouter/)",
                             allow_custom_value=True,
                         )
-                        image_model_name = gr.Dropdown(
-                            choices=[
-                                "gemini-3.1-flash-image-preview",
-                                "gemini-3-pro-image-preview",
-                                "gemini-2.5-flash-image",
-                                "gpt-image-1",
-                            ],
-                            value=default_image_model,
+                        _IMAGE_MODEL_MAP = {
+                            "🍌2 (Nano Banana 2 / Flash)": "gemini-3.1-flash-image-preview",
+                            "🍌Pro (Nano Banana Pro)": "gemini-3-pro-image-preview",
+                            "🍌1 (Nano Banana 1)": "gemini-2.5-flash-image",
+                        }
+                        _IMAGE_MODEL_DISPLAY = list(_IMAGE_MODEL_MAP.keys())
+                        _default_img_display = next(
+                            (k for k, v in _IMAGE_MODEL_MAP.items() if v == default_image_model),
+                            default_image_model,
+                        )
+                        image_model_dropdown = gr.Dropdown(
+                            choices=_IMAGE_MODEL_DISPLAY,
+                            value=_default_img_display,
                             label="Image Generation Model",
-                            info="Select or type a custom image model",
+                            info="Select or type a custom model name",
                             allow_custom_value=True,
+                        )
+                        image_model_name = gr.State(default_image_model)
+                        def _on_image_model_change(choice):
+                            return _IMAGE_MODEL_MAP.get(choice, choice)
+                        image_model_dropdown.change(
+                            _on_image_model_change,
+                            inputs=[image_model_dropdown],
+                            outputs=[image_model_name],
                         )
                         font_cn = gr.Dropdown(
                             choices=[
