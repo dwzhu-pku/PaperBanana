@@ -759,49 +759,61 @@ def build_app():
                             "gpt-image-1",
                             "Custom",
                         ]
+                        _main_default_is_preset = default_main_model in _TEXT_MODEL_CHOICES[:-1]
                         main_model_dropdown = gr.Dropdown(
                             choices=_TEXT_MODEL_CHOICES,
-                            value=default_main_model if default_main_model in _TEXT_MODEL_CHOICES else "Custom",
+                            value=default_main_model if _main_default_is_preset else "Custom",
                             label="Model Name",
                             info="Select a model or choose Custom to enter manually",
                         )
-                        _main_is_custom = default_main_model not in _TEXT_MODEL_CHOICES[:-1]
-                        main_model_name = gr.Textbox(
-                            label="Custom Model Name",
-                            value=default_main_model if _main_is_custom else "",
-                            interactive=_main_is_custom,
-                            info="Prefixes: local/, proma/, openrouter/",
-                        )
+                        with gr.Column(visible=not _main_default_is_preset) as main_model_custom_col:
+                            main_model_custom = gr.Textbox(
+                                label="Custom Model Name",
+                                value="" if _main_default_is_preset else default_main_model,
+                                info="Prefixes: local/, proma/, openrouter/",
+                            )
+                        main_model_name = gr.State(default_main_model)
                         def _on_main_model_select(choice):
                             if choice == "Custom":
-                                return gr.update(interactive=True, value="")
-                            return gr.update(interactive=False, value=choice)
+                                return gr.update(visible=True), gr.update(value=""), ""
+                            return gr.update(visible=False), gr.update(value=choice), choice
                         main_model_dropdown.change(
                             _on_main_model_select,
                             inputs=[main_model_dropdown],
+                            outputs=[main_model_custom_col, main_model_custom, main_model_name],
+                        )
+                        main_model_custom.change(
+                            lambda v: v,
+                            inputs=[main_model_custom],
                             outputs=[main_model_name],
                         )
 
+                        _img_default_is_preset = default_image_model in _IMAGE_MODEL_CHOICES[:-1]
                         image_model_dropdown = gr.Dropdown(
                             choices=_IMAGE_MODEL_CHOICES,
-                            value=default_image_model if default_image_model in _IMAGE_MODEL_CHOICES else "Custom",
+                            value=default_image_model if _img_default_is_preset else "Custom",
                             label="Image Generation Model",
                             info="Select an image model or choose Custom",
                         )
-                        _img_is_custom = default_image_model not in _IMAGE_MODEL_CHOICES[:-1]
-                        image_model_name = gr.Textbox(
-                            label="Custom Image Model",
-                            value=default_image_model if _img_is_custom else "",
-                            interactive=_img_is_custom,
-                            info="Model for generating diagram images",
-                        )
+                        with gr.Column(visible=not _img_default_is_preset) as image_model_custom_col:
+                            image_model_custom = gr.Textbox(
+                                label="Custom Image Model",
+                                value="" if _img_default_is_preset else default_image_model,
+                                info="Model for generating diagram images",
+                            )
+                        image_model_name = gr.State(default_image_model)
                         def _on_image_model_select(choice):
                             if choice == "Custom":
-                                return gr.update(interactive=True, value="")
-                            return gr.update(interactive=False, value=choice)
+                                return gr.update(visible=True), gr.update(value=""), ""
+                            return gr.update(visible=False), gr.update(value=choice), choice
                         image_model_dropdown.change(
                             _on_image_model_select,
                             inputs=[image_model_dropdown],
+                            outputs=[image_model_custom_col, image_model_custom, image_model_name],
+                        )
+                        image_model_custom.change(
+                            lambda v: v,
+                            inputs=[image_model_custom],
                             outputs=[image_model_name],
                         )
                         _CN_FONT_CHOICES = [
