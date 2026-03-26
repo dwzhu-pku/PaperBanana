@@ -22,7 +22,6 @@ import time
 from collections import Counter
 from typing import List, Dict, Any, AsyncGenerator, Callable, Optional
 
-import numpy as np
 from tqdm.asyncio import tqdm
 
 from agents.vanilla_agent import VanillaAgent
@@ -44,7 +43,6 @@ class ProgressTracker:
     def __init__(self, total_candidates: int, stages: List[str], callback: Optional[Callable] = None):
         self.total = total_candidates
         self.stages = stages
-        self.stage_index = {s: i for i, s in enumerate(stages)}
         self.total_steps = len(stages)
         # Per-candidate current stage
         self._candidate_stages: Dict[int, str] = {}
@@ -323,8 +321,15 @@ class PaperVizProcessor:
         retrieval_setting = self.exp_config.retrieval_setting
         needs_retrieval = exp_mode not in ("vanilla", "dev_polish", "dev_retriever")
 
-        # Build stage list for progress tracking
-        stages = self._get_pipeline_stages(exp_mode, data_list[0].get("max_critic_rounds", 3) if data_list else 3)
+        # Build stage list for progress tracking (use max across all candidates)
+        if data_list:
+            batch_max_critic_rounds = max(
+                (data.get("max_critic_rounds", 3) for data in data_list),
+                default=3,
+            )
+        else:
+            batch_max_critic_rounds = 3
+        stages = self._get_pipeline_stages(exp_mode, batch_max_critic_rounds)
         tracker = ProgressTracker(len(data_list), stages, callback=progress_callback) if progress_callback else None
 
         if needs_retrieval and data_list:
@@ -359,7 +364,7 @@ class PaperVizProcessor:
             for future in asyncio.as_completed(tasks):
                 try:
                     result_data = await future
-                except (ImageGenerationError, Exception):
+                except Exception:
                     # Cancel all remaining tasks to avoid wasting API calls
                     for t in tasks:
                         t.cancel()

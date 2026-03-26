@@ -3,9 +3,7 @@
 ## Quick Start
 
 ```bash
-cd /Users/noking/claude\ pr/DJ/paper_banana
-source .venv/bin/activate
-cd PaperBanana
+source ../.venv/bin/activate   # venv is one level above repo
 python app.py                  # Gradio UI at http://localhost:7860
 python main.py                 # CLI mode
 ```

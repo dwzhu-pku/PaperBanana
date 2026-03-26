@@ -166,8 +166,15 @@ async def preflight_check_image_model(image_gen_model_name: str) -> str:
     returns the model name as-is since those paths have their own retry logic.
     """
     # Skip preflight for non-Gemini image models
-    if image_gen_model_name.startswith(("gpt-image", "openrouter/", "proma/", "local/")):
+    if image_gen_model_name.startswith(("gpt-image", "openrouter/")):
         return image_gen_model_name
+    # Reject text-only provider prefixes for image generation
+    if image_gen_model_name.startswith(("proma/", "local/")):
+        from utils.generation_utils import ImageGenerationError
+        raise ImageGenerationError(
+            f"Image model '{image_gen_model_name}' uses a text-only provider prefix. "
+            f"Image generation only supports Gemini or OpenRouter models."
+        )
 
     # If OpenRouter is configured, it takes priority for image generation
     # in VisualizerAgent, so Gemini preflight is irrelevant
@@ -258,7 +265,7 @@ async def mock_process_parallel_candidates(data_list, exp_mode="dev_planner_crit
 
     # Simulate Retriever (serial)
     if tracker:
-        tracker.enter_stage(-1, "Retriever", "mock/text-model")
+        tracker.enter_stage(0, "Retriever", "mock/text-model")
     await asyncio.sleep(delay_per_stage * 0.5)
     if tracker:
         for cid in range(len(data_list)):
