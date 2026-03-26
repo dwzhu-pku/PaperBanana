@@ -119,7 +119,8 @@ class VisualizerAgent(BaseAgent):
             if key in data and f"{key}_base64_jpg" not in data:
                 desc_keys_to_process.append(key)
         
-        for round_idx in range(3):
+        max_critic_rounds = data.get("max_critic_rounds", 3)
+        for round_idx in range(max_critic_rounds):
             key = f"target_{task_name}_critic_desc{round_idx}"
             if key in data and f"{key}_base64_jpg" not in data:
                 critic_suggestions_key = f"target_{task_name}_critic_suggestions{round_idx}"

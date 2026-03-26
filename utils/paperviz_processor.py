@@ -341,7 +341,9 @@ class PaperVizProcessor:
                         data[key] = copy.deepcopy(first_data[key])
             print(f"[Retriever] Done. Retrieved {len(first_data.get('top10_references', []))} references.")
             if tracker:
-                tracker.complete_stage(-1, "Retriever")
+                # Retriever runs once for all candidates; mark all as complete
+                for cid in range(len(data_list)):
+                    tracker.complete_stage(cid, "Retriever")
 
         semaphore = asyncio.Semaphore(max_concurrent)
         async def process_with_semaphore(doc):
