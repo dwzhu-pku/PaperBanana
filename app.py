@@ -82,8 +82,6 @@ def get_config_val(section, key, env_var, default=""):
 # ---------------------------------------------------------------------------
 
 def clean_text(text):
-    if not text:
-        return text
     if isinstance(text, str):
         return text.encode("utf-8", errors="ignore").decode("utf-8", errors="ignore")
     return text
@@ -243,7 +241,7 @@ from utils.paperviz_processor import ProgressTracker, PaperVizProcessor as _PVP
 
 
 def _run_async(coro):
-    """Run an async coroutine in a fresh event loop."""
+    """Run an async coroutine in a fresh event loop (needed inside Gradio sync handlers)."""
     loop = asyncio.new_event_loop()
     try:
         return loop.run_until_complete(coro)
@@ -298,14 +296,9 @@ async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9
     image_model = get_config_val("defaults", "image_gen_model_name", "IMAGE_GEN_MODEL_NAME", "")
     image_b64 = base64.b64encode(image_bytes).decode("utf-8")
 
-    # Path 1: OpenRouter
-    try:
-        from utils.generation_utils import call_openrouter_image_generation_with_retry_async
-        _has_openrouter = True
-    except ImportError:
-        _has_openrouter = False
+    from utils.generation_utils import call_openrouter_image_generation_with_retry_async
     openrouter_api_key = get_config_val("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY", "")
-    if _has_openrouter and openrouter_api_key:
+    if openrouter_api_key:
         try:
             contents = [
                 {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": image_b64}},

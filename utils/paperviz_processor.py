@@ -123,18 +123,13 @@ class PaperVizProcessor:
     @staticmethod
     def _get_pipeline_stages(exp_mode: str, max_critic_rounds: int = 3) -> List[str]:
         """Return ordered list of stage names for the given pipeline mode."""
-        if exp_mode in ("dev_full", "demo_full"):
+        if exp_mode in ("dev_full", "demo_full", "dev_planner_stylist"):
             stages = ["Retriever", "Planner", "Stylist", "Visualizer"]
-        elif exp_mode in ("dev_planner_critic", "demo_planner_critic"):
-            stages = ["Retriever", "Planner", "Visualizer"]
-        elif exp_mode == "dev_planner_stylist":
-            stages = ["Retriever", "Planner", "Stylist", "Visualizer"]
-        elif exp_mode == "dev_planner":
+        elif exp_mode in ("dev_planner_critic", "demo_planner_critic", "dev_planner"):
             stages = ["Retriever", "Planner", "Visualizer"]
         else:
             return ["Processing"]
 
-        # Add critic iteration stages
         if "critic" in exp_mode or "full" in exp_mode:
             for r in range(max_critic_rounds):
                 stages.append(f"Critic R{r}")
@@ -304,10 +299,8 @@ class PaperVizProcessor:
             raise ValueError(f"Unknown experiment name: {exp_mode}")
 
         if do_eval:
-            data_with_eval = await self.evaluation_function(data, exp_config=self.exp_config)
-            return data_with_eval
-        else:
-            return data
+            return await self.evaluation_function(data, exp_config=self.exp_config)
+        return data
 
     async def process_queries_batch(
         self,
@@ -350,11 +343,7 @@ class PaperVizProcessor:
             async with semaphore:
                 return await self.process_single_query(doc, do_eval=do_eval, progress_tracker=tracker)
 
-        # Create all tasks
-        tasks = []
-        for data in data_list:
-            task = asyncio.create_task(process_with_semaphore(data))
-            tasks.append(task)
+        tasks = [asyncio.create_task(process_with_semaphore(data)) for data in data_list]
 
         all_result_list = []
         eval_dims = ["faithfulness", "conciseness", "readability", "aesthetics", "overall"]

@@ -20,12 +20,9 @@ import json
 import asyncio
 import base64
 from io import BytesIO
-from functools import partial
-from ast import literal_eval
 from typing import List, Dict, Any
 
 import httpx
-import aiofiles
 from PIL import Image
 from google import genai
 from google.genai import types
@@ -186,30 +183,20 @@ async def call_gemini_with_retry_async(
 
     result_list = []
     target_candidate_count = config.candidate_count
-    # Gemini API max candidate count is 8. Cap without mutating the original config.
     if target_candidate_count > 8:
         import copy as _copy
         config = _copy.copy(config)
         config.candidate_count = 8
 
-    current_contents = contents
     attempt = 0
     while attempt < max_attempts:
         try:
-            # Use global client
-            client = gemini_client
-
-            # Convert generic content list to Gemini's format right before the API call
-            gemini_contents = _convert_to_gemini_parts(current_contents)
-            response = await client.aio.models.generate_content(
+            gemini_contents = _convert_to_gemini_parts(contents)
+            response = await gemini_client.aio.models.generate_content(
                 model=model_name, contents=gemini_contents, config=config
             )
 
-            # If we are using Image Generation models to generate images
-            if (
-                "nanoviz" in model_name
-                or "image" in model_name
-            ):
+            if "nanoviz" in model_name or "image" in model_name:
                 raw_response_list = []
                 if not response.candidates or not response.candidates[0].content.parts:
                     print(
@@ -219,16 +206,13 @@ async def call_gemini_with_retry_async(
                     attempt += 1
                     continue
 
-                # In this mode, we can only have one candidate
                 for part in response.candidates[0].content.parts:
                     if part.inline_data:
-                        # Append base64 encoded image data to raw_response_list
                         raw_response_list.append(
                             base64.b64encode(part.inline_data.data).decode("utf-8")
                         )
                         break
 
-            # Otherwise, for text generation models
             else:
                 raw_response_list = [
                     part.text
@@ -250,7 +234,6 @@ async def call_gemini_with_retry_async(
             is_overload_error = "503" in error_str or "unavailable" in error_lower
             is_image_model = "image" in model_name or "nanoviz" in model_name
 
-            # --- 400: Region restriction → abort immediately ---
             if is_region_error and is_image_model:
                 msg = (
                     f"❌ Model {model_name} blocked by region restriction (400){context_msg}. "
@@ -262,7 +245,6 @@ async def call_gemini_with_retry_async(
                 })
                 raise ImageGenerationError(msg)
 
-            # --- 503: Overloaded → retry 5 times, then fallback, then abort ---
             if is_overload_error and is_image_model:
                 if attempt < max_attempts - 1:
                     current_delay = min(retry_delay * (2 ** attempt), 30)
@@ -274,7 +256,6 @@ async def call_gemini_with_retry_async(
                     attempt += 1
                     continue
                 else:
-                    # All retries exhausted for this model, try fallback
                     fallback = _get_fallback_model(model_name)
                     if fallback and fallback != model_name:
                         print(
@@ -288,7 +269,6 @@ async def call_gemini_with_retry_async(
                         attempt = 0
                         continue
                     else:
-                        # No more fallback models
                         msg = (
                             f"❌ All image models exhausted (503){context_msg}. "
                             f"Last model: {model_name}. All retries and fallbacks failed."
@@ -299,7 +279,6 @@ async def call_gemini_with_retry_async(
                         })
                         raise ImageGenerationError(msg)
 
-            # --- Other errors: normal retry with backoff ---
             current_delay = min(retry_delay * (2 ** attempt), 30)
             print(
                 f"Attempt {attempt + 1} for model {model_name} failed{context_msg}: {e}. Retrying in {current_delay} seconds..."
@@ -316,15 +295,14 @@ async def call_gemini_with_retry_async(
     return result_list
 
 
-# Image model fallback chain: on 503 overload, try next model; on 400 region block, abort immediately
 _IMAGE_MODEL_FALLBACK_CHAIN = [
     "gemini-3.1-flash-image-preview",
     "gemini-3-pro-image-preview",
     "gemini-2.5-flash-image",
 ]
 
-_fallback_used = {}  # Track which models already fell back to avoid loops
-fallback_events = []  # Collect fallback events for UI display
+_fallback_used = {}
+fallback_events = []
 
 
 def _get_fallback_model(current_model: str) -> str:
@@ -342,39 +320,12 @@ def _get_fallback_model(current_model: str) -> str:
     return current_model
 
 def _convert_to_claude_format(contents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """
-    Converts the generic content list to Claude's API format.
-    Currently, the formats are identical, so this acts as a pass-through
-    for architectural consistency and future-proofing.
-
-    Claude API's format:
-    [
-        {"type": "text", "text": "some text"},
-        {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": "..."}},
-        ...
-    ]
-    """
+    """Convert generic content list to Claude's API format (currently identical)."""
     return contents
 
 
 def _convert_to_openai_format(contents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """
-    Converts the generic content list (Claude format) to OpenAI's API format.
-    
-    Claude format:
-    [
-        {"type": "text", "text": "some text"},
-        {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": "..."}},
-        ...
-    ]
-    
-    OpenAI format:
-    [
-        {"type": "text", "text": "some text"},
-        {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64,..."}},
-        ...
-    ]
-    """
+    """Convert generic content list to OpenAI's API format (image -> image_url)."""
     openai_contents = []
     for item in contents:
         if item.get("type") == "text":
@@ -413,18 +364,11 @@ async def call_claude_with_retry_async(
     max_output_tokens = config["max_output_tokens"]
     response_text_list = []
 
-    # --- Preparation Phase ---
-    # Convert to the Claude-specific format and perform an initial optimistic resize.
-    current_contents = contents
-
-    # --- Validation and Remediation Phase ---
-    # We loop until we get a single successful response, proving the input is valid.
-    # Note that this check is required because Claude only has 128k / 256k context windows.
-    # For Gemini series that support 1M, we do not need this step.
+    # Validate input with a single request first (Claude has smaller context windows).
     is_input_valid = False
     for attempt in range(max_attempts):
         try:
-            claude_contents = _convert_to_claude_format(current_contents)
+            claude_contents = _convert_to_claude_format(contents)
             # Attempt to generate the very first candidate.
             first_response = await anthropic_client.messages.create(
                 model=model_name,
@@ -438,28 +382,19 @@ async def call_claude_with_retry_async(
             break
 
         except Exception as e:
-            error_str = str(e).lower()
             context_msg = f" for {error_context}" if error_context else ""
-            print(
-                f"Validation attempt {attempt + 1} failed{context_msg}: {error_str}. Retrying in {retry_delay} seconds..."
-            )
+            print(f"Attempt {attempt + 1} failed{context_msg}: {e}. Retrying in {retry_delay}s...")
             if attempt < max_attempts - 1:
                 await asyncio.sleep(retry_delay)
 
-    # --- Sampling Phase ---
     if not is_input_valid:
-        print(
-            f"Error: All {max_attempts} attempts failed to validate the input{context_msg}. Returning errors."
-        )
+        context_msg = f" for {error_context}" if error_context else ""
+        print(f"Error: All {max_attempts} Claude attempts failed{context_msg}.")
         return ["Error"] * candidate_num
 
-    # We already have 1 successful candidate, now generate the rest.
     remaining_candidates = candidate_num - 1
     if remaining_candidates > 0:
-        print(
-            f"Input validated. Now generating remaining {remaining_candidates} candidates..."
-        )
-        valid_claude_contents = _convert_to_claude_format(current_contents)
+        valid_claude_contents = _convert_to_claude_format(contents)
         tasks = [
             anthropic_client.messages.create(
                 model=model_name,
@@ -496,17 +431,10 @@ async def call_openai_with_retry_async(
     max_completion_tokens = config["max_completion_tokens"]
     response_text_list = []
 
-    # --- Preparation Phase ---
-    # Convert to the OpenAI-specific format
-    current_contents = contents
-
-    # --- Validation and Remediation Phase ---
-    # We loop until we get a single successful response, proving the input is valid.
     is_input_valid = False
     for attempt in range(max_attempts):
         try:
-            openai_contents = _convert_to_openai_format(current_contents)
-            # Attempt to generate the very first candidate.
+            openai_contents = _convert_to_openai_format(contents)
             first_response = await openai_client.chat.completions.create(
                 model=model_name,
                 messages=[
@@ -525,31 +453,22 @@ async def call_openai_with_retry_async(
                 continue
             response_text_list.append(content)
             is_input_valid = True
-            break  # Exit the validation loop
+            break
 
         except Exception as e:
-            error_str = str(e).lower()
             context_msg = f" for {error_context}" if error_context else ""
-            print(
-                f"Validation attempt {attempt + 1} failed{context_msg}: {error_str}. Retrying in {retry_delay} seconds..."
-            )
+            print(f"OpenAI attempt {attempt + 1} failed{context_msg}: {e}. Retrying in {retry_delay}s...")
             if attempt < max_attempts - 1:
                 await asyncio.sleep(retry_delay)
 
-    # --- Sampling Phase ---
     if not is_input_valid:
-        print(
-            f"Error: All {max_attempts} attempts failed to validate the input{context_msg}. Returning errors."
-        )
+        context_msg = f" for {error_context}" if error_context else ""
+        print(f"Error: All {max_attempts} OpenAI attempts failed{context_msg}.")
         return ["Error"] * candidate_num
 
-    # We already have 1 successful candidate, now generate the rest.
     remaining_candidates = candidate_num - 1
     if remaining_candidates > 0:
-        print(
-            f"Input validated. Now generating remaining {remaining_candidates} candidates..."
-        )
-        valid_openai_contents = _convert_to_openai_format(current_contents)
+        valid_openai_contents = _convert_to_openai_format(contents)
         tasks = [
             openai_client.chat.completions.create(
                 model=model_name,
@@ -585,20 +504,15 @@ async def call_openai_image_generation_with_retry_async(
     background = config.get("background", "opaque")
     output_format = config.get("output_format", "png")
     
-    # Base parameters for all models
     gen_params = {
         "model": model_name,
         "prompt": prompt,
         "n": 1,
         "size": size,
-    }
-    
-    # Add GPT-Image specific parameters
-    gen_params.update({
         "quality": quality,
         "background": background,
         "output_format": output_format,
-    })
+    }
 
     for attempt in range(max_attempts):
         try:
@@ -648,12 +562,10 @@ async def call_openrouter_with_retry_async(
     max_completion_tokens = config["max_completion_tokens"]
     response_text_list = []
 
-    current_contents = contents
-
     is_input_valid = False
     for attempt in range(max_attempts):
         try:
-            openai_contents = _convert_to_openai_format(current_contents)
+            openai_contents = _convert_to_openai_format(contents)
             first_response = await openrouter_client.chat.completions.create(
                 model=model_name,
                 messages=[
@@ -691,7 +603,7 @@ async def call_openrouter_with_retry_async(
 
     remaining_candidates = candidate_num - 1
     if remaining_candidates > 0:
-        valid_openai_contents = _convert_to_openai_format(current_contents)
+        valid_openai_contents = _convert_to_openai_format(contents)
         tasks = [
             openrouter_client.chat.completions.create(
                 model=model_name,
@@ -864,12 +776,10 @@ async def call_proma_with_retry_async(
     max_completion_tokens = config["max_completion_tokens"]
     response_text_list = []
 
-    current_contents = contents
-
     is_input_valid = False
     for attempt in range(max_attempts):
         try:
-            openai_contents = _convert_to_openai_format(current_contents)
+            openai_contents = _convert_to_openai_format(contents)
             first_response = await proma_client.chat.completions.create(
                 model=model_name,
                 messages=[
@@ -906,7 +816,7 @@ async def call_proma_with_retry_async(
 
     remaining_candidates = candidate_num - 1
     if remaining_candidates > 0:
-        valid_openai_contents = _convert_to_openai_format(current_contents)
+        valid_openai_contents = _convert_to_openai_format(contents)
         tasks = [
             proma_client.chat.completions.create(
                 model=model_name,
@@ -979,12 +889,10 @@ async def call_local_with_retry_async(
     max_completion_tokens = config["max_completion_tokens"]
     response_text_list = []
 
-    current_contents = contents
-
     is_input_valid = False
     for attempt in range(max_attempts):
         try:
-            openai_contents = _convert_to_openai_format(current_contents)
+            openai_contents = _convert_to_openai_format(contents)
             messages = [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": openai_contents},
@@ -1018,7 +926,7 @@ async def call_local_with_retry_async(
 
     remaining_candidates = candidate_num - 1
     if remaining_candidates > 0:
-        valid_openai_contents = _convert_to_openai_format(current_contents)
+        valid_openai_contents = _convert_to_openai_format(contents)
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": valid_openai_contents},

@@ -98,7 +98,7 @@ def vision_ocr(img_path: str) -> list[dict]:
         ly2 = int((1 - box.origin.y) * img_h)
 
         char_bboxes = []
-        for i in range(len(text)):
+        for i, ch in enumerate(text):
             char_range = Foundation.NSRange(i, 1)
             box_obs, _ = candidate.boundingBoxForRange_error_(char_range, None)
             if box_obs:
@@ -107,7 +107,7 @@ def vision_ocr(img_path: str) -> list[dict]:
                 cy1 = int((1 - b.origin.y - b.size.height) * img_h)
                 cx2 = int((b.origin.x + b.size.width) * img_w)
                 cy2 = int((1 - b.origin.y) * img_h)
-                char_bboxes.append({"char": text[i], "bbox": [cx1, cy1, cx2, cy2]})
+                char_bboxes.append({"char": ch, "bbox": [cx1, cy1, cx2, cy2]})
 
         results.append({
             "text": text,
@@ -163,10 +163,6 @@ def proofread(ocr_results: list[dict], client: OpenAI, model: str, reference: st
         return None
 
     result = _parse_response(raw)
-
-    if result is None:
-        print("[WARN] LLM 返回内容无法解析为JSON")
-        return None
     if not isinstance(result, dict):
         return None
 
