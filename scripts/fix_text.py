@@ -19,7 +19,6 @@ from datetime import datetime
 from difflib import SequenceMatcher
 from pathlib import Path
 
-import sys
 import numpy as np
 from openai import OpenAI
 from PIL import Image, ImageDraw
