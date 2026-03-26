@@ -179,20 +179,15 @@ async def preflight_check_image_model(image_gen_model_name: str) -> str:
         return _preflight_cache[image_gen_model_name]
     from utils.generation_utils import (
         ImageGenerationError, _get_fallback_model, _IMAGE_MODEL_FALLBACK_CHAIN,
-        fallback_events,
+        fallback_events, gemini_client, openrouter_client,
     )
-    from google import genai
     from google.genai import types
-
-    google_api_key = get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", "")
-    if not google_api_key:
-        # No Google key but might use OpenRouter for images — skip preflight
-        from utils.generation_utils import openrouter_client
+    if gemini_client is None:
         if openrouter_client is not None:
             return image_gen_model_name
         raise ImageGenerationError("No Google API key configured and no OpenRouter available.")
 
-    client = genai.Client(api_key=google_api_key)
+    client = gemini_client
     model = image_gen_model_name
 
     while True:

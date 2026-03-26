@@ -127,17 +127,18 @@ class VisualizerAgent(BaseAgent):
         for desc_key in desc_keys_to_process:
             prompt_text = cfg["prompt_template"].format(desc=data[desc_key])
 
-            # Inject font constraints if specified
-            additional = data.get("additional_info", {})
-            font_cn = additional.get("font_cn", "")
-            font_en = additional.get("font_en", "")
-            if font_cn or font_en:
-                font_parts = []
-                if font_cn:
-                    font_parts.append(f"all Chinese text must use the {font_cn} font")
-                if font_en:
-                    font_parts.append(f"all English text and numbers must use the {font_en} font")
-                prompt_text += "\nIMPORTANT: In the diagram, " + ", and ".join(font_parts) + "."
+            # Inject font constraints only for image/diagram generation (not code-gen plots)
+            if cfg["use_image_generation"]:
+                additional = data.get("additional_info", {})
+                font_cn = additional.get("font_cn", "")
+                font_en = additional.get("font_en", "")
+                if font_cn or font_en:
+                    font_parts = []
+                    if font_cn:
+                        font_parts.append(f"all Chinese text must use the {font_cn} font")
+                    if font_en:
+                        font_parts.append(f"all English text and numbers must use the {font_en} font")
+                    prompt_text += "\nIMPORTANT: In the diagram, " + ", and ".join(font_parts) + "."
 
             content_list = [{"type": "text", "text": prompt_text}]
             

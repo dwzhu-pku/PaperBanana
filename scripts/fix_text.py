@@ -19,12 +19,20 @@ from datetime import datetime
 from difflib import SequenceMatcher
 from pathlib import Path
 
+import sys
 import numpy as np
-import Foundation
-import Vision
 from openai import OpenAI
 from PIL import Image, ImageDraw
-from Quartz import CIImage
+
+try:
+    import Foundation
+    import Vision
+    from Quartz import CIImage
+except ModuleNotFoundError:
+    if sys.platform != "darwin":
+        print("Error: fix_text.py requires macOS (Vision framework). Not supported on this platform.")
+        sys.exit(1)
+    raise
 
 
 # --- Config ---

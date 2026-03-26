@@ -873,10 +873,16 @@ async def _local_stream_collect(client, model_name, messages, temperature, max_c
             if choice.finish_reason:
                 finish_reason = choice.finish_reason
     result = "".join(chunks)
-    if finish_reason and finish_reason != "stop":
-        print(f"Warning: Local stream ended with finish_reason={finish_reason} (expected 'stop')")
-    if not result and not finish_reason:
-        raise RuntimeError("Local proxy stream ended without content or finish_reason (likely truncated)")
+    if finish_reason != "stop":
+        if finish_reason is None:
+            raise RuntimeError(
+                "Local proxy stream ended without finish_reason 'stop' "
+                "(got None; likely truncated or aborted)"
+            )
+        raise RuntimeError(
+            f"Local proxy stream ended with finish_reason={finish_reason!r} "
+            "(expected 'stop')"
+        )
     return result
 
 

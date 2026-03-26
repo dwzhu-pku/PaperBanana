@@ -218,7 +218,9 @@ class PaperVizProcessor:
                 progress_tracker.complete_stage(cid, stage)
 
         if exp_mode == "vanilla":
+            _enter("Processing")
             data = await self.vanilla_agent.process(data)
+            _done("Processing")
             data["eval_image_field"] = f"vanilla_{task_name}_base64_jpg"
 
         elif exp_mode == "dev_planner":
@@ -288,11 +290,15 @@ class PaperVizProcessor:
             if "demo" in exp_mode: do_eval = False
 
         elif exp_mode == "dev_polish":
+            _enter("Processing")
             data = await self.polish_agent.process(data)
+            _done("Processing")
             data["eval_image_field"] = f"polished_{task_name}_base64_jpg"
 
         elif exp_mode == "dev_retriever":
+            _enter("Processing")
             data = await self.retriever_agent.process(data)
+            _done("Processing")
             do_eval = False
 
         else:
@@ -323,7 +329,7 @@ class PaperVizProcessor:
 
         if needs_retrieval and data_list:
             if tracker:
-                tracker.enter_stage(-1, "Retriever", self.exp_config.main_model_name)
+                tracker.enter_stage(0, "Retriever", self.exp_config.main_model_name)
             print("[Retriever] Running retrieval once for all candidates...")
             first_data = data_list[0]
             first_data = await self.retriever_agent.process(first_data, retrieval_setting=retrieval_setting)
