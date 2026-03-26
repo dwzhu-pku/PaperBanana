@@ -675,7 +675,7 @@ def build_app():
                     else:
                         os.environ.pop(env_var, None)
                 from utils.generation_utils import reinitialize_clients
-                initialized = reinitialize_clients()
+                initialized = reinitialize_clients(env_only=True)
                 if initialized:
                     return f"Clients initialized: {', '.join(initialized)}."
                 return (

@@ -57,11 +57,16 @@ proma_client = None
 local_client = None
 
 
-def reinitialize_clients():
+def reinitialize_clients(env_only=False):
     """(Re)build all API clients from current env vars / config file.
 
     Called once at module load and can be called again at runtime
     (e.g. after the user sets new API keys via the Gradio UI).
+
+    Args:
+        env_only: If True, only read from env vars (skip config file fallback).
+                  Use this when called from UI Apply Keys so clearing a key
+                  actually disables the provider.
 
     Returns a list of client names that were successfully initialized.
     """
@@ -69,9 +74,14 @@ def reinitialize_clients():
     global openrouter_client, openrouter_api_key
     global proma_client, local_client
 
+    def _get_key(section, key, env_var):
+        if env_only:
+            return os.getenv(env_var, "")
+        return get_config_val(section, key, env_var, "")
+
     initialized = []
 
-    api_key = get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", "")
+    api_key = _get_key("api_keys", "google_api_key", "GOOGLE_API_KEY")
     if api_key:
         gemini_client = genai.Client(api_key=api_key)
         print("Initialized Gemini Client with API Key")
@@ -79,7 +89,7 @@ def reinitialize_clients():
     else:
         gemini_client = None
 
-    key = get_config_val("api_keys", "anthropic_api_key", "ANTHROPIC_API_KEY", "")
+    key = _get_key("api_keys", "anthropic_api_key", "ANTHROPIC_API_KEY")
     if key:
         anthropic_client = AsyncAnthropic(api_key=key)
         print("Initialized Anthropic Client with API Key")
@@ -87,7 +97,7 @@ def reinitialize_clients():
     else:
         anthropic_client = None
 
-    key = get_config_val("api_keys", "openai_api_key", "OPENAI_API_KEY", "")
+    key = _get_key("api_keys", "openai_api_key", "OPENAI_API_KEY")
     if key:
         openai_client = AsyncOpenAI(api_key=key)
         print("Initialized OpenAI Client with API Key")
@@ -95,7 +105,7 @@ def reinitialize_clients():
     else:
         openai_client = None
 
-    openrouter_api_key = get_config_val("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY", "")
+    openrouter_api_key = _get_key("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY")
     if openrouter_api_key:
         openrouter_client = AsyncOpenAI(
             base_url="https://openrouter.ai/api/v1",
@@ -106,7 +116,7 @@ def reinitialize_clients():
     else:
         openrouter_client = None
 
-    key = get_config_val("api_keys", "proma_api_key", "PROMA_API_KEY", "")
+    key = _get_key("api_keys", "proma_api_key", "PROMA_API_KEY")
     if key:
         proma_client = AsyncOpenAI(
             base_url="https://api.proma.cool/v1",
@@ -117,7 +127,7 @@ def reinitialize_clients():
     else:
         proma_client = None
 
-    key = get_config_val("api_keys", "local_api_key", "LOCAL_API_KEY", "")
+    key = _get_key("api_keys", "local_api_key", "LOCAL_API_KEY")
     if key:
         local_client = AsyncOpenAI(
             base_url="http://localhost:3000/api/v1",
