@@ -220,8 +220,9 @@ async def call_gemini_with_retry_async(
             error_str = str(e)
             context_msg = f" for {error_context}" if error_context else ""
 
-            is_region_error = "400" in error_str and "location" in error_str.lower()
-            is_overload_error = "503" in error_str or "UNAVAILABLE" in error_str
+            error_lower = error_str.lower()
+            is_region_error = "400" in error_str and "location" in error_lower
+            is_overload_error = "503" in error_str or "unavailable" in error_lower
             is_image_model = "image" in model_name or "nanoviz" in model_name
 
             # --- 400: Region restriction → abort immediately ---
@@ -290,7 +291,7 @@ async def call_gemini_with_retry_async(
     return result_list
 
 
-# Image model fallback chain: try next available model on 400/503
+# Image model fallback chain: on 503 overload, try next model; on 400 region block, abort immediately
 _IMAGE_MODEL_FALLBACK_CHAIN = [
     "gemini-3.1-flash-image-preview",
     "gemini-3-pro-image-preview",
