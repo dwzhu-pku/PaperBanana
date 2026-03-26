@@ -100,13 +100,18 @@ def base64_to_image(b64_str):
         return None
 
 
-def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copies=10, max_critic_rounds=3):
+def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copies=10, max_critic_rounds=3, font_cn="", font_en=""):
+    additional_info = {"rounded_ratio": aspect_ratio}
+    if font_cn:
+        additional_info["font_cn"] = font_cn
+    if font_en:
+        additional_info["font_en"] = font_en
     base_input = {
         "filename": "demo_input",
         "caption": caption,
         "content": method_content,
         "visual_intent": caption,
-        "additional_info": {"rounded_ratio": aspect_ratio},
+        "additional_info": additional_info,
         "max_critic_rounds": max_critic_rounds,
     }
     inputs = []
@@ -492,7 +497,8 @@ def build_app():
         with gr.Accordion("API Keys", open=False):
             gr.Markdown(
                 "**You do not need both keys.** Fill **at least one**: **OpenRouter** *or* **Google (Gemini)**. "
-                "If both are set, OpenRouter is preferred for automatic routing when available."
+                "If both are set, OpenRouter is preferred for automatic routing when available. "
+                "Proma and Local proxy require explicit model prefixes (`proma/`, `local/`)."
             )
             with gr.Row():
                 openrouter_key_input = gr.Textbox(
@@ -503,25 +509,38 @@ def build_app():
                     label="Google API Key (optional)", type="password", placeholder="AIza...",
                     value=get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", ""),
                 )
+            with gr.Row():
+                proma_key_input = gr.Textbox(
+                    label="Proma API Key (optional)", type="password", placeholder="pk-...",
+                    value=get_config_val("api_keys", "proma_api_key", "PROMA_API_KEY", ""),
+                )
+                local_key_input = gr.Textbox(
+                    label="Local Proxy API Key (optional)", type="password", placeholder="sk-...",
+                    value=get_config_val("api_keys", "local_api_key", "LOCAL_API_KEY", ""),
+                )
             gr.Markdown("*Keys are used only for this session and never stored.*")
 
-            def apply_keys(or_key, g_key):
+            def apply_keys(or_key, g_key, proma_key, local_key):
                 if or_key:
                     os.environ["OPENROUTER_API_KEY"] = or_key
                 if g_key:
                     os.environ["GOOGLE_API_KEY"] = g_key
+                if proma_key:
+                    os.environ["PROMA_API_KEY"] = proma_key
+                if local_key:
+                    os.environ["LOCAL_API_KEY"] = local_key
                 from utils.generation_utils import reinitialize_clients
                 initialized = reinitialize_clients()
                 if initialized:
                     return f"Clients initialized: {', '.join(initialized)}."
                 return (
                     "Warning: no API clients could be initialized. "
-                    "Enter at least one key—OpenRouter or Google (Gemini)."
+                    "Enter at least one key."
                 )
 
             apply_keys_btn = gr.Button("Apply Keys", size="sm")
             keys_status = gr.Textbox(visible=False)
-            apply_keys_btn.click(apply_keys, inputs=[openrouter_key_input, google_key_input], outputs=[keys_status])
+            apply_keys_btn.click(apply_keys, inputs=[openrouter_key_input, google_key_input, proma_key_input, local_key_input], outputs=[keys_status])
 
         # ================================================================
         # TABS
@@ -580,13 +599,23 @@ def build_app():
                         )
                         main_model_name = gr.Textbox(
                             label="Model Name",
-                            info="Model name to use for reasoning",
+                            info="Prefixes: local/, proma/, openrouter/, or bare name for auto-detect",
                             value=default_main_model,
                         )
                         image_model_name = gr.Textbox(
                             label="Image Generation Model",
                             info="Model for generating diagram images",
                             value=default_image_model,
+                        )
+                        font_cn = gr.Textbox(
+                            label="Chinese Font",
+                            value="思源黑体",
+                            info="Font for Chinese text in diagrams",
+                        )
+                        font_en = gr.Textbox(
+                            label="English Font",
+                            value="Arial",
+                            info="Font for English text and numbers",
                         )
                         save_results = gr.Dropdown(
                             choices=["Yes", "No"],
@@ -654,7 +683,7 @@ def build_app():
                 def run_generate(
                     method_text, caption_text, pipe_mode, ret_setting,
                     n_cands, ar, max_rounds, m_model, img_model,
-                    figure_size, save_results,
+                    f_cn, f_en, figure_size, save_results,
                     progress=gr.Progress(track_tqdm=True),
                 ):
                     if not method_text or not caption_text:
@@ -668,6 +697,7 @@ def build_app():
                     input_data = create_sample_inputs(
                         method_content=method_text, caption=caption_text,
                         aspect_ratio=ar, num_copies=n_cands, max_critic_rounds=max_rounds,
+                        font_cn=f_cn, font_en=f_en,
                     )
                     params = {"figure_size": figure_size}
 
@@ -756,7 +786,7 @@ def build_app():
                         method_content, caption_input, pipeline_mode, retrieval_setting,
                         num_candidates, aspect_ratio, max_critic_rounds,
                         main_model_name, image_model_name,
-                        figure_size, save_results,
+                        font_cn, font_en, figure_size, save_results,
                     ],
                     outputs=[
                         results_gallery, evolution_html, zip_file_output, status_text,
