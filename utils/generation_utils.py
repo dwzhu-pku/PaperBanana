@@ -142,6 +142,11 @@ def _convert_to_gemini_parts(contents: List[Dict[str, Any]]) -> List[types.Part]
     return gemini_parts
 
 
+class ImageGenerationError(Exception):
+    """Raised when image generation fails irrecoverably (400 region block or all 503 fallbacks exhausted)."""
+    pass
+
+
 async def call_gemini_with_retry_async(
     model_name, contents, config, max_attempts=5, retry_delay=5, error_context=""
 ):
@@ -156,12 +161,15 @@ async def call_gemini_with_retry_async(
 
     result_list = []
     target_candidate_count = config.candidate_count
-    # Gemini API max candidate count is 8. We will call multiple times if needed.
-    if config.candidate_count > 8:
+    # Gemini API max candidate count is 8. Cap without mutating the original config.
+    if target_candidate_count > 8:
+        import copy as _copy
+        config = _copy.copy(config)
         config.candidate_count = 8
 
     current_contents = contents
-    for attempt in range(max_attempts):
+    attempt = 0
+    while attempt < max_attempts:
         try:
             # Use global client
             client = gemini_client
@@ -183,6 +191,7 @@ async def call_gemini_with_retry_async(
                         f"[Warning]: Failed to generate image, retrying in {retry_delay} seconds..."
                     )
                     await asyncio.sleep(retry_delay)
+                    attempt += 1
                     continue
 
                 # In this mode, we can only have one candidate
@@ -208,24 +217,103 @@ async def call_gemini_with_retry_async(
                 break
 
         except Exception as e:
+            error_str = str(e)
             context_msg = f" for {error_context}" if error_context else ""
-            
-            # Exponential backoff (capped at 30s)
+
+            is_region_error = "400" in error_str and "location" in error_str.lower()
+            is_overload_error = "503" in error_str or "UNAVAILABLE" in error_str
+            is_image_model = "image" in model_name or "nanoviz" in model_name
+
+            # --- 400: Region restriction → abort immediately ---
+            if is_region_error and is_image_model:
+                msg = (
+                    f"❌ Model {model_name} blocked by region restriction (400){context_msg}. "
+                    f"Please check your proxy/VPN configuration."
+                )
+                print(msg)
+                fallback_events.append({
+                    "from": model_name, "to": "ABORTED", "reason": "region restriction (400)",
+                })
+                raise ImageGenerationError(msg)
+
+            # --- 503: Overloaded → retry 5 times, then fallback, then abort ---
+            if is_overload_error and is_image_model:
+                if attempt < max_attempts - 1:
+                    current_delay = min(retry_delay * (2 ** attempt), 30)
+                    print(
+                        f"Attempt {attempt + 1} for model {model_name} failed (503){context_msg}. "
+                        f"Retrying in {current_delay} seconds..."
+                    )
+                    await asyncio.sleep(current_delay)
+                    attempt += 1
+                    continue
+                else:
+                    # All retries exhausted for this model, try fallback
+                    fallback = _get_fallback_model(model_name)
+                    if fallback and fallback != model_name:
+                        print(
+                            f"⚠️  Model {model_name} overloaded (503), all {max_attempts} retries failed{context_msg}. "
+                            f"Switching to fallback: {fallback}"
+                        )
+                        fallback_events.append({
+                            "from": model_name, "to": fallback, "reason": "overloaded (503)",
+                        })
+                        model_name = fallback
+                        attempt = 0
+                        continue
+                    else:
+                        # No more fallback models
+                        msg = (
+                            f"❌ All image models exhausted (503){context_msg}. "
+                            f"Last model: {model_name}. All retries and fallbacks failed."
+                        )
+                        print(msg)
+                        fallback_events.append({
+                            "from": model_name, "to": "ABORTED", "reason": "all models exhausted (503)",
+                        })
+                        raise ImageGenerationError(msg)
+
+            # --- Other errors: normal retry with backoff ---
             current_delay = min(retry_delay * (2 ** attempt), 30)
-            
             print(
                 f"Attempt {attempt + 1} for model {model_name} failed{context_msg}: {e}. Retrying in {current_delay} seconds..."
             )
-
             if attempt < max_attempts - 1:
                 await asyncio.sleep(current_delay)
             else:
                 print(f"Error: All {max_attempts} attempts failed{context_msg}")
                 result_list = ["Error"] * target_candidate_count
+        attempt += 1
 
     if len(result_list) < target_candidate_count:
         result_list.extend(["Error"] * (target_candidate_count - len(result_list)))
     return result_list
+
+
+# Image model fallback chain: try next available model on 400/503
+_IMAGE_MODEL_FALLBACK_CHAIN = [
+    "gemini-3.1-flash-image-preview",
+    "gemini-3-pro-image-preview",
+    "gemini-2.5-flash-image",
+]
+
+_fallback_used = {}  # Track which models already fell back to avoid loops
+fallback_events = []  # Collect fallback events for UI display
+
+
+def _get_fallback_model(current_model: str) -> str:
+    """Get the next fallback model in the chain. Returns current model if no fallback available."""
+    if current_model in _fallback_used:
+        return _fallback_used[current_model]
+
+    if current_model in _IMAGE_MODEL_FALLBACK_CHAIN:
+        idx = _IMAGE_MODEL_FALLBACK_CHAIN.index(current_model)
+        for next_idx in range(idx + 1, len(_IMAGE_MODEL_FALLBACK_CHAIN)):
+            fallback = _IMAGE_MODEL_FALLBACK_CHAIN[next_idx]
+            if fallback != current_model:
+                _fallback_used[current_model] = fallback
+                return fallback
+    return current_model
 
 def _convert_to_claude_format(contents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
