@@ -800,15 +800,38 @@ def build_app():
                             inputs=[image_model_dropdown],
                             outputs=[image_model_name],
                         )
-                        font_cn = gr.Textbox(
-                            label="Chinese Font",
+                        font_cn = gr.Dropdown(
+                            choices=[
+                                "思源黑体",        # Source Han Sans — 清晰现代，学术首选
+                                "思源宋体",        # Source Han Serif — 正式严谨
+                                "微软雅黑",        # Microsoft YaHei — Windows 标配
+                                "PingFang SC",    # 苹方 — macOS/iOS 原生
+                                "Noto Sans SC",   # Google Noto — 跨平台一致
+                                "HarmonyOS Sans SC",  # 华为鸿蒙字体
+                                "阿里巴巴普惠体",   # Alibaba PuHuiTi — 免费商用
+                                "Custom",
+                            ],
                             value="思源黑体",
+                            label="Chinese Font",
                             info="Font for Chinese text in diagrams",
+                            allow_custom_value=True,
                         )
-                        font_en = gr.Textbox(
-                            label="English Font",
+                        font_en = gr.Dropdown(
+                            choices=[
+                                "Arial",           # 经典无衬线，渲染清晰
+                                "Helvetica",       # 设计界标杆
+                                "Roboto",          # Google 主力字体
+                                "Inter",           # 现代 UI 字体，数字等宽
+                                "SF Pro",          # Apple 系统字体
+                                "Times New Roman", # 学术论文经典衬线
+                                "Georgia",         # 屏幕友好衬线体
+                                "Fira Sans",       # Mozilla 出品，技术文档常用
+                                "Custom",
+                            ],
                             value="Arial",
+                            label="English Font",
                             info="Font for English text and numbers",
+                            allow_custom_value=True,
                         )
                         mock_mode = gr.Checkbox(
                             label="Mock Mode (no API calls)",
