@@ -730,15 +730,75 @@ def build_app():
                             minimum=1, maximum=5, value=3, step=1,
                             label="Max Critic Rounds",
                         )
-                        main_model_name = gr.Textbox(
+                        _TEXT_MODEL_CHOICES = [
+                            # Gemini
+                            "gemini-3.1-pro-preview",
+                            "gemini-2.5-flash-preview-05-20",
+                            # Proma
+                            "proma/gemini-3.1-pro-preview",
+                            "proma/claude-sonnet-4-6",
+                            "proma/gpt-5-mini",
+                            "proma/deepseek-v3.2",
+                            # Proma Low-Cost
+                            "proma/lc-claude-opus-4-6",
+                            "proma/lc-claude-haiku-4-5-20251001",
+                            "proma/lc-kimi-k2.5",
+                            # Local
+                            "local/claude-opus-4-6",
+                            "local/claude-sonnet-4-6",
+                            "local/gpt-5.4",
+                            # Custom
+                            "Custom",
+                        ]
+                        _IMAGE_MODEL_CHOICES = [
+                            "gemini-3.1-flash-image-preview",
+                            "gemini-3-pro-image-preview",
+                            "gemini-2.5-flash-image",
+                            "gpt-image-1",
+                            "Custom",
+                        ]
+                        main_model_dropdown = gr.Dropdown(
+                            choices=_TEXT_MODEL_CHOICES,
+                            value=default_main_model if default_main_model in _TEXT_MODEL_CHOICES else "Custom",
                             label="Model Name",
-                            info="Prefixes: local/, proma/, openrouter/, or bare name for auto-detect",
+                            info="Select a model or choose Custom to enter manually",
+                        )
+                        main_model_name = gr.Textbox(
+                            label="Custom Model Name",
                             value=default_main_model,
+                            visible=default_main_model not in _TEXT_MODEL_CHOICES[:-1],
+                            info="Prefixes: local/, proma/, openrouter/",
+                        )
+                        def _on_main_model_select(choice):
+                            if choice == "Custom":
+                                return gr.update(visible=True, value="")
+                            return gr.update(visible=False, value=choice)
+                        main_model_dropdown.change(
+                            _on_main_model_select,
+                            inputs=[main_model_dropdown],
+                            outputs=[main_model_name],
+                        )
+
+                        image_model_dropdown = gr.Dropdown(
+                            choices=_IMAGE_MODEL_CHOICES,
+                            value=default_image_model if default_image_model in _IMAGE_MODEL_CHOICES else "Custom",
+                            label="Image Generation Model",
+                            info="Select an image model or choose Custom",
                         )
                         image_model_name = gr.Textbox(
-                            label="Image Generation Model",
-                            info="Model for generating diagram images",
+                            label="Custom Image Model",
                             value=default_image_model,
+                            visible=default_image_model not in _IMAGE_MODEL_CHOICES[:-1],
+                            info="Model for generating diagram images",
+                        )
+                        def _on_image_model_select(choice):
+                            if choice == "Custom":
+                                return gr.update(visible=True, value="")
+                            return gr.update(visible=False, value=choice)
+                        image_model_dropdown.change(
+                            _on_image_model_select,
+                            inputs=[image_model_dropdown],
+                            outputs=[image_model_name],
                         )
                         font_cn = gr.Textbox(
                             label="Chinese Font",
