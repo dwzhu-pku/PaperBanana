@@ -841,10 +841,10 @@ def build_app():
                         mock_delay = gr.Slider(
                             minimum=0.5, maximum=10, value=2, step=0.5,
                             label="Mock Delay (seconds/stage)",
-                            visible=False,
+                            interactive=False,
                         )
                         mock_mode.change(
-                            lambda v: gr.update(visible=v),
+                            lambda v: gr.update(interactive=v),
                             inputs=[mock_mode],
                             outputs=[mock_delay],
                         )
