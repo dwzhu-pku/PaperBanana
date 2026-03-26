@@ -763,16 +763,17 @@ def build_app():
                             label="Model Name",
                             info="Select a model or choose Custom to enter manually",
                         )
+                        _main_is_custom = default_main_model not in _TEXT_MODEL_CHOICES[:-1]
                         main_model_name = gr.Textbox(
                             label="Custom Model Name",
-                            value=default_main_model,
-                            visible=default_main_model not in _TEXT_MODEL_CHOICES[:-1],
+                            value=default_main_model if _main_is_custom else "",
+                            interactive=_main_is_custom,
                             info="Prefixes: local/, proma/, openrouter/",
                         )
                         def _on_main_model_select(choice):
                             if choice == "Custom":
-                                return gr.update(visible=True, value="")
-                            return gr.update(visible=False, value=choice)
+                                return gr.update(interactive=True, value="")
+                            return gr.update(interactive=False, value=choice)
                         main_model_dropdown.change(
                             _on_main_model_select,
                             inputs=[main_model_dropdown],
@@ -785,16 +786,17 @@ def build_app():
                             label="Image Generation Model",
                             info="Select an image model or choose Custom",
                         )
+                        _img_is_custom = default_image_model not in _IMAGE_MODEL_CHOICES[:-1]
                         image_model_name = gr.Textbox(
                             label="Custom Image Model",
-                            value=default_image_model,
-                            visible=default_image_model not in _IMAGE_MODEL_CHOICES[:-1],
+                            value=default_image_model if _img_is_custom else "",
+                            interactive=_img_is_custom,
                             info="Model for generating diagram images",
                         )
                         def _on_image_model_select(choice):
                             if choice == "Custom":
-                                return gr.update(visible=True, value="")
-                            return gr.update(visible=False, value=choice)
+                                return gr.update(interactive=True, value="")
+                            return gr.update(interactive=False, value=choice)
                         image_model_dropdown.change(
                             _on_image_model_select,
                             inputs=[image_model_dropdown],
