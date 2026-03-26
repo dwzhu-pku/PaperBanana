@@ -715,7 +715,7 @@ def build_app():
                             info="How to retrieve reference diagrams",
                         )
                         num_candidates = gr.Number(
-                            value=10, minimum=1, maximum=20, step=1,
+                            value=2, minimum=1, maximum=20, step=1,
                             label="Number of Candidates",
                         )
                         aspect_ratio = gr.Dropdown(
