@@ -1053,7 +1053,13 @@ async def call_model_with_retry_async(
          Priority: OpenRouter > Gemini > Anthropic > OpenAI
     """
     # Explicit provider prefix overrides auto-detection
-    if model_name.startswith("openrouter/"):
+    if model_name.startswith("local/"):
+        provider = "local"
+        actual_model = model_name[len("local/"):]
+    elif model_name.startswith("proma/"):
+        provider = "proma"
+        actual_model = model_name[len("proma/"):]
+    elif model_name.startswith("openrouter/"):
         provider = "openrouter"
         actual_model = model_name[len("openrouter/"):]
     elif model_name.startswith("claude-"):
@@ -1099,6 +1105,8 @@ async def call_model_with_retry_async(
     }
 
     call_fn = {
+        "local": call_local_with_retry_async,
+        "proma": call_proma_with_retry_async,
         "openrouter": call_openrouter_with_retry_async,
         "anthropic": call_claude_with_retry_async,
         "openai": call_openai_with_retry_async,
