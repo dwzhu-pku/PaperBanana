@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Vanilla Agent - Directly rendering images based on the method section.
+Visualizer Agent - Renders images from descriptions via image generation models.
 """
 
 from concurrent.futures import ProcessPoolExecutor

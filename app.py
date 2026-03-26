@@ -169,6 +169,12 @@ async def preflight_check_image_model(image_gen_model_name: str) -> str:
     if image_gen_model_name.startswith(("gpt-image", "openrouter/", "proma/", "local/")):
         return image_gen_model_name
 
+    # If OpenRouter is configured, it takes priority for image generation
+    # in VisualizerAgent, so Gemini preflight is irrelevant
+    from utils.generation_utils import openrouter_client
+    if openrouter_client is not None:
+        return image_gen_model_name
+
     if image_gen_model_name in _preflight_cache:
         return _preflight_cache[image_gen_model_name]
     from utils.generation_utils import (
@@ -237,7 +243,7 @@ async def preflight_check_image_model(image_gen_model_name: str) -> str:
 # Mock pipeline for testing without API calls
 # ---------------------------------------------------------------------------
 import random
-from utils.paperviz_processor import ProgressTracker, PaperVizProcessor as _PVP
+from utils.paperviz_processor import ProgressTracker
 
 
 def _run_async(coro):
@@ -252,7 +258,7 @@ def _run_async(coro):
 async def mock_process_parallel_candidates(data_list, exp_mode="dev_planner_critic", delay_per_stage=2.0, progress_callback=None):
     """Mock pipeline that simulates stages with delays. No API calls."""
     max_critic_rounds = data_list[0].get("max_critic_rounds", 3) if data_list else 3
-    stages = _PVP._get_pipeline_stages(exp_mode, max_critic_rounds)
+    stages = PaperVizProcessor._get_pipeline_stages(exp_mode, max_critic_rounds)
     tracker = ProgressTracker(len(data_list), stages, callback=progress_callback) if progress_callback else None
 
     # Simulate Retriever (serial)
@@ -371,7 +377,7 @@ def get_evolution_stages(result, exp_mode):
         if k in result and result[k]:
             stages.append({"name": "Stylist", "image_key": k, "desc_key": f"target_{task_name}_stylist_desc0", "description": "Stylistically refined"})
     # Critic rounds
-    for r in range(4):
+    for r in range(10):  # support up to 10 critic rounds dynamically
         k = f"target_{task_name}_critic_desc{r}_base64_jpg"
         if k in result and result[k]:
             stages.append({
@@ -389,7 +395,7 @@ def get_final_image(result, exp_mode):
     task_name = "diagram"
     final_key = None
     final_desc_key = None
-    for r in range(3, -1, -1):
+    for r in range(9, -1, -1):  # match evolution stages range
         k = f"target_{task_name}_critic_desc{r}_base64_jpg"
         if k in result and result[k]:
             final_key = k
@@ -1047,6 +1053,8 @@ def build_app():
                         raise gr.Error("Please provide edit instructions.")
 
                     buf = BytesIO()
+                    if pil_img.mode in ("RGBA", "LA", "P"):
+                        pil_img = pil_img.convert("RGB")
                     pil_img.save(buf, format="JPEG")
                     image_bytes = buf.getvalue()
 
