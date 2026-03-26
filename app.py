@@ -162,7 +162,15 @@ _preflight_cache: dict = {}
 
 
 async def preflight_check_image_model(image_gen_model_name: str) -> str:
-    """Test image model before running the full pipeline. Returns the working model name."""
+    """Test image model before running the full pipeline. Returns the working model name.
+
+    Only runs Gemini-specific preflight. For OpenRouter / gpt-image models,
+    returns the model name as-is since those paths have their own retry logic.
+    """
+    # Skip preflight for non-Gemini image models
+    if image_gen_model_name.startswith(("gpt-image", "openrouter/", "proma/", "local/")):
+        return image_gen_model_name
+
     if image_gen_model_name in _preflight_cache:
         return _preflight_cache[image_gen_model_name]
     from utils.generation_utils import (
@@ -174,7 +182,11 @@ async def preflight_check_image_model(image_gen_model_name: str) -> str:
 
     google_api_key = get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", "")
     if not google_api_key:
-        raise ImageGenerationError("No Google API key configured.")
+        # No Google key but might use OpenRouter for images — skip preflight
+        from utils.generation_utils import openrouter_client
+        if openrouter_client is not None:
+            return image_gen_model_name
+        raise ImageGenerationError("No Google API key configured and no OpenRouter available.")
 
     client = genai.Client(api_key=google_api_key)
     model = image_gen_model_name
@@ -247,7 +259,8 @@ async def mock_process_parallel_candidates(data_list, exp_mode="dev_planner_crit
     candidate_stages = [s for s in stages if s != "Retriever"]
 
     async def run_candidate(cid, data):
-        for stage in candidate_stages:
+        stopped_at = len(candidate_stages)
+        for idx, stage in enumerate(candidate_stages):
             model = "mock/image-model" if "Visualizer" in stage else "mock/text-model"
             if tracker:
                 tracker.enter_stage(cid, stage, model)
@@ -255,9 +268,14 @@ async def mock_process_parallel_candidates(data_list, exp_mode="dev_planner_crit
             if "Critic" in stage and random.random() < 0.3:
                 if tracker:
                     tracker.complete_stage(cid, stage)
+                stopped_at = idx + 1
                 break
             if tracker:
                 tracker.complete_stage(cid, stage)
+        # Mark remaining skipped stages as complete (match real pipeline behavior)
+        if tracker:
+            for remaining_stage in candidate_stages[stopped_at:]:
+                tracker.complete_stage(cid, remaining_stage)
         data["target_diagram_desc0"] = "Mock description for testing"
         data["target_diagram_desc0_base64_jpg"] = ""
         return data
@@ -845,8 +863,8 @@ def build_app():
                     if is_mock:
                         # --- Mock mode: no API calls ---
                         progress(0.05, desc="Mock mode: simulating pipeline...")
+                        loop = asyncio.new_event_loop()
                         try:
-                            loop = asyncio.new_event_loop()
                             results = loop.run_until_complete(
                                 mock_process_parallel_candidates(
                                     input_data, exp_mode=pipe_mode,
@@ -854,28 +872,30 @@ def build_app():
                                     progress_callback=_progress_cb,
                                 )
                             )
-                            loop.close()
                         except Exception as e:
                             raise gr.Error(f"Mock generation failed: {e}")
+                        finally:
+                            loop.close()
                     else:
                         # --- Real pipeline ---
                         # Preflight check for image model
                         progress(0.02, desc="Preflight: checking image model...")
+                        loop = asyncio.new_event_loop()
                         try:
-                            loop = asyncio.new_event_loop()
                             verified_model = loop.run_until_complete(
                                 preflight_check_image_model(img_model)
                             )
-                            loop.close()
-                            if verified_model != img_model:
-                                progress(0.05, desc=f"Fallback: using {verified_model}")
-                                img_model = verified_model
                         except Exception as e:
                             raise gr.Error(f"Image model preflight failed: {e}")
+                        finally:
+                            loop.close()
+                        if verified_model != img_model:
+                            progress(0.05, desc=f"Fallback: using {verified_model}")
+                            img_model = verified_model
 
                         progress(0.1, desc=f"Generating {n_cands} candidates in parallel...")
+                        loop = asyncio.new_event_loop()
                         try:
-                            loop = asyncio.new_event_loop()
                             results = loop.run_until_complete(
                                 process_parallel_candidates(
                                     input_data, exp_mode=pipe_mode, retrieval_setting=ret_setting,
@@ -883,9 +903,10 @@ def build_app():
                                     progress_callback=_progress_cb,
                                 )
                             )
-                            loop.close()
                         except Exception as e:
                             raise gr.Error(f"Generation failed: {e}")
+                        finally:
+                            loop.close()
 
                     progress(0.9, desc="Saving results...")
 
