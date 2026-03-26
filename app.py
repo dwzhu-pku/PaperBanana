@@ -242,6 +242,15 @@ import random
 from utils.paperviz_processor import ProgressTracker, PaperVizProcessor as _PVP
 
 
+def _run_async(coro):
+    """Run an async coroutine in a fresh event loop."""
+    loop = asyncio.new_event_loop()
+    try:
+        return loop.run_until_complete(coro)
+    finally:
+        loop.close()
+
+
 async def mock_process_parallel_candidates(data_list, exp_mode="dev_planner_critic", delay_per_stage=2.0, progress_callback=None):
     """Mock pipeline that simulates stages with delays. No API calls."""
     max_critic_rounds = data_list[0].get("max_critic_rounds", 3) if data_list else 3
@@ -591,7 +600,6 @@ def build_app():
         gen_results_state = gr.State([])
         gen_mode_state = gr.State("demo_planner_critic")
         gen_timestamp_state = gr.State("")
-        gen_json_path_state = gr.State("")
 
         # ================================================================
         # HEADER
@@ -888,7 +896,6 @@ def build_app():
                     max_rounds = int(max_rounds)
                     timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-                    # --- Progress callback that feeds Gradio progress bar ---
                     def _progress_cb(status):
                         pct = status.get("overall_pct", 0)
                         stage = status.get("stage", "")
@@ -907,53 +914,31 @@ def build_app():
                         font_cn=f_cn, font_en=f_en,
                     )
 
-                    if is_mock:
-                        # --- Mock mode: no API calls ---
-                        progress(0.05, desc="Mock mode: simulating pipeline...")
-                        loop = asyncio.new_event_loop()
-                        try:
-                            results = loop.run_until_complete(
-                                mock_process_parallel_candidates(
-                                    input_data, exp_mode=pipe_mode,
-                                    delay_per_stage=float(m_delay),
-                                    progress_callback=_progress_cb,
-                                )
-                            )
-                        except Exception as e:
-                            raise gr.Error(f"Mock generation failed: {e}")
-                        finally:
-                            loop.close()
-                    else:
-                        # --- Real pipeline ---
-                        # Preflight check for image model
-                        progress(0.02, desc="Preflight: checking image model...")
-                        loop = asyncio.new_event_loop()
-                        try:
-                            verified_model = loop.run_until_complete(
-                                preflight_check_image_model(img_model)
-                            )
-                        except Exception as e:
-                            raise gr.Error(f"Image model preflight failed: {e}")
-                        finally:
-                            loop.close()
-                        if verified_model != img_model:
-                            progress(0.05, desc=f"Fallback: using {verified_model}")
-                            img_model = verified_model
+                    try:
+                        if is_mock:
+                            progress(0.05, desc="Mock mode: simulating pipeline...")
+                            results = _run_async(mock_process_parallel_candidates(
+                                input_data, exp_mode=pipe_mode,
+                                delay_per_stage=float(m_delay),
+                                progress_callback=_progress_cb,
+                            ))
+                        else:
+                            progress(0.02, desc="Preflight: checking image model...")
+                            verified_model = _run_async(preflight_check_image_model(img_model))
+                            if verified_model != img_model:
+                                progress(0.05, desc=f"Fallback: using {verified_model}")
+                                img_model = verified_model
 
-                        progress(0.1, desc=f"Generating {n_cands} candidates in parallel...")
-                        loop = asyncio.new_event_loop()
-                        try:
-                            results = loop.run_until_complete(
-                                process_parallel_candidates(
-                                    input_data, exp_mode=pipe_mode, retrieval_setting=ret_setting,
-                                    main_model_name=m_model, image_gen_model_name=img_model,
-                                    progress_callback=_progress_cb,
-                                )
-                            )
-                        except Exception as e:
-                            raise gr.Error(f"Generation failed: {e}")
-                        finally:
-                            loop.close()
+                            progress(0.1, desc=f"Generating {n_cands} candidates in parallel...")
+                            results = _run_async(process_parallel_candidates(
+                                input_data, exp_mode=pipe_mode, retrieval_setting=ret_setting,
+                                main_model_name=m_model, image_gen_model_name=img_model,
+                                progress_callback=_progress_cb,
+                            ))
+                    except gr.Error:
+                        raise
+                    except Exception as e:
+                        raise gr.Error(f"Generation failed: {e}")
 
                     progress(0.9, desc="Saving results...")
 
@@ -970,11 +955,11 @@ def build_app():
                         json_filename = None
 
                     # Build gallery images
-                    gallery_images = []
-                    for idx, res in enumerate(results):
-                        img, _ = get_final_image(res, pipe_mode)
-                        if img:
-                            gallery_images.append((img, f"Candidate {idx}"))
+                    gallery_images = [
+                        (img, f"Candidate {idx}")
+                        for idx, res in enumerate(results)
+                        if (img := get_final_image(res, pipe_mode)[0])
+                    ]
 
                     # Build evolution HTML
                     evo_parts = []
@@ -1007,8 +992,8 @@ def build_app():
                             pass
 
                     status = f"Generated {len(results)} candidates at {datetime.now().strftime('%H:%M:%S')}."
-                    if json_filename and Path(str(json_filename)).exists():
-                        status += f" JSON saved to {Path(str(json_filename)).name}."
+                    if json_filename and json_filename.exists():
+                        status += f" JSON saved to {json_filename.name}."
 
                     progress(1.0, desc="Done!")
                     return (
@@ -1072,15 +1057,9 @@ def build_app():
                     pil_img.save(buf, format="JPEG")
                     image_bytes = buf.getvalue()
 
-                    loop = asyncio.new_event_loop()
-                    try:
-                        refined_bytes, msg = loop.run_until_complete(
-                            refine_image_with_nanoviz(image_bytes, prompt, aspect_ratio=ar, image_size=resolution)
-                        )
-                    except Exception as e:
-                        raise gr.Error(f"Refinement error: {e}")
-                    finally:
-                        loop.close()
+                    refined_bytes, msg = _run_async(
+                        refine_image_with_nanoviz(image_bytes, prompt, aspect_ratio=ar, image_size=resolution)
+                    )
 
                     if not refined_bytes:
                         raise gr.Error(msg)
