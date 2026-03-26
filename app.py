@@ -818,18 +818,25 @@ def build_app():
                             label="Chinese Font",
                             info="Font for Chinese text in diagrams",
                         )
-                        font_cn = gr.Textbox(
-                            label="Custom Chinese Font",
-                            value="思源黑体",
-                            interactive=False,
-                        )
+                        with gr.Column(visible=False) as font_cn_custom_col:
+                            font_cn_custom = gr.Textbox(
+                                label="Custom Chinese Font",
+                                value="",
+                            )
+                        # Hidden state that always holds the effective font value
+                        font_cn = gr.State("思源黑体")
                         def _on_font_cn_select(choice):
                             if choice == "Custom":
-                                return gr.update(interactive=True, value="")
-                            return gr.update(interactive=False, value=choice)
+                                return gr.update(visible=True), gr.update(value=""), ""
+                            return gr.update(visible=False), gr.update(value=choice), choice
                         font_cn_dropdown.change(
                             _on_font_cn_select,
                             inputs=[font_cn_dropdown],
+                            outputs=[font_cn_custom_col, font_cn_custom, font_cn],
+                        )
+                        font_cn_custom.change(
+                            lambda v: v,
+                            inputs=[font_cn_custom],
                             outputs=[font_cn],
                         )
 
@@ -839,18 +846,24 @@ def build_app():
                             label="English Font",
                             info="Font for English text and numbers",
                         )
-                        font_en = gr.Textbox(
-                            label="Custom English Font",
-                            value="Arial",
-                            interactive=False,
-                        )
+                        with gr.Column(visible=False) as font_en_custom_col:
+                            font_en_custom = gr.Textbox(
+                                label="Custom English Font",
+                                value="",
+                            )
+                        font_en = gr.State("Arial")
                         def _on_font_en_select(choice):
                             if choice == "Custom":
-                                return gr.update(interactive=True, value="")
-                            return gr.update(interactive=False, value=choice)
+                                return gr.update(visible=True), gr.update(value=""), ""
+                            return gr.update(visible=False), gr.update(value=choice), choice
                         font_en_dropdown.change(
                             _on_font_en_select,
                             inputs=[font_en_dropdown],
+                            outputs=[font_en_custom_col, font_en_custom, font_en],
+                        )
+                        font_en_custom.change(
+                            lambda v: v,
+                            inputs=[font_en_custom],
                             outputs=[font_en],
                         )
                         mock_mode = gr.Checkbox(
