@@ -56,6 +56,8 @@ anthropic_client = None
 openai_client = None
 openrouter_client = None
 openrouter_api_key = ""
+proma_client = None
+local_client = None
 
 
 def reinitialize_clients():
@@ -68,6 +70,7 @@ def reinitialize_clients():
     """
     global gemini_client, anthropic_client, openai_client
     global openrouter_client, openrouter_api_key
+    global proma_client, local_client
 
     initialized = []
 
@@ -105,6 +108,28 @@ def reinitialize_clients():
         initialized.append("OpenRouter")
     else:
         openrouter_client = None
+
+    key = get_config_val("api_keys", "proma_api_key", "PROMA_API_KEY", "")
+    if key:
+        proma_client = AsyncOpenAI(
+            base_url="https://api.proma.cool/v1",
+            api_key=key,
+        )
+        print("Initialized Proma Client with API Key")
+        initialized.append("Proma")
+    else:
+        proma_client = None
+
+    key = get_config_val("api_keys", "local_api_key", "LOCAL_API_KEY", "")
+    if key:
+        local_client = AsyncOpenAI(
+            base_url="http://localhost:3000/api/v1",
+            api_key=key,
+        )
+        print("Initialized Local Proxy Client with API Key")
+        initialized.append("Local")
+    else:
+        local_client = None
 
     return initialized
 
@@ -818,6 +843,91 @@ async def call_openrouter_image_generation_with_retry_async(
                 return ["Error"]
 
     return ["Error"]
+
+
+async def call_proma_with_retry_async(
+    model_name, contents, config, max_attempts=5, retry_delay=10, error_context=""
+):
+    """
+    ASYNC: Call Proma API (OpenAI-compatible) with asynchronous retry logic.
+    """
+    if proma_client is None:
+        raise RuntimeError(
+            "Proma client was not initialized: missing API key. "
+            "Please set PROMA_API_KEY in environment, or configure "
+            "api_keys.proma_api_key in configs/model_config.yaml."
+        )
+
+    system_prompt = config["system_prompt"]
+    temperature = config["temperature"]
+    candidate_num = config["candidate_num"]
+    max_completion_tokens = config["max_completion_tokens"]
+    response_text_list = []
+
+    current_contents = contents
+
+    is_input_valid = False
+    for attempt in range(max_attempts):
+        try:
+            openai_contents = _convert_to_openai_format(current_contents)
+            first_response = await proma_client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": openai_contents},
+                ],
+                temperature=temperature,
+                max_completion_tokens=max_completion_tokens,
+            )
+            content = first_response.choices[0].message.content or ""
+            if not content.strip():
+                print(f"Proma returned empty content, retrying...")
+                if attempt < max_attempts - 1:
+                    await asyncio.sleep(retry_delay)
+                continue
+            response_text_list.append(content)
+            is_input_valid = True
+            break
+
+        except Exception as e:
+            context_msg = f" for {error_context}" if error_context else ""
+            current_delay = min(retry_delay * (2 ** attempt), 60)
+            print(
+                f"Proma attempt {attempt + 1} failed{context_msg}: {e}. "
+                f"Retrying in {current_delay}s..."
+            )
+            if attempt < max_attempts - 1:
+                await asyncio.sleep(current_delay)
+
+    if not is_input_valid:
+        context_msg = f" for {error_context}" if error_context else ""
+        print(f"Error: All {max_attempts} Proma attempts failed{context_msg}.")
+        return ["Error"] * candidate_num
+
+    remaining_candidates = candidate_num - 1
+    if remaining_candidates > 0:
+        valid_openai_contents = _convert_to_openai_format(current_contents)
+        tasks = [
+            proma_client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": valid_openai_contents},
+                ],
+                temperature=temperature,
+                max_completion_tokens=max_completion_tokens,
+            )
+            for _ in range(remaining_candidates)
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        for res in results:
+            if isinstance(res, Exception):
+                print(f"Error generating a subsequent Proma candidate: {res}")
+                response_text_list.append("Error")
+            else:
+                response_text_list.append(res.choices[0].message.content or "Error")
+
+    return response_text_list
 
 
 def _to_openrouter_model_id(model_name: str) -> str:
