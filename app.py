@@ -663,14 +663,17 @@ def build_app():
             gr.Markdown("*Keys are used only for this session and never stored.*")
 
             def apply_keys(or_key, g_key, proma_key, local_key):
-                if or_key:
-                    os.environ["OPENROUTER_API_KEY"] = or_key
-                if g_key:
-                    os.environ["GOOGLE_API_KEY"] = g_key
-                if proma_key:
-                    os.environ["PROMA_API_KEY"] = proma_key
-                if local_key:
-                    os.environ["LOCAL_API_KEY"] = local_key
+                # Set or clear each key so users can remove providers
+                for env_var, val in [
+                    ("OPENROUTER_API_KEY", or_key),
+                    ("GOOGLE_API_KEY", g_key),
+                    ("PROMA_API_KEY", proma_key),
+                    ("LOCAL_API_KEY", local_key),
+                ]:
+                    if val:
+                        os.environ[env_var] = val
+                    else:
+                        os.environ.pop(env_var, None)
                 from utils.generation_utils import reinitialize_clients
                 initialized = reinitialize_clients()
                 if initialized:
