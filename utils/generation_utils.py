@@ -930,6 +930,102 @@ async def call_proma_with_retry_async(
     return response_text_list
 
 
+async def _local_stream_collect(client, model_name, messages, temperature, max_completion_tokens):
+    """Collect a full response from a streaming local proxy call."""
+    stream = await client.chat.completions.create(
+        model=model_name,
+        messages=messages,
+        temperature=temperature,
+        max_completion_tokens=max_completion_tokens,
+        stream=True,
+    )
+    chunks = []
+    async for chunk in stream:
+        if chunk.choices and chunk.choices[0].delta and chunk.choices[0].delta.content:
+            chunks.append(chunk.choices[0].delta.content)
+    return "".join(chunks)
+
+
+async def call_local_with_retry_async(
+    model_name, contents, config, max_attempts=5, retry_delay=10, error_context=""
+):
+    """
+    ASYNC: Call local proxy API (OpenAI-compatible, streaming) with asynchronous retry logic.
+    """
+    if local_client is None:
+        raise RuntimeError(
+            "Local proxy client was not initialized: missing API key. "
+            "Please set LOCAL_API_KEY in environment, or configure "
+            "api_keys.local_api_key in configs/model_config.yaml."
+        )
+
+    system_prompt = config["system_prompt"]
+    temperature = config["temperature"]
+    candidate_num = config["candidate_num"]
+    max_completion_tokens = config["max_completion_tokens"]
+    response_text_list = []
+
+    current_contents = contents
+
+    is_input_valid = False
+    for attempt in range(max_attempts):
+        try:
+            openai_contents = _convert_to_openai_format(current_contents)
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": openai_contents},
+            ]
+            content = await _local_stream_collect(
+                local_client, model_name, messages, temperature, max_completion_tokens
+            )
+            if not content.strip():
+                print(f"Local proxy returned empty content, retrying...")
+                if attempt < max_attempts - 1:
+                    await asyncio.sleep(retry_delay)
+                continue
+            response_text_list.append(content)
+            is_input_valid = True
+            break
+
+        except Exception as e:
+            context_msg = f" for {error_context}" if error_context else ""
+            current_delay = min(retry_delay * (2 ** attempt), 60)
+            print(
+                f"Local proxy attempt {attempt + 1} failed{context_msg}: {e}. "
+                f"Retrying in {current_delay}s..."
+            )
+            if attempt < max_attempts - 1:
+                await asyncio.sleep(current_delay)
+
+    if not is_input_valid:
+        context_msg = f" for {error_context}" if error_context else ""
+        print(f"Error: All {max_attempts} Local proxy attempts failed{context_msg}.")
+        return ["Error"] * candidate_num
+
+    remaining_candidates = candidate_num - 1
+    if remaining_candidates > 0:
+        valid_openai_contents = _convert_to_openai_format(current_contents)
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": valid_openai_contents},
+        ]
+        tasks = [
+            _local_stream_collect(
+                local_client, model_name, messages, temperature, max_completion_tokens
+            )
+            for _ in range(remaining_candidates)
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        for res in results:
+            if isinstance(res, Exception):
+                print(f"Error generating a subsequent Local proxy candidate: {res}")
+                response_text_list.append("Error")
+            else:
+                response_text_list.append(res if res.strip() else "Error")
+
+    return response_text_list
+
+
 def _to_openrouter_model_id(model_name: str) -> str:
     """Convert a bare model name to OpenRouter format (provider/model).
 
