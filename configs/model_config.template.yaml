@@ -25,3 +25,5 @@ api_keys:
   openai_api_key: ""
   anthropic_api_key: ""
   openrouter_api_key: "" # e.g. "sk-or-v1-xxxxx". Set model_name to "openrouter/<model>" to use.
+  proma_api_key: "" # Proma API. Set model_name to "proma/<model>" to use.
+  local_api_key: "" # Local proxy at localhost:3000. Set model_name to "local/<model>" to use.

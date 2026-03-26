@@ -20,12 +20,9 @@ import json
 import asyncio
 import base64
 from io import BytesIO
-from functools import partial
-from ast import literal_eval
 from typing import List, Dict, Any
 
 import httpx
-import aiofiles
 from PIL import Image
 from google import genai
 from google.genai import types
@@ -56,22 +53,35 @@ anthropic_client = None
 openai_client = None
 openrouter_client = None
 openrouter_api_key = ""
+proma_client = None
+local_client = None
 
 
-def reinitialize_clients():
+def reinitialize_clients(env_only=False):
     """(Re)build all API clients from current env vars / config file.
 
     Called once at module load and can be called again at runtime
     (e.g. after the user sets new API keys via the Gradio UI).
 
+    Args:
+        env_only: If True, only read from env vars (skip config file fallback).
+                  Use this when called from UI Apply Keys so clearing a key
+                  actually disables the provider.
+
     Returns a list of client names that were successfully initialized.
     """
     global gemini_client, anthropic_client, openai_client
     global openrouter_client, openrouter_api_key
+    global proma_client, local_client
+
+    def _get_key(section, key, env_var):
+        if env_only:
+            return os.getenv(env_var, "")
+        return get_config_val(section, key, env_var, "")
 
     initialized = []
 
-    api_key = get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", "")
+    api_key = _get_key("api_keys", "google_api_key", "GOOGLE_API_KEY")
     if api_key:
         gemini_client = genai.Client(api_key=api_key)
         print("Initialized Gemini Client with API Key")
@@ -79,7 +89,7 @@ def reinitialize_clients():
     else:
         gemini_client = None
 
-    key = get_config_val("api_keys", "anthropic_api_key", "ANTHROPIC_API_KEY", "")
+    key = _get_key("api_keys", "anthropic_api_key", "ANTHROPIC_API_KEY")
     if key:
         anthropic_client = AsyncAnthropic(api_key=key)
         print("Initialized Anthropic Client with API Key")
@@ -87,7 +97,7 @@ def reinitialize_clients():
     else:
         anthropic_client = None
 
-    key = get_config_val("api_keys", "openai_api_key", "OPENAI_API_KEY", "")
+    key = _get_key("api_keys", "openai_api_key", "OPENAI_API_KEY")
     if key:
         openai_client = AsyncOpenAI(api_key=key)
         print("Initialized OpenAI Client with API Key")
@@ -95,7 +105,7 @@ def reinitialize_clients():
     else:
         openai_client = None
 
-    openrouter_api_key = get_config_val("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY", "")
+    openrouter_api_key = _get_key("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY")
     if openrouter_api_key:
         openrouter_client = AsyncOpenAI(
             base_url="https://openrouter.ai/api/v1",
@@ -105,6 +115,28 @@ def reinitialize_clients():
         initialized.append("OpenRouter")
     else:
         openrouter_client = None
+
+    key = _get_key("api_keys", "proma_api_key", "PROMA_API_KEY")
+    if key:
+        proma_client = AsyncOpenAI(
+            base_url="https://api.proma.cool/v1",
+            api_key=key,
+        )
+        print("Initialized Proma Client with API Key")
+        initialized.append("Proma")
+    else:
+        proma_client = None
+
+    key = _get_key("api_keys", "local_api_key", "LOCAL_API_KEY")
+    if key:
+        local_client = AsyncOpenAI(
+            base_url="http://localhost:3000/api/v1",
+            api_key=key,
+        )
+        print("Initialized Local Proxy Client with API Key")
+        initialized.append("Local")
+    else:
+        local_client = None
 
     return initialized
 
@@ -142,6 +174,11 @@ def _convert_to_gemini_parts(contents: List[Dict[str, Any]]) -> List[types.Part]
     return gemini_parts
 
 
+class ImageGenerationError(Exception):
+    """Raised when image generation fails irrecoverably (400 region block or all 503 fallbacks exhausted)."""
+    pass
+
+
 async def call_gemini_with_retry_async(
     model_name, contents, config, max_attempts=5, retry_delay=5, error_context=""
 ):
@@ -156,45 +193,36 @@ async def call_gemini_with_retry_async(
 
     result_list = []
     target_candidate_count = config.candidate_count
-    # Gemini API max candidate count is 8. We will call multiple times if needed.
-    if config.candidate_count > 8:
+    if target_candidate_count > 8:
+        import copy as _copy
+        config = _copy.copy(config)
         config.candidate_count = 8
 
-    current_contents = contents
-    for attempt in range(max_attempts):
+    attempt = 0
+    while attempt < max_attempts:
         try:
-            # Use global client
-            client = gemini_client
-
-            # Convert generic content list to Gemini's format right before the API call
-            gemini_contents = _convert_to_gemini_parts(current_contents)
-            response = await client.aio.models.generate_content(
+            gemini_contents = _convert_to_gemini_parts(contents)
+            response = await gemini_client.aio.models.generate_content(
                 model=model_name, contents=gemini_contents, config=config
             )
 
-            # If we are using Image Generation models to generate images
-            if (
-                "nanoviz" in model_name
-                or "image" in model_name
-            ):
+            if "nanoviz" in model_name or "image" in model_name:
                 raw_response_list = []
                 if not response.candidates or not response.candidates[0].content.parts:
                     print(
                         f"[Warning]: Failed to generate image, retrying in {retry_delay} seconds..."
                     )
                     await asyncio.sleep(retry_delay)
+                    attempt += 1
                     continue
 
-                # In this mode, we can only have one candidate
                 for part in response.candidates[0].content.parts:
                     if part.inline_data:
-                        # Append base64 encoded image data to raw_response_list
                         raw_response_list.append(
                             base64.b64encode(part.inline_data.data).decode("utf-8")
                         )
                         break
 
-            # Otherwise, for text generation models
             else:
                 raw_response_list = [
                     part.text
@@ -208,59 +236,106 @@ async def call_gemini_with_retry_async(
                 break
 
         except Exception as e:
+            error_str = str(e)
             context_msg = f" for {error_context}" if error_context else ""
-            
-            # Exponential backoff (capped at 30s)
+
+            error_lower = error_str.lower()
+            is_region_error = "400" in error_str and "location" in error_lower
+            is_overload_error = "503" in error_str or "unavailable" in error_lower
+            is_image_model = "image" in model_name or "nanoviz" in model_name
+
+            if is_region_error and is_image_model:
+                msg = (
+                    f"❌ Model {model_name} blocked by region restriction (400){context_msg}. "
+                    f"Please check your proxy/VPN configuration."
+                )
+                print(msg)
+                fallback_events.append({
+                    "from": model_name, "to": "ABORTED", "reason": "region restriction (400)",
+                })
+                raise ImageGenerationError(msg)
+
+            if is_overload_error and is_image_model:
+                if attempt < max_attempts - 1:
+                    current_delay = min(retry_delay * (2 ** attempt), 30)
+                    print(
+                        f"Attempt {attempt + 1} for model {model_name} failed (503){context_msg}. "
+                        f"Retrying in {current_delay} seconds..."
+                    )
+                    await asyncio.sleep(current_delay)
+                    attempt += 1
+                    continue
+                else:
+                    fallback = _get_fallback_model(model_name)
+                    if fallback and fallback != model_name:
+                        print(
+                            f"⚠️  Model {model_name} overloaded (503), all {max_attempts} retries failed{context_msg}. "
+                            f"Switching to fallback: {fallback}"
+                        )
+                        fallback_events.append({
+                            "from": model_name, "to": fallback, "reason": "overloaded (503)",
+                        })
+                        model_name = fallback
+                        attempt = 0
+                        continue
+                    else:
+                        msg = (
+                            f"❌ All image models exhausted (503){context_msg}. "
+                            f"Last model: {model_name}. All retries and fallbacks failed."
+                        )
+                        print(msg)
+                        fallback_events.append({
+                            "from": model_name, "to": "ABORTED", "reason": "all models exhausted (503)",
+                        })
+                        raise ImageGenerationError(msg)
+
             current_delay = min(retry_delay * (2 ** attempt), 30)
-            
             print(
                 f"Attempt {attempt + 1} for model {model_name} failed{context_msg}: {e}. Retrying in {current_delay} seconds..."
             )
-
             if attempt < max_attempts - 1:
                 await asyncio.sleep(current_delay)
             else:
                 print(f"Error: All {max_attempts} attempts failed{context_msg}")
                 result_list = ["Error"] * target_candidate_count
+        attempt += 1
 
     if len(result_list) < target_candidate_count:
         result_list.extend(["Error"] * (target_candidate_count - len(result_list)))
     return result_list
 
-def _convert_to_claude_format(contents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """
-    Converts the generic content list to Claude's API format.
-    Currently, the formats are identical, so this acts as a pass-through
-    for architectural consistency and future-proofing.
 
-    Claude API's format:
-    [
-        {"type": "text", "text": "some text"},
-        {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": "..."}},
-        ...
-    ]
-    """
+_IMAGE_MODEL_FALLBACK_CHAIN = [
+    "gemini-3.1-flash-image-preview",
+    "gemini-3-pro-image-preview",
+    "gemini-2.5-flash-image",
+]
+
+_fallback_used = {}
+fallback_events = []
+
+
+def _get_fallback_model(current_model: str) -> str:
+    """Get the next fallback model in the chain. Returns current model if no fallback available."""
+    if current_model in _fallback_used:
+        return _fallback_used[current_model]
+
+    if current_model in _IMAGE_MODEL_FALLBACK_CHAIN:
+        idx = _IMAGE_MODEL_FALLBACK_CHAIN.index(current_model)
+        for next_idx in range(idx + 1, len(_IMAGE_MODEL_FALLBACK_CHAIN)):
+            fallback = _IMAGE_MODEL_FALLBACK_CHAIN[next_idx]
+            if fallback != current_model:
+                _fallback_used[current_model] = fallback
+                return fallback
+    return current_model
+
+def _convert_to_claude_format(contents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Convert generic content list to Claude's API format (currently identical)."""
     return contents
 
 
 def _convert_to_openai_format(contents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """
-    Converts the generic content list (Claude format) to OpenAI's API format.
-    
-    Claude format:
-    [
-        {"type": "text", "text": "some text"},
-        {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": "..."}},
-        ...
-    ]
-    
-    OpenAI format:
-    [
-        {"type": "text", "text": "some text"},
-        {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64,..."}},
-        ...
-    ]
-    """
+    """Convert generic content list to OpenAI's API format (image -> image_url)."""
     openai_contents = []
     for item in contents:
         if item.get("type") == "text":
@@ -299,18 +374,11 @@ async def call_claude_with_retry_async(
     max_output_tokens = config["max_output_tokens"]
     response_text_list = []
 
-    # --- Preparation Phase ---
-    # Convert to the Claude-specific format and perform an initial optimistic resize.
-    current_contents = contents
-
-    # --- Validation and Remediation Phase ---
-    # We loop until we get a single successful response, proving the input is valid.
-    # Note that this check is required because Claude only has 128k / 256k context windows.
-    # For Gemini series that support 1M, we do not need this step.
+    # Validate input with a single request first (Claude has smaller context windows).
     is_input_valid = False
     for attempt in range(max_attempts):
         try:
-            claude_contents = _convert_to_claude_format(current_contents)
+            claude_contents = _convert_to_claude_format(contents)
             # Attempt to generate the very first candidate.
             first_response = await anthropic_client.messages.create(
                 model=model_name,
@@ -324,28 +392,19 @@ async def call_claude_with_retry_async(
             break
 
         except Exception as e:
-            error_str = str(e).lower()
             context_msg = f" for {error_context}" if error_context else ""
-            print(
-                f"Validation attempt {attempt + 1} failed{context_msg}: {error_str}. Retrying in {retry_delay} seconds..."
-            )
+            print(f"Attempt {attempt + 1} failed{context_msg}: {e}. Retrying in {retry_delay}s...")
             if attempt < max_attempts - 1:
                 await asyncio.sleep(retry_delay)
 
-    # --- Sampling Phase ---
     if not is_input_valid:
-        print(
-            f"Error: All {max_attempts} attempts failed to validate the input{context_msg}. Returning errors."
-        )
+        context_msg = f" for {error_context}" if error_context else ""
+        print(f"Error: All {max_attempts} Claude attempts failed{context_msg}.")
         return ["Error"] * candidate_num
 
-    # We already have 1 successful candidate, now generate the rest.
     remaining_candidates = candidate_num - 1
     if remaining_candidates > 0:
-        print(
-            f"Input validated. Now generating remaining {remaining_candidates} candidates..."
-        )
-        valid_claude_contents = _convert_to_claude_format(current_contents)
+        valid_claude_contents = _convert_to_claude_format(contents)
         tasks = [
             anthropic_client.messages.create(
                 model=model_name,
@@ -382,17 +441,10 @@ async def call_openai_with_retry_async(
     max_completion_tokens = config["max_completion_tokens"]
     response_text_list = []
 
-    # --- Preparation Phase ---
-    # Convert to the OpenAI-specific format
-    current_contents = contents
-
-    # --- Validation and Remediation Phase ---
-    # We loop until we get a single successful response, proving the input is valid.
     is_input_valid = False
     for attempt in range(max_attempts):
         try:
-            openai_contents = _convert_to_openai_format(current_contents)
-            # Attempt to generate the very first candidate.
+            openai_contents = _convert_to_openai_format(contents)
             first_response = await openai_client.chat.completions.create(
                 model=model_name,
                 messages=[
@@ -411,31 +463,22 @@ async def call_openai_with_retry_async(
                 continue
             response_text_list.append(content)
             is_input_valid = True
-            break  # Exit the validation loop
+            break
 
         except Exception as e:
-            error_str = str(e).lower()
             context_msg = f" for {error_context}" if error_context else ""
-            print(
-                f"Validation attempt {attempt + 1} failed{context_msg}: {error_str}. Retrying in {retry_delay} seconds..."
-            )
+            print(f"OpenAI attempt {attempt + 1} failed{context_msg}: {e}. Retrying in {retry_delay}s...")
             if attempt < max_attempts - 1:
                 await asyncio.sleep(retry_delay)
 
-    # --- Sampling Phase ---
     if not is_input_valid:
-        print(
-            f"Error: All {max_attempts} attempts failed to validate the input{context_msg}. Returning errors."
-        )
+        context_msg = f" for {error_context}" if error_context else ""
+        print(f"Error: All {max_attempts} OpenAI attempts failed{context_msg}.")
         return ["Error"] * candidate_num
 
-    # We already have 1 successful candidate, now generate the rest.
     remaining_candidates = candidate_num - 1
     if remaining_candidates > 0:
-        print(
-            f"Input validated. Now generating remaining {remaining_candidates} candidates..."
-        )
-        valid_openai_contents = _convert_to_openai_format(current_contents)
+        valid_openai_contents = _convert_to_openai_format(contents)
         tasks = [
             openai_client.chat.completions.create(
                 model=model_name,
@@ -471,20 +514,15 @@ async def call_openai_image_generation_with_retry_async(
     background = config.get("background", "opaque")
     output_format = config.get("output_format", "png")
     
-    # Base parameters for all models
     gen_params = {
         "model": model_name,
         "prompt": prompt,
         "n": 1,
         "size": size,
-    }
-    
-    # Add GPT-Image specific parameters
-    gen_params.update({
         "quality": quality,
         "background": background,
         "output_format": output_format,
-    })
+    }
 
     for attempt in range(max_attempts):
         try:
@@ -534,12 +572,10 @@ async def call_openrouter_with_retry_async(
     max_completion_tokens = config["max_completion_tokens"]
     response_text_list = []
 
-    current_contents = contents
-
     is_input_valid = False
     for attempt in range(max_attempts):
         try:
-            openai_contents = _convert_to_openai_format(current_contents)
+            openai_contents = _convert_to_openai_format(contents)
             first_response = await openrouter_client.chat.completions.create(
                 model=model_name,
                 messages=[
@@ -577,7 +613,7 @@ async def call_openrouter_with_retry_async(
 
     remaining_candidates = candidate_num - 1
     if remaining_candidates > 0:
-        valid_openai_contents = _convert_to_openai_format(current_contents)
+        valid_openai_contents = _convert_to_openai_format(contents)
         tasks = [
             openrouter_client.chat.completions.create(
                 model=model_name,
@@ -731,6 +767,203 @@ async def call_openrouter_image_generation_with_retry_async(
     return ["Error"]
 
 
+async def call_proma_with_retry_async(
+    model_name, contents, config, max_attempts=5, retry_delay=10, error_context=""
+):
+    """
+    ASYNC: Call Proma API (OpenAI-compatible) with asynchronous retry logic.
+    """
+    if proma_client is None:
+        raise RuntimeError(
+            "Proma client was not initialized: missing API key. "
+            "Please set PROMA_API_KEY in environment, or configure "
+            "api_keys.proma_api_key in configs/model_config.yaml."
+        )
+
+    system_prompt = config["system_prompt"]
+    temperature = config["temperature"]
+    candidate_num = config["candidate_num"]
+    max_completion_tokens = config["max_completion_tokens"]
+    response_text_list = []
+
+    is_input_valid = False
+    for attempt in range(max_attempts):
+        try:
+            openai_contents = _convert_to_openai_format(contents)
+            first_response = await proma_client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": openai_contents},
+                ],
+                temperature=temperature,
+                max_completion_tokens=max_completion_tokens,
+            )
+            content = first_response.choices[0].message.content or ""
+            if not content.strip():
+                print(f"Proma returned empty content, retrying...")
+                if attempt < max_attempts - 1:
+                    await asyncio.sleep(retry_delay)
+                continue
+            response_text_list.append(content)
+            is_input_valid = True
+            break
+
+        except Exception as e:
+            context_msg = f" for {error_context}" if error_context else ""
+            current_delay = min(retry_delay * (2 ** attempt), 60)
+            print(
+                f"Proma attempt {attempt + 1} failed{context_msg}: {e}. "
+                f"Retrying in {current_delay}s..."
+            )
+            if attempt < max_attempts - 1:
+                await asyncio.sleep(current_delay)
+
+    if not is_input_valid:
+        context_msg = f" for {error_context}" if error_context else ""
+        print(f"Error: All {max_attempts} Proma attempts failed{context_msg}.")
+        return ["Error"] * candidate_num
+
+    remaining_candidates = candidate_num - 1
+    if remaining_candidates > 0:
+        valid_openai_contents = _convert_to_openai_format(contents)
+        tasks = [
+            proma_client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": valid_openai_contents},
+                ],
+                temperature=temperature,
+                max_completion_tokens=max_completion_tokens,
+            )
+            for _ in range(remaining_candidates)
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        for res in results:
+            if isinstance(res, Exception):
+                print(f"Error generating a subsequent Proma candidate: {res}")
+                response_text_list.append("Error")
+            else:
+                response_text_list.append(res.choices[0].message.content or "Error")
+
+    return response_text_list
+
+
+async def _local_stream_collect(client, model_name, messages, temperature, max_completion_tokens):
+    """Collect a full response from a streaming local proxy call.
+
+    Validates that the stream completed normally (finish_reason == 'stop').
+    Raises RuntimeError on truncated or abnormal stream termination.
+    """
+    stream = await client.chat.completions.create(
+        model=model_name,
+        messages=messages,
+        temperature=temperature,
+        max_completion_tokens=max_completion_tokens,
+        stream=True,
+    )
+    chunks = []
+    finish_reason = None
+    async for chunk in stream:
+        if chunk.choices:
+            choice = chunk.choices[0]
+            if choice.delta and choice.delta.content:
+                chunks.append(choice.delta.content)
+            if choice.finish_reason:
+                finish_reason = choice.finish_reason
+    result = "".join(chunks)
+    if finish_reason != "stop":
+        if finish_reason is None:
+            raise RuntimeError(
+                "Local proxy stream ended without finish_reason 'stop' "
+                "(got None; likely truncated or aborted)"
+            )
+        raise RuntimeError(
+            f"Local proxy stream ended with finish_reason={finish_reason!r} "
+            "(expected 'stop')"
+        )
+    return result
+
+
+async def call_local_with_retry_async(
+    model_name, contents, config, max_attempts=5, retry_delay=10, error_context=""
+):
+    """
+    ASYNC: Call local proxy API (OpenAI-compatible, streaming) with asynchronous retry logic.
+    """
+    if local_client is None:
+        raise RuntimeError(
+            "Local proxy client was not initialized: missing API key. "
+            "Please set LOCAL_API_KEY in environment, or configure "
+            "api_keys.local_api_key in configs/model_config.yaml."
+        )
+
+    system_prompt = config["system_prompt"]
+    temperature = config["temperature"]
+    candidate_num = config["candidate_num"]
+    max_completion_tokens = config["max_completion_tokens"]
+    response_text_list = []
+
+    is_input_valid = False
+    for attempt in range(max_attempts):
+        try:
+            openai_contents = _convert_to_openai_format(contents)
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": openai_contents},
+            ]
+            content = await _local_stream_collect(
+                local_client, model_name, messages, temperature, max_completion_tokens
+            )
+            if not content.strip():
+                print(f"Local proxy returned empty content, retrying...")
+                if attempt < max_attempts - 1:
+                    await asyncio.sleep(retry_delay)
+                continue
+            response_text_list.append(content)
+            is_input_valid = True
+            break
+
+        except Exception as e:
+            context_msg = f" for {error_context}" if error_context else ""
+            current_delay = min(retry_delay * (2 ** attempt), 60)
+            print(
+                f"Local proxy attempt {attempt + 1} failed{context_msg}: {e}. "
+                f"Retrying in {current_delay}s..."
+            )
+            if attempt < max_attempts - 1:
+                await asyncio.sleep(current_delay)
+
+    if not is_input_valid:
+        context_msg = f" for {error_context}" if error_context else ""
+        print(f"Error: All {max_attempts} Local proxy attempts failed{context_msg}.")
+        return ["Error"] * candidate_num
+
+    remaining_candidates = candidate_num - 1
+    if remaining_candidates > 0:
+        valid_openai_contents = _convert_to_openai_format(contents)
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": valid_openai_contents},
+        ]
+        tasks = [
+            _local_stream_collect(
+                local_client, model_name, messages, temperature, max_completion_tokens
+            )
+            for _ in range(remaining_candidates)
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        for res in results:
+            if isinstance(res, Exception):
+                print(f"Error generating a subsequent Local proxy candidate: {res}")
+                response_text_list.append("Error")
+            else:
+                response_text_list.append(res if res.strip() else "Error")
+
+    return response_text_list
+
+
 def _to_openrouter_model_id(model_name: str) -> str:
     """Convert a bare model name to OpenRouter format (provider/model).
 
@@ -752,13 +985,24 @@ async def call_model_with_retry_async(
     Unified router that dispatches to the correct provider based on model_name.
 
     Routing rules:
-      1. Explicit prefix overrides: "openrouter/" -> OpenRouter, "claude-" -> Anthropic,
-         "gpt-"/"o1-"/"o3-"/"o4-" -> OpenAI
+      1. Explicit prefix overrides (required for some providers):
+         - "local/"      -> Local proxy (localhost:3000)
+         - "proma/"      -> Proma API
+         - "openrouter/" -> OpenRouter
+         - "claude-"     -> Anthropic
+         - "gpt-"/"o1-"/"o3-"/"o4-" -> OpenAI
       2. No prefix: auto-detect based on which API key is configured.
          Priority: OpenRouter > Gemini > Anthropic > OpenAI
+         Note: Proma and Local require explicit prefixes and do not participate in auto-detect.
     """
     # Explicit provider prefix overrides auto-detection
-    if model_name.startswith("openrouter/"):
+    if model_name.startswith("local/"):
+        provider = "local"
+        actual_model = model_name[len("local/"):]
+    elif model_name.startswith("proma/"):
+        provider = "proma"
+        actual_model = model_name[len("proma/"):]
+    elif model_name.startswith("openrouter/"):
         provider = "openrouter"
         actual_model = model_name[len("openrouter/"):]
     elif model_name.startswith("claude-"):
@@ -804,6 +1048,8 @@ async def call_model_with_retry_async(
     }
 
     call_fn = {
+        "local": call_local_with_retry_async,
+        "proma": call_proma_with_retry_async,
         "openrouter": call_openrouter_with_retry_async,
         "anthropic": call_claude_with_retry_async,
         "openai": call_openai_with_retry_async,
