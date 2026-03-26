@@ -931,7 +931,11 @@ async def call_proma_with_retry_async(
 
 
 async def _local_stream_collect(client, model_name, messages, temperature, max_completion_tokens):
-    """Collect a full response from a streaming local proxy call."""
+    """Collect a full response from a streaming local proxy call.
+
+    Validates that the stream completed normally (finish_reason == 'stop').
+    Raises RuntimeError on truncated or abnormal stream termination.
+    """
     stream = await client.chat.completions.create(
         model=model_name,
         messages=messages,
@@ -940,10 +944,20 @@ async def _local_stream_collect(client, model_name, messages, temperature, max_c
         stream=True,
     )
     chunks = []
+    finish_reason = None
     async for chunk in stream:
-        if chunk.choices and chunk.choices[0].delta and chunk.choices[0].delta.content:
-            chunks.append(chunk.choices[0].delta.content)
-    return "".join(chunks)
+        if chunk.choices:
+            choice = chunk.choices[0]
+            if choice.delta and choice.delta.content:
+                chunks.append(choice.delta.content)
+            if choice.finish_reason:
+                finish_reason = choice.finish_reason
+    result = "".join(chunks)
+    if finish_reason and finish_reason != "stop":
+        print(f"Warning: Local stream ended with finish_reason={finish_reason} (expected 'stop')")
+    if not result and not finish_reason:
+        raise RuntimeError("Local proxy stream ended without content or finish_reason (likely truncated)")
+    return result
 
 
 async def call_local_with_retry_async(
@@ -1047,10 +1061,15 @@ async def call_model_with_retry_async(
     Unified router that dispatches to the correct provider based on model_name.
 
     Routing rules:
-      1. Explicit prefix overrides: "openrouter/" -> OpenRouter, "claude-" -> Anthropic,
-         "gpt-"/"o1-"/"o3-"/"o4-" -> OpenAI
+      1. Explicit prefix overrides (required for some providers):
+         - "local/"      -> Local proxy (localhost:3000)
+         - "proma/"      -> Proma API
+         - "openrouter/" -> OpenRouter
+         - "claude-"     -> Anthropic
+         - "gpt-"/"o1-"/"o3-"/"o4-" -> OpenAI
       2. No prefix: auto-detect based on which API key is configured.
          Priority: OpenRouter > Gemini > Anthropic > OpenAI
+         Note: Proma and Local require explicit prefixes and do not participate in auto-detect.
     """
     # Explicit provider prefix overrides auto-detection
     if model_name.startswith("local/"):
