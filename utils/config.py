@@ -27,7 +27,7 @@ from typing import Literal
 class ExpConfig:
     """Experiment configuration"""
 
-    dataset_name: Literal["PaperBananaBench"]
+    dataset_name: Literal["PaperBananaBench", "Demo"]
     task_name: Literal["diagram", "plot"] = "diagram"
     split_name: str = "test"
     temperature: float = 1.0

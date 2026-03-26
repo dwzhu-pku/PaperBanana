@@ -20,6 +20,7 @@ Replaces the Streamlit demo.py with a modern dark-themed interface.
 import gradio as gr
 import asyncio
 import base64
+import copy
 import json
 import zipfile
 from io import BytesIO
@@ -110,7 +111,7 @@ def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copie
     }
     inputs = []
     for i in range(num_copies):
-        c = base_input.copy()
+        c = copy.deepcopy(base_input)
         c["filename"] = f"demo_input_candidate_{i}"
         c["candidate_id"] = i
         inputs.append(c)
