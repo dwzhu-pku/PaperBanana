@@ -629,9 +629,11 @@ def build_app():
         # ================================================================
         with gr.Accordion("API Keys", open=False):
             gr.Markdown(
-                "**You do not need both keys.** Fill **at least one**: **OpenRouter** *or* **Google (Gemini)**. "
-                "If both are set, OpenRouter is preferred for automatic routing when available. "
-                "Proma and Local proxy require explicit model prefixes (`proma/`, `local/`)."
+                "Fill **at least one** API key. Supported providers:\n\n"
+                "- **Google (Gemini)** — text + image generation, bare model name auto-routes here\n"
+                "- **OpenRouter** — multi-model proxy, auto-routes when configured (priority over Gemini)\n"
+                "- **Proma** — cost-optimized proxy, requires `proma/` prefix (e.g. `proma/claude-sonnet-4-6`)\n"
+                "- **Local Proxy** — localhost:3000, requires `local/` prefix (e.g. `local/claude-opus-4-6`)"
             )
             with gr.Row():
                 openrouter_key_input = gr.Textbox(
