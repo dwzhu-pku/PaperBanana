@@ -22,6 +22,7 @@ import asyncio
 import base64
 import json
 import zipfile
+import socket
 from io import BytesIO
 from PIL import Image
 from pathlib import Path
@@ -844,13 +845,29 @@ def build_app():
     return app
 
 
+def pick_server_port(preferred_port=7860, max_attempts=20):
+    """Return the first available localhost port, starting from preferred_port."""
+    for port in range(preferred_port, preferred_port + max_attempts):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            try:
+                sock.bind(("127.0.0.1", port))
+                return port
+            except OSError:
+                continue
+    raise OSError(
+        f"Cannot find an available port in range {preferred_port}-{preferred_port + max_attempts - 1}."
+    )
+
+
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     app = build_app()
+    server_port = int(os.getenv("GRADIO_SERVER_PORT", pick_server_port()))
     app.launch(
-        server_port=7860,
+        server_port=server_port,
         share=False,
         css=CUSTOM_CSS,
         theme=gr.themes.Default(
