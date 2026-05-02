@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Vanilla Agent - Directly rendering images based on the method section.
+Visualizer Agent - Renders images from descriptions via image generation models.
 """
 
 from concurrent.futures import ProcessPoolExecutor
@@ -65,36 +65,24 @@ class VisualizerAgent(BaseAgent):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        
-        # Task-specific configurations
         if "plot" in self.exp_config.task_name:
             self.model_name = self.exp_config.main_model_name
             self.system_prompt = PLOT_VISUALIZER_AGENT_SYSTEM_PROMPT
             self.process_executor = ProcessPoolExecutor(max_workers=32)
             self.task_config = {
                 "task_name": "plot",
-                "use_image_generation": False,  # Use code generation instead
+                "use_image_generation": False,
                 "prompt_template": "Use python matplotlib to generate a statistical plot based on the following detailed description: {desc}\n Only provide the code without any explanations. Code:",
                 "max_output_tokens": 50000,
             }
-            # The code below is for applying image generation models to statistics plots:
-            # self.model_name = self.exp_config.image_gen_model_name
-            # self.system_prompt = """You are an expert statistical plot illustrator. Generate high-quality statistical plots based on user requests. Note that you should not use code, but directly generate the image."""
-            # self.process_executor = None
-            # self.task_config = {
-            #     "task_name": "plot",
-            #     "use_image_generation": True,  # Use direct image generation
-            #     "prompt_template": "Render an image based on the following description: {desc}\n Plot:",
-            #     "max_output_tokens": 50000,
-            # }
 
         else:
             self.model_name = self.exp_config.image_gen_model_name
             self.system_prompt = DIAGRAM_VISUALIZER_AGENT_SYSTEM_PROMPT
-            self.process_executor = None  # Not needed for diagrams
+            self.process_executor = None
             self.task_config = {
                 "task_name": "diagram",
-                "use_image_generation": True,  # Use direct image generation
+                "use_image_generation": True,
                 "prompt_template": "Render an image based on the following detailed description: {desc}\n Note that do not include figure titles in the image. Diagram: ",
                 "max_output_tokens": 50000,
             }
@@ -104,10 +92,7 @@ class VisualizerAgent(BaseAgent):
             self.process_executor.shutdown(wait=True)
 
     async def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Unified processing method that works for both diagram and plot tasks.
-        Uses task_config to determine task-specific parameters.
-        """
+        """Process descriptions into images (diagrams) or code (plots)."""
         cfg = self.task_config
         task_name = cfg["task_name"]
         
@@ -119,7 +104,8 @@ class VisualizerAgent(BaseAgent):
             if key in data and f"{key}_base64_jpg" not in data:
                 desc_keys_to_process.append(key)
         
-        for round_idx in range(3):
+        max_critic_rounds = data.get("max_critic_rounds", 3)
+        for round_idx in range(max_critic_rounds):
             key = f"target_{task_name}_critic_desc{round_idx}"
             if key in data and f"{key}_base64_jpg" not in data:
                 critic_suggestions_key = f"target_{task_name}_critic_suggestions{round_idx}"
@@ -140,6 +126,20 @@ class VisualizerAgent(BaseAgent):
         
         for desc_key in desc_keys_to_process:
             prompt_text = cfg["prompt_template"].format(desc=data[desc_key])
+
+            # Inject font constraints only for image/diagram generation (not code-gen plots)
+            if cfg["use_image_generation"]:
+                additional = data.get("additional_info", {})
+                font_cn = additional.get("font_cn", "")
+                font_en = additional.get("font_en", "")
+                if font_cn or font_en:
+                    font_parts = []
+                    if font_cn:
+                        font_parts.append(f"all Chinese text must use the {font_cn} font")
+                    if font_en:
+                        font_parts.append(f"all English text and numbers must use the {font_en} font")
+                    prompt_text += "\nIMPORTANT: In the diagram, " + ", and ".join(font_parts) + "."
+
             content_list = [{"type": "text", "text": prompt_text}]
             
             gen_config_args = {
@@ -149,10 +149,7 @@ class VisualizerAgent(BaseAgent):
                 "max_output_tokens": cfg["max_output_tokens"],
             }
             
-            # Resolve aspect ratio for image generation
-            aspect_ratio = "1:1"
-            if "additional_info" in data and "rounded_ratio" in data["additional_info"]:
-                aspect_ratio = data["additional_info"]["rounded_ratio"]
+            aspect_ratio = data.get("additional_info", {}).get("rounded_ratio", "1:1")
 
             if cfg["use_image_generation"]:
                 if "gpt-image" in self.model_name:
@@ -170,7 +167,6 @@ class VisualizerAgent(BaseAgent):
                         retry_delay=30,
                     )
                 elif generation_utils.openrouter_client is not None:
-                    # OpenRouter image generation
                     image_config = {
                         "system_prompt": self.system_prompt,
                         "temperature": self.exp_config.temperature,
@@ -185,7 +181,6 @@ class VisualizerAgent(BaseAgent):
                         retry_delay=30,
                     )
                 else:
-                    # Gemini direct image generation
                     gen_config_args["response_modalities"] = ["IMAGE"]
                     gen_config_args["image_config"] = types.ImageConfig(
                         aspect_ratio=aspect_ratio,
@@ -199,7 +194,6 @@ class VisualizerAgent(BaseAgent):
                         retry_delay=30,
                     )
             else:
-                # Code generation for plots — use the unified router
                 response_list = await generation_utils.call_model_with_retry_async(
                     model_name=self.model_name,
                     contents=content_list,
@@ -211,9 +205,7 @@ class VisualizerAgent(BaseAgent):
             if not response_list or not response_list[0]:
                 continue
             
-            # Post-process based on task type
             if cfg["use_image_generation"]:
-                # Convert PNG to JPG
                 converted_jpg = await asyncio.to_thread(
                     image_utils.convert_png_b64_to_jpg_b64, response_list[0]
                 )
@@ -222,12 +214,7 @@ class VisualizerAgent(BaseAgent):
                 else:
                     print(f"⚠️  Skipping {desc_key}: image conversion failed")
             else:
-                # Plot: execute generated code
                 raw_code = response_list[0]
-                
-                if not hasattr(self, "process_executor") or self.process_executor is None:
-                    print("Warning: Creating temporary ProcessPoolExecutor. Initialize one in __init__ for better performance.")
-                    self.process_executor = ProcessPoolExecutor(max_workers=4)
                 
                 base64_jpg = await loop.run_in_executor(
                     self.process_executor, _execute_plot_code_worker, raw_code
@@ -243,8 +230,3 @@ class VisualizerAgent(BaseAgent):
 DIAGRAM_VISUALIZER_AGENT_SYSTEM_PROMPT = """You are an expert scientific diagram illustrator. Generate high-quality scientific diagrams based on user requests."""
 
 PLOT_VISUALIZER_AGENT_SYSTEM_PROMPT = """You are an expert statistical plot illustrator. Write code to generate high-quality statistical plots based on user requests."""
-
-
-# !!! Note: If using image generation models, use the following system prompt instead:
-
-# PLOT_VISUALIZER_AGENT_SYSTEM_PROMPT = """You are an expert statistical plot illustrator. Generate high-quality statistical plots based on user requests. Note that you should not use code, but directly generate the image."""

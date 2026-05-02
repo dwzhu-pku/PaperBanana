@@ -27,7 +27,7 @@ from typing import Literal
 class ExpConfig:
     """Experiment configuration"""
 
-    dataset_name: Literal["PaperBananaBench"]
+    dataset_name: Literal["PaperBananaBench", "Demo"]
     task_name: Literal["diagram", "plot"] = "diagram"
     split_name: str = "test"
     temperature: float = 1.0
@@ -45,36 +45,32 @@ class ExpConfig:
         if hasattr(time, "tzset"):
             time.tzset()  # Only available on Unix; no-op guard for Windows
         
-        # Fallback to yaml config if no model name provided
+        # Resolve model names: yaml config -> environment variables -> hard defaults
         if not self.main_model_name or not self.image_gen_model_name:
             import yaml
             config_path = self.work_dir / "configs" / "model_config.yaml"
             if config_path.exists():
                 with open(config_path, "r", encoding="utf-8") as f:
-                    model_config_data = yaml.safe_load(f) or {}
+                    defaults = (yaml.safe_load(f) or {}).get("defaults", {})
                     if not self.main_model_name:
-                        self.main_model_name = model_config_data.get("defaults", {}).get("main_model_name", "")
+                        self.main_model_name = defaults.get("main_model_name", "")
                     if not self.image_gen_model_name:
-                        self.image_gen_model_name = model_config_data.get("defaults", {}).get("image_gen_model_name", "")
-        # Fallback to environment variables
-        if not self.main_model_name:
-            self.main_model_name = os.environ.get("MAIN_MODEL_NAME", "")
-        if not self.image_gen_model_name:
-            self.image_gen_model_name = os.environ.get("IMAGE_GEN_MODEL_NAME", "")
-        # Hard defaults so model name is never empty
-        if not self.main_model_name:
-            self.main_model_name = "gemini-3.1-pro-preview"
-            print(f"Warning: main_model_name not configured, falling back to '{self.main_model_name}'. "
-                  "Set it in configs/model_config.yaml or via --main-model-name.")
-        if not self.image_gen_model_name:
-            self.image_gen_model_name = "gemini-3.1-flash-image-preview"
-            print(f"Warning: image_gen_model_name not configured, falling back to '{self.image_gen_model_name}'. "
-                  "Set it in configs/model_config.yaml or via --image-gen-model-name.")
+                        self.image_gen_model_name = defaults.get("image_gen_model_name", "")
+
+        for attr, env_var, fallback in [
+            ("main_model_name", "MAIN_MODEL_NAME", "gemini-3.1-pro-preview"),
+            ("image_gen_model_name", "IMAGE_GEN_MODEL_NAME", "gemini-3.1-flash-image-preview"),
+        ]:
+            if not getattr(self, attr):
+                setattr(self, attr, os.environ.get(env_var, ""))
+            if not getattr(self, attr):
+                setattr(self, attr, fallback)
+                print(f"Warning: {attr} not configured, falling back to '{fallback}'. "
+                      f"Set it in configs/model_config.yaml or via --{attr.replace('_', '-')}.")
         self.timestamp = (
             time.strftime("%m%d_%H%M") if self.timestamp is None else self.timestamp
         )
         self.exp_name = f"{self.timestamp}_{self.retrieval_setting}ret_{self.exp_mode}_{self.split_name}"
 
-        # mkdir result_dir if not exists
         self.result_dir = self.work_dir / "results" / f"{self.dataset_name}_{self.task_name}"
         self.result_dir.mkdir(exist_ok=True, parents=True)

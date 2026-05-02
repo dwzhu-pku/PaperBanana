@@ -1,8 +1,13 @@
 configs/model_config.yaml
 __pycache__/
 *.pyc
-*.pyc
-__pycache__/
 .venv/
 data/
 results/
+
+# Secrets / environment files
+.env
+.env.*
+*.env
+configs/*.local.yaml
+configs/secrets*.yaml

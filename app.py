@@ -20,6 +20,7 @@ Replaces the Streamlit demo.py with a modern dark-themed interface.
 import gradio as gr
 import asyncio
 import base64
+import copy
 import json
 import zipfile
 from io import BytesIO
@@ -81,8 +82,6 @@ def get_config_val(section, key, env_var, default=""):
 # ---------------------------------------------------------------------------
 
 def clean_text(text):
-    if not text:
-        return text
     if isinstance(text, str):
         return text.encode("utf-8", errors="ignore").decode("utf-8", errors="ignore")
     return text
@@ -99,18 +98,23 @@ def base64_to_image(b64_str):
         return None
 
 
-def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copies=10, max_critic_rounds=3):
+def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copies=10, max_critic_rounds=3, font_cn="", font_en=""):
+    additional_info = {"rounded_ratio": aspect_ratio}
+    if font_cn:
+        additional_info["font_cn"] = font_cn
+    if font_en:
+        additional_info["font_en"] = font_en
     base_input = {
         "filename": "demo_input",
         "caption": caption,
         "content": method_content,
         "visual_intent": caption,
-        "additional_info": {"rounded_ratio": aspect_ratio},
+        "additional_info": additional_info,
         "max_critic_rounds": max_critic_rounds,
     }
     inputs = []
     for i in range(num_copies):
-        c = base_input.copy()
+        c = copy.deepcopy(base_input)
         c["filename"] = f"demo_input_candidate_{i}"
         c["candidate_id"] = i
         inputs.append(c)
@@ -119,7 +123,7 @@ def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copie
 
 async def process_parallel_candidates(
     data_list, exp_mode="dev_planner_critic", retrieval_setting="auto",
-    main_model_name="", image_gen_model_name="",
+    main_model_name="", image_gen_model_name="", progress_callback=None,
 ):
     exp_config = config.ExpConfig(
         dataset_name="Demo",
@@ -141,23 +145,168 @@ async def process_parallel_candidates(
         polish_agent=PolishAgent(exp_config=exp_config),
     )
     results = []
-    async for result_data in processor.process_queries_batch(data_list, max_concurrent=10, do_eval=False):
+    async for result_data in processor.process_queries_batch(
+        data_list, max_concurrent=10, do_eval=False,
+        progress_callback=progress_callback,
+    ):
         results.append(result_data)
     return results
+
+
+# ---------------------------------------------------------------------------
+# Preflight image model check with caching
+# ---------------------------------------------------------------------------
+_preflight_cache: dict = {}
+
+
+async def preflight_check_image_model(image_gen_model_name: str) -> str:
+    """Test image model before running the full pipeline. Returns the working model name.
+
+    Only runs Gemini-specific preflight. For OpenRouter / gpt-image models,
+    returns the model name as-is since those paths have their own retry logic.
+    """
+    # Skip preflight for non-Gemini image models
+    if image_gen_model_name.startswith(("gpt-image", "openrouter/")):
+        return image_gen_model_name
+    # Reject text-only provider prefixes for image generation
+    if image_gen_model_name.startswith(("proma/", "local/")):
+        from utils.generation_utils import ImageGenerationError
+        raise ImageGenerationError(
+            f"Image model '{image_gen_model_name}' uses a text-only provider prefix. "
+            f"Image generation only supports Gemini or OpenRouter models."
+        )
+
+    # If OpenRouter is configured, it takes priority for image generation
+    # in VisualizerAgent, so Gemini preflight is irrelevant
+    from utils.generation_utils import openrouter_client
+    if openrouter_client is not None:
+        return image_gen_model_name
+
+    if image_gen_model_name in _preflight_cache:
+        return _preflight_cache[image_gen_model_name]
+    from utils.generation_utils import (
+        ImageGenerationError, _get_fallback_model, _IMAGE_MODEL_FALLBACK_CHAIN,
+        fallback_events, gemini_client, openrouter_client,
+    )
+    from google.genai import types
+    if gemini_client is None:
+        if openrouter_client is not None:
+            return image_gen_model_name
+        raise ImageGenerationError("No Google API key configured and no OpenRouter available.")
+
+    client = gemini_client
+    model = image_gen_model_name
+
+    while True:
+        try:
+            response = await asyncio.to_thread(
+                client.models.generate_content,
+                model=model,
+                contents="Draw a small blue dot on white background",
+                config=types.GenerateContentConfig(
+                    response_modalities=["IMAGE"],
+                    image_config=types.ImageConfig(aspect_ratio="1:1", image_size="1k"),
+                ),
+            )
+            if response.candidates and response.candidates[0].content.parts:
+                for part in response.candidates[0].content.parts:
+                    if part.inline_data:
+                        _preflight_cache[image_gen_model_name] = model
+                        return model
+            raise Exception("Empty response from image model")
+
+        except Exception as e:
+            error_str = str(e)
+            error_lower = error_str.lower()
+            is_region = "400" in error_str and "location" in error_lower
+            is_overload = "503" in error_str or "unavailable" in error_lower
+
+            if is_region:
+                raise ImageGenerationError(
+                    f"❌ Model {model} blocked by region restriction (400). "
+                    f"Please check your proxy/VPN configuration."
+                )
+            if is_overload:
+                fallback = _get_fallback_model(model)
+                if fallback and fallback != model:
+                    fallback_events.append({
+                        "from": model, "to": fallback, "reason": "overloaded (503) in preflight",
+                    })
+                    model = fallback
+                    continue
+                else:
+                    raise ImageGenerationError(
+                        f"❌ All image models overloaded (503). Checked: {', '.join(_IMAGE_MODEL_FALLBACK_CHAIN)}"
+                    )
+            raise ImageGenerationError(f"❌ Image model preflight failed: {e}")
+
+
+# ---------------------------------------------------------------------------
+# Mock pipeline for testing without API calls
+# ---------------------------------------------------------------------------
+import random
+from utils.paperviz_processor import ProgressTracker
+
+
+def _run_async(coro):
+    """Run an async coroutine in a fresh event loop (needed inside Gradio sync handlers)."""
+    loop = asyncio.new_event_loop()
+    try:
+        return loop.run_until_complete(coro)
+    finally:
+        loop.close()
+
+
+async def mock_process_parallel_candidates(data_list, exp_mode="dev_planner_critic", delay_per_stage=2.0, progress_callback=None):
+    """Mock pipeline that simulates stages with delays. No API calls."""
+    max_critic_rounds = data_list[0].get("max_critic_rounds", 3) if data_list else 3
+    stages = PaperVizProcessor._get_pipeline_stages(exp_mode, max_critic_rounds)
+    tracker = ProgressTracker(len(data_list), stages, callback=progress_callback) if progress_callback else None
+
+    # Simulate Retriever (serial)
+    if tracker:
+        tracker.enter_stage(0, "Retriever", "mock/text-model")
+    await asyncio.sleep(delay_per_stage * 0.5)
+    if tracker:
+        for cid in range(len(data_list)):
+            tracker.complete_stage(cid, "Retriever")
+
+    candidate_stages = [s for s in stages if s != "Retriever"]
+
+    async def run_candidate(cid, data):
+        stopped_at = len(candidate_stages)
+        for idx, stage in enumerate(candidate_stages):
+            model = "mock/image-model" if "Visualizer" in stage else "mock/text-model"
+            if tracker:
+                tracker.enter_stage(cid, stage, model)
+            await asyncio.sleep(delay_per_stage * (0.5 + random.random()))
+            if "Critic" in stage and random.random() < 0.3:
+                if tracker:
+                    tracker.complete_stage(cid, stage)
+                stopped_at = idx + 1
+                break
+            if tracker:
+                tracker.complete_stage(cid, stage)
+        # Mark remaining skipped stages as complete (match real pipeline behavior)
+        if tracker:
+            for remaining_stage in candidate_stages[stopped_at:]:
+                tracker.complete_stage(cid, remaining_stage)
+        data["target_diagram_desc0"] = "Mock description for testing"
+        data["target_diagram_desc0_base64_jpg"] = ""
+        return data
+
+    tasks = [asyncio.create_task(run_candidate(i, d)) for i, d in enumerate(data_list)]
+    results = await asyncio.gather(*tasks)
+    return list(results)
 
 
 async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9", image_size="2K"):
     image_model = get_config_val("defaults", "image_gen_model_name", "IMAGE_GEN_MODEL_NAME", "")
     image_b64 = base64.b64encode(image_bytes).decode("utf-8")
 
-    # Path 1: OpenRouter
-    try:
-        from utils.generation_utils import call_openrouter_image_generation_with_retry_async
-        _has_openrouter = True
-    except ImportError:
-        _has_openrouter = False
+    from utils.generation_utils import call_openrouter_image_generation_with_retry_async
     openrouter_api_key = get_config_val("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY", "")
-    if _has_openrouter and openrouter_api_key:
+    if openrouter_api_key:
         try:
             contents = [
                 {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": image_b64}},
@@ -230,7 +379,7 @@ def get_evolution_stages(result, exp_mode):
         if k in result and result[k]:
             stages.append({"name": "Stylist", "image_key": k, "desc_key": f"target_{task_name}_stylist_desc0", "description": "Stylistically refined"})
     # Critic rounds
-    for r in range(4):
+    for r in range(10):  # support up to 10 critic rounds dynamically
         k = f"target_{task_name}_critic_desc{r}_base64_jpg"
         if k in result and result[k]:
             stages.append({
@@ -248,7 +397,7 @@ def get_final_image(result, exp_mode):
     task_name = "diagram"
     final_key = None
     final_desc_key = None
-    for r in range(3, -1, -1):
+    for r in range(9, -1, -1):  # match evolution stages range
         k = f"target_{task_name}_critic_desc{r}_base64_jpg"
         if k in result and result[k]:
             final_key = k
@@ -452,7 +601,6 @@ def build_app():
         gen_results_state = gr.State([])
         gen_mode_state = gr.State("demo_planner_critic")
         gen_timestamp_state = gr.State("")
-        gen_json_path_state = gr.State("")
 
         # ================================================================
         # HEADER
@@ -490,8 +638,11 @@ def build_app():
         # ================================================================
         with gr.Accordion("API Keys", open=False):
             gr.Markdown(
-                "**You do not need both keys.** Fill **at least one**: **OpenRouter** *or* **Google (Gemini)**. "
-                "If both are set, OpenRouter is preferred for automatic routing when available."
+                "Fill **at least one** API key. Supported providers:\n\n"
+                "- **Google (Gemini)** — text + image generation, bare model name auto-routes here\n"
+                "- **OpenRouter** — multi-model proxy, auto-routes when configured (priority over Gemini)\n"
+                "- **Proma** — cost-optimized proxy, requires `proma/` prefix (e.g. `proma/claude-sonnet-4-6`)\n"
+                "- **Local Proxy** — localhost:3000, requires `local/` prefix (e.g. `local/claude-opus-4-6`)"
             )
             with gr.Row():
                 openrouter_key_input = gr.Textbox(
@@ -502,25 +653,41 @@ def build_app():
                     label="Google API Key (optional)", type="password", placeholder="AIza...",
                     value=get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", ""),
                 )
+            with gr.Row():
+                proma_key_input = gr.Textbox(
+                    label="Proma API Key (optional)", type="password", placeholder="pk-...",
+                    value=get_config_val("api_keys", "proma_api_key", "PROMA_API_KEY", ""),
+                )
+                local_key_input = gr.Textbox(
+                    label="Local Proxy API Key (optional)", type="password", placeholder="sk-...",
+                    value=get_config_val("api_keys", "local_api_key", "LOCAL_API_KEY", ""),
+                )
             gr.Markdown("*Keys are used only for this session and never stored.*")
 
-            def apply_keys(or_key, g_key):
-                if or_key:
-                    os.environ["OPENROUTER_API_KEY"] = or_key
-                if g_key:
-                    os.environ["GOOGLE_API_KEY"] = g_key
+            def apply_keys(or_key, g_key, proma_key, local_key):
+                # Set or clear each key so users can remove providers
+                for env_var, val in [
+                    ("OPENROUTER_API_KEY", or_key),
+                    ("GOOGLE_API_KEY", g_key),
+                    ("PROMA_API_KEY", proma_key),
+                    ("LOCAL_API_KEY", local_key),
+                ]:
+                    if val:
+                        os.environ[env_var] = val
+                    else:
+                        os.environ.pop(env_var, None)
                 from utils.generation_utils import reinitialize_clients
-                initialized = reinitialize_clients()
+                initialized = reinitialize_clients(env_only=True)
                 if initialized:
                     return f"Clients initialized: {', '.join(initialized)}."
                 return (
                     "Warning: no API clients could be initialized. "
-                    "Enter at least one key—OpenRouter or Google (Gemini)."
+                    "Enter at least one key."
                 )
 
             apply_keys_btn = gr.Button("Apply Keys", size="sm")
             keys_status = gr.Textbox(visible=False)
-            apply_keys_btn.click(apply_keys, inputs=[openrouter_key_input, google_key_input], outputs=[keys_status])
+            apply_keys_btn.click(apply_keys, inputs=[openrouter_key_input, google_key_input, proma_key_input, local_key_input], outputs=[keys_status])
 
         # ================================================================
         # TABS
@@ -560,7 +727,7 @@ def build_app():
                             info="How to retrieve reference diagrams",
                         )
                         num_candidates = gr.Number(
-                            value=10, minimum=1, maximum=20, step=1,
+                            value=2, minimum=1, maximum=20, step=1,
                             label="Number of Candidates",
                         )
                         aspect_ratio = gr.Dropdown(
@@ -577,15 +744,85 @@ def build_app():
                             minimum=1, maximum=5, value=3, step=1,
                             label="Max Critic Rounds",
                         )
-                        main_model_name = gr.Textbox(
-                            label="Model Name",
-                            info="Model name to use for reasoning",
+                        main_model_name = gr.Dropdown(
+                            choices=[
+                                "gemini-3.1-pro-preview",
+                                "gemini-2.5-flash-preview-05-20",
+                                "proma/gemini-3.1-pro-preview",
+                                "proma/claude-sonnet-4-6",
+                                "proma/gpt-5-mini",
+                                "proma/deepseek-v3.2",
+                                "proma/lc-claude-opus-4-6",
+                                "proma/lc-claude-haiku-4-5-20251001",
+                                "proma/lc-kimi-k2.5",
+                                "local/claude-opus-4-6",
+                                "local/claude-sonnet-4-6",
+                                "local/gpt-5.4",
+                            ],
                             value=default_main_model,
+                            label="Model Name",
+                            info="Select or type a custom model (prefixes: local/, proma/, openrouter/)",
+                            allow_custom_value=True,
                         )
-                        image_model_name = gr.Textbox(
+                        _IMAGE_MODEL_MAP = {
+                            "🍌2 (Nano Banana 2 / Flash)": "gemini-3.1-flash-image-preview",
+                            "🍌Pro (Nano Banana Pro)": "gemini-3-pro-image-preview",
+                            "🍌1 (Nano Banana 1)": "gemini-2.5-flash-image",
+                        }
+                        _IMAGE_MODEL_DISPLAY = list(_IMAGE_MODEL_MAP.keys())
+                        _default_img_display = next(
+                            (k for k, v in _IMAGE_MODEL_MAP.items() if v == default_image_model),
+                            default_image_model,
+                        )
+                        image_model_dropdown = gr.Dropdown(
+                            choices=_IMAGE_MODEL_DISPLAY,
+                            value=_default_img_display,
                             label="Image Generation Model",
-                            info="Model for generating diagram images",
-                            value=default_image_model,
+                            info="Select or type a custom model name",
+                            allow_custom_value=True,
+                        )
+                        image_model_name = gr.State(default_image_model)
+                        def _on_image_model_change(choice):
+                            return _IMAGE_MODEL_MAP.get(choice, choice)
+                        image_model_dropdown.change(
+                            _on_image_model_change,
+                            inputs=[image_model_dropdown],
+                            outputs=[image_model_name],
+                        )
+                        font_cn = gr.Dropdown(
+                            choices=[
+                                "思源黑体", "思源宋体", "微软雅黑", "PingFang SC",
+                                "Noto Sans SC", "HarmonyOS Sans SC", "阿里巴巴普惠体",
+                            ],
+                            value="思源黑体",
+                            label="Chinese Font",
+                            info="Select or type a custom font name",
+                            allow_custom_value=True,
+                        )
+                        font_en = gr.Dropdown(
+                            choices=[
+                                "Arial", "Helvetica", "Roboto", "Inter", "SF Pro",
+                                "Times New Roman", "Georgia", "Fira Sans",
+                            ],
+                            value="Arial",
+                            label="English Font",
+                            info="Select or type a custom font name",
+                            allow_custom_value=True,
+                        )
+                        mock_mode = gr.Checkbox(
+                            label="Mock Mode (no API calls)",
+                            value=False,
+                            info="Test UI with simulated delays",
+                        )
+                        mock_delay = gr.Slider(
+                            minimum=0.5, maximum=10, value=2, step=0.5,
+                            label="Mock Delay (seconds/stage)",
+                            interactive=False,
+                        )
+                        mock_mode.change(
+                            lambda v: gr.update(interactive=v),
+                            inputs=[mock_mode],
+                            outputs=[mock_delay],
                         )
                         save_results = gr.Dropdown(
                             choices=["Yes", "No"],
@@ -653,7 +890,7 @@ def build_app():
                 def run_generate(
                     method_text, caption_text, pipe_mode, ret_setting,
                     n_cands, ar, max_rounds, m_model, img_model,
-                    figure_size, save_results,
+                    f_cn, f_en, is_mock, m_delay, figure_size, save_results,
                     progress=gr.Progress(track_tqdm=True),
                 ):
                     if not method_text or not caption_text:
@@ -663,23 +900,47 @@ def build_app():
                     max_rounds = int(max_rounds)
                     timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
 
+                    def _progress_cb(status):
+                        pct = status.get("overall_pct", 0)
+                        stage = status.get("stage", "")
+                        model = status.get("model", "")
+                        done = status.get("stage_done", 0)
+                        total = status.get("total", 0)
+                        desc = f"{stage} ({done}/{total})"
+                        if model:
+                            desc += f" [{model}]"
+                        progress(min(0.1 + pct * 0.8, 0.9), desc=desc)
+
                     progress(0, desc="Preparing inputs...")
                     input_data = create_sample_inputs(
                         method_content=method_text, caption=caption_text,
                         aspect_ratio=ar, num_copies=n_cands, max_critic_rounds=max_rounds,
+                        font_cn=f_cn, font_en=f_en,
                     )
-                    params = {"figure_size": figure_size}
 
-                    progress(0.1, desc=f"Generating {n_cands} candidates in parallel...")
                     try:
-                        loop = asyncio.new_event_loop()
-                        results = loop.run_until_complete(
-                            process_parallel_candidates(
+                        if is_mock:
+                            progress(0.05, desc="Mock mode: simulating pipeline...")
+                            results = _run_async(mock_process_parallel_candidates(
+                                input_data, exp_mode=pipe_mode,
+                                delay_per_stage=float(m_delay),
+                                progress_callback=_progress_cb,
+                            ))
+                        else:
+                            progress(0.02, desc="Preflight: checking image model...")
+                            verified_model = _run_async(preflight_check_image_model(img_model))
+                            if verified_model != img_model:
+                                progress(0.05, desc=f"Fallback: using {verified_model}")
+                                img_model = verified_model
+
+                            progress(0.1, desc=f"Generating {n_cands} candidates in parallel...")
+                            results = _run_async(process_parallel_candidates(
                                 input_data, exp_mode=pipe_mode, retrieval_setting=ret_setting,
                                 main_model_name=m_model, image_gen_model_name=img_model,
-                            )
-                        )
-                        loop.close()
+                                progress_callback=_progress_cb,
+                            ))
+                    except gr.Error:
+                        raise
                     except Exception as e:
                         raise gr.Error(f"Generation failed: {e}")
 
@@ -698,11 +959,11 @@ def build_app():
                         json_filename = None
 
                     # Build gallery images
-                    gallery_images = []
-                    for idx, res in enumerate(results):
-                        img, _ = get_final_image(res, pipe_mode)
-                        if img:
-                            gallery_images.append((img, f"Candidate {idx}"))
+                    gallery_images = [
+                        (img, f"Candidate {idx}")
+                        for idx, res in enumerate(results)
+                        if (img := get_final_image(res, pipe_mode)[0])
+                    ]
 
                     # Build evolution HTML
                     evo_parts = []
@@ -735,8 +996,8 @@ def build_app():
                             pass
 
                     status = f"Generated {len(results)} candidates at {datetime.now().strftime('%H:%M:%S')}."
-                    if json_filename and Path(str(json_filename)).exists():
-                        status += f" JSON saved to {Path(str(json_filename)).name}."
+                    if json_filename and json_filename.exists():
+                        status += f" JSON saved to {json_filename.name}."
 
                     progress(1.0, desc="Done!")
                     return (
@@ -755,7 +1016,7 @@ def build_app():
                         method_content, caption_input, pipeline_mode, retrieval_setting,
                         num_candidates, aspect_ratio, max_critic_rounds,
                         main_model_name, image_model_name,
-                        figure_size, save_results,
+                        font_cn, font_en, mock_mode, mock_delay, figure_size, save_results,
                     ],
                     outputs=[
                         results_gallery, evolution_html, zip_file_output, status_text,
@@ -797,18 +1058,14 @@ def build_app():
                         raise gr.Error("Please provide edit instructions.")
 
                     buf = BytesIO()
+                    if pil_img.mode in ("RGBA", "LA", "P"):
+                        pil_img = pil_img.convert("RGB")
                     pil_img.save(buf, format="JPEG")
                     image_bytes = buf.getvalue()
 
-                    loop = asyncio.new_event_loop()
-                    try:
-                        refined_bytes, msg = loop.run_until_complete(
-                            refine_image_with_nanoviz(image_bytes, prompt, aspect_ratio=ar, image_size=resolution)
-                        )
-                    except Exception as e:
-                        raise gr.Error(f"Refinement error: {e}")
-                    finally:
-                        loop.close()
+                    refined_bytes, msg = _run_async(
+                        refine_image_with_nanoviz(image_bytes, prompt, aspect_ratio=ar, image_size=resolution)
+                    )
 
                     if not refined_bytes:
                         raise gr.Error(msg)
