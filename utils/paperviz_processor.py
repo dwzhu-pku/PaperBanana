@@ -80,7 +80,14 @@ class PaperVizProcessor:
             
             critic_suggestions_key = f"target_{task_name}_critic_suggestions{round_idx}"
             critic_suggestions = data.get(critic_suggestions_key, "")
-            
+            # Critic output occasionally parses to NaN (float) or None when the
+            # model returns empty/malformed JSON on dense content. Coerce to str
+            # before calling .strip() to avoid AttributeError mid-run.
+            if not isinstance(critic_suggestions, str):
+                critic_suggestions = "" if critic_suggestions is None or (
+                    isinstance(critic_suggestions, float) and str(critic_suggestions) == "nan"
+                ) else str(critic_suggestions)
+
             if critic_suggestions.strip() == "No changes needed.":
                 print(f"[Critic Round {round_idx}] No changes needed. Stopping iteration.")
                 break
