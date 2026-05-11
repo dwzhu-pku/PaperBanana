@@ -99,13 +99,33 @@ def base64_to_image(b64_str):
         return None
 
 
-def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copies=10, max_critic_rounds=3):
+# Map the UI "Figure Size" label (physical column width) to the image-generation
+# image_size string the underlying models accept. Smaller-than-default figures stay
+# at 1k to match the historical hardcoded behavior; widening past default upgrades
+# resolution so the dropdown is no longer dead UI.
+_FIGURE_SIZE_TO_IMAGE_SIZE = {
+    "1-3cm": "1k",
+    "4-6cm": "1k",
+    "7-9cm": "2k",
+    "10-13cm": "2k",
+    "14-17cm": "4k",
+}
+
+
+def image_size_for_figure_size(figure_size):
+    return _FIGURE_SIZE_TO_IMAGE_SIZE.get(figure_size, "1k")
+
+
+def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copies=10, max_critic_rounds=3, figure_size="7-9cm"):
     base_input = {
         "filename": "demo_input",
         "caption": caption,
         "content": method_content,
         "visual_intent": caption,
-        "additional_info": {"rounded_ratio": aspect_ratio},
+        "additional_info": {
+            "rounded_ratio": aspect_ratio,
+            "image_size": image_size_for_figure_size(figure_size),
+        },
         "max_critic_rounds": max_critic_rounds,
     }
     inputs = []
@@ -667,8 +687,8 @@ def build_app():
                     input_data = create_sample_inputs(
                         method_content=method_text, caption=caption_text,
                         aspect_ratio=ar, num_copies=n_cands, max_critic_rounds=max_rounds,
+                        figure_size=figure_size,
                     )
-                    params = {"figure_size": figure_size}
 
                     progress(0.1, desc=f"Generating {n_cands} candidates in parallel...")
                     try:

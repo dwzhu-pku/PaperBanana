@@ -163,13 +163,14 @@ class PolishAgent(BaseAgent):
         
         # Generate polished image
         aspect_ratio = data.get("additional_info", {}).get("rounded_ratio", "16:9")
+        image_size = data.get("additional_info", {}).get("image_size", "1k")
         try:
             if generation_utils.openrouter_client is not None:
                 image_config = {
                     "system_prompt": self.system_prompt,
                     "temperature": self.exp_config.temperature,
                     "aspect_ratio": aspect_ratio,
-                    "image_size": "1k",
+                    "image_size": image_size,
                 }
                 response_list = await generation_utils.call_openrouter_image_generation_with_retry_async(
                     model_name=self.image_gen_model_name,
@@ -190,7 +191,7 @@ class PolishAgent(BaseAgent):
                         response_modalities=["IMAGE"],
                         image_config=types.ImageConfig(
                             aspect_ratio=aspect_ratio,
-                            image_size="1k",
+                            image_size=image_size,
                         ),
                     ),
                     max_attempts=5,

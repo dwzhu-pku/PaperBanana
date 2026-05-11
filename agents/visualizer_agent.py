@@ -153,6 +153,7 @@ class VisualizerAgent(BaseAgent):
             aspect_ratio = "1:1"
             if "additional_info" in data and "rounded_ratio" in data["additional_info"]:
                 aspect_ratio = data["additional_info"]["rounded_ratio"]
+            image_size = data.get("additional_info", {}).get("image_size", "1k")
 
             if cfg["use_image_generation"]:
                 if "gpt-image" in self.model_name:
@@ -175,7 +176,7 @@ class VisualizerAgent(BaseAgent):
                         "system_prompt": self.system_prompt,
                         "temperature": self.exp_config.temperature,
                         "aspect_ratio": aspect_ratio,
-                        "image_size": "1k",
+                        "image_size": image_size,
                     }
                     response_list = await generation_utils.call_openrouter_image_generation_with_retry_async(
                         model_name=self.model_name,
@@ -189,7 +190,7 @@ class VisualizerAgent(BaseAgent):
                     gen_config_args["response_modalities"] = ["IMAGE"]
                     gen_config_args["image_config"] = types.ImageConfig(
                         aspect_ratio=aspect_ratio,
-                        image_size="1k",
+                        image_size=image_size,
                     )
                     response_list = await generation_utils.call_gemini_with_retry_async(
                         model_name=self.model_name,
