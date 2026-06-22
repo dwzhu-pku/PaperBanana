@@ -19,45 +19,11 @@ Vanilla Agent - Directly rendering images based on the method section.
 from concurrent.futures import ProcessPoolExecutor
 from typing import Dict, Any
 from google.genai import types
-import base64, io, asyncio, re
-import matplotlib.pyplot as plt
-from PIL import Image
+import asyncio
 
 from utils import generation_utils, image_utils
+from utils.plot_execution import execute_plot_code_worker
 from .base_agent import BaseAgent
-
-
-def _execute_plot_code_worker(code_text: str) -> str:
-    """
-    Independent plot code execution worker:
-    1. Extract code
-    2. Execute plotting
-    3. Return JPEG as Base64 string
-    """
-    match = re.search(r"```python(.*?)```", code_text, re.DOTALL)
-    code_clean = match.group(1).strip() if match else code_text.strip()
-
-    plt.switch_backend("Agg")
-    plt.close("all")
-    plt.rcdefaults()
-
-    try:
-        exec_globals = {}
-        exec(code_clean, exec_globals)
-        if plt.get_fignums():
-            buf = io.BytesIO()
-            plt.savefig(buf, format="jpeg", bbox_inches="tight", dpi=300)
-            plt.close("all")
-
-            buf.seek(0)
-            img_bytes = buf.read()
-            return base64.b64encode(img_bytes).decode("utf-8")
-        else:
-            return None
-
-    except Exception as e:
-        print(f"Error executing plot code: {e}")
-        return None
 
 
 class VisualizerAgent(BaseAgent):
@@ -234,7 +200,7 @@ class VisualizerAgent(BaseAgent):
                     self.process_executor = ProcessPoolExecutor(max_workers=4)
                 
                 base64_jpg = await loop.run_in_executor(
-                    self.process_executor, _execute_plot_code_worker, raw_code
+                    self.process_executor, execute_plot_code_worker, raw_code, 300
                 )
                 data[f"{desc_key}_code"] = raw_code
                 

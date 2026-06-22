@@ -107,6 +107,8 @@ Use **Prompt Studio** for new figures and **Refine Image** for modifications or 
 
 When `data/PaperBananaBench/diagram/ref.json` is present, Prompt Studio can attach up to 10 manually selected diagram examples to a native generation run. The app records those examples in `request.json`, generated metadata, and the provider prompt. PaperBanana does not download or unpack the benchmark automatically.
 
+Prompt Studio can also run the `Statistical Plot` task through the native provider path. Manual reference examples remain diagram-only in this version; plot runs proceed without manual examples and record `reference_mode: none`.
+
 For automation or CI, install without opening the app:
 
 ```bash
@@ -191,6 +193,14 @@ python main.py \
   --split_name "test" \
   --exp_mode "dev_full" \
   --retrieval_setting "auto"
+
+# Legacy matplotlib plot-code generation with no few-shot retrieval
+python main.py \
+  --dataset_name "PaperBananaBench" \
+  --task_name "plot" \
+  --split_name "test" \
+  --exp_mode "vanilla" \
+  --retrieval_setting "none"
 ```
 
 **Available Options:**
