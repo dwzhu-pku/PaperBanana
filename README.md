@@ -128,6 +128,14 @@ python main.py \
   --split_name "test" \
   --exp_mode "dev_full" \
   --retrieval_setting "auto"
+
+# Legacy matplotlib plot-code generation with no few-shot retrieval
+python main.py \
+  --dataset_name "PaperBananaBench" \
+  --task_name "plot" \
+  --split_name "test" \
+  --exp_mode "vanilla" \
+  --retrieval_setting "none"
 ```
 
 **Available Options:**
@@ -310,5 +318,4 @@ If you find this repo helpful, please cite our paper as follows:
 This is not an officially supported Google product. This project is not eligible for the [Google Open Source Software Vulnerability Rewards Program](https://bughunters.google.com/open-source-security).
 
 Our goal is simply to benefit the community, so currently we have no plans to use it for commercial purposes. The core methodology was developed during my internship at Google, and patents have been filed for these specific workflows by Google. While this doesn't impact open-source research efforts, it restricts third-party commercial applications using similar logic.
-
 
