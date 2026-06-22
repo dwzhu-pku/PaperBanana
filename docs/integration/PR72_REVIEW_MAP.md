@@ -155,12 +155,17 @@ Current evidence:
 - `EV-20260622-014`: accessibility landmark source/AX spot checks.
 - `EV-20260622-015`: Settings layout/screenshots.
 - `EV-20260622-016`: table accessibility follow-up and 154 passing Swift tests.
+- `EV-20260622-022`: Settings effective-minimum and adaptive appearance
+  screenshots covered the Workspace pane in Dark/Light with Increased Contrast,
+  Reduce Transparency, and Reduce Motion. Independent macOS design critique
+  found no release-blocking Settings defect.
 
 Open gaps:
 
 - Full manual VoiceOver and keyboard traversal remain required.
-- Increased Contrast, Increased Text Size, Reduce Motion, Reduce Transparency,
-  hover/focus, inactive-window, and narrow-width evidence remain required.
+- Increased Text Size and inactive-window Settings review remain open. Broader
+  full-app hover/focus and adaptive-state review remains required outside the
+  Settings increment.
 
 ### 3. Prompt Studio And Manual Reference Examples
 
