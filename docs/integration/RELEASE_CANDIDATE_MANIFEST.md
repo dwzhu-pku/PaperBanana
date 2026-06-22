@@ -75,10 +75,12 @@ only, or unsupported as stated above.
 | Requirement | Current status |
 |---|---|
 | Current app install provenance | Covered by `EV-20260622-035` |
+| Local app-bundle backup/install/restore preflight | Covered by `EV-20260622-037`; before, candidate, and restored binary hashes matched |
 | True upgrade from a prior known-good app bundle | Not yet proven |
-| App-bundle rollback to a prior known-good bundle | Not yet proven |
+| App-bundle rollback to a distinct prior known-good bundle | Not yet proven; `EV-20260622-037` covers mechanics only |
+| Selected non-secret defaults preservation during install/restore | Covered by `EV-20260622-037` via plist hash comparison |
 | User data / Application Support preservation across upgrade and rollback | Not yet proven |
-| Run-folder/schema compatibility after candidate upgrade and rollback | Not yet proven |
+| Run-folder/schema compatibility after candidate upgrade and rollback | Source-level legacy migration tests passed in `EV-20260622-037`; end-to-end app upgrade remains open |
 | Hosted rollback | Not applicable until hosted deployment is selected and validated |
 
 Rollback work must preserve existing run folders and user settings. Do not use
