@@ -40,6 +40,8 @@ struct RootView: View {
             selection = .refineImage
         case .recoveredImages:
             selection = .recoveredImages
+        case .artifactLibrary:
+            selection = .artifactLibrary
         case .runDetails:
             selection = .runDetails
         case .runLedger:

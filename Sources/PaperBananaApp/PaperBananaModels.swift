@@ -554,6 +554,7 @@ enum PaperBananaIntentDestination: String {
     case promptStudio
     case refineImage
     case recoveredImages
+    case artifactLibrary
     case runDetails
     case runLedger
 }

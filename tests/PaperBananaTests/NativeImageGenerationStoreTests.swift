@@ -149,9 +149,9 @@ final class NativeImageGenerationStoreTests: XCTestCase {
     }
 
     func testIntentBridgeConsumesRequestedDestinationOnce() {
-        PaperBananaIntentBridge.request(.runDetails)
+        PaperBananaIntentBridge.request(.artifactLibrary)
 
-        XCTAssertEqual(PaperBananaIntentBridge.consume(), .runDetails)
+        XCTAssertEqual(PaperBananaIntentBridge.consume(), .artifactLibrary)
         XCTAssertNil(PaperBananaIntentBridge.consume())
     }
 
