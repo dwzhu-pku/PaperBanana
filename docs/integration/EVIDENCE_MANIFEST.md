@@ -80,6 +80,7 @@ content, or raw provider payloads in shared evidence.
 | EV-20260622-009 | WP-104/T-104 | `1e67cb5164c7` | Passed with limitation | PR #73 critic controls and opt-in Gemini agentic Critic integrated with default path unchanged; evidence recorded in `docs/integration/evidence/20260622-023145_1e67cb5164c7_WP-104-critic-agentic.md`. |
 | EV-20260622-010 | WP-105/T-105 | `7ce4f079f614` | Passed with limitation | Native macOS stack integrated onto the Python/security branch, reviewer-found route/audit gaps fixed, and full native/Python/Xcode 27 gate passed; evidence recorded in `docs/integration/evidence/20260622-065855_7ce4f079f614_WP-105-native-integrated-candidate.md`. |
 | EV-20260622-011 | WP-005/T-034/T-035 | `26adc4670944` | Passed with limitation | Portable CI workflows and native gate scripts added; clean temporary Python 3.12 suite and full local native/Python/Xcode 27 gate passed; evidence recorded in `docs/integration/evidence/20260622-070737_26adc4670944_WP-005-ci-portability.md`. |
+| EV-20260622-012 | WP-105/T-017/T-018/T-019 | `d43a6c8a9556` | Passed with limitation | Exact native-integrated branch head revalidated after the evidence/diff-hygiene cleanup; full native/Python/Xcode 27 gate passed with 153 Swift tests, 88 Python tests, and `codex-xcode27 proof`; evidence recorded in `docs/integration/evidence/20260622-091516_d43a6c8a9556_WP-105-exact-head-gate.md`. |
 
 ## Required Next Evidence
 
