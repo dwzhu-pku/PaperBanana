@@ -248,15 +248,18 @@ struct ArtifactLibraryView: View {
                     spacing: AppDesignSystem.Spacing.md
                 ) {
                     ForEach(filteredArtifacts) { artifact in
-                        ArtifactCardView(
-                            artifact: artifact,
-                            isSelected: artifact.id == store.selectedArtifactID,
-                            isFavorite: store.isFavorite(artifact)
-                        )
-                        .contentShape(Rectangle())
-                        .onTapGesture {
+                        Button {
                             store.selectedArtifactID = artifact.id
+                        } label: {
+                            ArtifactCardView(
+                                artifact: artifact,
+                                isSelected: artifact.id == store.selectedArtifactID,
+                                isFavorite: store.isFavorite(artifact)
+                            )
                         }
+                        .buttonStyle(.plain)
+                        .contentShape(Rectangle())
+                        .accessibilityIdentifier("artifact-card-\(artifact.relativePath)")
                         .contextMenu {
                             Button("Open") { store.open(artifact) }
                             Button("Reveal in Finder") { store.reveal(artifact) }
@@ -278,6 +281,10 @@ struct ArtifactLibraryView: View {
                     }
                 }
                 .padding(AppDesignSystem.Spacing.lg)
+                .accessibilityLabel("Artifact grid")
+                .accessibilityValue("\(filteredArtifacts.count) artifacts shown")
+                .accessibilityHint("Use Tab to focus an artifact, Return to select it, and the context menu for actions.")
+                .accessibilityIdentifier("artifact-grid")
             }
         }
     }

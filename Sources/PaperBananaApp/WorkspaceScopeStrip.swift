@@ -101,6 +101,10 @@ private struct WorkspaceSearchField: View {
             TextField(prompt, text: $text)
                 .textFieldStyle(.plain)
                 .lineLimit(1)
+                .accessibilityLabel(prompt)
+                .accessibilityValue(searchAccessibilityValue)
+                .accessibilityIdentifier(searchAccessibilityIdentifier)
+                .help(prompt)
         }
         .padding(.horizontal, AppDesignSystem.Spacing.sm)
         .frame(height: 28)
@@ -111,5 +115,21 @@ private struct WorkspaceSearchField: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel(prompt)
+    }
+
+    private var searchAccessibilityValue: String {
+        text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "No search text" : text
+    }
+
+    private var searchAccessibilityIdentifier: String {
+        let normalized = prompt
+            .lowercased()
+            .map { character -> Character in
+                character.isLetter || character.isNumber ? character : "-"
+            }
+        let collapsed = String(normalized)
+            .split(separator: "-")
+            .joined(separator: "-")
+        return "workspace-search-\(collapsed)"
     }
 }

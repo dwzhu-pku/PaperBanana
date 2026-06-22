@@ -217,6 +217,10 @@ struct ProviderRunLedgerView: View {
                     }
                     .width(min: 150, ideal: 220)
                 }
+                .accessibilityLabel("Provider call ledger")
+                .accessibilityValue("\(filteredCalls.count) provider calls shown")
+                .accessibilityHint("Use the arrow keys to select a provider call and review its details.")
+                .accessibilityIdentifier("provider-run-ledger-table")
             }
         }
         .onChange(of: filteredCalls) { _ in

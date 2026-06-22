@@ -93,6 +93,10 @@ struct RunDetailsRunListView: View {
             }
             .width(min: 180, ideal: 260)
         }
+        .accessibilityLabel("Run list")
+        .accessibilityValue("\(runs.count) runs shown")
+        .accessibilityHint("Use the arrow keys to select a run and review its details.")
+        .accessibilityIdentifier("run-details-table")
     }
 }
 

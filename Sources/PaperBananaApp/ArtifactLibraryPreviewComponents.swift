@@ -42,6 +42,21 @@ struct ArtifactCardView: View {
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(artifact.title), \(artifact.kind.label), \(artifact.workflow)")
+        .accessibilityValue(accessibilityValue)
+        .accessibilityHint("Selects this artifact for preview and actions.")
+        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
+    }
+
+    private var accessibilityValue: String {
+        var values: [String] = []
+        if isSelected { values.append("Selected") }
+        if isFavorite { values.append("Favorite") }
+        if artifact.isRecovered { values.append("Recovered") }
+        if let status = artifact.runStatus {
+            values.append("Run status \(status.label)")
+        }
+        values.append(artifact.relativePath)
+        return values.joined(separator: ", ")
     }
 
     private var cardBadges: some View {

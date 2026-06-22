@@ -247,6 +247,46 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
         )
     }
 
+    func testNativeKeyboardAndAccessibilityLandmarksRemainNamed() throws {
+        let repoRoot = Self.repoRoot()
+        let scopeStrip = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/WorkspaceScopeStrip.swift"),
+            encoding: .utf8
+        )
+        let runList = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/RunDetailsRunListView.swift"),
+            encoding: .utf8
+        )
+        let ledger = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ProviderRunLedgerView.swift"),
+            encoding: .utf8
+        )
+        let artifactLibrary = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ArtifactLibraryView.swift"),
+            encoding: .utf8
+        )
+        let artifactCard = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ArtifactLibraryPreviewComponents.swift"),
+            encoding: .utf8
+        )
+
+        XCTAssertTrue(scopeStrip.contains(".accessibilityIdentifier(searchAccessibilityIdentifier)"))
+        XCTAssertTrue(scopeStrip.contains(".accessibilityValue(searchAccessibilityValue)"))
+        XCTAssertTrue(runList.contains(#".accessibilityIdentifier("run-details-table")"#))
+        XCTAssertTrue(runList.contains(#".accessibilityHint("Use the arrow keys to select a run and review its details.")"#))
+        XCTAssertTrue(ledger.contains(#".accessibilityIdentifier("provider-run-ledger-table")"#))
+        XCTAssertTrue(ledger.contains(#".accessibilityHint("Use the arrow keys to select a provider call and review its details.")"#))
+        XCTAssertTrue(artifactLibrary.contains(#".accessibilityIdentifier("artifact-grid")"#))
+        XCTAssertTrue(artifactLibrary.contains(#".accessibilityIdentifier("artifact-card-\(artifact.relativePath)")"#))
+        XCTAssertTrue(artifactLibrary.contains(#".buttonStyle(.plain)"#))
+        XCTAssertFalse(
+            artifactLibrary.contains(".onTapGesture {\n                            store.selectedArtifactID = artifact.id"),
+            "Artifact cards should remain keyboard-activatable Buttons, not pointer-only tap targets."
+        )
+        XCTAssertTrue(artifactCard.contains(#".accessibilityHint("Selects this artifact for preview and actions.")"#))
+        XCTAssertTrue(artifactCard.contains(".accessibilityAddTraits(isSelected ? [.isSelected] : [])"))
+    }
+
     func testPromptStudioUsesNativeWorkbenchSectionsInsteadOfLegacyPanelStack() throws {
         let repoRoot = Self.repoRoot()
         let promptStudio = try String(
