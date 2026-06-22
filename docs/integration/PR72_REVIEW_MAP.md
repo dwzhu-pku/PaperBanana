@@ -53,7 +53,7 @@ native PR head.
 | CI and gate portability | `26adc46`, `75f6d99` | Portable CI workflows, native structural checks, Ruby pinning, and script portability away from a single local host path. |
 | Evidence records | `1524a00`, `d43a6c8`, `4a8df78`, `7271e07`, `1e1688f`, `949bd3c`, `4c9d779` | SHA-linked validation records and manifest updates. Review for accuracy and limitations, not product behavior. |
 | Visual/accessibility polish | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812`, `261ad29`, `cf9531c`, `706e054` | Sidebar/settings polish, search/card accessibility landmarks, Settings form layout, native table accessibility summaries, Prompt Studio keyboard focus escape, adaptive material fallback, minimum-window contract, preflight/reference/disabled-action landmarks, Settings inactive-window evidence, and source-level regression contracts. |
-| Live accessibility evidence | `fdcaad1`, `e393430` | Installed-app AX proof for no-spend preflight row semantics, non-image Artifact inspector disabled-action hints, and manual reference-row selectable/selected/search/selection-limit states. |
+| Live accessibility evidence | `fdcaad1`, `e393430`, `f360dc6` | Installed-app AX proof for no-spend preflight row semantics, non-image Artifact inspector disabled-action hints, manual reference-row selectable/selected/search/selection-limit states, and current branch-head aggregate gate/install evidence. |
 
 ## Original PR #72 Source Stack Mapping
 
@@ -120,12 +120,17 @@ Current evidence:
   `5628b3050aa6`; workflow `Python Tests` / check-run `Python 3.12 Tests`
   succeeded, and workflow `Native Structural Checks` / check-run
   `Native Source And Project Contracts` succeeded.
+- `EV-20260622-035`: current branch head `f360dc6d5ccd` passed the local
+  aggregate native/Python/Xcode 27 gate plus Release build/install and
+  post-install sanity checks.
 
 Open gaps:
 
 - The manual/self-hosted Xcode 27 full gate remains required only if selected
   as required branch/release evidence.
-- A final release-candidate install proof remains required on the final SHA.
+- A final release-candidate gate/install proof remains required only if the
+  frozen release-candidate SHA differs from `f360dc6d5ccd` or later product
+  code changes land.
 
 ### 2. App Shell, Navigation, Settings, And Design System
 
@@ -572,16 +577,16 @@ README.md
 | Area | Current status | Why |
 |---|---|---|
 | Native implementation existence | Implemented | Native source, tests, scripts, assets, and docs are present on `integration/native-first-rc-native`. |
-| Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. Final release-candidate rerun remains required. |
+| Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. `EV-20260622-035` covers the exact current branch head `f360dc6d5ccd`; a final release-candidate rerun remains required only if the frozen release-candidate SHA differs or later product code changes land. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings, Settings adaptive screenshots are covered by `EV-20260622-022`, and bounded Settings inactive-window screenshots are covered by `EV-20260622-032`. Increased Text Size and broader full-app adaptive states remain open. |
 | Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`, live no-spend preflight plus non-image Artifact disabled-action AX proof is covered by `EV-20260622-033`, and live reference-row selectable/selected/search/cap AX proof is covered by `EV-20260622-034`. Full manual keyboard/VoiceOver traversal remains open. |
 | Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, and real-data search/filter plus 10-reference cap persistence are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
-| Release readiness | Not complete | Provider E2E, rollback, final install provenance, quality benchmark, and upstream maintainer acceptance remain open. |
+| Release readiness | Not complete | Current-head install provenance is covered by `EV-20260622-035`, but provider E2E, rollback/upgrade proof, release manifest consistency, quality benchmark, and upstream maintainer acceptance remain open. |
 
 ## Required Follow-Up Before Full Signoff
 
 - Record a final full native/Python/Xcode gate on the frozen release-candidate
-  SHA.
+  SHA if it differs from `f360dc6d5ccd` or later product code changes land.
 - Run the full manual keyboard and VoiceOver traversal, including Run Details
   and Provider Run Ledger table focus beyond the AX summary proof in
   `EV-20260622-021`, plus Prompt Studio states beyond the focused
