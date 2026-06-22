@@ -55,7 +55,12 @@ gemini_client = None
 anthropic_client = None
 openai_client = None
 openrouter_client = None
+local_openai_client = None
 openrouter_api_key = ""
+local_openai_base_url = ""
+local_openai_api_key = ""
+
+OLLAMA_OPENAI_BASE_URL = "http://localhost:11434/v1"
 
 
 def reinitialize_clients():
@@ -67,7 +72,8 @@ def reinitialize_clients():
     Returns a list of client names that were successfully initialized.
     """
     global gemini_client, anthropic_client, openai_client
-    global openrouter_client, openrouter_api_key
+    global openrouter_client, local_openai_client, openrouter_api_key
+    global local_openai_base_url, local_openai_api_key
 
     initialized = []
 
@@ -105,6 +111,18 @@ def reinitialize_clients():
         initialized.append("OpenRouter")
     else:
         openrouter_client = None
+
+    local_openai_base_url = get_config_val("local_openai", "base_url", "LOCAL_OPENAI_BASE_URL", "")
+    local_openai_api_key = get_config_val("local_openai", "api_key", "LOCAL_OPENAI_API_KEY", "")
+    if local_openai_base_url:
+        local_openai_client = AsyncOpenAI(
+            base_url=local_openai_base_url,
+            api_key=local_openai_api_key or "local",
+        )
+        print("Initialized Local OpenAI-compatible Client")
+        initialized.append("Local OpenAI-compatible")
+    else:
+        local_openai_client = None
 
     return initialized
 
@@ -460,6 +478,109 @@ async def call_openai_with_retry_async(
     return response_text_list
 
 
+def _get_local_openai_client(use_ollama_default: bool = False):
+    """Return a configured OpenAI-compatible local text client."""
+    if local_openai_client is not None:
+        return local_openai_client
+
+    base_url = get_config_val("local_openai", "base_url", "LOCAL_OPENAI_BASE_URL", "")
+    api_key = get_config_val("local_openai", "api_key", "LOCAL_OPENAI_API_KEY", "")
+    if use_ollama_default and not base_url:
+        base_url = OLLAMA_OPENAI_BASE_URL
+        api_key = api_key or "ollama"
+
+    if not base_url:
+        raise RuntimeError(
+            "Local OpenAI-compatible client was not initialized: missing base URL. "
+            "Set LOCAL_OPENAI_BASE_URL or local_openai.base_url in configs/model_config.yaml. "
+            "For Ollama, use http://localhost:11434/v1 or the ollama/<model> prefix."
+        )
+
+    return AsyncOpenAI(base_url=base_url, api_key=api_key or "local")
+
+
+async def call_local_openai_with_retry_async(
+    model_name, contents, config, max_attempts=5, retry_delay=30, error_context="",
+    use_ollama_default=False,
+):
+    """
+    ASYNC: Call an OpenAI-compatible local text endpoint.
+
+    This route is intentionally limited to chat/text generation. It does not
+    make local OpenAI-compatible servers a drop-in image-generation backend.
+    """
+    client = _get_local_openai_client(use_ollama_default=use_ollama_default)
+    system_prompt = config["system_prompt"]
+    temperature = config["temperature"]
+    candidate_num = config["candidate_num"]
+    max_tokens = config["max_completion_tokens"]
+    response_text_list = []
+
+    current_contents = contents
+    is_input_valid = False
+    for attempt in range(max_attempts):
+        try:
+            openai_contents = _convert_to_openai_format(current_contents)
+            first_response = await client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": openai_contents},
+                ],
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            content = first_response.choices[0].message.content or ""
+            if not content.strip():
+                print("Local OpenAI-compatible endpoint returned empty content, retrying...")
+                if attempt < max_attempts - 1:
+                    await asyncio.sleep(retry_delay)
+                continue
+            response_text_list.append(content)
+            is_input_valid = True
+            break
+
+        except Exception as e:
+            context_msg = f" for {error_context}" if error_context else ""
+            current_delay = min(retry_delay * (2 ** attempt), 60)
+            print(
+                f"Local OpenAI-compatible attempt {attempt + 1} failed{context_msg}: {e}. "
+                f"Retrying in {current_delay}s..."
+            )
+            if attempt < max_attempts - 1:
+                await asyncio.sleep(current_delay)
+
+    if not is_input_valid:
+        context_msg = f" for {error_context}" if error_context else ""
+        print(f"Error: All {max_attempts} local OpenAI-compatible attempts failed{context_msg}.")
+        return ["Error"] * candidate_num
+
+    remaining_candidates = candidate_num - 1
+    if remaining_candidates > 0:
+        valid_openai_contents = _convert_to_openai_format(current_contents)
+        tasks = [
+            client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": valid_openai_contents},
+                ],
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            for _ in range(remaining_candidates)
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        for res in results:
+            if isinstance(res, Exception):
+                print(f"Error generating a subsequent local OpenAI-compatible candidate: {res}")
+                response_text_list.append("Error")
+            else:
+                response_text_list.append(res.choices[0].message.content or "Error")
+
+    return response_text_list
+
+
 async def call_openai_image_generation_with_retry_async(
     model_name, prompt, config, max_attempts=5, retry_delay=30, error_context=""
 ):
@@ -752,15 +873,24 @@ async def call_model_with_retry_async(
     Unified router that dispatches to the correct provider based on model_name.
 
     Routing rules:
-      1. Explicit prefix overrides: "openrouter/" -> OpenRouter, "claude-" -> Anthropic,
-         "gpt-"/"o1-"/"o3-"/"o4-" -> OpenAI
+      1. Explicit prefix overrides: "openrouter/" -> OpenRouter,
+         "local/" and "ollama/" -> local OpenAI-compatible text endpoints,
+         "claude-" -> Anthropic, "gpt-"/"o1-"/"o3-"/"o4-" -> OpenAI
       2. No prefix: auto-detect based on which API key is configured.
          Priority: OpenRouter > Gemini > Anthropic > OpenAI
     """
     # Explicit provider prefix overrides auto-detection
+    use_ollama_default = False
     if model_name.startswith("openrouter/"):
         provider = "openrouter"
         actual_model = model_name[len("openrouter/"):]
+    elif model_name.startswith("local/"):
+        provider = "local_openai"
+        actual_model = model_name[len("local/"):]
+    elif model_name.startswith("ollama/"):
+        provider = "local_openai"
+        actual_model = model_name[len("ollama/"):]
+        use_ollama_default = True
     elif model_name.startswith("claude-"):
         provider = "anthropic"
         actual_model = model_name
@@ -807,6 +937,7 @@ async def call_model_with_retry_async(
         "openrouter": call_openrouter_with_retry_async,
         "anthropic": call_claude_with_retry_async,
         "openai": call_openai_with_retry_async,
+        "local_openai": call_local_openai_with_retry_async,
     }[provider]
 
     return await call_fn(
@@ -816,4 +947,5 @@ async def call_model_with_retry_async(
         max_attempts=max_attempts,
         retry_delay=retry_delay,
         error_context=error_context,
+        **({"use_ollama_default": use_ollama_default} if provider == "local_openai" else {}),
     )

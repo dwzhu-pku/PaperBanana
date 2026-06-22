@@ -21,6 +21,12 @@ This repository forked the content of that repo and aims to keep evolving toward
 - **2026-03-11**: Added OpenRouter support — use models from OpenAI, Anthropic, and other providers via a unified API.
 - **2026-03-11**: Added Contributors section with all-contributors bot support.
 
+## Artifacts And Support
+
+The public PaperBanana artifacts are the [Hugging Face paper page](https://huggingface.co/papers/2601.23265), [PaperBananaBench dataset](https://huggingface.co/datasets/dwzhu/PaperBananaBench), [PaperBananaDiagramPDFs dataset](https://huggingface.co/datasets/dwzhu/PaperBananaDiagramPDFs), and [hosted Hugging Face Space](https://huggingface.co/spaces/dwzhu/PaperBanana). PaperBanana is an orchestration framework around provider-hosted models plus the released datasets; no separate PaperBanana model checkpoint is required to run the released code or demo.
+
+For provider choice, Ollama/local text routing, quota or billing errors, provider suspension, third-party relay/base URL setup, and API-key rotation, see [docs/SUPPORT.md](docs/SUPPORT.md).
+
 ## TODO List
 - [ ] Add support for using manually selected examples. Provide **a** user-friendly interface.
 - [ ] Upload code for generating statistical plots.
@@ -57,6 +63,8 @@ PaperBanana supports configuring API keys from a YAML configuration file or via 
 
 We recommend duplicate the `configs/model_config.template.yaml` file into `configs/model_config.yaml` to externalize all user configurations. This file is ignored by git to keep your api keys and configurations secret. In `model_config.yaml`, remember to fill in the two model names (`defaults.main_model_name` and `defaults.image_gen_model_name`) and set **at least one** API key under `api_keys`—for example only `google_api_key` (Gemini), or only `openrouter_api_key` (OpenRouter). **You do not need both; either one is enough.** If both are configured, OpenRouter is preferred for routing when available.
 
+For OpenAI-compatible local text endpoints, set `local_openai.base_url` and `local_openai.api_key`, then use `local/<model>` or `ollama/<model>` as `defaults.main_model_name`. Local and Ollama routes are text-route support only and are not a full image-generation backend, so keep `defaults.image_gen_model_name` on a supported image-capable provider.
+
 Note that if you need to generate many candidates simultaneously, you will require an API key that supports high concurrency.
 
 ### Step3: Downloading the Dataset
@@ -88,7 +96,13 @@ First download [PaperBananaBench](https://huggingface.co/datasets/dwzhu/PaperBan
 **Try it online — no setup required:**  
 👉 **[PaperBanana on Hugging Face Spaces](https://huggingface.co/spaces/dwzhu/PaperBanana)**
 
-To get started, enter your API key (OpenRouter or Google Gemini), then configure your desired parameters (pipeline mode, number of candidates, aspect ratio, etc.), paste your method section text and figure caption, and click **Generate**.
+To get started on a hosted deployment, use the provider routes configured by
+the server operator, then configure your desired parameters (pipeline mode,
+number of candidates, aspect ratio, etc.), paste your method section text and
+figure caption, and click **Generate**. Local operators should configure
+OpenRouter or Google Gemini keys through environment variables or
+`configs/model_config.yaml`; the hosted UI does not accept per-session user
+API keys.
 
 You can also run the Gradio app locally:
 ```bash
