@@ -322,6 +322,10 @@ Current evidence:
   Codex-fallback refinement ledger provenance, pre-provider durable refinement
   records, and the source contract that native stores do not auto-route through
   the legacy Python provider.
+- `EV-20260622-039`: no-live native recovery slice passed focused Swift tests
+  for native Google generation/refinement cancellation, timeout, cancelled and
+  timed-out provider-call SQLite persistence, and stale running provider-call
+  recovery after relaunch.
 
 Open gaps:
 
@@ -377,6 +381,9 @@ Current evidence:
 - `EV-20260622-038`: focused no-spend refinement tests passed for Codex-fallback
   output/ledger provenance without Python provider execution and durable
   pre-provider run-record creation with invalid mock payload recovery.
+- `EV-20260622-039`: focused no-live refinement recovery tests passed for
+  cancellation, timeout, cancelled/timed-out provider-call persistence, and
+  stale provider-call recovery after relaunch.
 - `EV-20260622-029`: Artifact Library cards now expose a native
   `Artifact Actions` menu button; focused tests, Release build/install,
   installed-app AX proof, and the full native/Python/Xcode 27 aggregate gate
@@ -595,7 +602,7 @@ README.md
 | Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. `EV-20260622-035` covers the exact current branch head `f360dc6d5ccd`; a final release-candidate rerun remains required only if the frozen release-candidate SHA differs or later product code changes land. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings, Settings adaptive screenshots are covered by `EV-20260622-022`, and bounded Settings inactive-window screenshots are covered by `EV-20260622-032`. Increased Text Size and broader full-app adaptive states remain open. |
 | Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`, live no-spend preflight plus non-image Artifact disabled-action AX proof is covered by `EV-20260622-033`, and live reference-row selectable/selected/search/cap AX proof is covered by `EV-20260622-034`. Full manual keyboard/VoiceOver traversal remains open. |
-| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, real-data search/filter plus 10-reference cap persistence, and focused no-spend generation/refinement store provenance tests are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
+| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, real-data search/filter plus 10-reference cap persistence, focused no-spend generation/refinement store provenance tests, and focused no-live cancellation/timeout/stale-run recovery tests are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
 | Release readiness | Not complete | Current-head install provenance is covered by `EV-20260622-035`, draft release-manifest consistency is covered by `EV-20260622-036`, and local app-bundle rollback preflight is covered by `EV-20260622-037`; provider E2E, distinct prior-version upgrade proof, full user-data migration, hosted rollback, final frozen-SHA manifest consistency, quality benchmark, notarization/distribution decision, and upstream maintainer acceptance remain open. |
 
 ## Required Follow-Up Before Full Signoff
@@ -622,7 +629,9 @@ README.md
   covered by `EV-20260622-033`.
 - Run at least one approved live provider/fallback native E2E and inspect
   durable request/metadata/provider artifacts. `EV-20260622-038` covers
-  no-spend generation/refinement store artifact and provenance behavior only.
+  no-spend generation/refinement store artifact and provenance behavior only;
+  `EV-20260622-039` covers mocked/no-live cancellation, timeout, and stale-run
+  recovery only.
 - Complete hosted two-session/negative-path validation before any public hosted
   claim.
 - Produce final frozen-SHA release manifest consistency, install/upgrade/

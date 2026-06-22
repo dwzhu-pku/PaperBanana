@@ -60,7 +60,7 @@ channel approval, upgrade proof, or rollback proof.
 |---|---|---|---|
 | Native no-spend dry run | Validated for local provenance, manual-reference persistence, and generation/refinement store artifact behavior | `EV-20260622-024`, `EV-20260622-025`, `EV-20260622-026`, `EV-20260622-038` | Not a live provider generation result |
 | Codex fallback | Implemented and covered by unit/component tests as a no-paid-provider path | Swift/Python test suites in `EV-20260622-035`; focused refinement fallback evidence in `EV-20260622-038` | Approved live fallback E2E remains open |
-| Google Gemini / Nano Banana | Implemented and covered by mocked/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
+| Google Gemini / Nano Banana | Implemented and covered by mocked/error-path tests | Swift/Python test suites in `EV-20260622-035`; focused cancellation/timeout recovery evidence in `EV-20260622-039` | Approved live provider E2E remains open |
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
 | `local/<model>` and `ollama/<model>` text routes | Documented and covered by mocked route/docs tests | `EV-20260622-007` and full Python suites | Optional real local/Ollama endpoint smoke remains open if promoted beyond mocked support |
 | Foundation Models | Unsupported for release | `D-05`, `D-13`, and provider-support docs | Do not promote as functional without implementation and tests |
