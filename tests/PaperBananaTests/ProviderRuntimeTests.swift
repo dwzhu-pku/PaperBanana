@@ -30,6 +30,30 @@ final class ProviderRuntimeTests: XCTestCase {
         XCTAssertTrue(client is OpenRouterProviderClient)
     }
 
+    func testReleaseVisibleImageModelsDoNotRouteToUnsupportedFoundationModelsProvider() {
+        let settingsVariants = [
+            Self.settings(),
+            Self.settings(googleAPIKey: "test-google-key"),
+            Self.settings(openRouterAPIKey: "test-openrouter-key")
+        ]
+
+        XCTAssertFalse(
+            ImageModelChoice.allCases.contains { $0.backendValue == ImageProviderKind.foundationModels.rawValue },
+            "Foundation Models must not be exposed as a release-visible image model until the provider is implemented and validated."
+        )
+
+        for settings in settingsVariants {
+            for model in ImageModelChoice.allCases {
+                let plan = ImageProviderExecutionPlan(requestedModel: model, settings: settings)
+                let client = ProviderClientFactory().client(for: plan)
+
+                XCTAssertNotEqual(plan.provider, .foundationModels)
+                XCTAssertFalse(client is FoundationModelsProviderClient)
+                XCTAssertNotEqual(plan.durableRequestFields["provider_kind"] as? String, ImageProviderKind.foundationModels.rawValue)
+            }
+        }
+    }
+
     func testOpenRouterProviderClientWritesNativeImageRequestPayload() throws {
         let repoRoot = try Self.makeTemporaryRepoRoot()
         defer { try? FileManager.default.removeItem(at: repoRoot) }

@@ -622,7 +622,7 @@ enum PaperBananaFoundationAssistant {
         input: String,
         imageURL: URL? = nil,
         context: String = "",
-        preferFoundationModels: Bool = true
+        preferFoundationModels: Bool = false
     ) async -> PaperBananaAssistantResult {
         let ocrResult = (task == .extractText && imageURL != nil)
             ? (try? PaperBananaVisionTextExtractor.extractText(from: imageURL!))

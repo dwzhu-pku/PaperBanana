@@ -82,6 +82,19 @@ final class NativeImageGenerationStoreTests: XCTestCase {
         XCTAssertTrue(result.text.contains("legible typography"))
     }
 
+    func testFoundationAssistantDefaultsToLocalFallbackForReleaseCandidate() async {
+        let result = await PaperBananaFoundationAssistant.run(
+            task: .improvePrompt,
+            input: "Create a CIED MR-linac workflow figure.",
+            context: "Resolution: 4K. Aspect ratio: 16:9."
+        )
+
+        XCTAssertEqual(result.task, .improvePrompt)
+        XCTAssertFalse(result.usedFoundationModels)
+        XCTAssertEqual(result.fallbackReason, "Foundation Models disabled for this request.")
+        XCTAssertTrue(result.text.contains("Create a CIED MR-linac workflow figure."))
+    }
+
     func testFoundationAssistantFallbackImprovesStatisticalPlotPromptFromContext() async {
         let result = await PaperBananaFoundationAssistant.run(
             task: .improvePrompt,
