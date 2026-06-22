@@ -83,6 +83,7 @@ content, or raw provider payloads in shared evidence.
 | EV-20260622-012 | WP-105/T-017/T-018/T-019 | `d43a6c8a9556` | Passed with limitation | Exact native-integrated branch head revalidated after the evidence/diff-hygiene cleanup; full native/Python/Xcode 27 gate passed with 153 Swift tests, 88 Python tests, and `codex-xcode27 proof`; evidence recorded in `docs/integration/evidence/20260622-091516_d43a6c8a9556_WP-105-exact-head-gate.md`. |
 | EV-20260622-013 | WP-007/T-020 | `1c7452754839` | Passed with limitation | Native sidebar/settings polish applied, Release build installed, 153 Swift tests passed, and polished Light/Dark screenshots captured; evidence recorded in `docs/integration/evidence/20260622-093954_1c7452754839_WP-007-native-visual-polish.md`. |
 | EV-20260622-014 | WP-007/T-021 | `14cc59e7ee57` | Passed with limitation | Native accessibility landmarks improved for workspace search fields and Artifact Library cards, 154 Swift tests passed, and local AX spot checks confirmed improved search/card exposure while the native Table focus path remains an unlabeled `AXOutline`; evidence recorded in `docs/integration/evidence/20260622-095249_14cc59e7ee57_WP-007-native-accessibility-landmarks.md`. |
+| EV-20260622-015 | WP-007/T-020/T-021 | `3d7ad20f3994` | Passed with limitation | Native Settings forms were tightened with bounded tabbed Preferences layout, Settings-native readiness rows, responsive actions, path help/accessibility values, and refreshed Light/Dark screenshots from the installed Release app; evidence recorded in `docs/integration/evidence/20260622-101600_3d7ad20f3994_WP-007-settings-polish.md`. |
 
 ## Required Next Evidence
 
@@ -97,5 +98,5 @@ content, or raw provider payloads in shared evidence.
 | WP-104 | Bounded live Gemini code-execution fixture and privacy/retention review before promoting agentic Critic beyond experimental opt-in. |
 | WP-007 | Full manual keyboard navigation and VoiceOver traversal, including native Table focus naming, Settings, reference rows, artifact grid context menus, disabled states, and preflight sheets. |
 | WP-007 | Reduce Motion, Reduce Transparency, Increased Contrast, Increased Text Size, hover/focus, and inactive-window visual review. |
-| WP-007 | Additional Settings and Light Mode parity polish before full visual signoff. |
-| WP-007 | Release build/install proof through `./script/build_and_run.sh --release --install --no-open` if that distribution path remains in scope. |
+| WP-007 | Remaining Settings narrow-width, focused, inactive-window, increased-contrast, increased-text-size, reduced-transparency, and reduced-motion review before full visual signoff. |
+| WP-007 | Repeat Release build/install proof on the final release-candidate SHA if that distribution path remains in scope. |
