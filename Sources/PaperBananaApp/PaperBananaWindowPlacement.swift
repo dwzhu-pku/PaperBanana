@@ -3,10 +3,10 @@ import CoreGraphics
 enum PaperBananaWindowPlacement {
     static let minimumScreenMargin: CGFloat = 20
     private static let preferredTopMargin: CGFloat = 32
-    private static let preferredMinimumWidth: CGFloat = 1280
+    private static let preferredMinimumWidth: CGFloat = AppDesignSystem.Layout.minimumWindowWidth
     private static let preferredMinimumHeight: CGFloat = 860
-    static let minimumUsableWindowWidth: CGFloat = 1120
-    static let minimumUsableWindowHeight: CGFloat = 760
+    static let minimumUsableWindowWidth: CGFloat = AppDesignSystem.Layout.minimumWindowWidth
+    static let minimumUsableWindowHeight: CGFloat = AppDesignSystem.Layout.minimumWindowHeight
 
     static func frame(currentFrame: CGRect, codexBounds: CGRect, visibleFrame: CGRect) -> CGRect {
         let availableWidth = max(visibleFrame.width - (minimumScreenMargin * 2), minimumUsableWindowWidth)

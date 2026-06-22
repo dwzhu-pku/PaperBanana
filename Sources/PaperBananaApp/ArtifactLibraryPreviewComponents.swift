@@ -6,6 +6,8 @@ struct ArtifactCardView: View {
     let isSelected: Bool
     let isFavorite: Bool
 
+    @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+
     var body: some View {
         VStack(alignment: .leading, spacing: AppDesignSystem.Spacing.sm) {
             ZStack(alignment: .topTrailing) {
@@ -34,11 +36,20 @@ struct ArtifactCardView: View {
         .padding(AppDesignSystem.Spacing.sm)
         .background(
             RoundedRectangle(cornerRadius: AppDesignSystem.Radius.panel, style: .continuous)
-                .fill(isSelected ? Color.accentColor.opacity(0.14) : AppDesignSystem.Surfaces.panel)
+                .fill(
+                    isSelected
+                        ? AppDesignSystem.Adaptive.selectionFill(Color.accentColor, contrast: colorSchemeContrast)
+                        : AppDesignSystem.Surfaces.panel
+                )
         )
         .overlay {
             RoundedRectangle(cornerRadius: AppDesignSystem.Radius.panel, style: .continuous)
-                .stroke(isSelected ? Color.accentColor : Color.secondary.opacity(0.22), lineWidth: isSelected ? 2 : 1)
+                .stroke(
+                    isSelected
+                        ? AppDesignSystem.Adaptive.selectionStroke(Color.accentColor, contrast: colorSchemeContrast)
+                        : Color.secondary.opacity(colorSchemeContrast == .increased ? 0.48 : 0.22),
+                    lineWidth: isSelected ? 2 : 1
+                )
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(artifact.title), \(artifact.kind.label), \(artifact.workflow)")
@@ -65,7 +76,11 @@ struct ArtifactCardView: View {
                 Image(systemName: "star.fill")
                     .foregroundStyle(.yellow)
                     .padding(7)
-                    .background(.regularMaterial, in: Circle())
+                    .appAdaptiveMaterialBackground(
+                        .regularMaterial,
+                        fallback: AppDesignSystem.Surfaces.panel,
+                        in: Circle()
+                    )
                     .accessibilityLabel("Favorite")
             }
 
@@ -75,7 +90,11 @@ struct ArtifactCardView: View {
                     .labelStyle(.titleAndIcon)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 5)
-                    .background(.regularMaterial, in: Capsule())
+                    .appAdaptiveMaterialBackground(
+                        .regularMaterial,
+                        fallback: AppDesignSystem.Surfaces.panel,
+                        in: Capsule()
+                    )
                     .accessibilityLabel("Recovered image")
             }
 
@@ -113,7 +132,11 @@ struct ArtifactPreviewView: View {
                     .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(.regularMaterial)
+            .appAdaptiveMaterialBackground(
+                .regularMaterial,
+                fallback: AppDesignSystem.Surfaces.content,
+                in: Rectangle()
+            )
         }
     }
 
@@ -196,7 +219,11 @@ struct ArtifactPreviewView: View {
             .buttonStyle(.bordered)
             .controlSize(.small)
             .padding(8)
-            .background(.regularMaterial, in: Capsule())
+            .appAdaptiveMaterialBackground(
+                .regularMaterial,
+                fallback: AppDesignSystem.Surfaces.panel,
+                in: Capsule()
+            )
             .padding(8)
         }
     }
@@ -230,7 +257,11 @@ struct ArtifactRunStatusBadge: View {
             .labelStyle(.titleAndIcon)
             .padding(.horizontal, 8)
             .padding(.vertical, 5)
-            .background(.regularMaterial, in: Capsule())
+            .appAdaptiveMaterialBackground(
+                .regularMaterial,
+                fallback: AppDesignSystem.Surfaces.panel,
+                in: Capsule()
+            )
             .foregroundStyle(statusColor)
     }
 

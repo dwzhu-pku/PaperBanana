@@ -6,8 +6,6 @@ struct WorkbenchSection<Content: View>: View {
     let subtitle: String?
     let content: Content
 
-    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
-
     init(
         _ title: String,
         systemImage: String,
@@ -39,21 +37,14 @@ struct WorkbenchSection<Content: View>: View {
         }
         .padding(AppDesignSystem.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .topLeading)
-        .background(sectionBackground)
+        .appAdaptiveMaterialBackground(
+            .regularMaterial,
+            fallback: AppDesignSystem.Surfaces.panel,
+            in: RoundedRectangle(cornerRadius: AppDesignSystem.Radius.workbench, style: .continuous)
+        )
         .overlay {
             RoundedRectangle(cornerRadius: AppDesignSystem.Radius.workbench, style: .continuous)
                 .stroke(.quaternary, lineWidth: 1)
-        }
-    }
-
-    @ViewBuilder
-    private var sectionBackground: some View {
-        if reduceTransparency {
-            RoundedRectangle(cornerRadius: AppDesignSystem.Radius.workbench, style: .continuous)
-                .fill(AppDesignSystem.Surfaces.panel)
-        } else {
-            RoundedRectangle(cornerRadius: AppDesignSystem.Radius.workbench, style: .continuous)
-                .fill(.regularMaterial)
         }
     }
 }
@@ -80,8 +71,6 @@ struct WorkbenchOptionField<Content: View>: View {
 struct WorkbenchCommandBar<Content: View>: View {
     @ViewBuilder let content: Content
 
-    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
-
     var body: some View {
         HStack(alignment: .center, spacing: AppDesignSystem.Spacing.sm) {
             content
@@ -89,21 +78,14 @@ struct WorkbenchCommandBar<Content: View>: View {
         .padding(.horizontal, AppDesignSystem.Spacing.sm)
         .padding(.vertical, AppDesignSystem.Spacing.xs)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(commandBarBackground)
+        .appAdaptiveMaterialBackground(
+            .thinMaterial,
+            fallback: AppDesignSystem.Surfaces.panel,
+            in: RoundedRectangle(cornerRadius: AppDesignSystem.Radius.panel, style: .continuous)
+        )
         .overlay {
             RoundedRectangle(cornerRadius: AppDesignSystem.Radius.panel, style: .continuous)
                 .stroke(.quaternary, lineWidth: 1)
-        }
-    }
-
-    @ViewBuilder
-    private var commandBarBackground: some View {
-        if reduceTransparency {
-            RoundedRectangle(cornerRadius: AppDesignSystem.Radius.panel, style: .continuous)
-                .fill(AppDesignSystem.Surfaces.panel)
-        } else {
-            RoundedRectangle(cornerRadius: AppDesignSystem.Radius.panel, style: .continuous)
-                .fill(.thinMaterial)
         }
     }
 }
@@ -137,13 +119,19 @@ struct WorkbenchStatusPill: View {
     let systemImage: String
     let tint: Color
 
+    @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+
     var body: some View {
         Label(title, systemImage: systemImage)
             .font(AppDesignSystem.Typography.caption.weight(.semibold))
             .foregroundStyle(tint)
             .padding(.horizontal, AppDesignSystem.Spacing.sm)
             .padding(.vertical, 5)
-            .background(tint.opacity(0.14), in: Capsule())
+            .background(AppDesignSystem.Adaptive.statusFill(tint, contrast: colorSchemeContrast), in: Capsule())
+            .overlay {
+                Capsule()
+                    .stroke(AppDesignSystem.Adaptive.statusStroke(tint, contrast: colorSchemeContrast), lineWidth: 1)
+            }
             .accessibilityLabel(title)
     }
 }

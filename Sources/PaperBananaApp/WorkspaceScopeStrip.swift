@@ -108,7 +108,11 @@ private struct WorkspaceSearchField: View {
         }
         .padding(.horizontal, AppDesignSystem.Spacing.sm)
         .frame(height: 28)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+        .appAdaptiveMaterialBackground(
+            .regularMaterial,
+            fallback: AppDesignSystem.Surfaces.panel,
+            in: RoundedRectangle(cornerRadius: 7, style: .continuous)
+        )
         .overlay {
             RoundedRectangle(cornerRadius: 7, style: .continuous)
                 .stroke(.quaternary, lineWidth: 1)

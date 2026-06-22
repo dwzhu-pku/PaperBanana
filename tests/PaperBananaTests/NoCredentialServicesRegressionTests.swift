@@ -16,6 +16,15 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             source.contains("backend.restart("),
             "AppRootContainer must not restart the legacy Gradio backend during native app launch."
         )
+        XCTAssertTrue(
+            source.contains("PaperBananaWindowPlacement.minimumUsableWindowWidth") &&
+                source.contains("PaperBananaWindowPlacement.minimumUsableWindowHeight"),
+            "AppRootContainer should share the AppKit window minimums instead of hard-coding a stale SwiftUI content minimum."
+        )
+        XCTAssertFalse(
+            source.contains(".frame(minWidth: 1120"),
+            "AppRootContainer must not keep the obsolete 1120-point minimum that clips wider native split views."
+        )
     }
 
     func testRootChromeDoesNotExposeLegacyBackendControlsGlobally() throws {
@@ -416,12 +425,22 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             "Manual plot examples should no longer be hidden behind a disabled state."
         )
         XCTAssertTrue(
-            workbench.contains("accessibilityReduceTransparency"),
-            "Workbench surfaces must respect Reduce Transparency instead of relying only on material effects."
+            designSystem.contains("struct AdaptiveMaterialSurface") &&
+                designSystem.contains("accessibilityReduceTransparency") &&
+                designSystem.contains("colorSchemeContrast") &&
+                designSystem.contains("func appAdaptiveMaterialBackground"),
+            "Adaptive material fallback policy should live in AppDesignSystem so WP-007 Reduce Transparency and Increased Contrast behavior stays centralized."
         )
         XCTAssertTrue(
-            workbench.contains(".fill(.regularMaterial)"),
-            "Workbench surfaces should use native system material through the shared component."
+            workbench.contains("appAdaptiveMaterialBackground") &&
+                workbench.contains(".regularMaterial") &&
+                workbench.contains(".thinMaterial"),
+            "Workbench surfaces should use native system material through the shared adaptive design-system component."
+        )
+        XCTAssertFalse(
+            workbench.contains(".fill(.regularMaterial)") ||
+                workbench.contains(".fill(.thinMaterial)"),
+            "Workbench surfaces should not own raw material fallback logic."
         )
         XCTAssertTrue(
             designSystem.contains("enum Radius"),
@@ -444,6 +463,56 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
         XCTAssertFalse(
             promptStudio.contains("agent_selected_12"),
             "Native manual example selection should not revive the hard-coded legacy manual few-shot file."
+        )
+    }
+
+    func testScopedNativeSurfacesUseAdaptiveMaterialPolicy() throws {
+        let repoRoot = Self.repoRoot()
+        let scopedMaterialFiles = [
+            "Sources/PaperBananaApp/ArtifactLibraryPreviewComponents.swift",
+            "Sources/PaperBananaApp/RootSidebarView.swift",
+            "Sources/PaperBananaApp/WorkspaceScopeStrip.swift"
+        ]
+
+        for relativePath in scopedMaterialFiles {
+            let source = try String(
+                contentsOf: repoRoot.appendingPathComponent(relativePath),
+                encoding: .utf8
+            )
+
+            XCTAssertTrue(
+                source.contains("appAdaptiveMaterialBackground"),
+                "\(relativePath) should use the centralized adaptive material helper."
+            )
+            XCTAssertFalse(
+                source.contains(".background(.regularMaterial") ||
+                    source.contains(".background(.thinMaterial") ||
+                    source.contains(".fill(.regularMaterial") ||
+                    source.contains(".fill(.thinMaterial"),
+                "\(relativePath) must not bypass the centralized Reduce Transparency and Increased Contrast material policy."
+            )
+        }
+
+        let workbench = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/WorkbenchComponents.swift"),
+            encoding: .utf8
+        )
+        let settingsPanes = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/SettingsPanes.swift"),
+            encoding: .utf8
+        )
+
+        XCTAssertTrue(
+            workbench.contains("AppDesignSystem.Adaptive.statusFill") &&
+                workbench.contains("AppDesignSystem.Adaptive.statusStroke") &&
+                settingsPanes.contains("AppDesignSystem.Adaptive.statusFill") &&
+                settingsPanes.contains("AppDesignSystem.Adaptive.statusStroke"),
+            "Status pills should use adaptive contrast tokens rather than fixed low-opacity fills."
+        )
+        XCTAssertFalse(
+            workbench.contains(".background(tint.opacity(0.14)") ||
+                settingsPanes.contains(".background(color.opacity(0.16)"),
+            "Status pills must not rely on fixed low-opacity backgrounds in Increased Contrast."
         )
     }
 

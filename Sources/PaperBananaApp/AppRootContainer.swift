@@ -8,7 +8,10 @@ struct AppRootContainer: View {
 
     var body: some View {
         RootView(settings: settings, backend: backend)
-            .frame(minWidth: 1120, minHeight: 760)
+            .frame(
+                minWidth: PaperBananaWindowPlacement.minimumUsableWindowWidth,
+                minHeight: PaperBananaWindowPlacement.minimumUsableWindowHeight
+            )
             .onAppear {
                 AppIconController.shared.apply(colorScheme: colorScheme)
                 guard !PaperBananaRuntimeEnvironment.isRunningUnitTests else { return }

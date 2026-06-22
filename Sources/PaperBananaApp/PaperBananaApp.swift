@@ -75,7 +75,12 @@ final class PaperBananaAppDelegate: NSObject, NSApplicationDelegate, NSWindowDel
         let rootView = AppRootContainer(settings: settings, backend: backend)
         let hostingController = NSHostingController(rootView: rootView)
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 1280, height: 860),
+            contentRect: NSRect(
+                x: 0,
+                y: 0,
+                width: PaperBananaWindowPlacement.minimumUsableWindowWidth,
+                height: 860
+            ),
             styleMask: [.titled, .closable, .miniaturizable, .resizable],
             backing: .buffered,
             defer: false

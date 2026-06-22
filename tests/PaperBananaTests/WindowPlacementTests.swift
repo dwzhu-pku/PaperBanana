@@ -3,8 +3,25 @@ import XCTest
 @testable import PaperBanana
 
 final class WindowPlacementTests: XCTestCase {
+    private let widestSplitDetailWidth: CGFloat = 620 + 420
+
     func testRuntimeEnvironmentDetectsXcodeUnitTests() {
         XCTAssertTrue(PaperBananaRuntimeEnvironment.isRunningUnitTests)
+    }
+
+    func testMinimumWindowWidthCoversWidestNativeSplit() {
+        let requiredWidth = AppDesignSystem.Layout.sidebarWidth
+            + widestSplitDetailWidth
+            + AppDesignSystem.Layout.rootDividerAllowance
+
+        XCTAssertGreaterThanOrEqual(
+            PaperBananaWindowPlacement.minimumUsableWindowWidth,
+            requiredWidth
+        )
+        XCTAssertEqual(
+            PaperBananaWindowPlacement.minimumUsableWindowWidth,
+            AppDesignSystem.Layout.minimumWindowWidth
+        )
     }
 
     func testPlacementKeepsWindowInsideVisibleScreenWhenCodexIsFlushLeft() {

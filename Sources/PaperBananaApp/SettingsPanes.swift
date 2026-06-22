@@ -438,16 +438,18 @@ private struct SettingsReadinessStatusPill: View {
     let text: String
     let severity: PaperBananaReadinessSeverity
 
+    @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+
     var body: some View {
         Text(text)
             .font(AppDesignSystem.Typography.caption)
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
-            .background(color.opacity(0.16), in: Capsule())
+            .background(AppDesignSystem.Adaptive.statusFill(color, contrast: colorSchemeContrast), in: Capsule())
             .foregroundStyle(color)
             .overlay {
                 Capsule()
-                    .stroke(color.opacity(0.28), lineWidth: 1)
+                    .stroke(AppDesignSystem.Adaptive.statusStroke(color, contrast: colorSchemeContrast), lineWidth: 1)
             }
             .accessibilityLabel(text)
     }
@@ -465,16 +467,18 @@ private struct SettingsStatusPill: View {
     let text: String
     let severity: DiagnosticSeverity
 
+    @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+
     var body: some View {
         Text(text)
             .font(AppDesignSystem.Typography.caption)
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
-            .background(color.opacity(0.16), in: Capsule())
+            .background(AppDesignSystem.Adaptive.statusFill(color, contrast: colorSchemeContrast), in: Capsule())
             .foregroundStyle(color)
             .overlay {
                 Capsule()
-                    .stroke(color.opacity(0.28), lineWidth: 1)
+                    .stroke(AppDesignSystem.Adaptive.statusStroke(color, contrast: colorSchemeContrast), lineWidth: 1)
             }
             .accessibilityLabel(text)
     }

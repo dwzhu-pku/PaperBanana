@@ -15,6 +15,12 @@ enum AppDesignSystem {
         static let sidebarRowHeight: CGFloat = 30
         static let sidebarHorizontalPadding: CGFloat = 14
         static let activityButtonSize: CGFloat = 34
+        static let widestWorkbenchDetailWidth: CGFloat = 1_040
+        static let rootDividerAllowance: CGFloat = 4
+        static var minimumWindowWidth: CGFloat {
+            sidebarWidth + widestWorkbenchDetailWidth + rootDividerAllowance
+        }
+        static let minimumWindowHeight: CGFloat = 760
     }
 
     enum Radius {
@@ -48,11 +54,61 @@ enum AppDesignSystem {
         static let activityRail = Color(nsColor: .controlBackgroundColor)
     }
 
+    enum Adaptive {
+        static func statusFill(_ tint: Color, contrast: ColorSchemeContrast) -> Color {
+            tint.opacity(contrast == .increased ? 0.24 : 0.14)
+        }
+
+        static func statusStroke(_ tint: Color, contrast: ColorSchemeContrast) -> Color {
+            tint.opacity(contrast == .increased ? 0.72 : 0.28)
+        }
+
+        static func selectionFill(_ tint: Color = SemanticColors.accent, contrast: ColorSchemeContrast) -> Color {
+            tint.opacity(contrast == .increased ? 0.28 : 0.22)
+        }
+
+        static func selectionStroke(_ tint: Color = SemanticColors.accent, contrast: ColorSchemeContrast) -> Color {
+            tint.opacity(contrast == .increased ? 0.82 : 0.45)
+        }
+    }
+
     enum Motion {
         static let quick = Animation.easeInOut(duration: 0.12)
 
         static func standard(_ reduceMotion: Bool) -> Animation? {
             reduceMotion ? nil : .easeInOut(duration: 0.18)
+        }
+    }
+}
+
+struct AdaptiveMaterialSurface<S: Shape>: View {
+    let material: Material
+    let fallback: Color
+    let shape: S
+
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+
+    var body: some View {
+        shape.fill(fillStyle)
+    }
+
+    private var fillStyle: AnyShapeStyle {
+        if reduceTransparency || colorSchemeContrast == .increased {
+            return AnyShapeStyle(fallback)
+        }
+        return AnyShapeStyle(material)
+    }
+}
+
+extension View {
+    func appAdaptiveMaterialBackground<S: Shape>(
+        _ material: Material,
+        fallback: Color = AppDesignSystem.Surfaces.panel,
+        in shape: S
+    ) -> some View {
+        background {
+            AdaptiveMaterialSurface(material: material, fallback: fallback, shape: shape)
         }
     }
 }

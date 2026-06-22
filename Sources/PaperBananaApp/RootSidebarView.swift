@@ -212,6 +212,8 @@ private struct RootActivityRailButton: View {
     let isSelected: Bool
     let action: () -> Void
 
+    @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+
     var body: some View {
         Button(action: action) {
             Image(systemName: destination.systemImage)
@@ -224,10 +226,10 @@ private struct RootActivityRailButton: View {
         .background {
             if isSelected {
                 Circle()
-                    .fill(AppDesignSystem.SemanticColors.accent.opacity(0.24))
+                    .fill(AppDesignSystem.Adaptive.selectionFill(contrast: colorSchemeContrast))
                     .overlay {
                         Circle()
-                            .stroke(AppDesignSystem.SemanticColors.accent.opacity(0.55), lineWidth: 1)
+                            .stroke(AppDesignSystem.Adaptive.selectionStroke(contrast: colorSchemeContrast), lineWidth: 1)
                     }
             }
         }
@@ -287,7 +289,11 @@ private struct RootRuntimeBlock: View {
         }
         .padding(AppDesignSystem.Spacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .appAdaptiveMaterialBackground(
+            .thinMaterial,
+            fallback: AppDesignSystem.Surfaces.panel,
+            in: RoundedRectangle(cornerRadius: 8, style: .continuous)
+        )
         .overlay {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .stroke(.quaternary, lineWidth: 1)
@@ -310,6 +316,8 @@ private struct RootSidebarCommandRow: View {
     let destination: RootSidebarDestination
     let isSelected: Bool
     let action: () -> Void
+
+    @Environment(\.colorSchemeContrast) private var colorSchemeContrast
 
     var body: some View {
         Button(action: action) {
@@ -336,10 +344,10 @@ private struct RootSidebarCommandRow: View {
         .background {
             if isSelected {
                 RoundedRectangle(cornerRadius: 7, style: .continuous)
-                    .fill(AppDesignSystem.SemanticColors.accent.opacity(0.22))
+                    .fill(AppDesignSystem.Adaptive.selectionFill(contrast: colorSchemeContrast))
                     .overlay {
                         RoundedRectangle(cornerRadius: 7, style: .continuous)
-                            .stroke(AppDesignSystem.SemanticColors.accent.opacity(0.45), lineWidth: 1)
+                            .stroke(AppDesignSystem.Adaptive.selectionStroke(contrast: colorSchemeContrast), lineWidth: 1)
                     }
             }
         }
