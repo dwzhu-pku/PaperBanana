@@ -73,6 +73,8 @@ content, or raw provider payloads in shared evidence.
 | EV-20260622-002 | WP-002 | `ddeb2a9a8cf6` | Created | Branch map and initial evidence manifest added. |
 | EV-20260622-003 | WP-003/T-003 | `e031e7499efa` | Passed with limitation | Baseline red test and integration green credential-isolation evidence recorded in `docs/integration/evidence/20260622-015757_e031e7499efa_WP-003-credential-isolation.md`. |
 | EV-20260622-004 | WP-101/T-001 | `1cd601ee348f` | Passed with limitation | PR #69 legacy plot/Figure Size integration and cumulative credential regression evidence recorded in `docs/integration/evidence/20260622-020143_1cd601ee348f_WP-101-legacy-plot-integration.md`. |
+| EV-20260622-005 | WP-004/T-004 | `c44ed277c7d6` | Passed with limitation | Hosted/shared plot-code execution now fails closed before generated Python reaches `exec`; evidence recorded in `docs/integration/evidence/20260622-022143_c44ed277c7d6_WP-004-hosted-plot-containment.md`. |
+| EV-20260622-006 | WP-007/T-007 | `e0cea781ca07` | Passed with limitation | Native PR #72 aggregate gate passed on the native branch; evidence recorded in `docs/integration/evidence/20260622-022316_e0cea781ca07_WP-007-native-aggregate-gate.md`. |
 
 ## Required Next Evidence
 
@@ -80,3 +82,7 @@ content, or raw provider payloads in shared evidence.
 |---|---|
 | WP-003 | Full two-client hosted/session proof before public hosted release. |
 | WP-003 | Clean environment Python 3.12 validation once WP-005/WP-201 defines the environment. |
+| WP-004 | Hosted deployment negative test before any public hosted release claim. |
+| WP-105 | Rebase native PR #72 after credential isolation, hosted plot containment, and provider support are integrated. |
+| WP-007 | Light/Dark screenshots, keyboard navigation, VoiceOver, Reduce Motion, and Reduce Transparency review. |
+| WP-007 | Release build/install proof through `./script/build_and_run.sh --release --install --no-open` if that distribution path remains in scope. |
