@@ -25,6 +25,7 @@ import base64, io, asyncio
 from PIL import Image
 
 from utils import generation_utils
+from utils.config import load_style_guide_for_task
 from .base_agent import BaseAgent
 
 
@@ -62,8 +63,7 @@ class StylistAgent(BaseAgent):
         
         detailed_description = data[input_desc_key]
         
-        with open(self.exp_config.work_dir / f"style_guides/neurips2025_{task_name}_style_guide.md", "r", encoding="utf-8") as f:
-            style_guide = f.read()
+        style_guide = load_style_guide_for_task(self.exp_config.work_dir, task_name)
         
         user_prompt = f"Detailed Description: {detailed_description}\nStyle Guidelines: {style_guide}\n"
         raw_content = data['content']
