@@ -24,6 +24,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-108 no-live contract head | `37b44c04dcbdb680a043553684e1d15b3a568f52` |
 | Latest WP-109 runtime migration head | `439419e1fbf76162eec622745d2e655f6915267b` |
 | Latest WP-106 fake-Codex handoff test head | `6f48b2dcd055a32f0fa3cdca899ddcff7a9fd009` |
+| Latest WP-007 Settings source-contract test head | `758a3841028d7ec576042a19c0cc65e0c808e469` |
 | Manifest status | Draft; not a frozen release tag |
 
 Commits after `cf9531cfdd4e` are evidence, documentation, runbook, screenshot,
@@ -46,6 +47,9 @@ stale-run recovery, scanner rediscovery, and synthetic artifact byte
 preservation. `EV-20260622-049` validates the later `6f48b2dcd055` no-live
 store-level fake-Codex fallback handoff through the real Swift
 `CodexFallbackProviderClient`.
+`EV-20260622-050` validates the later `758a3841028d` source-level
+Settings accessibility/adaptive contract test slice. It does not replace full
+manual keyboard/VoiceOver traversal or screenshot-based adaptive visual signoff.
 
 ## Installed App Artifact
 
@@ -73,7 +77,7 @@ channel approval, upgrade proof, or rollback proof.
 | Release build/install | `EV-20260622-035` | Release build/install and post-install sanity checks passed |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042` | Passed with limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034` | Real local data, search/filter, 10-example cap, and no-spend persistence validated |
-| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034` | Partial; not full manual VoiceOver traversal |
+| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050` | Partial; includes source-level Settings accessibility/adaptive regression coverage, but not full manual VoiceOver traversal |
 | Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041` | Partial; broader full-app adaptive signoff remains open |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
@@ -123,7 +127,8 @@ state is verified.
 
 - Full manual keyboard navigation and VoiceOver traversal across Settings,
   reference rows, Artifact Library disabled states, preflight sheets, and table
-  workflows.
+  workflows. `EV-20260622-050` covers source-level Settings
+  accessibility/adaptive contracts only.
 - Dark Settings Increased Text Size visible content is covered by
   `EV-20260622-041`; lower Workspace content, Light Mode Settings Increased Text
   Size, full-app Increased Text Size, hover/focus, narrow-width, and full-app
