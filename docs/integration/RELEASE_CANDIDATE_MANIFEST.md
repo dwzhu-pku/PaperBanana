@@ -13,9 +13,9 @@ been validated and leaves every unvalidated release claim open.
 
 | Item | Value |
 |---|---|
-| Latest full local native/Python/Xcode gate | `f5ac81459047b2f5e46917ef6cb27f154d49b0c8` |
-| Latest recorded remote-check evidence head | `6c42b340f4a9d51b86a94d1eeb0627a45f698b82` |
-| Latest current-head install/source-contract evidence | `6c42b340f4a9d51b86a94d1eeb0627a45f698b82` |
+| Latest full local native/Python/Xcode gate | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
+| Latest recorded remote-check evidence head | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
+| Latest current-head install/source-contract evidence | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
 | Branch | `integration/native-first-rc-native` |
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
 | Upstream base | `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b` |
@@ -28,19 +28,15 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-007 Settings source-contract test head | `758a3841028d7ec576042a19c0cc65e0c808e469` |
 | Latest WP-108 no-live artifact runner head | `46f9a937480c77ba8f8ffcea8d3d970ab51f5c08` |
 | Latest WP-208 Foundation Models disposition head | `69e9159ca9078952fc24609ded25995e73fe7c1a` |
+| Latest post-WP-208 full-gate/install head | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
 | Manifest status | Draft; not a frozen release tag |
 
-Commits after the last recorded full local gate include evidence,
-documentation, runbook, screenshot, rollback-preflight, no-live
-benchmark-contract commits, and the later WP-208 Foundation Models disposition
-product change at `69e9159ca907`. `EV-20260622-052` validates pushed branch head
-`f5ac81459047` through remote structural/Python workflow checks and the local
-aggregate native/Python/Xcode 27 gate with 163 Swift tests, 102 Python tests,
-and `codex-xcode27 proof`; it is historical relative to the later WP-208
-product-code change. `EV-20260622-054` validates that release-visible image
-model choices cannot route to Foundation Models and that the auxiliary assistant
-defaults to local fallback, but the full local/self-hosted gate must still be
-repeated on the next frozen release-candidate SHA.
+`EV-20260622-055` validates post-WP-208 branch head `1fa6cbe90e6f` through
+remote structural/Python workflow checks, the local aggregate
+native/Python/Xcode 27 gate with 165 Swift tests, 102 Python tests, and
+`codex-xcode27 proof`, plus Release build/install proof for
+`/Applications/PaperBanana.app`. This closes the specific repeat-full-gate gap
+introduced by `EV-20260622-054`.
 `EV-20260622-047` remains historical full-gate evidence for
 `eebe3928f63a48b8fe56ba23c8c637ddf129d299`, and
 `EV-20260622-035` separately validates
@@ -66,11 +62,12 @@ manual keyboard/VoiceOver traversal or screenshot-based adaptive visual signoff.
 `EV-20260622-051` validates the later `46f9a937480c` no-live WP-108
 artifact-completeness runner using synthetic native run artifacts. It does not
 score output quality, run providers, perform reviewer scoring, or support
-publication-quality claims. `EV-20260622-052` validates the current pushed
-branch head `f5ac81459047` through remote structural/Python workflow checks and
+publication-quality claims. `EV-20260622-052` validates the historical pushed
+branch head `f5ac81459047b2f5e46917ef6cb27f154d49b0c8` through remote
+structural/Python workflow checks and
 the local aggregate native/Python/Xcode 27 gate with 163 Swift tests, 102 Python
 tests, and `codex-xcode27 proof`. `EV-20260622-053` validates the later
-current branch head `6c42b340f4a9` through Release build/install, local
+current branch head `6c42b340f4a9d51b86a94d1eeb0627a45f698b82` through Release build/install, local
 codesign, focused source-level accessibility/keyboard contracts, focused
 Settings accessibility/adaptive contracts, project-drift check, and remote
 `Native Structural Checks` / `Python Tests` workflow success; its GUI
@@ -80,6 +77,8 @@ capture/AX surface.
 release-visible image model choices do not route to Foundation Models, the
 auxiliary assistant defaults to local fallback, and Foundation Models remains
 unsupported for release.
+`EV-20260622-055` validates the current post-WP-208 full gate and install
+provenance for the same branch head.
 
 ## Installed App Artifact
 
@@ -91,9 +90,9 @@ unsupported for release.
 | Bundle version | `1` |
 | Binary architecture | `arm64` |
 | Code-signing check | Valid on disk; satisfies designated requirement |
-| Binary SHA-256 | `0a789877105010155e760d6c4b648839dbfea7133dfcbcfe9e2a489a853633c1` |
+| Binary SHA-256 | `45692c786c04fdc395b237ac9d5b099bb07456033b7329584fe9c91a9cff57ba` |
 | Install command | `DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer ./script/build_and_run.sh --release --install --no-open` |
-| Artifact evidence | `EV-20260622-053` |
+| Artifact evidence | `EV-20260622-055` |
 
 This is local install provenance only. It is not notarization, distribution
 channel approval, upgrade proof, or rollback proof.
@@ -102,10 +101,10 @@ channel approval, upgrade proof, or rollback proof.
 
 | Area | Evidence | Status |
 |---|---|---|
-| Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053` | Passed with limitation |
-| Local aggregate native gate | `EV-20260622-052` | 163 Swift tests, 102 Python tests, and `codex-xcode27 proof` passed on current pushed branch head |
-| Release build/install | `EV-20260622-035`, `EV-20260622-053` | Current-head Release build/install and post-install sanity checks passed |
-| Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053` | Passed with limitation |
+| Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055` | Passed with limitation |
+| Local aggregate native gate | `EV-20260622-055` | 165 Swift tests, 102 Python tests, and `codex-xcode27 proof` passed on the current post-WP-208 branch head |
+| Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055` | Current post-WP-208 Release build/install and post-install sanity checks passed |
+| Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055` | Passed with limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034` | Real local data, search/filter, 10-example cap, and no-spend persistence validated |
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053` | Partial; includes current-head source-level accessibility/keyboard contracts and source-level Settings accessibility/adaptive regression coverage, but not full manual VoiceOver traversal |
 | Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041` | Partial; broader full-app adaptive signoff remains open |
@@ -117,6 +116,7 @@ channel approval, upgrade proof, or rollback proof.
 | Runtime user-data migration slice | `EV-20260622-048` | Isolated Application Support override, fake sentinel secret-store permissions, legacy run-store schema migration, stale-run recovery, Run Details / Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte preservation passed without live providers |
 | Fake-Codex fallback store handoff | `EV-20260622-049` | Native generation and refinement stores now execute the real Swift Codex fallback adapter with a deterministic fake executable and persist `swift_codex`/`provider_spend=none` provenance without live provider keys |
 | Foundation Models disposition | `EV-20260622-054` | Release-visible image model choices do not route to Foundation Models, and the auxiliary assistant defaults to local fallback; Foundation Models remains unsupported |
+| Post-WP-208 full-gate/install proof | `EV-20260622-055` | Current branch head passed the full local aggregate gate, remote structural/Python checks, and Release build/install after the Foundation Models disposition |
 
 ## Provider Support Matrix
 
@@ -138,7 +138,7 @@ only, or unsupported as stated above.
 
 | Requirement | Current status |
 |---|---|
-| Current app install provenance | Covered by `EV-20260622-035` |
+| Current app install provenance | Covered by `EV-20260622-055` |
 | Local app-bundle backup/install/restore preflight | Covered by `EV-20260622-037`; before, candidate, and restored binary hashes matched |
 | Temporary distinct-bundle upgrade from an older validated product commit | Covered by `EV-20260622-045`; prior app was built from `261ad29fb0c4`, candidate hash differed, and restored hash matched prior |
 | True upgrade from a retained public prior release artifact | Not yet proven |
@@ -179,17 +179,16 @@ state is verified.
   public hosted-generation claim. `EV-20260622-040` is localhost-only
   credential/session smoke evidence.
 - True install/upgrade/rollback proof and release manifest consistency on the
-  final frozen release SHA. Current full local gate and pushed evidence-head
-  consistency are covered by `EV-20260622-052`, temporary distinct-bundle
-  replacement/restore is covered by `EV-20260622-045`, and isolated runtime
-  user-data migration is covered by
+  final frozen release SHA. Current post-WP-208 full local gate, pushed
+  evidence-head consistency, and Release install proof are covered by
+  `EV-20260622-055`, temporary distinct-bundle replacement/restore is covered by
+  `EV-20260622-045`, and isolated runtime user-data migration is covered by
   `EV-20260622-048`, but these are not frozen release approval, public
   prior-release upgrade proof, full runtime user-data migration proof, or
   hosted rollback proof.
-- A full local/self-hosted native/Python/Xcode gate on the next frozen
-  release-candidate SHA remains required because `EV-20260622-054` records a
-  product-code change after the last full local aggregate gate in
-  `EV-20260622-052`.
+- Repeat the full local/self-hosted native/Python/Xcode gate if a later
+  product-code change lands or if the final frozen release-candidate SHA
+  differs from `1fa6cbe90e6f585c33bad323febd80fbade6d340`.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
   `EV-20260622-043` confirms the current branch has evaluation-adjacent code but
   no safe no-live release-quality benchmark runner, frozen manifest, threshold,
