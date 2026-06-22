@@ -82,6 +82,30 @@ final class NativeImageGenerationStoreTests: XCTestCase {
         XCTAssertTrue(result.text.contains("legible typography"))
     }
 
+    func testFoundationAssistantFallbackImprovesStatisticalPlotPromptFromContext() async {
+        let result = await PaperBananaFoundationAssistant.run(
+            task: .improvePrompt,
+            input: "Compare AUC across cohorts.",
+            context: "Task: statistical plot. Resolution: 4K. Aspect ratio: 16:9.",
+            preferFoundationModels: false
+        )
+
+        XCTAssertEqual(result.task, .improvePrompt)
+        XCTAssertFalse(result.usedFoundationModels)
+        XCTAssertEqual(result.fallbackReason, "Foundation Models disabled for this request.")
+        XCTAssertTrue(result.text.contains("Compare AUC across cohorts."))
+        let lowercasedText = result.text.lowercased()
+        XCTAssertTrue(lowercasedText.contains("statistical plot"))
+        XCTAssertTrue(lowercasedText.contains("data series"))
+        XCTAssertTrue(lowercasedText.contains("x-axis"))
+        XCTAssertTrue(lowercasedText.contains("y-axis"))
+        XCTAssertTrue(lowercasedText.contains("visual encoding"))
+        XCTAssertFalse(lowercasedText.contains("scientific diagram"))
+        XCTAssertFalse(lowercasedText.contains("workflow logic"))
+        XCTAssertFalse(lowercasedText.contains("clear panel structure"))
+        XCTAssertFalse(lowercasedText.contains("aligned connectors"))
+    }
+
     func testFoundationAssistantExtractTextAcceptsImageInputWithoutProviderSpend() async throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("PaperBananaAssistantImageTests-\(UUID().uuidString)", isDirectory: true)
