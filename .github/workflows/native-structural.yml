@@ -27,6 +27,7 @@ jobs:
       - name: Set up Ruby dependencies
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: "3.3"
           bundler-cache: true
 
       - name: Install XcodeGen
