@@ -239,12 +239,17 @@ Current evidence:
 - `EV-20260622-010`: native integration review gaps fixed.
 - `EV-20260622-016`: full Swift suite still passes after table accessibility
   polish.
+- `EV-20260622-020`: no-live native durability/provider-safety slice passed
+  focused mocked provider recovery, ledger, stale-run recovery, credential
+  isolation, local-route, and provider-audit loss-protection tests. Filename-only
+  leak scans found no ignored runtime artifact hits for the checked key/header
+  patterns.
 
 Open gaps:
 
 - Native secret-store threat-model signoff remains required.
-- Live paid provider smoke and sentinel secret/artifact scan remain required
-  before release claims.
+- Approved live paid provider smoke and live-run sentinel secret/artifact scan
+  remain required before release claims.
 
 ### 5. Artifact Library, Image Preview, And Refinement
 
@@ -287,6 +292,10 @@ Current evidence:
 - `EV-20260622-018`: Light/Dark top and bottom inspector screenshots show
   lower Artifact Library content reachable above the fixed two-row action
   footer.
+- `EV-20260622-020`: no-live native refinement and provider-recovery tests
+  passed, including durable pre-provider run records, mocked native Google
+  raw-payload/no-image recovery, provider-audit writing, and recovered-artifact
+  surfacing.
 - Read-only design review on 2026-06-22 found the lower inspector screenshot
   risk most likely reflected scroll position rather than true action-bar
   occlusion because `ScrollView`, `Divider`, and `ArtifactInspectorActionBar`
@@ -342,12 +351,15 @@ Current evidence:
 - `EV-20260622-014`: initial accessibility landmarks for table surfaces.
 - `EV-20260622-016`: named selection summaries and virtual row accessibility
   children for Run Details and Provider Run Ledger.
+- `EV-20260622-020`: focused no-live tests passed for provider-call to
+  run-folder/artifact linkage, recovery-surfacer companion metadata, and stale
+  running provider-call recovery after relaunch.
 
 Open gaps:
 
 - Live AX re-probe and manual VoiceOver traversal remain required for the table
   surfaces.
-- Provider/failure/recovery E2E on a final candidate remains required.
+- Live provider/failure/recovery E2E on a final candidate remains required.
 
 ### 7. Python Bridge And Legacy Compatibility
 
