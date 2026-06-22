@@ -1,0 +1,42 @@
+name: Native Structural Checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - integration/**
+      - native/**
+      - fix/**
+      - feature/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-structural:
+    name: Native Source And Project Contracts
+    runs-on: macos-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby dependencies
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Validate durable native source contract
+        run: ./script/check_native_source_control_contract.sh
+
+      - name: Validate Xcode project drift
+        run: ./script/check_xcode_project_drift.sh
+
+      - name: Validate shell syntax
+        run: bash -n script/*.sh

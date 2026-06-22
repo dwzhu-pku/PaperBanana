@@ -15,6 +15,9 @@ git rev-parse --is-inside-work-tree >/dev/null 2>&1 || \
 
 required_paths=(
   ".gitignore"
+  ".github/workflows/native-structural.yml"
+  ".github/workflows/native-xcode27-full-gate.yml"
+  ".github/workflows/python-tests.yml"
   ".codex/environments/environment.toml"
   "Package.swift"
   "project.yml"
@@ -40,6 +43,7 @@ required_paths=(
   "Sources/PaperBananaApp/ReferenceExamplePickerView.swift"
   "Sources/PaperBananaApp/ReferenceExampleProvenance.swift"
   "Sources/PaperBananaApp/ReferenceExampleStore.swift"
+  "docs/CI.md"
   "docs/NATIVE_MACOS_TROUBLESHOOTING.md"
   "docs/XCODE27_NATIVE_BASELINE.md"
   "paperbanana_gui/__init__.py"
@@ -53,6 +57,7 @@ required_paths=(
   "tests/PaperBananaTests/RunStoreTests.swift"
   "tests/PaperBananaTests/ProviderRuntimeTests.swift"
   "tests/test_codex_handoff.py"
+  "tests/test_ci_contract.py"
   "tests/test_native_generate_cli.py"
   "tests/test_native_refine_cli.py"
   "tests/test_provider_audit_loss_protection.py"
@@ -66,6 +71,7 @@ required_paths=(
 )
 
 durable_roots=(
+  ".github/workflows"
   ".codex/environments"
   ".gitignore"
   "Package.swift"
@@ -79,6 +85,7 @@ durable_roots=(
   "paperbanana_gui"
   "tests/PaperBananaTests"
   "tests/test_codex_handoff.py"
+  "tests/test_ci_contract.py"
   "tests/test_native_generate_cli.py"
   "tests/test_native_refine_cli.py"
   "tests/test_provider_audit_loss_protection.py"

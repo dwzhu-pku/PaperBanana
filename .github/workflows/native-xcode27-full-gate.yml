@@ -1,0 +1,44 @@
+name: Native Xcode 27 Full Gate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-xcode27-full-gate:
+    name: Xcode 27 Full Native Gate
+    runs-on:
+      - self-hosted
+      - macOS
+      - ARM64
+      - xcode-27
+    timeout-minutes: 60
+
+    env:
+      DEVELOPER_DIR: /Applications/Xcode-beta.app/Contents/Developer
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify codex-xcode27 is available
+        shell: bash
+        run: |
+          if [[ -n "${CODEX_XCODE27_BIN:-}" ]]; then
+            test -x "$CODEX_XCODE27_BIN"
+          else
+            command -v codex-xcode27
+          fi
+
+      - name: Run full native and Python gate
+        run: ./script/test_all.sh
+
+      - name: Upload Xcode 27 reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcode27-reports
+          path: .codex/xcode27/
+          if-no-files-found: ignore

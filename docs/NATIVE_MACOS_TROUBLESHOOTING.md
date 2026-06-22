@@ -83,10 +83,11 @@ Individual gates:
 
 ```bash
 export DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer
+export CODEX_XCODE27_BIN="$(command -v codex-xcode27)"
 ./script/check_xcode_project_drift.sh
 xcodebuild test -project PaperBanana.xcodeproj -scheme PaperBanana -destination 'platform=macOS,arch=arm64'
 PYTHONPATH=. .venv/bin/python -m pytest -q tests
-/Users/jeff/.codex/bin/codex-xcode27 proof
+"$CODEX_XCODE27_BIN" proof --root "$(pwd)"
 ```
 
 Install without opening the app:
@@ -107,5 +108,5 @@ Confirm no app or legacy backend process is running after a no-open install:
 
 ```bash
 pgrep -x PaperBanana
-pgrep -fl /Users/jeff/Codex_projects/PaperBanana/app.py
+pgrep -fl "$(pwd)/app.py"
 ```
