@@ -18,6 +18,8 @@
     "evaluation_mode": { "enum": ["fixture", "human_review", "provider_scored"] },
     "provider_scoring_used": { "type": "boolean" },
     "publication_quality_claimed": { "type": "boolean" },
+    "scoring_protocol": { "type": "object" },
+    "artifact_binding": { "type": "object" },
     "case_results": {
       "type": "array",
       "minItems": 1,
@@ -30,6 +32,9 @@
             "enum": ["not_scored", "fixture_passed", "fixture_failed", "passed", "failed"]
           },
           "scores": { "type": "object" },
+          "score_source": { "type": "string" },
+          "scored_artifact": { "type": "object" },
+          "reviewer_scores": { "type": "array" },
           "critical_failures": {
             "type": "array",
             "items": { "type": "string" }

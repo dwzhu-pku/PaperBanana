@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paperbanana.local/schemas/wp108_human_review_packet.schema.json",
+  "title": "PaperBanana WP-108 Human Review Packet",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "created_at_utc",
+    "source_head",
+    "scoring_protocol",
+    "artifact_binding",
+    "rubric",
+    "cases",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema_version": { "const": "wp108.human_review_packet.v1" },
+    "manifest_id": { "type": "string", "minLength": 1 },
+    "created_at_utc": { "type": "string", "minLength": 1 },
+    "source_head": { "type": "string", "minLength": 1 },
+    "claim_boundary": { "type": "string", "minLength": 1 },
+    "scoring_protocol": {
+      "type": "object",
+      "required": [
+        "reviewer_policy_id",
+        "scoring_mode",
+        "minimum_reviewers_per_case",
+        "adjudication_policy",
+        "score_scale",
+        "critical_failure_policy"
+      ],
+      "properties": {
+        "reviewer_policy_id": { "type": "string", "minLength": 1 },
+        "scoring_mode": { "const": "human_review" },
+        "minimum_reviewers_per_case": { "type": "integer", "minimum": 1 },
+        "adjudication_policy": { "type": "string", "minLength": 1 },
+        "critical_failure_policy": { "type": "string", "minLength": 1 },
+        "score_scale": {
+          "type": "object",
+          "required": ["minimum", "maximum"],
+          "properties": {
+            "minimum": { "type": "number" },
+            "maximum": { "type": "number" }
+          }
+        }
+      }
+    },
+    "artifact_binding": {
+      "type": "object",
+      "required": [
+        "manifest_path",
+        "manifest_sha256",
+        "run_map_path",
+        "run_map_sha256",
+        "artifact_report_path",
+        "artifact_report_sha256"
+      ],
+      "properties": {
+        "manifest_path": { "type": "string", "minLength": 1 },
+        "manifest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "run_map_path": { "type": "string", "minLength": 1 },
+        "run_map_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "artifact_report_path": { "type": "string", "minLength": 1 },
+        "artifact_report_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "rubric": { "type": "array", "minItems": 1 },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "case_id",
+          "run_id",
+          "image_path",
+          "image_sha256",
+          "image_bytes",
+          "artifact_check_status",
+          "reviewer_score_slots"
+        ],
+        "properties": {
+          "case_id": { "type": "string", "minLength": 1 },
+          "run_id": { "type": "string", "minLength": 1 },
+          "image_path": { "type": "string", "minLength": 1 },
+          "image_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "image_bytes": { "type": "integer", "minimum": 1 },
+          "artifact_check_status": { "const": "fixture_passed" },
+          "reviewer_score_slots": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["reviewer_id", "completed_at_utc", "attestation", "scores", "critical_failures"],
+              "properties": {
+                "reviewer_id": { "type": "string" },
+                "completed_at_utc": { "type": "string" },
+                "attestation": { "const": false },
+                "scores": { "type": "object" },
+                "critical_failures": { "type": "array" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

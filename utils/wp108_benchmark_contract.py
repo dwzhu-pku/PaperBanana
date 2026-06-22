@@ -35,6 +35,11 @@ ALLOWED_RESULT_STATUSES = {
     "passed",
     "failed",
 }
+ALLOWED_SCORE_SOURCES = {
+    "adjudicated_human_review",
+    "single_human_reviewer",
+    "provider_scored",
+}
 
 
 class ContractError(ValueError):
@@ -59,6 +64,21 @@ def _require(condition: bool, message: str) -> None:
 def _required_string(owner: dict[str, Any], field: str, context: str) -> str:
     value = owner.get(field)
     _require(isinstance(value, str) and bool(value.strip()), f"{context}.{field} must be a non-empty string")
+    return value
+
+
+def _required_object(owner: dict[str, Any], field: str, context: str) -> dict[str, Any]:
+    value = owner.get(field)
+    _require(isinstance(value, dict), f"{context}.{field} must be an object")
+    return value
+
+
+def _required_sha256(owner: dict[str, Any], field: str, context: str) -> str:
+    value = _required_string(owner, field, context)
+    _require(
+        len(value) == 64 and all(character in "0123456789abcdef" for character in value),
+        f"{context}.{field} must be a lowercase sha256 digest",
+    )
     return value
 
 
@@ -113,6 +133,13 @@ def validate_manifest(manifest: dict[str, Any], *, manifest_path: Path, check_pa
         _required_string(dimension, "scale", context)
         threshold = dimension.get("pass_threshold")
         _require(isinstance(threshold, (int, float)), f"{context}.pass_threshold must be numeric")
+        anchors = dimension.get("anchors")
+        _require(isinstance(anchors, list) and anchors, f"{context}.anchors must be a non-empty list")
+        for anchor_index, anchor in enumerate(anchors):
+            anchor_context = f"{context}.anchors[{anchor_index}]"
+            _require(isinstance(anchor, dict), f"{anchor_context} must be an object")
+            _require(isinstance(anchor.get("score"), (int, float)), f"{anchor_context}.score must be numeric")
+            _required_string(anchor, "description", anchor_context)
 
     thresholds = manifest.get("thresholds")
     _require(isinstance(thresholds, dict), "manifest.thresholds must be an object")
@@ -151,6 +178,93 @@ def _score_values(report: dict[str, Any], rubric_ids: set[str], *, mode: str) ->
                 _require(isinstance(value, (int, float)), f"{context}.scores.{dimension_id} must be numeric")
                 values.append(float(value))
     return values
+
+
+def _score_scale(protocol: dict[str, Any]) -> tuple[float, float]:
+    score_scale = _required_object(protocol, "score_scale", "report.scoring_protocol")
+    minimum = score_scale.get("minimum")
+    maximum = score_scale.get("maximum")
+    _require(
+        isinstance(minimum, (int, float)) and isinstance(maximum, (int, float)) and float(minimum) < float(maximum),
+        "report.scoring_protocol.score_scale must contain numeric minimum < maximum",
+    )
+    return float(minimum), float(maximum)
+
+
+def _validate_reviewer_scores(
+    result: dict[str, Any],
+    *,
+    context: str,
+    rubric_ids: set[str],
+    minimum_reviewers: int,
+    score_minimum: float,
+    score_maximum: float,
+) -> None:
+    reviewer_scores = result.get("reviewer_scores")
+    _require(isinstance(reviewer_scores, list) and len(reviewer_scores) >= minimum_reviewers, f"{context}.reviewer_scores must include at least {minimum_reviewers} completed reviewers")
+    for reviewer_index, reviewer in enumerate(reviewer_scores):
+        reviewer_context = f"{context}.reviewer_scores[{reviewer_index}]"
+        _require(isinstance(reviewer, dict), f"{reviewer_context} must be an object")
+        _required_string(reviewer, "reviewer_id", reviewer_context)
+        _required_string(reviewer, "completed_at_utc", reviewer_context)
+        _require(reviewer.get("attestation") is True, f"{reviewer_context}.attestation must be true")
+        scores = reviewer.get("scores")
+        _require(isinstance(scores, dict), f"{reviewer_context}.scores must be an object")
+        missing = sorted(rubric_ids - set(scores))
+        unknown = sorted(set(scores) - rubric_ids)
+        _require(not missing, f"{reviewer_context}.scores is missing rubric dimensions: {missing}")
+        _require(not unknown, f"{reviewer_context}.scores contains unknown rubric dimensions: {unknown}")
+        for dimension_id, value in scores.items():
+            _require(isinstance(value, (int, float)), f"{reviewer_context}.scores.{dimension_id} must be numeric")
+            _require(
+                score_minimum <= float(value) <= score_maximum,
+                f"{reviewer_context}.scores.{dimension_id} must be within the scoring scale",
+            )
+        failures = reviewer.get("critical_failures", [])
+        _require(isinstance(failures, list), f"{reviewer_context}.critical_failures must be a list")
+
+
+def _validate_human_review_provenance(report: dict[str, Any], *, manifest_contract: dict[str, Any]) -> None:
+    protocol = _required_object(report, "scoring_protocol", "report")
+    _required_string(protocol, "reviewer_policy_id", "report.scoring_protocol")
+    _require(protocol.get("scoring_mode") == "human_review", "report.scoring_protocol.scoring_mode must be human_review")
+    minimum_reviewers = protocol.get("minimum_reviewers_per_case")
+    _require(
+        isinstance(minimum_reviewers, int) and minimum_reviewers > 0,
+        "report.scoring_protocol.minimum_reviewers_per_case must be a positive integer",
+    )
+    _required_string(protocol, "adjudication_policy", "report.scoring_protocol")
+    _required_string(protocol, "critical_failure_policy", "report.scoring_protocol")
+    score_minimum, score_maximum = _score_scale(protocol)
+
+    artifact_binding = _required_object(report, "artifact_binding", "report")
+    for field in ("manifest_sha256", "run_map_sha256", "artifact_report_sha256", "review_packet_sha256"):
+        _required_sha256(artifact_binding, field, "report.artifact_binding")
+    _required_string(artifact_binding, "source_head", "report.artifact_binding")
+
+    for index, result in enumerate(report.get("case_results", [])):
+        context = f"report.case_results[{index}]"
+        score_source = _required_string(result, "score_source", context)
+        _require(score_source in ALLOWED_SCORE_SOURCES, f"{context}.score_source must be one of {sorted(ALLOWED_SCORE_SOURCES)}")
+        _require(
+            score_source in {"adjudicated_human_review", "single_human_reviewer"},
+            f"{context}.score_source is not valid for human_review mode",
+        )
+        scored_artifact = _required_object(result, "scored_artifact", context)
+        _required_string(scored_artifact, "run_id", f"{context}.scored_artifact")
+        _required_sha256(scored_artifact, "image_sha256", f"{context}.scored_artifact")
+        _require(
+            scored_artifact.get("artifact_check_status") == "fixture_passed",
+            f"{context}.scored_artifact.artifact_check_status must be fixture_passed",
+        )
+        _validate_reviewer_scores(
+            result,
+            context=context,
+            rubric_ids=manifest_contract["rubric_ids"],
+            minimum_reviewers=minimum_reviewers,
+            score_minimum=score_minimum,
+            score_maximum=score_maximum,
+        )
 
 
 def validate_report(
@@ -201,6 +315,9 @@ def validate_report(
     _require(isinstance(summary.get("threshold_passed"), bool), "report.summary.threshold_passed must be boolean")
 
     values = _score_values(report, manifest_contract["rubric_ids"], mode=mode)
+    if mode == "human_review":
+        _validate_human_review_provenance(report, manifest_contract=manifest_contract)
+
     if values:
         observed_mean = sum(values) / len(values)
         reported_mean = summary.get("mean_score")

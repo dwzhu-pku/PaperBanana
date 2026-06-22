@@ -54,12 +54,24 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "name", "scale", "pass_threshold"],
+        "required": ["id", "name", "scale", "pass_threshold", "anchors"],
         "properties": {
           "id": { "type": "string", "minLength": 1 },
           "name": { "type": "string", "minLength": 1 },
           "scale": { "type": "string", "minLength": 1 },
-          "pass_threshold": { "type": "number" }
+          "pass_threshold": { "type": "number" },
+          "anchors": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["score", "description"],
+              "properties": {
+                "score": { "type": "number" },
+                "description": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
         }
       }
     },

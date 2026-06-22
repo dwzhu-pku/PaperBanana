@@ -33,12 +33,17 @@ bounded live or reviewer-scored benchmark.
 |---|---|
 | `docs/integration/wp108_no_live_manifest.schema.json` | Reader-facing schema for the fixed case manifest. |
 | `docs/integration/wp108_no_live_report.schema.json` | Reader-facing schema for benchmark reports. |
+| `docs/integration/wp108_human_review_packet.schema.json` | Reader-facing schema for blank human-review score packets. |
 | `docs/integration/wp108_no_live_manifest.example.json` | Example no-live manifest using non-private PaperBananaBench references. |
+| `docs/integration/wp108_human_review_packet.example.json` | Example blank human-review packet shape. |
 | `docs/integration/wp108_no_live_run_map.schema.json` | Reader-facing schema for mapping manifest cases to already-created native run artifacts. |
 | `docs/integration/wp108_no_live_run_map.example.json` | Example run-map shape for native output, request, metadata, provider-audit, and run-store artifacts. |
 | `docs/integration/wp108_no_live_report.fixture.json` | Example fixture-mode report that makes no quality claim. |
 | `utils/wp108_benchmark_contract.py` | Pure-stdlib CLI validator for manifest/report pairs. |
+| `utils/wp108_human_review_packet.py` | Pure-stdlib CLI that prepares blank digest-bound human-review score packets. |
 | `utils/wp108_no_live_artifact_runner.py` | Pure-stdlib CLI runner that checks no-live native artifact completeness and emits a fixture-mode report. |
+| `tests/test_wp108_human_review_packet.py` | CI-safe packet preparation and validation coverage. |
+| `tests/test_wp108_no_live_artifact_runner.py` | CI-safe artifact-runner coverage using synthetic native artifacts. |
 
 ## Validation
 
@@ -140,3 +145,47 @@ policy, and report. This scaffold alone is not that evidence.
 The artifact runner also does not prove publication quality. It proves only
 that mapped native artifacts are present, parseable, linked, and safe to hand to
 a future reviewer/provider scoring workflow.
+
+## Human-Review Packet Preparation
+
+After a run map produces a fixture-mode artifact report, prepare a blank
+human-review packet before any reviewer enters scores:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
+  python -m utils.wp108_human_review_packet prepare \
+  --manifest docs/integration/wp108_no_live_manifest.example.json \
+  --run-map /tmp/wp108-no-live-run-map.json \
+  --artifact-report /tmp/wp108-no-live-artifact-report.json \
+  --source-head <candidate-sha> \
+  --output /tmp/wp108-human-review-packet.json \
+  --reviewer-count 2 \
+  --no-path-check
+```
+
+The packet freezes:
+
+- manifest, run-map, and artifact-report SHA-256 digests;
+- source head under review;
+- reviewer policy and score scale;
+- rubric dimensions with scoring anchors;
+- generated image SHA-256 digests and byte counts;
+- blank reviewer score slots.
+
+It does not read provider response payload contents, fill scores, adjudicate
+scores, call providers, or support a publication-quality claim. Validate a
+prepared packet with:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
+  python -m utils.wp108_human_review_packet validate \
+  --manifest docs/integration/wp108_no_live_manifest.example.json \
+  --packet /tmp/wp108-human-review-packet.json \
+  --no-path-check
+```
+
+Human-review reports with scores must include `scoring_protocol`,
+`artifact_binding`, completed `reviewer_scores`, `scored_artifact`, and a
+`score_source`; the report validator rejects scored human-review reports that
+lack that provenance. This prepares the workflow for real reviewer scoring but
+still does not replace WP-108's final scored benchmark run.

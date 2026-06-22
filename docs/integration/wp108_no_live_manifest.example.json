@@ -26,19 +26,61 @@
       "id": "semantic_faithfulness",
       "name": "Semantic faithfulness",
       "scale": "0-4 integer or decimal score",
-      "pass_threshold": 3.0
+      "pass_threshold": 3.0,
+      "anchors": [
+        {
+          "score": 0,
+          "description": "Major scientific meaning is absent or contradicted."
+        },
+        {
+          "score": 3,
+          "description": "Core scientific relationships are preserved with only minor omissions."
+        },
+        {
+          "score": 4,
+          "description": "Scientific meaning and key relationships are faithfully represented."
+        }
+      ]
     },
     {
       "id": "visual_legibility",
       "name": "Visual legibility",
       "scale": "0-4 integer or decimal score",
-      "pass_threshold": 3.0
+      "pass_threshold": 3.0,
+      "anchors": [
+        {
+          "score": 0,
+          "description": "The output is unreadable or structurally incoherent."
+        },
+        {
+          "score": 3,
+          "description": "The output is readable with minor layout or labeling issues."
+        },
+        {
+          "score": 4,
+          "description": "The output is clear, well organized, and suitable for detailed review."
+        }
+      ]
     },
     {
       "id": "artifact_completeness",
       "name": "Artifact completeness",
       "scale": "0-4 integer or decimal score",
-      "pass_threshold": 3.0
+      "pass_threshold": 3.0,
+      "anchors": [
+        {
+          "score": 0,
+          "description": "Required output or provenance artifacts are missing."
+        },
+        {
+          "score": 3,
+          "description": "Required artifacts are present and traceable with minor documentation gaps."
+        },
+        {
+          "score": 4,
+          "description": "Required artifacts, provenance, and recovery evidence are complete and internally consistent."
+        }
+      ]
     }
   ],
   "thresholds": {

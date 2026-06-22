@@ -1,0 +1,91 @@
+{
+  "schema_version": "wp108.human_review_packet.v1",
+  "manifest_id": "paperbanana-m1-no-live-contract",
+  "created_at_utc": "2026-06-22T00:00:00Z",
+  "source_head": "example-source-head",
+  "scoring_protocol": {
+    "reviewer_policy_id": "paperbanana-wp108-human-review-v1",
+    "scoring_mode": "human_review",
+    "minimum_reviewers_per_case": 2,
+    "adjudication_policy": "Reviewer score slots are intentionally blank. A later scored report must record completed reviewer scores and final adjudicated case scores.",
+    "score_scale": {
+      "minimum": 0.0,
+      "maximum": 4.0
+    },
+    "critical_failure_policy": "Any critical semantic, privacy, artifact-linkage, or non-recoverable rendering failure must be listed and prevents a quality pass."
+  },
+  "artifact_binding": {
+    "manifest_path": "docs/integration/wp108_no_live_manifest.example.json",
+    "manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "run_map_path": "/tmp/wp108-no-live-run-map.json",
+    "run_map_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "artifact_report_path": "/tmp/wp108-no-live-artifact-report.json",
+    "artifact_report_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "rubric": [
+    {
+      "id": "semantic_faithfulness",
+      "name": "Semantic faithfulness",
+      "scale": "0-4 integer or decimal score",
+      "pass_threshold": 3.0,
+      "anchors": [
+        {
+          "score": 0,
+          "description": "Major scientific meaning is absent or contradicted."
+        },
+        {
+          "score": 3,
+          "description": "Core scientific relationships are preserved with only minor omissions."
+        },
+        {
+          "score": 4,
+          "description": "Scientific meaning and key relationships are faithfully represented."
+        }
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "diagram-ref-1-contract",
+      "task_type": "diagram",
+      "split": "contract_fixture",
+      "content_ref": "data/PaperBananaBench/diagram/ref.json#ref_1.content",
+      "visual_intent_ref": "data/PaperBananaBench/diagram/ref.json#ref_1.visual_intent",
+      "path_to_gt_image": "data/PaperBananaBench/diagram/gt/ref_1.png",
+      "run_id": "native_generate_20260622_072111",
+      "image_path": "/tmp/generated_2K.png",
+      "image_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "image_bytes": 128,
+      "artifact_check_status": "fixture_passed",
+      "checked_outputs": [
+        "image",
+        "request_json",
+        "metadata_json",
+        "provider_request_json",
+        "provider_audit",
+        "run_store"
+      ],
+      "reviewer_score_slots": [
+        {
+          "reviewer_id": "",
+          "completed_at_utc": "",
+          "attestation": false,
+          "scores": {
+            "semantic_faithfulness": null
+          },
+          "critical_failures": []
+        },
+        {
+          "reviewer_id": "",
+          "completed_at_utc": "",
+          "attestation": false,
+          "scores": {
+            "semantic_faithfulness": null
+          },
+          "critical_failures": []
+        }
+      ]
+    }
+  ],
+  "claim_boundary": "This packet freezes review inputs only. Scores are blank, no provider scoring was performed, and no publication-quality claim is supported until completed reviewer scores are validated in a separate human_review report."
+}
