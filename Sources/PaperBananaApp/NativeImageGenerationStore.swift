@@ -65,6 +65,7 @@ final class NativeImageGenerationStore: ObservableObject {
             fail("Generation prompt is required.")
             return
         }
+        let providerPrompt = request.providerPrompt
 
         let repoRoot = URL(fileURLWithPath: request.settings.repoPath, isDirectory: true)
         let outputDirectory = repoRoot.appendingPathComponent("results/native_generate", isDirectory: true)
@@ -85,7 +86,7 @@ final class NativeImageGenerationStore: ObservableObject {
         )
 
         do {
-            try prepareDurableRunRecord(request: request, providerPlan: providerPlan, prompt: trimmedPrompt)
+            try prepareDurableRunRecord(request: request, providerPlan: providerPlan, prompt: providerPrompt)
         } catch {
             fail("Could not create durable generation run record: \(error.localizedDescription)")
             return
@@ -95,7 +96,7 @@ final class NativeImageGenerationStore: ObservableObject {
             startNativeProviderExecution(
                 request: request,
                 providerPlan: providerPlan,
-                prompt: trimmedPrompt,
+                prompt: providerPrompt,
                 providerClientOverride: localProviderClient,
                 onCompletion: onCompletion
             )
@@ -106,7 +107,7 @@ final class NativeImageGenerationStore: ObservableObject {
             startNativeProviderExecution(
                 request: request,
                 providerPlan: providerPlan,
-                prompt: trimmedPrompt,
+                prompt: providerPrompt,
                 onCompletion: onCompletion
             )
             return

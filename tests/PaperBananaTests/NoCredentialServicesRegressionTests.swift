@@ -288,6 +288,10 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             "Prompt Studio should present output as a sectioned native preview panel."
         )
         XCTAssertTrue(
+            promptStudio.contains("ReferenceExamplePickerView") && promptStudio.contains("referenceExamplesPanel"),
+            "Prompt Studio should expose manual PaperBananaBench examples as a compact native workbench section."
+        )
+        XCTAssertTrue(
             workbench.contains("accessibilityReduceTransparency"),
             "Workbench surfaces must respect Reduce Transparency instead of relying only on material effects."
         )
@@ -312,6 +316,10 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
         XCTAssertFalse(
             promptStudio.contains("Color(nsColor: .separatorColor)"),
             "Prompt Studio should use semantic strokes rather than hard-coded separator colors."
+        )
+        XCTAssertFalse(
+            promptStudio.contains("agent_selected_12"),
+            "Native manual example selection should not revive the hard-coded legacy manual few-shot file."
         )
     }
 

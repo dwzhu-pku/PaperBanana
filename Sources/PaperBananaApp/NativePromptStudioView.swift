@@ -6,11 +6,13 @@ struct NativePromptStudioView: View {
     @ObservedObject var generationStore: NativeImageGenerationStore
     let title: String
 
+    @StateObject private var referenceStore = ReferenceExampleStore()
     @State private var prompt = ""
     @State private var model: ImageModelChoice
     @State private var resolution = "2K"
     @State private var aspectRatio = "16:9"
     @State private var task = "scientific diagram"
+    @State private var selectedReferenceIDs = Set<String>()
     @State private var previewImage: NSImage?
     @State private var pendingPreflightPlan: NativeRunPreflightPlan?
     @State private var pendingGenerationRequest: NativeImageGenerationRequest?
@@ -20,7 +22,7 @@ struct NativePromptStudioView: View {
 
     private let resolutions = ["1K", "2K", "4K"]
     private let aspectRatios = ["1:1", "4:3", "3:2", "16:9", "9:16", "21:9"]
-    private let tasks = ["scientific diagram", "publication figure", "workflow schematic", "concept art", "graphical abstract"]
+    private let tasks = ["scientific diagram", "publication figure", "workflow schematic", "concept art", "graphical abstract", "statistical plot"]
 
     init(
         settings: AppSettingsStore,
@@ -47,6 +49,10 @@ struct NativePromptStudioView: View {
         .background(AppDesignSystem.Surfaces.content)
         .onAppear {
             consumePendingIntentPrompt()
+            loadReferenceExamples()
+        }
+        .onChange(of: settings.repoPath) { _ in
+            loadReferenceExamples()
         }
         .onChange(of: generationStore.outputURL) { outputURL in
             loadPreview(from: outputURL)
@@ -241,6 +247,7 @@ struct NativePromptStudioView: View {
                 )
                 runControlPanel
                 runConfigurationPanel
+                referenceExamplesPanel
                 outputPreviewPanel
                 progressPanel
             }
@@ -270,6 +277,12 @@ struct NativePromptStudioView: View {
                 Label("Provider key missing", systemImage: "key")
                     .font(AppDesignSystem.Typography.caption)
                     .foregroundStyle(AppDesignSystem.SemanticColors.statusStarting)
+            }
+
+            if !selectedReferenceSelections.isEmpty {
+                Label("\(selectedReferenceSelections.count) reference examples selected", systemImage: "quote.bubble")
+                    .font(AppDesignSystem.Typography.caption)
+                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -316,6 +329,15 @@ struct NativePromptStudioView: View {
             .controlSize(.small)
         }
         .disabled(generationStore.isRunning)
+    }
+
+    private var referenceExamplesPanel: some View {
+        ReferenceExamplePickerView(
+            store: referenceStore,
+            selectedIDs: $selectedReferenceIDs,
+            task: task,
+            isRunning: generationStore.isRunning
+        )
     }
 
     private var promptCharacterCount: Int {
@@ -605,7 +627,8 @@ struct NativePromptStudioView: View {
             resolution: resolution,
             aspectRatio: aspectRatio,
             task: task,
-            settings: settings.snapshot
+            settings: settings.snapshot,
+            referenceExamples: selectedReferenceSelections
         )
         let plan = NativeRunPreflightPlan.generation(request: request)
         pendingGenerationRequest = request
@@ -659,6 +682,19 @@ struct NativePromptStudioView: View {
         }
         prompt = pendingPrompt
         UserDefaults.standard.removeObject(forKey: key)
+    }
+
+    private var selectedReferenceSelections: [ReferenceExampleSelection] {
+        guard !task.localizedCaseInsensitiveContains("plot") else { return [] }
+        return referenceStore.selectedExamples(for: selectedReferenceIDs)
+    }
+
+    private func loadReferenceExamples() {
+        referenceStore.load(repoRootPath: settings.repoPath)
+        selectedReferenceIDs = ReferenceExampleSelection.limitedIDs(
+            selectedReferenceIDs,
+            orderedExamples: referenceStore.state.examples
+        )
     }
 
     private func loadPreview(from outputURL: URL?) {
