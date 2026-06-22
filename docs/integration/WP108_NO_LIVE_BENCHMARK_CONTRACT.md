@@ -46,6 +46,7 @@ bounded live or reviewer-scored benchmark.
 | `utils/wp108_quality_decision.py` | Pure-stdlib CLI that turns a completed human-review report into an auditable go/no-go decision report. |
 | `utils/wp108_no_live_artifact_runner.py` | Pure-stdlib CLI runner that checks no-live native artifact completeness and emits a fixture-mode report. |
 | `tests/test_wp108_human_review_packet.py` | CI-safe packet preparation and validation coverage. |
+| `tests/test_wp108_offline_evidence_chain.py` | CI-safe integration coverage that chains native artifact completeness, packet binding, completed human-review report validation, and quality decision validation without provider calls. |
 | `tests/test_wp108_quality_decision.py` | CI-safe quality decision and no-go coverage using synthetic completed human-review reports. |
 | `tests/test_wp108_no_live_artifact_runner.py` | CI-safe artifact-runner coverage using synthetic native artifacts. |
 
@@ -239,3 +240,25 @@ does not score images, call providers, repeat a benchmark subset, or authorize a
 publication-quality claim by itself. A release claim still needs actual
 final-candidate outputs, completed reviewer/provider scoring as approved by
 D-06, repeated subset evidence when required, and stakeholder go/no-go approval.
+
+## Offline Evidence Chain
+
+The individual no-live utilities are also covered as one stitched chain by
+`tests/test_wp108_offline_evidence_chain.py`. The chain uses synthetic native
+run-store, provider-audit, request, metadata, image, provider-request, and
+provider-response artifacts, then:
+
+- generates a run map and fixture-mode artifact-completeness report;
+- prepares and validates a blank digest-bound human-review packet;
+- creates a completed synthetic `human_review` report with two attested
+  reviewer records and adjudicated final case scores;
+- validates the completed report through the benchmark contract;
+- emits and validates a `wp108.quality_decision.v1` report;
+- confirms provider payload sentinel text is not copied into review packets,
+  human-review reports, or decision reports.
+
+This chain proves the offline WP-108 evidence tooling can preserve artifact
+binding and claim boundaries across the full no-live handoff. It is still
+synthetic tooling evidence: it does not include actual final-candidate reviewer
+scores, provider scoring, repeated subset evidence, stakeholder approval, or a
+publication-quality claim.
