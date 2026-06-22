@@ -56,7 +56,8 @@ enum ArtifactLibraryScanner {
                 metadataURL: companions.metadata,
                 runID: nativeRun?.runID ?? "",
                 runDirectoryURL: nativeRun?.directoryURL,
-                runStatus: nativeRun?.status
+                runStatus: nativeRun?.status,
+                referenceProvenance: nativeRun?.referenceProvenance ?? .empty
             )
         }
         .sorted { lhs, rhs in

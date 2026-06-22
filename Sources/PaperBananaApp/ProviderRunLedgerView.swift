@@ -38,6 +38,7 @@ struct ProviderRunLedgerView: View {
                 || call.context.localizedCaseInsensitiveContains(trimmedSearch)
                 || call.usageSummary.localizedCaseInsensitiveContains(trimmedSearch)
                 || call.searchablePathText.localizedCaseInsensitiveContains(trimmedSearch)
+                || call.searchableReferenceText.localizedCaseInsensitiveContains(trimmedSearch)
                 || call.message.localizedCaseInsensitiveContains(trimmedSearch)
                 || call.error.localizedCaseInsensitiveContains(trimmedSearch)
         }
@@ -340,6 +341,8 @@ private struct ProviderRunInspectorView: View {
             }
             .font(AppDesignSystem.Typography.body)
 
+            ReferenceExampleProvenanceSection(provenance: call.referenceProvenance)
+
             if !call.message.isEmpty {
                 LedgerMessagePanel(title: "Message", text: call.message, systemImage: "text.bubble")
             }
@@ -397,6 +400,7 @@ private struct ProviderRunInspectorView: View {
             "Usage: \(call.usageSummary)",
             "Attempt: \(call.attempt.map { "\($0)" } ?? "Unknown")",
             "Recovery candidates: \(call.recoveryCandidateURLs.count)",
+            "Reference examples: \(call.referenceProvenance.summaryText.isEmpty ? "None" : call.referenceProvenance.summaryText)",
             "Message: \(nonBlank(call.message) ?? "None")",
             "Error: \(nonBlank(call.error) ?? "None")"
         ].joined(separator: "\n")
@@ -414,6 +418,9 @@ private struct ProviderRunInspectorView: View {
             "Audit log path: \(call.auditLogURL?.path ?? "None")",
             "Usage metadata: \(call.usageSummary)"
         ]
+        if call.referenceProvenance.isManual {
+            lines.append("Reference provenance: \(call.referenceProvenance.searchableText)")
+        }
         lines.append(contentsOf: call.artifactURLs.map { "Saved artifact path: \($0.path)" })
         lines.append(contentsOf: call.nativeArtifactURLs.map { "Native artifact path: \($0.path)" })
         lines.append(contentsOf: call.rawArtifactURLs.map { "Raw artifact path: \($0.path)" })

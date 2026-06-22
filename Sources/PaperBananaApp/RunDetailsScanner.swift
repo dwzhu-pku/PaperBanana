@@ -96,7 +96,8 @@ enum RunDetailsScanner {
             requestURL: nil,
             providerRequestURL: nil,
             eventLogURL: auditLogURL,
-            metadataURL: nil
+            metadataURL: nil,
+            referenceProvenance: sortedCalls.first(where: { $0.referenceProvenance.isManual })?.referenceProvenance ?? .empty
         )
     }
 
