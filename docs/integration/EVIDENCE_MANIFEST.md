@@ -75,6 +75,7 @@ content, or raw provider payloads in shared evidence.
 | EV-20260622-004 | WP-101/T-001 | `1cd601ee348f` | Passed with limitation | PR #69 legacy plot/Figure Size integration and cumulative credential regression evidence recorded in `docs/integration/evidence/20260622-020143_1cd601ee348f_WP-101-legacy-plot-integration.md`. |
 | EV-20260622-005 | WP-004/T-004 | `c44ed277c7d6` | Passed with limitation | Hosted/shared plot-code execution now fails closed before generated Python reaches `exec`; evidence recorded in `docs/integration/evidence/20260622-022143_c44ed277c7d6_WP-004-hosted-plot-containment.md`. |
 | EV-20260622-006 | WP-007/T-007 | `e0cea781ca07` | Passed with limitation | Native PR #72 aggregate gate passed on the native branch; evidence recorded in `docs/integration/evidence/20260622-022316_e0cea781ca07_WP-007-native-aggregate-gate.md`. |
+| EV-20260622-007 | WP-102/T-102 | `50c0f49798d4` | Passed with limitation | PR #74 provider/local route support and durable support docs integrated with credential/plot-policy wording preserved; evidence recorded in `docs/integration/evidence/20260622-022925_50c0f49798d4_WP-102-provider-support.md`. |
 
 ## Required Next Evidence
 
@@ -84,5 +85,6 @@ content, or raw provider payloads in shared evidence.
 | WP-003 | Clean environment Python 3.12 validation once WP-005/WP-201 defines the environment. |
 | WP-004 | Hosted deployment negative test before any public hosted release claim. |
 | WP-105 | Rebase native PR #72 after credential isolation, hosted plot containment, and provider support are integrated. |
+| WP-102 | Optional real local/Ollama endpoint smoke if local-route support is promoted beyond mocked route coverage. |
 | WP-007 | Light/Dark screenshots, keyboard navigation, VoiceOver, Reduce Motion, and Reduce Transparency review. |
 | WP-007 | Release build/install proof through `./script/build_and_run.sh --release --install --no-open` if that distribution path remains in scope. |
