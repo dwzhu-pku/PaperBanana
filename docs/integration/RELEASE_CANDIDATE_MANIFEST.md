@@ -22,7 +22,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest product-source change | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
 | Latest native artifact-secret test head | `59e40f7b7c33b5e449a44224edc1d8dfb1508a6c` |
 | Latest temporary rollback preflight head | `c976aca0ee70f26a8473f7024deb0b11ae2fe884` |
-| Latest current-head rollback preflight head | `de4c8170952ad8f0efa2aa8e901f248f3c878605` |
+| Latest current-head rollback preflight head | `ad07fcc594dc4fa231724c8bf6831a03e191ee8a` |
 | Latest WP-108 no-live contract head | `37b44c04dcbdb680a043553684e1d15b3a568f52` |
 | Latest WP-109 runtime migration head | `439419e1fbf76162eec622745d2e655f6915267b` |
 | Latest WP-106 fake-Codex handoff test head | `6f48b2dcd055a32f0fa3cdca899ddcff7a9fd009` |
@@ -130,7 +130,10 @@ manual keyboard/VoiceOver traversal or screenshot-based adaptive visual signoff.
 `EV-20260622-066` validates the later `6ce551e868dd` source-level Settings
 Workspace lower-content contract slice. It is source-level regression
 protection only and does not replace screenshot-based lower Workspace/full-app
-visual signoff.
+visual signoff. `EV-20260622-067` refreshes the no-live temporary distinct-bundle rollback plus runtime-migration slice on `ad07fcc594dc`: the prior app from
+`1fa6cbe90e6f` restored exactly by binary hash, the candidate hash differed,
+synthetic Application Support and `results/` fixtures stayed unchanged, and 6
+selected runtime-migration/secret-store Swift tests passed.
 `EV-20260622-051` validates the later `46f9a937480c` no-live WP-108
 artifact-completeness runner using synthetic native run artifacts. It does not
 score output quality, run providers, perform reviewer scoring, or support
@@ -192,8 +195,8 @@ channel approval, upgrade proof, or rollback proof.
 | WP-108 offline evidence chain | `EV-20260622-063` | Synthetic native artifacts now flow through run-map generation, artifact-completeness reporting, packet binding, completed synthetic human-review validation, and quality decision validation while preserving claim boundaries and excluding provider payload sentinel text; no real reviewer scores or quality claim |
 | WP-107 no-live hosted-readiness smoke | `EV-20260622-061` | Reusable localhost share=False hosted-readiness smoke passed on the current harness head: fake startup key sentinels were absent, no key-entry UI returned, two clients called a non-provider endpoint, and cleanup closed the port; not a Hugging Face Space deployment proof |
 | Native artifact secret-sentinel scan | `EV-20260622-044` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; live-provider and hosted scans remain open |
-| Temporary distinct-bundle rollback preflight | `EV-20260622-045`, `EV-20260622-058` | The latest run used a prior app from `1fa6cbe90e6f` and the current post-Codex-env candidate `de4c8170952a`; it upgraded in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
-| Runtime user-data migration slice | `EV-20260622-048`, `EV-20260622-058` | Isolated Application Support override, fake sentinel secret-store permissions, legacy run-store schema migration, stale-run recovery, Run Details / Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte preservation passed without live providers; the selected runtime migration/secret-store/RunStore migration slice was rerun on the current post-Codex-env candidate |
+| Temporary distinct-bundle rollback preflight | `EV-20260622-045`, `EV-20260622-058`, `EV-20260622-067` | The latest run used a prior app from `1fa6cbe90e6f` and the current branch head `ad07fcc594dc`; it upgraded in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
+| Runtime user-data migration slice | `EV-20260622-048`, `EV-20260622-058`, `EV-20260622-067` | Isolated Application Support override, fake sentinel secret-store permissions, legacy run-store schema migration, stale-run recovery, Run Details / Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte preservation passed without live providers; the selected runtime migration/secret-store/RunStore migration slice was rerun on the current branch head |
 | Fake-Codex fallback store handoff | `EV-20260622-049` | Native generation and refinement stores now execute the real Swift Codex fallback adapter with a deterministic fake executable and persist `swift_codex`/`provider_spend=none` provenance without live provider keys |
 | Foundation Models disposition | `EV-20260622-054` | Release-visible image model choices do not route to Foundation Models, and the auxiliary assistant defaults to local fallback; Foundation Models remains unsupported |
 | Post-WP-208 full-gate/install proof | `EV-20260622-055` | Current branch head passed the full local aggregate gate, remote structural/Python checks, and Release build/install after the Foundation Models disposition |
@@ -222,12 +225,12 @@ only, or unsupported as stated above.
 |---|---|
 | Current app install provenance | Covered by `EV-20260622-065` |
 | Local app-bundle backup/install/restore preflight | Covered by `EV-20260622-037`; before, candidate, and restored binary hashes matched |
-| Temporary distinct-bundle upgrade from an older validated product commit | Covered historically by `EV-20260622-045`; current post-Codex-env candidate coverage is `EV-20260622-058`, using a prior app built from `1fa6cbe90e6f`, a distinct candidate hash, and an exact restored prior hash |
+| Temporary distinct-bundle upgrade from an older validated product commit | Covered historically by `EV-20260622-045`; current branch-head coverage is `EV-20260622-067`, using a prior app built from `1fa6cbe90e6f`, a distinct candidate hash, and an exact restored prior hash |
 | True upgrade from a retained public prior release artifact | Not yet proven |
-| App-bundle rollback to a distinct prior app bundle | Temporarily proven by `EV-20260622-045` and repeated for the current candidate in `EV-20260622-058`; final release/distribution proof remains open |
+| App-bundle rollback to a distinct prior app bundle | Temporarily proven by `EV-20260622-045` and repeated for the current candidate in `EV-20260622-058` and `EV-20260622-067`; final release/distribution proof remains open |
 | Selected non-secret defaults preservation during install/restore | Covered by `EV-20260622-037` via plist hash comparison |
 | Synthetic Application Support and `results/` fixture preservation | Covered by `EV-20260622-045` |
-| User data / Application Support preservation across runtime migration | No-live isolated runtime migration slice covered by `EV-20260622-048` and rerun on the current candidate in `EV-20260622-058`; true public prior-release upgrade and final frozen-SHA rollback remain open |
+| User data / Application Support preservation across runtime migration | No-live isolated runtime migration slice covered by `EV-20260622-048` and rerun on the current candidate in `EV-20260622-058` and `EV-20260622-067`; true public prior-release upgrade and final frozen-SHA rollback remain open |
 | Run-folder/schema compatibility after candidate upgrade and rollback | Source-level legacy migration tests passed in `EV-20260622-037`; end-to-end app upgrade remains open |
 | Hosted rollback | Not applicable until hosted deployment is selected and validated |
 
@@ -270,10 +273,10 @@ state is verified.
   artifact provenance is covered by `EV-20260622-065`, earlier pushed
   evidence-head consistency is covered by `EV-20260622-057`, temporary
   distinct-bundle replacement/restore is covered historically by
-  `EV-20260622-045` and repeated for the current candidate in
-  `EV-20260622-058`, and
+  `EV-20260622-045`, repeated for the post-Codex-environment candidate in
+  `EV-20260622-058`, and refreshed for `ad07fcc594dc` in `EV-20260622-067`, and
   isolated runtime user-data migration is covered by `EV-20260622-048` and
-  rerun on the current candidate in `EV-20260622-058`, but
+  rerun on the current candidate in `EV-20260622-058` and `EV-20260622-067`, but
   these are not frozen release approval, public prior-release upgrade proof,
   full runtime user-data migration proof, or hosted rollback proof.
 - Repeat the full local/self-hosted native/Python/Xcode gate if a later
