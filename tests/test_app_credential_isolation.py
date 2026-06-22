@@ -117,13 +117,27 @@ class AppCredentialIsolationTests(unittest.TestCase):
             ):
                 app_module = importlib.import_module("app")
                 interface = app_module.build_app()
-                config_text = str(interface.get_config_file())
+                config = interface.get_config_file()
+                config_text = str(config)
         finally:
             self._clear_app_modules()
 
         captured = "\n".join([stdout.getvalue(), stderr.getvalue(), config_text])
         for secret in sentinels.values():
             self.assertNotIn(secret, captured)
+        self.assertIn("OpenRouter: **configured**", captured)
+        self.assertIn("Google Gemini: **configured**", captured)
+
+        component_labels = [
+            component.get("props", {}).get("label")
+            for component in config.get("components", [])
+            if component.get("type") == "textbox"
+            and isinstance(component.get("props", {}).get("label"), str)
+        ]
+        self.assertFalse(
+            any("API Key" in label for label in component_labels),
+            component_labels,
+        )
 
     @staticmethod
     def _clear_app_modules():
