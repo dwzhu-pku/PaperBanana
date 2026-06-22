@@ -52,7 +52,7 @@ native PR head.
 | Native prompt/provider integration | `7594d4d`, `fac7cc8`, `79425e8`, `7ce4f07` | Plot fallback prompt behavior, provider audit calls, clean-worktree native gate portability, local-route image rejection, and direct Gemini refinement audit preservation. |
 | CI and gate portability | `26adc46`, `75f6d99` | Portable CI workflows, native structural checks, Ruby pinning, and script portability away from a single local host path. |
 | Evidence records | `1524a00`, `d43a6c8`, `4a8df78`, `7271e07`, `1e1688f`, `949bd3c`, `4c9d779` | SHA-linked validation records and manifest updates. Review for accuracy and limitations, not product behavior. |
-| Visual/accessibility polish | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812` | Sidebar/settings polish, search/card accessibility landmarks, Settings form layout, native table accessibility summaries, Prompt Studio keyboard focus escape, and source-level regression contracts. |
+| Visual/accessibility polish | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812`, `261ad29` | Sidebar/settings polish, search/card accessibility landmarks, Settings form layout, native table accessibility summaries, Prompt Studio keyboard focus escape, adaptive material fallback, minimum-window contract, and source-level regression contracts. |
 
 ## Original PR #72 Source Stack Mapping
 
@@ -167,6 +167,11 @@ Current evidence:
   screenshots covered the Workspace pane in Dark/Light with Increased Contrast,
   Reduce Transparency, and Reduce Motion. Independent macOS design critique
   found no release-blocking Settings defect.
+- `EV-20260622-030`: adaptive layout policy centralized raw material fallback in
+  `AppDesignSystem`, added adaptive status/selection contrast tokens, raised the
+  minimum window contract to cover the widest existing split workspace, and
+  passed focused tests, the aggregate native/Python/Xcode 27 gate, and Release
+  build/install.
 
 Open gaps:
 
@@ -174,8 +179,8 @@ Open gaps:
 - Prompt Studio prompt-to-run-control keyboard escape is covered by
   `EV-20260622-027`.
 - Increased Text Size and inactive-window Settings review remain open. Broader
-  full-app hover/focus and adaptive-state review remains required outside the
-  Settings increment.
+  full-app hover/focus and adaptive-state screenshot review remains required
+  outside the Settings and source-policy increments.
 
 ### 3. Prompt Studio And Manual Reference Examples
 
