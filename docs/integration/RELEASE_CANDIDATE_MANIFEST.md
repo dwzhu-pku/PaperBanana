@@ -14,7 +14,7 @@ been validated and leaves every unvalidated release claim open.
 | Item | Value |
 |---|---|
 | Last full local product-code gate | `f360dc6d5ccd59ca3760f5f2ddd168dc407656ae` |
-| Current pushed evidence head | `7af73793f0d3d02843ab115266f9c0560f6ea7c8` |
+| Latest recorded remote-check evidence head | `7af73793f0d3d02843ab115266f9c0560f6ea7c8` |
 | Branch | `integration/native-first-rc-native` |
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
 | Upstream base | `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b` |
@@ -25,8 +25,8 @@ Commits after `cf9531cfdd4e` through `7af73793f0d3` are evidence,
 documentation, runbook, and screenshot commits. `EV-20260622-035` validates
 `f360dc6d5ccd` through the local aggregate native/Python/Xcode 27 gate plus
 Release build/install proof. `EV-20260622-042` records that current pushed
-evidence head `7af73793f0d3` passed the remote `Native Structural Checks` and
-`Python Tests` workflows.
+evidence head at capture time `7af73793f0d3` passed the remote `Native
+Structural Checks` and `Python Tests` workflows.
 
 ## Installed App Artifact
 
@@ -56,6 +56,7 @@ channel approval, upgrade proof, or rollback proof.
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034` | Real local data, search/filter, 10-example cap, and no-spend persistence validated |
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034` | Partial; not full manual VoiceOver traversal |
 | Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041` | Partial; broader full-app adaptive signoff remains open |
+| Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
 
 ## Provider Support Matrix
 
@@ -112,6 +113,9 @@ state is verified.
   final frozen release SHA. Current pushed evidence-head consistency is covered
   by `EV-20260622-042`, but this is not a frozen release approval.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
+  `EV-20260622-043` confirms the current branch has evaluation-adjacent code but
+  no safe no-live release-quality benchmark runner, frozen manifest, threshold,
+  or report schema.
 - Upstream maintainer review, merge, and issue closure before claiming upstream
   closeout.
 

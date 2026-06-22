@@ -59,7 +59,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "Candidate Source Snapshot",
         "f360dc6d5ccd59ca3760f5f2ddd168dc407656ae",
         "7af73793f0d3d02843ab115266f9c0560f6ea7c8",
-        "Current pushed evidence head",
+        "Latest recorded remote-check evidence head",
         "Installed App Artifact",
         "/Applications/PaperBanana.app",
         "local.paperbanana.gui",
@@ -80,6 +80,8 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "Approved live provider/fallback native E2E",
         "Hosted two-session proof",
         "WP-108 quality benchmark",
+        "EV-20260622-043",
+        "no safe no-live release-quality benchmark runner",
         "Release Claim Boundary",
         "must not be described as release-ready",
     ]

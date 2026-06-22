@@ -8,10 +8,10 @@
 - **Scope:** Remote GitHub Actions status for the current pushed evidence head.
 - **Status:** **Passed with limitations.**
 
-The current pushed branch head is evidence/docs-only relative to the last full
-local product-code gate at `f360dc6d5ccd59ca3760f5f2ddd168dc407656ae`.
-This evidence records that the remote structural and Python workflows also
-passed on the current pushed head.
+At capture time, the pushed branch head was evidence/docs-only relative to the
+last full local product-code gate at
+`f360dc6d5ccd59ca3760f5f2ddd168dc407656ae`. This evidence records that the
+remote structural and Python workflows passed on that recorded evidence head.
 
 This does not replace the local Xcode 27 full gate in `EV-20260622-035`, and it
 does not prove live provider, hosted deployment, manual VoiceOver, quality,
@@ -56,7 +56,8 @@ Relevant completed runs for `7af73793f0d3d02843ab115266f9c0560f6ea7c8`:
 
 ## Interpretation
 
-- The fork branch currently points at the same SHA as the local clean worktree.
+- At capture time, the fork branch pointed at the same SHA as the local clean
+  worktree.
 - Both remote workflows configured for normal branch pushes completed
   successfully on that SHA.
 - The branch remains based on upstream `origin/main` at
