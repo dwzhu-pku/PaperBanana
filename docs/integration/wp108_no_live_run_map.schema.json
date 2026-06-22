@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paperbanana.local/schemas/wp108_no_live_run_map.schema.json",
+  "title": "PaperBanana WP-108 No-Live Native Run Map",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "provider_scoring_used",
+    "publication_quality_claimed",
+    "live_provider_used",
+    "cases"
+  ],
+  "properties": {
+    "schema_version": { "const": "wp108.no_live_run_map.v1" },
+    "manifest_id": { "type": "string", "minLength": 1 },
+    "provider_scoring_used": { "const": false },
+    "publication_quality_claimed": { "const": false },
+    "live_provider_used": { "const": false },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "case_id",
+          "run_id",
+          "run_dir",
+          "image_path",
+          "request_json",
+          "metadata_json",
+          "provider_request_json",
+          "provider_audit_jsonl",
+          "run_store_db"
+        ],
+        "properties": {
+          "case_id": { "type": "string", "minLength": 1 },
+          "run_id": { "type": "string", "minLength": 1 },
+          "run_dir": { "type": "string", "minLength": 1 },
+          "image_path": { "type": "string", "minLength": 1 },
+          "request_json": { "type": "string", "minLength": 1 },
+          "metadata_json": { "type": "string", "minLength": 1 },
+          "provider_request_json": { "type": "string", "minLength": 1 },
+          "provider_response_json": { "type": "string", "minLength": 1 },
+          "provider_audit_jsonl": { "type": "string", "minLength": 1 },
+          "run_store_db": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

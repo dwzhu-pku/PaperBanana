@@ -46,6 +46,45 @@
         "threshold_passed": { "type": "boolean" },
         "claim_boundary": { "type": "string", "minLength": 1 }
       }
+    },
+    "artifact_checks": {
+      "type": "object",
+      "required": ["schema_version", "secret_markers_checked", "cases"],
+      "properties": {
+        "schema_version": { "const": "wp108.no_live_artifact_checks.v1" },
+        "secret_markers_checked": { "type": "integer", "minimum": 0 },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "case_id",
+              "run_id",
+              "checked_outputs",
+              "checked_files",
+              "artifact_failures",
+              "status"
+            ],
+            "properties": {
+              "case_id": { "type": "string", "minLength": 1 },
+              "run_id": { "type": "string", "minLength": 1 },
+              "checked_outputs": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "checked_files": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "artifact_failures": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "status": { "enum": ["fixture_passed", "fixture_failed"] }
+            }
+          }
+        }
+      }
     }
   }
 }

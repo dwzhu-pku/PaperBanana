@@ -149,8 +149,15 @@ def test_wp108_no_live_contract_preserves_quality_claim_boundary():
     required_phrases = [
         "Status: contract scaffold, not quality evidence",
         "utils/wp108_benchmark_contract.py",
+        "utils/wp108_no_live_artifact_runner.py",
+        "docs/integration/wp108_no_live_run_map.schema.json",
+        "tests/test_wp108_no_live_artifact_runner.py",
+        "native run artifact completeness",
+        "output image existence and PNG/JPEG magic bytes",
+        "artifact_checks",
         "provider_scoring_used: false",
         "publication_quality_claimed: false",
+        "The artifact runner also does not prove publication quality",
         "This scaffold alone is not that evidence",
     ]
 
