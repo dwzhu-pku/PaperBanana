@@ -7,6 +7,7 @@ struct NativeImageGenerationRequest {
     let aspectRatio: String
     let task: String
     let settings: PaperBananaSettingsSnapshot
+    let referenceExamples: [ReferenceExampleSelection]
     let executionMode: NativeImageGenerationExecutionMode
     let preflightRunID: String?
 
@@ -17,6 +18,7 @@ struct NativeImageGenerationRequest {
         aspectRatio: String,
         task: String,
         settings: PaperBananaSettingsSnapshot,
+        referenceExamples: [ReferenceExampleSelection] = [],
         executionMode: NativeImageGenerationExecutionMode = .live,
         preflightRunID: String? = nil
     ) {
@@ -26,6 +28,7 @@ struct NativeImageGenerationRequest {
         self.aspectRatio = aspectRatio
         self.task = task
         self.settings = settings
+        self.referenceExamples = Array(referenceExamples.prefix(ReferenceExampleSelection.maximumSelectionCount))
         self.executionMode = executionMode
         self.preflightRunID = preflightRunID
     }
@@ -38,6 +41,7 @@ struct NativeImageGenerationRequest {
             aspectRatio: aspectRatio,
             task: task,
             settings: settings,
+            referenceExamples: referenceExamples,
             executionMode: executionMode,
             preflightRunID: runID
         )
