@@ -284,6 +284,9 @@ Current evidence:
 - `EV-20260622-013`: Artifact Library screenshots and full Swift suite.
 - `EV-20260622-014`: Artifact Library card accessibility.
 - `EV-20260622-016`: full Swift suite still passes after later native changes.
+- `EV-20260622-018`: Light/Dark top and bottom inspector screenshots show
+  lower Artifact Library content reachable above the fixed two-row action
+  footer.
 - Read-only design review on 2026-06-22 found the lower inspector screenshot
   risk most likely reflected scroll position rather than true action-bar
   occlusion because `ScrollView`, `Divider`, and `ArtifactInspectorActionBar`
@@ -291,9 +294,9 @@ Current evidence:
 
 Open gaps:
 
-- Artifact Library lower inspector reachability still requires a current
-  bottom-scroll screenshot proof; bottom breathing room and export action
-  accessibility labels were added after this map was created.
+- Artifact Library lower inspector reachability now has normal Light/Dark
+  top/bottom screenshot proof. Remaining Artifact Library work is keyboard,
+  VoiceOver, context-menu, disabled-state, and adaptive-mode validation.
 - Live refinement/provider E2E remains required before release claims.
 
 ### 6. Run Details, Provider Ledger, Recovery, And Workflow Evaluation
@@ -487,8 +490,9 @@ README.md
 - Capture adaptive visual evidence for Increased Contrast, Increased Text Size,
   Reduce Transparency, Reduce Motion, hover/focus, inactive-window, and narrow
   widths.
-- Prove Artifact Library lower inspector content is scroll-accessible without
-  action-bar occlusion, or fix it if reproduced.
+- Validate Artifact Library keyboard, VoiceOver, context-menu, disabled-state,
+  and adaptive-mode behavior now that lower inspector scroll reachability has
+  top/bottom Light/Dark screenshot evidence.
 - Run real-data manual reference UI validation for PaperBananaBench.
 - Run at least one approved live provider/fallback native E2E and inspect
   durable request/metadata/provider artifacts.
