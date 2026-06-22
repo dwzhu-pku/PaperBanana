@@ -130,10 +130,14 @@ def _scan_secret_markers(path: Path, markers: tuple[str, ...], failures: list[st
 
 
 def _check_provider_audit(path: Path, run_id: str, failures: list[str]) -> None:
+    _check_provider_audit_event(path, run_id=run_id, call_id=None, failures=failures)
+
+
+def _check_provider_audit_event(path: Path, *, run_id: str, call_id: str | None, failures: list[str]) -> None:
     if not path.exists():
         failures.append(f"provider_audit missing: {path}")
         return
-    matched_run = False
+    matched_event = False
     parsed_lines = 0
     try:
         lines = path.read_text(encoding="utf-8").splitlines()
@@ -149,12 +153,15 @@ def _check_provider_audit(path: Path, run_id: str, failures: list[str]) -> None:
             failures.append(f"provider_audit line {line_no} is invalid JSON: {exc}")
             continue
         parsed_lines += 1
-        if isinstance(payload, dict) and payload.get("run_id") == run_id:
-            matched_run = True
+        if not isinstance(payload, dict):
+            continue
+        if payload.get("run_id") == run_id or (call_id and payload.get("call_id") == call_id):
+            matched_event = True
     if parsed_lines == 0:
         failures.append(f"provider_audit has no JSONL events: {path}")
-    if not matched_run:
-        failures.append(f"provider_audit has no event for run_id {run_id}: {path}")
+    if not matched_event:
+        label = f"run_id {run_id}" if not call_id else f"run_id {run_id} or call_id {call_id}"
+        failures.append(f"provider_audit has no event for {label}: {path}")
 
 
 def _check_run_store(
@@ -260,6 +267,265 @@ def _case_by_id(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {case["case_id"]: case for case in manifest["cases"]}
 
 
+def _parse_case_run_pairs(raw_pairs: list[str] | None) -> dict[str, str]:
+    _require(bool(raw_pairs), "at least one --case-run CASE_ID=RUN_ID mapping is required")
+    pairs: dict[str, str] = {}
+    for raw_pair in raw_pairs or []:
+        case_id, separator, run_id = raw_pair.partition("=")
+        _require(separator == "=", f"--case-run must use CASE_ID=RUN_ID syntax: {raw_pair}")
+        case_id = case_id.strip()
+        run_id = run_id.strip()
+        _require(case_id != "", f"--case-run has an empty case id: {raw_pair}")
+        _require(run_id != "", f"--case-run has an empty run id for case {case_id}")
+        _require(case_id not in pairs, f"--case-run repeats case id {case_id}")
+        pairs[case_id] = run_id
+    return pairs
+
+
+def _table_columns(connection: sqlite3.Connection, table: str) -> set[str]:
+    try:
+        rows = connection.execute(f"PRAGMA table_info({table})").fetchall()
+    except sqlite3.Error as exc:
+        raise ArtifactRunnerError(f"run_store could not inspect table {table}: {exc}") from exc
+    return {str(row[1]) for row in rows}
+
+
+def _select_columns(connection: sqlite3.Connection, table: str, columns: list[str], where: str, parameters: tuple[Any, ...]) -> dict[str, str] | None:
+    available = _table_columns(connection, table)
+    if not available:
+        raise ArtifactRunnerError(f"run_store is missing table {table}")
+    selected = [column for column in columns if column in available]
+    if not selected:
+        raise ArtifactRunnerError(f"run_store table {table} has none of the expected columns")
+    sql = f"SELECT {', '.join(selected)} FROM {table} WHERE {where} LIMIT 1"
+    try:
+        cursor = connection.execute(sql, parameters)
+        row = cursor.fetchone()
+    except sqlite3.Error as exc:
+        raise ArtifactRunnerError(f"run_store query failed for table {table}: {exc}") from exc
+    if row is None:
+        return None
+    return {column: "" if row[index] is None else str(row[index]) for index, column in enumerate(selected)}
+
+
+def _default_run_store(repo_root: Path) -> Path:
+    return repo_root / "results" / "run_store" / "paperbanana_runs.sqlite"
+
+
+def _read_run_store_record(run_store_db: Path, run_id: str) -> dict[str, str]:
+    _require(run_store_db.exists(), f"run_store_db is missing: {run_store_db}")
+    try:
+        connection = sqlite3.connect(f"file:{run_store_db}?mode=ro", uri=True)
+    except sqlite3.Error as exc:
+        raise ArtifactRunnerError(f"run_store cannot be opened read-only: {run_store_db}: {exc}") from exc
+    try:
+        run_record = _select_columns(
+            connection,
+            "runs",
+            [
+                "id",
+                "workflow",
+                "status",
+                "provider",
+                "provider_kind",
+                "run_dir",
+                "request_path",
+                "provider_request_path",
+                "raw_response_path",
+                "artifact_path",
+                "metadata_path",
+                "provider_call_id",
+                "updated_at",
+            ],
+            "id = ?",
+            (run_id,),
+        )
+        if run_record is None:
+            raise ArtifactRunnerError(f"run_store has no runs row for run_id {run_id}: {run_store_db}")
+        status = run_record.get("status", "")
+        if status and status != "completed":
+            raise ArtifactRunnerError(f"run_store run {run_id} has status {status}, not completed")
+
+        call_id = run_record.get("provider_call_id", "")
+        provider_call = None
+        if call_id:
+            provider_call = _select_columns(
+                connection,
+                "provider_calls",
+                ["call_id", "run_id", "provider", "context", "status", "updated_at"],
+                "call_id = ?",
+                (call_id,),
+            )
+        if provider_call is None:
+            provider_call = _select_columns(
+                connection,
+                "provider_calls",
+                ["call_id", "run_id", "provider", "context", "status", "updated_at"],
+                "run_id = ?",
+                (run_id,),
+            )
+        if provider_call is None:
+            raise ArtifactRunnerError(f"run_store has no provider_calls row for run_id {run_id}: {run_store_db}")
+        provider_status = provider_call.get("status", "")
+        if provider_status and provider_status != "succeeded":
+            raise ArtifactRunnerError(f"run_store provider call for {run_id} has status {provider_status}, not succeeded")
+        if not call_id:
+            call_id = provider_call.get("call_id", "")
+        _require(call_id != "", f"run_store provider call for {run_id} is missing call_id")
+        run_record["provider_call_id"] = call_id
+        run_record["provider_call_provider"] = provider_call.get("provider", "")
+        run_record["provider_call_context"] = provider_call.get("context", "")
+        run_record["provider_call_status"] = provider_status
+        return run_record
+    finally:
+        connection.close()
+
+
+def _candidate_provider_audit_paths(repo_root: Path, explicit_paths: list[Path] | None) -> list[Path]:
+    candidates: list[Path] = []
+    for path in explicit_paths or []:
+        if path.is_dir():
+            candidates.extend(sorted(path.glob("*.jsonl")))
+        else:
+            candidates.append(path)
+    default_dir = repo_root / "results" / "provider_audit"
+    if default_dir.exists():
+        candidates.extend(sorted(default_dir.glob("*.jsonl")))
+
+    unique: list[Path] = []
+    seen: set[str] = set()
+    for candidate in candidates:
+        standard = _standard(candidate)
+        if standard not in seen:
+            seen.add(standard)
+            unique.append(candidate)
+    return unique
+
+
+def _audit_path_matches(path: Path, *, run_id: str, call_id: str) -> bool:
+    if not path.exists() or not path.is_file():
+        return False
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return False
+    for line in lines:
+        if not line.strip():
+            continue
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict) and (payload.get("run_id") == run_id or payload.get("call_id") == call_id):
+            return True
+    return False
+
+
+def _find_provider_audit_jsonl(repo_root: Path, run_id: str, call_id: str, explicit_paths: list[Path] | None = None) -> Path:
+    for candidate in _candidate_provider_audit_paths(repo_root, explicit_paths):
+        if _audit_path_matches(candidate, run_id=run_id, call_id=call_id):
+            return candidate
+    raise ArtifactRunnerError(f"no provider audit JSONL found for run_id {run_id} or call_id {call_id}")
+
+
+def _required_path_fields_for_case(manifest_case: dict[str, Any]) -> dict[str, str]:
+    fields: dict[str, str] = {}
+    for output_name in manifest_case["expected_outputs"]:
+        field_name = REQUIRED_RUN_MAP_PATHS.get(output_name)
+        _require(field_name is not None, f"unsupported expected output in manifest: {output_name}")
+        fields[output_name] = field_name
+    return fields
+
+
+def _run_map_case_from_record(
+    *,
+    case_id: str,
+    manifest_case: dict[str, Any],
+    record: dict[str, str],
+    audit_path: Path,
+    run_store_db: Path,
+) -> dict[str, Any]:
+    raw_paths = {
+        "image_path": record.get("artifact_path", ""),
+        "request_json": record.get("request_path", ""),
+        "metadata_json": record.get("metadata_path", ""),
+        "provider_request_json": record.get("provider_request_path", ""),
+        "provider_response_json": record.get("raw_response_path", ""),
+        "provider_audit_jsonl": str(audit_path),
+        "run_store_db": str(run_store_db),
+    }
+    run_id = record.get("id", "") or record.get("run_id", "")
+    _require(run_id != "", f"run_store record for case {case_id} is missing id")
+    run_dir = record.get("run_dir", "")
+    _require(run_dir != "", f"run_store record for {run_id} is missing run_dir")
+
+    case_payload: dict[str, Any] = {
+        "case_id": case_id,
+        "run_id": run_id,
+        "provider_call_id": record.get("provider_call_id", ""),
+        "run_dir": _standard(Path(run_dir)),
+    }
+
+    for output_name, field_name in _required_path_fields_for_case(manifest_case).items():
+        raw_path = raw_paths.get(field_name, "")
+        _require(raw_path != "", f"run_store record for {run_id} is missing {field_name}")
+        path = Path(raw_path)
+        _require(path.exists(), f"mapped {output_name} path for {run_id} is missing: {path}")
+        case_payload[field_name] = _standard(path)
+
+    return case_payload
+
+
+def build_run_map_from_native_runs(
+    *,
+    manifest: dict[str, Any],
+    manifest_contract: dict[str, Any],
+    repo_root: Path,
+    case_run_ids: dict[str, str],
+    run_store_db: Path | None = None,
+    provider_audit_paths: list[Path] | None = None,
+) -> dict[str, Any]:
+    expected_case_ids = manifest_contract["case_ids"]
+    supplied_case_ids = set(case_run_ids)
+    missing = sorted(expected_case_ids - supplied_case_ids)
+    extra = sorted(supplied_case_ids - expected_case_ids)
+    _require(not missing, f"--case-run is missing manifest cases: {missing}")
+    _require(not extra, f"--case-run has unknown manifest cases: {extra}")
+
+    run_store = run_store_db or _default_run_store(repo_root)
+    manifest_cases = _case_by_id(manifest)
+    cases: list[dict[str, Any]] = []
+    for manifest_case in manifest["cases"]:
+        case_id = manifest_case["case_id"]
+        run_id = case_run_ids[case_id]
+        record = _read_run_store_record(run_store, run_id)
+        call_id = record["provider_call_id"]
+        audit_path = _find_provider_audit_jsonl(
+            repo_root,
+            run_id,
+            call_id,
+            explicit_paths=provider_audit_paths,
+        )
+        cases.append(
+            _run_map_case_from_record(
+                case_id=case_id,
+                manifest_case=manifest_cases[case_id],
+                record=record,
+                audit_path=audit_path,
+                run_store_db=run_store,
+            )
+        )
+
+    return {
+        "schema_version": RUN_MAP_SCHEMA_VERSION,
+        "manifest_id": manifest_contract["benchmark_id"],
+        "provider_scoring_used": False,
+        "publication_quality_claimed": False,
+        "live_provider_used": False,
+        "cases": cases,
+    }
+
+
 def _path_for(case: dict[str, Any], field: str, base: Path) -> Path | None:
     value = case.get(field)
     if not isinstance(value, str) or not value.strip():
@@ -300,7 +566,13 @@ def _check_case(
             if payload is not None:
                 _check_no_live_json_markers(payload, failures, output_name)
         elif output_name == "provider_audit":
-            _check_provider_audit(path, run_id, failures)
+            call_id = run_map_case.get("provider_call_id")
+            _check_provider_audit_event(
+                path,
+                run_id=run_id,
+                call_id=call_id if isinstance(call_id, str) and call_id else None,
+                failures=failures,
+            )
         elif output_name == "run_store":
             _check_run_store(
                 path,
@@ -412,6 +684,54 @@ def run_command(args: argparse.Namespace) -> int:
     return 1 if failed_cases else 0
 
 
+def generate_run_map_command(args: argparse.Namespace) -> int:
+    manifest_path = Path(args.manifest)
+    output_path = Path(args.output)
+    repo_root = Path(args.repo_root).expanduser().resolve(strict=False)
+    run_store_db = Path(args.run_store).expanduser().resolve(strict=False) if args.run_store else None
+    provider_audit_paths = [
+        Path(path).expanduser().resolve(strict=False)
+        for path in (args.provider_audit or [])
+    ]
+
+    manifest = _load_json(manifest_path)
+    manifest_contract = validate_manifest(manifest, manifest_path=manifest_path, check_paths=args.check_paths)
+    run_map = build_run_map_from_native_runs(
+        manifest=manifest,
+        manifest_contract=manifest_contract,
+        repo_root=repo_root,
+        case_run_ids=_parse_case_run_pairs(args.case_run),
+        run_store_db=run_store_db,
+        provider_audit_paths=provider_audit_paths,
+    )
+    _write_json(output_path, run_map)
+
+    report_path = Path(args.report).expanduser().resolve(strict=False) if args.report else None
+    if report_path is not None:
+        markers = tuple(DEFAULT_SECRET_MARKERS + tuple(args.secret_marker or ()))
+        report = build_report(
+            manifest=manifest,
+            manifest_contract=manifest_contract,
+            run_map=run_map,
+            run_map_path=output_path,
+            secret_markers=markers,
+        )
+        _write_json(report_path, report)
+        failed_cases = [result for result in report["case_results"] if result["status"] != "fixture_passed"]
+        print(
+            "WP-108 no-live run map generated and checked: "
+            f"run_map={output_path} report={report_path} cases={len(report['case_results'])} "
+            f"failed_cases={len(failed_cases)} publication_quality_claimed=false"
+        )
+        return 1 if failed_cases else 0
+
+    print(
+        "WP-108 no-live run map generated: "
+        f"run_map={output_path} cases={len(run_map['cases'])} publication_quality_claimed=false"
+    )
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Validate WP-108 no-live native artifact completeness.")
     parser.add_argument("--manifest", required=True, help="Path to WP-108 no-live manifest JSON")
@@ -425,9 +745,31 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def build_generate_run_map_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Generate a WP-108 no-live run map from native run-store records.")
+    parser.add_argument("--manifest", required=True, help="Path to WP-108 no-live manifest JSON")
+    parser.add_argument("--repo-root", required=True, help="Repository root that owns the native run artifacts")
+    parser.add_argument("--case-run", action="append", required=True, help="Manifest case mapping in CASE_ID=RUN_ID form")
+    parser.add_argument("--output", required=True, help="Path to write the generated run-map JSON")
+    parser.add_argument("--run-store", help="Override the native run-store SQLite path")
+    parser.add_argument("--provider-audit", action="append", help="Provider audit JSONL file or directory to scan before the default provider_audit directory")
+    parser.add_argument("--report", help="Optional path to write an immediate artifact-completeness report")
+    parser.add_argument("--secret-marker", action="append", help="Additional forbidden marker to scan when --report is used")
+    path_group = parser.add_mutually_exclusive_group()
+    path_group.add_argument("--check-paths", action="store_true", help="Require manifest ground-truth paths to exist")
+    path_group.add_argument("--no-path-check", action="store_true", help="Skip ground-truth path existence checks")
+    parser.set_defaults(func=generate_run_map_command)
+    return parser
+
+
 def main(argv: list[str] | None = None) -> int:
-    parser = build_parser()
-    args = parser.parse_args(argv)
+    raw_args = list(sys.argv[1:] if argv is None else argv)
+    if raw_args[:1] == ["generate-run-map"]:
+        parser = build_generate_run_map_parser()
+        args = parser.parse_args(raw_args[1:])
+    else:
+        parser = build_parser()
+        args = parser.parse_args(raw_args)
     try:
         return args.func(args)
     except (ArtifactRunnerError, ContractError) as exc:

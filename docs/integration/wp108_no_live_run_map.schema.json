@@ -36,6 +36,7 @@
         "properties": {
           "case_id": { "type": "string", "minLength": 1 },
           "run_id": { "type": "string", "minLength": 1 },
+          "provider_call_id": { "type": "string" },
           "run_dir": { "type": "string", "minLength": 1 },
           "image_path": { "type": "string", "minLength": 1 },
           "request_json": { "type": "string", "minLength": 1 },

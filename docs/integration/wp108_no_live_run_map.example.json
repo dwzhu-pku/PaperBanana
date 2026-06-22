@@ -8,6 +8,7 @@
     {
       "case_id": "diagram-ref-1-contract",
       "run_id": "native_generate_4K_20260622_130000",
+      "provider_call_id": "swift-local-fixture-call",
       "run_dir": "results/native_runs/native_generate_4K_20260622_130000",
       "image_path": "results/native_runs/native_generate_4K_20260622_130000/generated_4K.png",
       "request_json": "results/native_runs/native_generate_4K_20260622_130000/request.json",

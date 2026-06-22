@@ -80,6 +80,27 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
   --no-path-check
 ```
 
+The same utility can generate the run map from native run-store records before
+checking it. The command requires explicit manifest-case to run-id mappings and
+an explicit artifact repository root; it reads SQLite/path metadata and provider
+audit JSONL only, then emits a no-live map and optional fixture-mode report:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
+  python -m utils.wp108_no_live_artifact_runner generate-run-map \
+  --manifest docs/integration/wp108_no_live_manifest.example.json \
+  --repo-root /path/to/PaperBanana \
+  --case-run diagram-ref-1-contract=native_generate_20260622_072111 \
+  --output /tmp/wp108-no-live-run-map.json \
+  --report /tmp/wp108-no-live-artifact-report.json \
+  --no-path-check
+```
+
+`provider_response_json` is included in generated maps only when the manifest
+explicitly lists that expected output. The current checked-in fixture manifest
+does not require provider-response JSON, so generated maps can validate the
+safer structural artifacts without reading optional provider-response payloads.
+
 The checked-in `docs/integration/wp108_no_live_run_map.example.json` is
 illustrative and points at artifact paths that are not committed to the
 repository. The CI-safe runner behavior is covered by

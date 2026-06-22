@@ -253,6 +253,44 @@ def _run_artifact_runner(manifest_path: Path, run_map_path: Path, report_path: P
     )
 
 
+def _run_generate_run_map(
+    *,
+    manifest_path: Path,
+    repo_root: Path,
+    output_path: Path,
+    report_path: Path | None = None,
+    case_run: str = "diagram-ref-1-contract=native_generate_4K_20260622_130000",
+    provider_audit: Path | None = None,
+) -> subprocess.CompletedProcess[str]:
+    command = [
+        sys.executable,
+        "-m",
+        "utils.wp108_no_live_artifact_runner",
+        "generate-run-map",
+        "--manifest",
+        str(manifest_path),
+        "--repo-root",
+        str(repo_root),
+        "--case-run",
+        case_run,
+        "--output",
+        str(output_path),
+        "--no-path-check",
+    ]
+    if provider_audit is not None:
+        command.extend(["--provider-audit", str(provider_audit)])
+    if report_path is not None:
+        command.extend(["--report", str(report_path)])
+    return subprocess.run(
+        command,
+        cwd=REPO_ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+
 def test_complete_synthetic_native_run_emits_fixture_passed_report(tmp_path):
     manifest_path, run_map_path, report_path = _make_synthetic_native_run(tmp_path)
 
@@ -348,3 +386,88 @@ def test_runner_source_does_not_import_provider_backed_evaluation_modules():
 
     for phrase in forbidden:
         assert phrase not in source
+
+
+def test_generate_run_map_from_native_run_store_then_runner_passes(tmp_path):
+    manifest_path, _, _ = _make_synthetic_native_run(tmp_path)
+    generated_run_map = tmp_path / "generated_run_map.json"
+    generated_report = tmp_path / "generated_report.json"
+
+    result = _run_generate_run_map(
+        manifest_path=manifest_path,
+        repo_root=tmp_path / "fixture_repo",
+        output_path=generated_run_map,
+        report_path=generated_report,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "publication_quality_claimed=false" in result.stdout
+    run_map = _load_json(generated_run_map)
+    case = run_map["cases"][0]
+    assert run_map["publication_quality_claimed"] is False
+    assert run_map["provider_scoring_used"] is False
+    assert run_map["live_provider_used"] is False
+    assert case["case_id"] == "diagram-ref-1-contract"
+    assert case["run_id"] == "native_generate_4K_20260622_130000"
+    assert case["provider_call_id"] == "swift-local-fixture-call"
+    assert Path(case["run_dir"]).exists()
+    assert Path(case["image_path"]).exists()
+    assert Path(case["provider_response_json"]).exists()
+
+    report = _load_json(generated_report)
+    assert report["publication_quality_claimed"] is False
+    assert report["summary"]["threshold_passed"] is False
+    assert report["case_results"][0]["status"] == "fixture_passed"
+
+
+def test_generate_run_map_requires_all_manifest_cases(tmp_path):
+    manifest_path, _, _ = _make_synthetic_native_run(tmp_path)
+
+    result = _run_generate_run_map(
+        manifest_path=manifest_path,
+        repo_root=tmp_path / "fixture_repo",
+        output_path=tmp_path / "generated_run_map.json",
+        case_run="not-in-manifest=native_generate_4K_20260622_130000",
+    )
+
+    assert result.returncode == 2
+    assert "missing manifest cases" in result.stderr
+    assert "unknown manifest cases" not in result.stderr
+
+
+def test_generate_run_map_finds_provider_audit_by_call_id(tmp_path):
+    manifest_path, _, _ = _make_synthetic_native_run(tmp_path)
+    provider_audit_dir = tmp_path / "fixture_repo" / "results" / "provider_audit"
+    for existing in provider_audit_dir.glob("*.jsonl"):
+        existing.unlink()
+    call_only_audit = tmp_path / "audits" / "custom_name.jsonl"
+    call_only_audit.parent.mkdir(parents=True, exist_ok=True)
+    call_only_audit.write_text(
+        json.dumps(
+            {
+                "event": "provider_call_finished",
+                "call_id": "swift-local-fixture-call",
+                "provider": "swift_local",
+                "success": True,
+            },
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    generated_run_map = tmp_path / "generated_run_map.json"
+    generated_report = tmp_path / "generated_report.json"
+
+    result = _run_generate_run_map(
+        manifest_path=manifest_path,
+        repo_root=tmp_path / "fixture_repo",
+        output_path=generated_run_map,
+        report_path=generated_report,
+        provider_audit=call_only_audit,
+    )
+
+    assert result.returncode == 0, result.stderr
+    run_map = _load_json(generated_run_map)
+    assert run_map["cases"][0]["provider_audit_jsonl"] == str(call_only_audit.resolve(strict=False))
+    report = _load_json(generated_report)
+    assert report["case_results"][0]["status"] == "fixture_passed"
