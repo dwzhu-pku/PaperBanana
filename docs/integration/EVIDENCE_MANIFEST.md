@@ -81,6 +81,7 @@ content, or raw provider payloads in shared evidence.
 | EV-20260622-010 | WP-105/T-105 | `7ce4f079f614` | Passed with limitation | Native macOS stack integrated onto the Python/security branch, reviewer-found route/audit gaps fixed, and full native/Python/Xcode 27 gate passed; evidence recorded in `docs/integration/evidence/20260622-065855_7ce4f079f614_WP-105-native-integrated-candidate.md`. |
 | EV-20260622-011 | WP-005/T-034/T-035 | `26adc4670944` | Passed with limitation | Portable CI workflows and native gate scripts added; clean temporary Python 3.12 suite and full local native/Python/Xcode 27 gate passed; evidence recorded in `docs/integration/evidence/20260622-070737_26adc4670944_WP-005-ci-portability.md`. |
 | EV-20260622-012 | WP-105/T-017/T-018/T-019 | `d43a6c8a9556` | Passed with limitation | Exact native-integrated branch head revalidated after the evidence/diff-hygiene cleanup; full native/Python/Xcode 27 gate passed with 153 Swift tests, 88 Python tests, and `codex-xcode27 proof`; evidence recorded in `docs/integration/evidence/20260622-091516_d43a6c8a9556_WP-105-exact-head-gate.md`. |
+| EV-20260622-013 | WP-007/T-020 | `1c7452754839` | Passed with limitation | Native sidebar/settings polish applied, Release build installed, 153 Swift tests passed, and polished Light/Dark screenshots captured; evidence recorded in `docs/integration/evidence/20260622-093954_1c7452754839_WP-007-native-visual-polish.md`. |
 
 ## Required Next Evidence
 
@@ -93,5 +94,5 @@ content, or raw provider payloads in shared evidence.
 | WP-102 | Optional real local/Ollama endpoint smoke if local-route support is promoted beyond mocked route coverage. |
 | WP-103 | Output-value comparison before claiming metaphor mode improves quality. |
 | WP-104 | Bounded live Gemini code-execution fixture and privacy/retention review before promoting agentic Critic beyond experimental opt-in. |
-| WP-007 | Light/Dark screenshots, keyboard navigation, VoiceOver, Reduce Motion, and Reduce Transparency review. |
+| WP-007 | Manual keyboard navigation, VoiceOver, Reduce Motion, Reduce Transparency, and Increased Contrast review. |
 | WP-007 | Release build/install proof through `./script/build_and_run.sh --release --install --no-open` if that distribution path remains in scope. |
