@@ -28,7 +28,7 @@ The public PaperBanana artifacts are the [Hugging Face paper page](https://huggi
 For provider choice, Ollama/local text routing, quota or billing errors, provider suspension, third-party relay/base URL setup, and API-key rotation, see [docs/SUPPORT.md](docs/SUPPORT.md).
 
 ## TODO List
-- [ ] Add support for using manually selected examples. Provide **a** user-friendly interface.
+- [x] Add support for using manually selected examples. Provide **a** user-friendly interface.
 - [ ] Upload code for generating statistical plots.
 - [ ] Upload code for improving existing diagrams based on style guideline.
 - [ ] Expand the reference set to support more areas beyond computer science.
@@ -39,6 +39,7 @@ This fork now treats the native Apple Silicon macOS app as the primary local wor
 
 The native app provides:
 - Prompt Studio for de novo figure generation.
+- Manual PaperBananaBench diagram example selection inside Prompt Studio for native prompt enrichment.
 - Refine Image for image-to-image modification and high-resolution rebuilds.
 - Artifact Library and Recovered Images views for generated, refined, and recovered output files.
 - Run Details and Provider Ledger views for provider-call visibility, raw-response recovery, output paths, timing, and failure states.
@@ -111,6 +112,8 @@ open /Applications/PaperBanana.app
 Use **Prompt Studio** for new figures and **Refine Image** for modifications or high-resolution rebuilds. Use **Run Details**, **Provider Ledger**, **Artifact Library**, and **Recovered Images** to inspect outputs and recover provider artifacts.
 
 For OpenAI-compatible local text endpoints, set `local_openai.base_url` and `local_openai.api_key`, then use `local/<model>` or `ollama/<model>` as `defaults.main_model_name`. Local and Ollama routes are text-route support only and are not a full image-generation backend, so keep `defaults.image_gen_model_name` on a supported image-capable provider.
+
+When `data/PaperBananaBench/diagram/ref.json` is present, Prompt Studio can attach up to 10 manually selected diagram examples to a native generation run. The app records those examples in `request.json`, generated metadata, and the provider prompt. PaperBanana does not download or unpack the benchmark automatically.
 
 For automation or CI, install without opening the app:
 

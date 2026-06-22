@@ -234,6 +234,84 @@ final class NativeImageGenerationStoreTests: XCTestCase {
     }
 
     @MainActor
+    func testGenerationRunRecordsManualReferenceExamplesInArtifactsAndProviderPrompt() async throws {
+        let repoRoot = FileManager.default.temporaryDirectory
+            .appendingPathComponent("PaperBananaManualReferenceGeneration-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: repoRoot, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+
+        let reference = ReferenceExampleSelection(
+            id: "diagram_042",
+            visualIntent: "Show a planner, visualizer, and critic loop.",
+            contentSummary: "Agent loop with retrieval-guided planning and iterative critique.",
+            imagePath: "images/diagram_042.png"
+        )
+        let store = NativeImageGenerationStore(
+            stallWarningInterval: 60,
+            hardTimeoutInterval: 120,
+            providerClientFactory: ProviderClientFactory(
+                googleClient: MockNativeProviderClient(
+                    imageData: Self.tinyPNGData,
+                    text: "Mock native image generated with references.",
+                    usageMetadata: ["totalTokenCount": "55"]
+                )
+            )
+        )
+
+        store.start(
+            request: NativeImageGenerationRequest(
+                prompt: "Create a native PaperBanana diagram with manual references.",
+                model: .nanoBananaPro,
+                resolution: "2K",
+                aspectRatio: "16:9",
+                task: "scientific diagram",
+                settings: PaperBananaSettingsSnapshot(
+                    repoPath: repoRoot.path,
+                    serverPort: 7860,
+                    defaultImageModel: .nanoBananaPro,
+                    codexModel: "gpt-5.5",
+                    codexReasoning: "xhigh",
+                    googleAPIKey: "test-google-key",
+                    openRouterAPIKey: ""
+                ),
+                referenceExamples: [reference]
+            ),
+            onCompletion: { _ in }
+        )
+
+        try await Self.waitForGenerationStore(store) {
+            if case .complete = $0.runState { return true }
+            return false
+        }
+
+        let requestURL = try XCTUnwrap(store.requestURL)
+        let providerRequestURL = try XCTUnwrap(store.providerRequestURL)
+        let metadataURL = try XCTUnwrap(store.metadataURL)
+
+        let requestPayload = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: requestURL)) as? [String: Any])
+        XCTAssertEqual(requestPayload["source_prompt"] as? String, "Create a native PaperBanana diagram with manual references.")
+        XCTAssertEqual(requestPayload["reference_mode"] as? String, "manual_native_prompt_enrichment")
+        XCTAssertEqual(requestPayload["reference_example_count"] as? Int, 1)
+        XCTAssertTrue((requestPayload["prompt"] as? String ?? "").contains("Selected Reference Examples"))
+        let requestReferences = try XCTUnwrap(requestPayload["reference_examples"] as? [[String: Any]])
+        XCTAssertEqual(requestReferences.first?["id"] as? String, "diagram_042")
+        XCTAssertEqual(requestReferences.first?["image_path"] as? String, "images/diagram_042.png")
+
+        let providerPayload = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: providerRequestURL)) as? [String: Any])
+        let providerPrompt = try XCTUnwrap(providerPayload["prompt"] as? String)
+        XCTAssertTrue(providerPrompt.contains("Selected Reference Examples"))
+        XCTAssertTrue(providerPrompt.contains("ID: diagram_042"))
+        XCTAssertTrue(providerPrompt.contains("Image path: images/diagram_042.png"))
+
+        let metadata = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: metadataURL)) as? [String: Any])
+        XCTAssertEqual(metadata["source_prompt"] as? String, "Create a native PaperBanana diagram with manual references.")
+        XCTAssertEqual(metadata["reference_mode"] as? String, "manual_native_prompt_enrichment")
+        XCTAssertEqual(metadata["reference_example_count"] as? Int, 1)
+        let metadataReferences = try XCTUnwrap(metadata["reference_examples"] as? [[String: Any]])
+        XCTAssertEqual(metadataReferences.first?["id"] as? String, "diagram_042")
+    }
+
+    @MainActor
     func testNativeGoogleGenerationWritesOutputLedgerAndProviderAuditWithoutPython() async throws {
         let repoRoot = FileManager.default.temporaryDirectory
             .appendingPathComponent("PaperBananaNativeGoogleSuccess-\(UUID().uuidString)", isDirectory: true)

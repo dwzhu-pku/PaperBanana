@@ -42,6 +42,9 @@ as the target design.
 - Search/scope controls must not overlap, wrap single words vertically, or force the sidebar/detail split out of bounds.
 - The main shell should read as a dense desktop production app: compact activity rail, calm navigation pane, strong inspector/content separation, no web-wrapper chrome, no marketing panels, no generic dashboard cards, and no oversized empty decoration.
 - Prompt Studio must not restore the discarded `controls`/`resultPane` split, the old `520/640` control-column frame, or an unframed output pane.
+- Prompt Studio reference examples must stay inside the right-side run panel as compact native configuration, not a gallery, modal-first flow, or new sidebar destination.
+- Manual example rows must tolerate long benchmark ids, captions, and methodology summaries inside the 360-440 px run panel without horizontal scrolling or clipped controls.
+- Selected manual references must be visibly counted before generation and must not compete with the primary Generate action.
 - Setup, Run, and Review workspaces must expose the same PaperBanana readiness
   facts: configured path, generation key state, backend validity, and
   deterministic Codex fallback behavior.
