@@ -78,6 +78,9 @@ M1.
   explicitly selected by local workflow.
 - Hosted execution must fail closed before model-generated Python reaches
   `exec` unless a reviewed sandbox is introduced later.
+- The unsafe compatibility override is intentionally explicit:
+  `PAPERBANANA_ENABLE_UNSAFE_PLOT_CODE_EXECUTION=1`. Operators can force a
+  deny policy everywhere with `PAPERBANANA_DISABLE_PLOT_CODE_EXECUTION=1`.
 - Documentation must not advertise hosted plot execution until that policy is
   implemented and validated.
 

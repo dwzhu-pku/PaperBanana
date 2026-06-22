@@ -97,6 +97,13 @@ python app.py
 
 The Gradio **Figure Size** setting maps `1-3cm` and `4-6cm` to `1k`, `7-9cm` and `10-13cm` to `2k`, and `14-17cm` to `4k` for Gemini and OpenRouter image-generation calls. OpenAI `gpt-image` requests continue to use their existing fixed-size API path.
 
+Legacy plot mode renders model-generated Matplotlib code only in trusted local
+compatibility contexts. Shared hosted deployments such as Hugging Face Spaces
+disable plot-code execution before Python reaches `exec` unless the operator
+explicitly sets `PAPERBANANA_ENABLE_UNSAFE_PLOT_CODE_EXECUTION=1` after
+accepting that no sandbox is provided. Operators can force-disable plot-code
+execution in any environment with `PAPERBANANA_DISABLE_PLOT_CODE_EXECUTION=1`.
+
 #### Option 2: Interactive Demo (Streamlit)
 The easiest way to launch PaperBanana is via the interactive Streamlit demo:
 ```bash
