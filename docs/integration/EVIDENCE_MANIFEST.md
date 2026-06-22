@@ -82,6 +82,7 @@ content, or raw provider payloads in shared evidence.
 | EV-20260622-011 | WP-005/T-034/T-035 | `26adc4670944` | Passed with limitation | Portable CI workflows and native gate scripts added; clean temporary Python 3.12 suite and full local native/Python/Xcode 27 gate passed; evidence recorded in `docs/integration/evidence/20260622-070737_26adc4670944_WP-005-ci-portability.md`. |
 | EV-20260622-012 | WP-105/T-017/T-018/T-019 | `d43a6c8a9556` | Passed with limitation | Exact native-integrated branch head revalidated after the evidence/diff-hygiene cleanup; full native/Python/Xcode 27 gate passed with 153 Swift tests, 88 Python tests, and `codex-xcode27 proof`; evidence recorded in `docs/integration/evidence/20260622-091516_d43a6c8a9556_WP-105-exact-head-gate.md`. |
 | EV-20260622-013 | WP-007/T-020 | `1c7452754839` | Passed with limitation | Native sidebar/settings polish applied, Release build installed, 153 Swift tests passed, and polished Light/Dark screenshots captured; evidence recorded in `docs/integration/evidence/20260622-093954_1c7452754839_WP-007-native-visual-polish.md`. |
+| EV-20260622-014 | WP-007/T-021 | `14cc59e7ee57` | Passed with limitation | Native accessibility landmarks improved for workspace search fields and Artifact Library cards, 154 Swift tests passed, and local AX spot checks confirmed improved search/card exposure while the native Table focus path remains an unlabeled `AXOutline`; evidence recorded in `docs/integration/evidence/20260622-095249_14cc59e7ee57_WP-007-native-accessibility-landmarks.md`. |
 
 ## Required Next Evidence
 
@@ -94,5 +95,7 @@ content, or raw provider payloads in shared evidence.
 | WP-102 | Optional real local/Ollama endpoint smoke if local-route support is promoted beyond mocked route coverage. |
 | WP-103 | Output-value comparison before claiming metaphor mode improves quality. |
 | WP-104 | Bounded live Gemini code-execution fixture and privacy/retention review before promoting agentic Critic beyond experimental opt-in. |
-| WP-007 | Manual keyboard navigation, VoiceOver, Reduce Motion, Reduce Transparency, and Increased Contrast review. |
+| WP-007 | Full manual keyboard navigation and VoiceOver traversal, including native Table focus naming, Settings, reference rows, artifact grid context menus, disabled states, and preflight sheets. |
+| WP-007 | Reduce Motion, Reduce Transparency, Increased Contrast, Increased Text Size, hover/focus, and inactive-window visual review. |
+| WP-007 | Additional Settings and Light Mode parity polish before full visual signoff. |
 | WP-007 | Release build/install proof through `./script/build_and_run.sh --release --install --no-open` if that distribution path remains in scope. |
