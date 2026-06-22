@@ -36,6 +36,7 @@ import os
 
 import yaml
 from pathlib import Path
+from utils import provider_audit
 
 # Load config
 config_path = Path(__file__).parent.parent / "configs" / "model_config.yaml"
@@ -196,6 +197,17 @@ async def call_gemini_with_retry_async(
 
     current_contents = contents
     for attempt in range(max_attempts):
+        modality = "image" if ("nanoviz" in model_name or "image" in model_name) else "text"
+        call_id = provider_audit.start_call(
+            provider="gemini",
+            model=model_name,
+            modality=modality,
+            context=error_context,
+            attempt=attempt + 1,
+            max_attempts=max_attempts,
+            contents=current_contents,
+            config=config,
+        )
         try:
             # Use global client
             client = gemini_client
@@ -212,21 +224,49 @@ async def call_gemini_with_retry_async(
                 or "image" in model_name
             ):
                 raw_response_list = []
+                artifact_paths = []
                 if not response.candidates or not response.candidates[0].content.parts:
+                    provider_audit.finish_call(
+                        call_id=call_id,
+                        provider="gemini",
+                        model=model_name,
+                        modality=modality,
+                        context=error_context,
+                        attempt=attempt + 1,
+                        success=False,
+                        message="No image parts returned.",
+                    )
                     print(
                         f"[Warning]: Failed to generate image, retrying in {retry_delay} seconds..."
                     )
                     await asyncio.sleep(retry_delay)
                     continue
 
-                # In this mode, we can only have one candidate
                 for part in response.candidates[0].content.parts:
-                    if part.inline_data:
-                        # Append base64 encoded image data to raw_response_list
+                    if getattr(part, "inline_data", None):
+                        artifact_path = provider_audit.save_image_bytes(
+                            call_id=call_id,
+                            provider="gemini",
+                            model=model_name,
+                            image_bytes=part.inline_data.data,
+                            suffix="png",
+                        )
+                        artifact_paths.append(str(artifact_path))
                         raw_response_list.append(
                             base64.b64encode(part.inline_data.data).decode("utf-8")
                         )
-                        break
+                provider_audit.finish_call(
+                    call_id=call_id,
+                    provider="gemini",
+                    model=model_name,
+                    modality=modality,
+                    context=error_context,
+                    attempt=attempt + 1,
+                    success=bool(raw_response_list),
+                    response_count=len(raw_response_list),
+                    artifacts=artifact_paths,
+                    message="Image response received." if raw_response_list else "No inline image data found.",
+                )
 
             # Otherwise, for text generation models
             else:
@@ -236,12 +276,32 @@ async def call_gemini_with_retry_async(
                     for part in candidate.content.parts
                     if part.text is not None
                 ]
+                provider_audit.finish_call(
+                    call_id=call_id,
+                    provider="gemini",
+                    model=model_name,
+                    modality=modality,
+                    context=error_context,
+                    attempt=attempt + 1,
+                    success=bool(raw_response_list),
+                    response_count=len(raw_response_list),
+                    message="Text response received." if raw_response_list else "No text returned.",
+                )
             result_list.extend([r for r in raw_response_list if r and r.strip() != ""])
             if len(result_list) >= target_candidate_count:
                 result_list = result_list[:target_candidate_count]
                 break
 
         except Exception as e:
+            provider_audit.fail_call(
+                call_id=call_id,
+                provider="gemini",
+                model=model_name,
+                modality=modality,
+                context=error_context,
+                attempt=attempt + 1,
+                error=e,
+            )
             context_msg = f" for {error_context}" if error_context else ""
             
             # Exponential backoff (capped at 30s)
@@ -624,19 +684,67 @@ async def call_openai_image_generation_with_retry_async(
     })
 
     for attempt in range(max_attempts):
+        call_id = provider_audit.start_call(
+            provider="openai",
+            model=model_name,
+            modality="image",
+            context=error_context,
+            attempt=attempt + 1,
+            max_attempts=max_attempts,
+            contents=[{"type": "text", "text": prompt}],
+            config=type("ImageConfigSummary", (), gen_params)(),
+        )
         try:
             response = await openai_client.images.generate(**gen_params)
             
             # OpenAI images.generate returns a list of images in response.data
             if response.data and response.data[0].b64_json:
+                artifact_path = provider_audit.save_base64_image(
+                    call_id=call_id,
+                    provider="openai",
+                    model=model_name,
+                    base64_image=response.data[0].b64_json,
+                    suffix="png",
+                )
+                provider_audit.finish_call(
+                    call_id=call_id,
+                    provider="openai",
+                    model=model_name,
+                    modality="image",
+                    context=error_context,
+                    attempt=attempt + 1,
+                    success=True,
+                    response_count=1,
+                    artifacts=[str(artifact_path)],
+                    message="Image response received.",
+                )
                 return [response.data[0].b64_json]
             else:
+                provider_audit.finish_call(
+                    call_id=call_id,
+                    provider="openai",
+                    model=model_name,
+                    modality="image",
+                    context=error_context,
+                    attempt=attempt + 1,
+                    success=False,
+                    message="No image data returned.",
+                )
                 print(f"[Warning]: Failed to generate image via OpenAI, no data returned.")
                 if attempt < max_attempts - 1:
                     await asyncio.sleep(retry_delay)
                 continue
 
         except Exception as e:
+            provider_audit.fail_call(
+                call_id=call_id,
+                provider="openai",
+                model=model_name,
+                modality="image",
+                context=error_context,
+                attempt=attempt + 1,
+                error=e,
+            )
             context_msg = f" for {error_context}" if error_context else ""
             print(
                 f"Attempt {attempt + 1} for OpenAI image generation model {model_name} failed{context_msg}: {e}. Retrying in {retry_delay} seconds..."
@@ -784,6 +892,19 @@ async def call_openrouter_image_generation_with_retry_async(
     }
 
     for attempt in range(max_attempts):
+        call_id = provider_audit.start_call(
+            provider="openrouter",
+            model=model_name,
+            modality="image",
+            context=error_context,
+            attempt=attempt + 1,
+            max_attempts=max_attempts,
+            contents=contents,
+            config=type("OpenRouterImageConfigSummary", (), {
+                "temperature": temperature,
+                "response_modalities": ["image", "text"],
+            })(),
+        )
         try:
             async with httpx.AsyncClient(timeout=300) as client:
                 resp = await client.post(
@@ -796,6 +917,16 @@ async def call_openrouter_image_generation_with_retry_async(
 
             choices = data.get("choices", [])
             if not choices:
+                provider_audit.finish_call(
+                    call_id=call_id,
+                    provider="openrouter",
+                    model=model_name,
+                    modality="image",
+                    context=error_context,
+                    attempt=attempt + 1,
+                    success=False,
+                    message="No choices returned.",
+                )
                 print(f"[Warning]: OpenRouter image generation returned no choices, retrying...")
                 if attempt < max_attempts - 1:
                     await asyncio.sleep(retry_delay)
@@ -810,6 +941,25 @@ async def call_openrouter_image_generation_with_retry_async(
                     if isinstance(part, dict) and "inline_data" in part:
                         b64_data = part["inline_data"].get("data", "")
                         if b64_data:
+                            artifact_path = provider_audit.save_base64_image(
+                                call_id=call_id,
+                                provider="openrouter",
+                                model=model_name,
+                                base64_image=b64_data,
+                                suffix="png",
+                            )
+                            provider_audit.finish_call(
+                                call_id=call_id,
+                                provider="openrouter",
+                                model=model_name,
+                                modality="image",
+                                context=error_context,
+                                attempt=attempt + 1,
+                                success=True,
+                                response_count=1,
+                                artifacts=[str(artifact_path)],
+                                message="Inline image response received.",
+                            )
                             return [b64_data]
 
             # Try extracting from images field (OpenRouter standard)
@@ -825,6 +975,25 @@ async def call_openrouter_image_generation_with_retry_async(
                 else:
                     b64_data = data_url
                 if b64_data:
+                    artifact_path = provider_audit.save_base64_image(
+                        call_id=call_id,
+                        provider="openrouter",
+                        model=model_name,
+                        base64_image=b64_data,
+                        suffix="png",
+                    )
+                    provider_audit.finish_call(
+                        call_id=call_id,
+                        provider="openrouter",
+                        model=model_name,
+                        modality="image",
+                        context=error_context,
+                        attempt=attempt + 1,
+                        success=True,
+                        response_count=1,
+                        artifacts=[str(artifact_path)],
+                        message="Image URL response received.",
+                    )
                     return [b64_data]
 
             # Try extracting base64 from text content
@@ -832,14 +1001,52 @@ async def call_openrouter_image_generation_with_retry_async(
                 if "," in content:
                     b64_data = content.split(",", 1)[1]
                     if b64_data:
+                        artifact_path = provider_audit.save_base64_image(
+                            call_id=call_id,
+                            provider="openrouter",
+                            model=model_name,
+                            base64_image=b64_data,
+                            suffix="png",
+                        )
+                        provider_audit.finish_call(
+                            call_id=call_id,
+                            provider="openrouter",
+                            model=model_name,
+                            modality="image",
+                            context=error_context,
+                            attempt=attempt + 1,
+                            success=True,
+                            response_count=1,
+                            artifacts=[str(artifact_path)],
+                            message="Data URL text image response received.",
+                        )
                         return [b64_data]
 
+            provider_audit.finish_call(
+                call_id=call_id,
+                provider="openrouter",
+                model=model_name,
+                modality="image",
+                context=error_context,
+                attempt=attempt + 1,
+                success=False,
+                message="No image data returned.",
+            )
             print(f"[Warning]: OpenRouter image generation returned no images, retrying...")
             if attempt < max_attempts - 1:
                 await asyncio.sleep(retry_delay)
             continue
 
         except httpx.HTTPStatusError as e:
+            provider_audit.fail_call(
+                call_id=call_id,
+                provider="openrouter",
+                model=model_name,
+                modality="image",
+                context=error_context,
+                attempt=attempt + 1,
+                error=f"HTTP {e.response.status_code} - {e.response.text}",
+            )
             context_msg = f" for {error_context}" if error_context else ""
             current_delay = min(retry_delay * (2 ** attempt), 60)
             print(
@@ -853,6 +1060,15 @@ async def call_openrouter_image_generation_with_retry_async(
                 print(f"Error: All {max_attempts} attempts failed{context_msg}")
                 return ["Error"]
         except Exception as e:
+            provider_audit.fail_call(
+                call_id=call_id,
+                provider="openrouter",
+                model=model_name,
+                modality="image",
+                context=error_context,
+                attempt=attempt + 1,
+                error=e,
+            )
             context_msg = f" for {error_context}" if error_context else ""
             current_delay = min(retry_delay * (2 ** attempt), 60)
             print(
