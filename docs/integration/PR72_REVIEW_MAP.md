@@ -499,10 +499,15 @@ Current evidence:
 - `EV-20260622-005`: hosted plot-code execution containment.
 - `EV-20260622-010`: integrated native/Python gate and provider audit fixes.
 - `EV-20260622-011`: clean temporary Python 3.12 suite and portable CI.
+- `EV-20260622-040`: sanitized localhost Gradio served credential smoke
+  confirmed no fake startup key sentinel values in `/config`, no `Apply Keys`,
+  no provider API-key textbox labels, and two independent local clients
+  exercising a non-provider endpoint.
 
 Open gaps:
 
-- Full hosted two-session proof remains required before public hosted release.
+- Real hosted/Hugging Face two-session proof remains required before public
+  hosted release.
 - Hosted deployment negative test remains required before public hosted claims.
 
 ### 8. App Intents, Spotlight, Icons, And Platform Integration
@@ -602,7 +607,7 @@ README.md
 | Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. `EV-20260622-035` covers the exact current branch head `f360dc6d5ccd`; a final release-candidate rerun remains required only if the frozen release-candidate SHA differs or later product code changes land. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings, Settings adaptive screenshots are covered by `EV-20260622-022`, and bounded Settings inactive-window screenshots are covered by `EV-20260622-032`. Increased Text Size and broader full-app adaptive states remain open. |
 | Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`, live no-spend preflight plus non-image Artifact disabled-action AX proof is covered by `EV-20260622-033`, and live reference-row selectable/selected/search/cap AX proof is covered by `EV-20260622-034`. Full manual keyboard/VoiceOver traversal remains open. |
-| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, real-data search/filter plus 10-reference cap persistence, focused no-spend generation/refinement store provenance tests, and focused no-live cancellation/timeout/stale-run recovery tests are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
+| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, real-data search/filter plus 10-reference cap persistence, focused no-spend generation/refinement store provenance tests, focused no-live cancellation/timeout/stale-run recovery tests, and sanitized localhost served credential smoke are covered. Live provider, broader secret/artifact scan, and real hosted session proof remain open. |
 | Release readiness | Not complete | Current-head install provenance is covered by `EV-20260622-035`, draft release-manifest consistency is covered by `EV-20260622-036`, and local app-bundle rollback preflight is covered by `EV-20260622-037`; provider E2E, distinct prior-version upgrade proof, full user-data migration, hosted rollback, final frozen-SHA manifest consistency, quality benchmark, notarization/distribution decision, and upstream maintainer acceptance remain open. |
 
 ## Required Follow-Up Before Full Signoff
@@ -632,8 +637,9 @@ README.md
   no-spend generation/refinement store artifact and provenance behavior only;
   `EV-20260622-039` covers mocked/no-live cancellation, timeout, and stale-run
   recovery only.
-- Complete hosted two-session/negative-path validation before any public hosted
-  claim.
+- Complete real hosted two-session/negative-path validation before any public
+  hosted claim. `EV-20260622-040` is localhost-only served credential smoke,
+  not public hosted deployment evidence.
 - Produce final frozen-SHA release manifest consistency, install/upgrade/
   rollback proof, and upstream review handoff before calling the project
   complete. `EV-20260622-036` covers only the draft current-candidate manifest,

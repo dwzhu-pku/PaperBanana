@@ -64,7 +64,7 @@ channel approval, upgrade proof, or rollback proof.
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
 | `local/<model>` and `ollama/<model>` text routes | Documented and covered by mocked route/docs tests | `EV-20260622-007` and full Python suites | Optional real local/Ollama endpoint smoke remains open if promoted beyond mocked support |
 | Foundation Models | Unsupported for release | `D-05`, `D-13`, and provider-support docs | Do not promote as functional without implementation and tests |
-| Hosted Gradio/Space generation | Not release-verified | Credential/plot policy evidence exists for local code paths | Hosted two-session, hosted negative-path, deployed-SHA, and rollback proof remain open |
+| Hosted Gradio/Space generation | Not release-verified | Credential/plot policy evidence exists for local code paths; sanitized localhost served credential smoke in `EV-20260622-040` | Real hosted two-session, hosted negative-path, deployed-SHA, provider generation, and rollback proof remain open |
 
 Per `D-05`, only routes with final smoke evidence can be described as supported
 release routes. Routes without final smoke remain experimental, mocked, local
@@ -99,8 +99,10 @@ state is verified.
 - Approved live provider/fallback native E2E with non-private fixtures, spend
   limit, redacted request/metadata/provider-artifact review, and
   failure/recovery proof.
-- Hosted two-session proof and hosted negative-path validation before any
-  public hosted-generation claim.
+- Hosted two-session proof on the real hosted surface, hosted negative-path
+  validation, deployed SHA, runtime-log review, and hosted rollback before any
+  public hosted-generation claim. `EV-20260622-040` is localhost-only
+  credential/session smoke evidence.
 - True install/upgrade/rollback proof and release manifest consistency on the
   final frozen release SHA.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
