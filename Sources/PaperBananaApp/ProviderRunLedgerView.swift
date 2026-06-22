@@ -169,63 +169,119 @@ struct ProviderRunLedgerView: View {
                 .padding(AppDesignSystem.Spacing.lg)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                Table(filteredCalls, selection: $store.selectedCallID) {
-                    TableColumn("Status") { call in
-                        ProviderRunStatusLabel(status: call.status)
-                    }
-                    .width(min: 130, ideal: 150)
-
-                    TableColumn("Time") { call in
-                        Text(call.displayDate)
-                            .lineLimit(1)
-                    }
-                    .width(min: 130, ideal: 150)
-
-                    TableColumn("Model") { call in
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(call.shortModel)
-                                .lineLimit(1)
-                            Text(call.provider.isEmpty ? "Unknown provider" : call.provider)
-                                .font(AppDesignSystem.Typography.caption)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                        }
-                    }
-                    .width(min: 170, ideal: 220)
-
-                    TableColumn("Run") { call in
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(call.runID.isEmpty ? "No run ID" : call.runID)
-                                .lineLimit(1)
-                            Text(call.callID)
-                                .font(.system(.caption, design: .monospaced))
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                        }
-                    }
-                    .width(min: 190, ideal: 260)
-
-                    TableColumn("Artifacts") { call in
-                        Text("\(call.artifactURLs.count) saved, \(call.nativeArtifactURLs.count) native, \(call.rawArtifactURLs.count) raw")
-                            .lineLimit(1)
-                    }
-                    .width(min: 160, ideal: 190)
-
-                    TableColumn("Usage") { call in
-                        Text(call.usageSummary)
-                            .lineLimit(1)
-                    }
-                    .width(min: 150, ideal: 220)
-                }
-                .accessibilityLabel("Provider call ledger")
-                .accessibilityValue("\(filteredCalls.count) provider calls shown")
-                .accessibilityHint("Use the arrow keys to select a provider call and review its details.")
-                .accessibilityIdentifier("provider-run-ledger-table")
+                ledgerTable
             }
         }
         .onChange(of: filteredCalls) { _ in
             reconcileSelection()
         }
+    }
+
+    private var ledgerTable: some View {
+        VStack(spacing: 0) {
+            Table(filteredCalls, selection: $store.selectedCallID) {
+                TableColumn("Status") { call in
+                    ProviderRunStatusLabel(status: call.status)
+                }
+                .width(min: 130, ideal: 150)
+
+                TableColumn("Time") { call in
+                    Text(call.displayDate)
+                        .lineLimit(1)
+                }
+                .width(min: 130, ideal: 150)
+
+                TableColumn("Model") { call in
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(call.shortModel)
+                            .lineLimit(1)
+                        Text(call.provider.isEmpty ? "Unknown provider" : call.provider)
+                            .font(AppDesignSystem.Typography.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
+                }
+                .width(min: 170, ideal: 220)
+
+                TableColumn("Run") { call in
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(call.runID.isEmpty ? "No run ID" : call.runID)
+                            .lineLimit(1)
+                        Text(call.callID)
+                            .font(.system(.caption, design: .monospaced))
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
+                }
+                .width(min: 190, ideal: 260)
+
+                TableColumn("Artifacts") { call in
+                    Text("\(call.artifactURLs.count) saved, \(call.nativeArtifactURLs.count) native, \(call.rawArtifactURLs.count) raw")
+                        .lineLimit(1)
+                }
+                .width(min: 160, ideal: 190)
+
+                TableColumn("Usage") { call in
+                    Text(call.usageSummary)
+                        .lineLimit(1)
+                }
+                .width(min: 150, ideal: 220)
+            }
+            .accessibilityLabel("Provider call ledger")
+            .accessibilityValue("\(filteredCalls.count) provider calls shown")
+            .accessibilityHint("Use the arrow keys to select a provider call and review its details.")
+            .accessibilityIdentifier("provider-run-ledger-table")
+            .accessibilityChildren {
+                ForEach(filteredCalls) { call in
+                    Text(accessibilityLabel(for: call))
+                        .accessibilityLabel(accessibilityLabel(for: call))
+                        .accessibilityValue(accessibilityValue(for: call))
+                        .accessibilityAddTraits(call.id == store.selectedCallID ? [.isSelected] : [])
+                }
+            }
+
+            Divider()
+
+            NativeTableSelectionSummary(
+                title: "Selected provider call",
+                value: selectedCallSummary,
+                systemImage: "arrow.up.and.down.and.arrow.left.and.right",
+                identifier: "provider-run-ledger-table-selection-summary"
+            )
+        }
+    }
+
+    private var selectedLedgerCall: ProviderRunLedgerCall? {
+        guard let selectedCallID = store.selectedCallID else { return nil }
+        return filteredCalls.first { $0.id == selectedCallID }
+    }
+
+    private var selectedCallSummary: String {
+        guard let selectedLedgerCall else {
+            return filteredCalls.isEmpty ? "No provider calls available." : "No provider call selected."
+        }
+        return accessibilityValue(for: selectedLedgerCall)
+    }
+
+    private func accessibilityLabel(for call: ProviderRunLedgerCall) -> String {
+        "\(call.shortModel), \(call.status.label)"
+    }
+
+    private func accessibilityValue(for call: ProviderRunLedgerCall) -> String {
+        [
+            "Provider \(call.provider.isEmpty ? "Unknown" : call.provider)",
+            "Run \(call.runID.isEmpty ? "None" : call.runID)",
+            "Call \(call.callID)",
+            "Status \(call.status.label)",
+            "Updated \(call.displayDate)",
+            "\(call.artifactURLs.count) saved artifacts",
+            "\(call.nativeArtifactURLs.count) native artifacts",
+            "\(call.rawArtifactURLs.count) raw artifacts",
+            "Usage \(call.usageSummary)",
+            call.needsAttention ? "Needs attention" : nil
+        ]
+        .compactMap { $0 }
+        .joined(separator: ". ")
     }
 
     private func refresh() {

@@ -148,6 +148,37 @@ struct WorkbenchStatusPill: View {
     }
 }
 
+struct NativeTableSelectionSummary: View {
+    let title: String
+    let value: String
+    let systemImage: String
+    let identifier: String
+
+    var body: some View {
+        HStack(spacing: AppDesignSystem.Spacing.sm) {
+            Label(title, systemImage: systemImage)
+                .font(AppDesignSystem.Typography.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            Text(value)
+                .font(AppDesignSystem.Typography.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .truncationMode(.middle)
+                .textSelection(.enabled)
+
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, AppDesignSystem.Spacing.md)
+        .padding(.vertical, AppDesignSystem.Spacing.xs)
+        .background(AppDesignSystem.Surfaces.panel)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(title)
+        .accessibilityValue(value)
+        .accessibilityIdentifier(identifier)
+    }
+}
+
 struct PaperBananaReadinessPanel: View {
     let snapshot: PaperBananaReadinessSnapshot
     let title: String

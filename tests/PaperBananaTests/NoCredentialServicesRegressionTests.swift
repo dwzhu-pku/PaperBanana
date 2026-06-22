@@ -269,13 +269,29 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ArtifactLibraryPreviewComponents.swift"),
             encoding: .utf8
         )
+        let workbench = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/WorkbenchComponents.swift"),
+            encoding: .utf8
+        )
 
         XCTAssertTrue(scopeStrip.contains(".accessibilityIdentifier(searchAccessibilityIdentifier)"))
         XCTAssertTrue(scopeStrip.contains(".accessibilityValue(searchAccessibilityValue)"))
         XCTAssertTrue(runList.contains(#".accessibilityIdentifier("run-details-table")"#))
         XCTAssertTrue(runList.contains(#".accessibilityHint("Use the arrow keys to select a run and review its details.")"#))
+        XCTAssertTrue(runList.contains(".accessibilityChildren"))
+        XCTAssertTrue(runList.contains(#"identifier: "run-details-table-selection-summary""#))
+        XCTAssertTrue(runList.contains(#"title: "Selected run""#))
         XCTAssertTrue(ledger.contains(#".accessibilityIdentifier("provider-run-ledger-table")"#))
         XCTAssertTrue(ledger.contains(#".accessibilityHint("Use the arrow keys to select a provider call and review its details.")"#))
+        XCTAssertTrue(ledger.contains(".accessibilityChildren"))
+        XCTAssertTrue(ledger.contains(#"identifier: "provider-run-ledger-table-selection-summary""#))
+        XCTAssertTrue(ledger.contains(#"title: "Selected provider call""#))
+        XCTAssertTrue(
+            workbench.contains("struct NativeTableSelectionSummary") &&
+                workbench.contains(".accessibilityLabel(title)") &&
+                workbench.contains(".accessibilityValue(value)"),
+            "Native tables should expose a shared selected-row summary that assistive technology can read when AppKit's AXOutline focus label is too terse."
+        )
         XCTAssertTrue(artifactLibrary.contains(#".accessibilityIdentifier("artifact-grid")"#))
         XCTAssertTrue(artifactLibrary.contains(#".accessibilityIdentifier("artifact-card-\(artifact.relativePath)")"#))
         XCTAssertTrue(artifactLibrary.contains(#".buttonStyle(.plain)"#))
