@@ -34,15 +34,19 @@ bounded live or reviewer-scored benchmark.
 | `docs/integration/wp108_no_live_manifest.schema.json` | Reader-facing schema for the fixed case manifest. |
 | `docs/integration/wp108_no_live_report.schema.json` | Reader-facing schema for benchmark reports. |
 | `docs/integration/wp108_human_review_packet.schema.json` | Reader-facing schema for blank human-review score packets. |
+| `docs/integration/wp108_quality_decision.schema.json` | Reader-facing schema for deterministic quality go/no-go decision reports over completed human-review reports. |
 | `docs/integration/wp108_no_live_manifest.example.json` | Example no-live manifest using non-private PaperBananaBench references. |
 | `docs/integration/wp108_human_review_packet.example.json` | Example blank human-review packet shape. |
+| `docs/integration/wp108_quality_decision.example.json` | Example quality decision report shape with `publication_quality_claimed: false`. |
 | `docs/integration/wp108_no_live_run_map.schema.json` | Reader-facing schema for mapping manifest cases to already-created native run artifacts. |
 | `docs/integration/wp108_no_live_run_map.example.json` | Example run-map shape for native output, request, metadata, provider-audit, and run-store artifacts. |
 | `docs/integration/wp108_no_live_report.fixture.json` | Example fixture-mode report that makes no quality claim. |
 | `utils/wp108_benchmark_contract.py` | Pure-stdlib CLI validator for manifest/report pairs. |
 | `utils/wp108_human_review_packet.py` | Pure-stdlib CLI that prepares blank digest-bound human-review score packets. |
+| `utils/wp108_quality_decision.py` | Pure-stdlib CLI that turns a completed human-review report into an auditable go/no-go decision report. |
 | `utils/wp108_no_live_artifact_runner.py` | Pure-stdlib CLI runner that checks no-live native artifact completeness and emits a fixture-mode report. |
 | `tests/test_wp108_human_review_packet.py` | CI-safe packet preparation and validation coverage. |
+| `tests/test_wp108_quality_decision.py` | CI-safe quality decision and no-go coverage using synthetic completed human-review reports. |
 | `tests/test_wp108_no_live_artifact_runner.py` | CI-safe artifact-runner coverage using synthetic native artifacts. |
 
 ## Validation
@@ -189,3 +193,49 @@ Human-review reports with scores must include `scoring_protocol`,
 `score_source`; the report validator rejects scored human-review reports that
 lack that provenance. This prepares the workflow for real reviewer scoring but
 still does not replace WP-108's final scored benchmark run.
+
+## Quality Decision Reports
+
+Once reviewers have completed a `human_review` report, create an auditable
+decision report:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
+  python -m utils.wp108_quality_decision decide \
+  --manifest docs/integration/wp108_no_live_manifest.example.json \
+  --report /tmp/wp108-human-review-report.json \
+  --output /tmp/wp108-quality-decision.json \
+  --no-provider \
+  --no-path-check
+```
+
+Validate a saved decision report with:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
+  python -m utils.wp108_quality_decision validate \
+  --manifest docs/integration/wp108_no_live_manifest.example.json \
+  --report /tmp/wp108-human-review-report.json \
+  --decision /tmp/wp108-quality-decision.json \
+  --no-provider \
+  --no-path-check
+```
+
+The decision utility reuses `validate_manifest()` and `validate_report()` before
+making a decision. It then checks:
+
+- the report's manifest-level `minimum_cases`, `minimum_mean_score`, and
+  `max_critical_failures`;
+- each rubric dimension's `pass_threshold`;
+- every case status is `passed`;
+- no case-level or reviewer-level critical failures are present;
+- score sources are adjudicated human review by default;
+- `publication_quality_claimed` remains `false`.
+
+The decision output uses schema `wp108.quality_decision.v1` and records
+`decision: go` or `decision: no_go`, observed dimension averages, reviewer
+critical failures, score-source blockers, and artifact-binding provenance. It
+does not score images, call providers, repeat a benchmark subset, or authorize a
+publication-quality claim by itself. A release claim still needs actual
+final-candidate outputs, completed reviewer/provider scoring as approved by
+D-06, repeated subset evidence when required, and stakeholder go/no-go approval.
