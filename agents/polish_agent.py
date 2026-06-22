@@ -50,12 +50,14 @@ class PolishAgent(BaseAgent):
         if self.exp_config.task_name == "plot":
             self.style_guide_filename = "neurips2025_plot_style_guide.md"
             self.suggestion_system_prompt = PLOT_SUGGESTION_SYSTEM_PROMPT
+            self.system_prompt = PLOT_POLISH_AGENT_SYSTEM_PROMPT
             self.task_config = {
                 "task_name": "plot",
             }
         else:
             self.style_guide_filename = "neurips2025_diagram_style_guide.md"
             self.suggestion_system_prompt = DIAGRAM_SUGGESTION_SYSTEM_PROMPT
+            self.system_prompt = DIAGRAM_POLISH_AGENT_SYSTEM_PROMPT
             self.task_config = {
                 "task_name": "diagram",
             }

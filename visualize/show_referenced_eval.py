@@ -157,11 +157,11 @@ def format_reasoning(text):
 async def run_eval_on_sample(sample, task_name="diagram"):
     """Hot-reload prompts and run eval."""
     import prompts.diagram_eval_prompts
-    import prompts.plots_eval_prompts
+    import prompts.plot_eval_prompts
     import utils.eval_toolkits
     
     importlib.reload(prompts.diagram_eval_prompts)
-    importlib.reload(prompts.plots_eval_prompts)
+    importlib.reload(prompts.plot_eval_prompts)
     importlib.reload(utils.eval_toolkits)
     from utils.eval_toolkits import get_score_for_image_referenced
     

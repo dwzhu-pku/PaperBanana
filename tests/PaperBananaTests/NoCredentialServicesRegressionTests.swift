@@ -253,6 +253,10 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/NativePromptStudioView.swift"),
             encoding: .utf8
         )
+        let referencePicker = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ReferenceExamplePickerView.swift"),
+            encoding: .utf8
+        )
         let workbench = try String(
             contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/WorkbenchComponents.swift"),
             encoding: .utf8
@@ -290,6 +294,19 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
         XCTAssertTrue(
             promptStudio.contains("ReferenceExamplePickerView") && promptStudio.contains("referenceExamplesPanel"),
             "Prompt Studio should expose manual PaperBananaBench examples as a compact native workbench section."
+        )
+        XCTAssertTrue(
+            promptStudio.contains(#""statistical plot""#),
+            "Prompt Studio should keep the native statistical plot task available."
+        )
+        XCTAssertTrue(
+            promptStudio.contains(#"guard !task.localizedCaseInsensitiveContains("plot") else { return [] }"#),
+            "Prompt Studio plot runs must not reuse manually selected diagram references."
+        )
+        XCTAssertTrue(
+            referencePicker.contains(#""Manual Plot Examples Unavailable""#) &&
+                referencePicker.contains("Plot generation can still run without manual examples."),
+            "Reference Examples should show an explicit disabled state for plot tasks."
         )
         XCTAssertTrue(
             workbench.contains("accessibilityReduceTransparency"),
