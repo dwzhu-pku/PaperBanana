@@ -30,6 +30,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-007 Settings source-contract test head | `758a3841028d7ec576042a19c0cc65e0c808e469` |
 | Latest WP-108 no-live artifact runner head | `dc8d8e5f5149eb8099a9ecb45628a74dcd610599` |
 | Latest WP-108 human-review packet head | `86f9bb16fa524cc638a39d5c6c7e6d64a5b279c4` |
+| Latest WP-107 no-live hosted-readiness smoke head | `2312eae6cc7b968512f7dee5bccd8a582fc47113` |
 | Latest WP-208 Foundation Models disposition head | `69e9159ca9078952fc24609ded25995e73fe7c1a` |
 | Latest post-WP-208 full-gate/install head | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
 | Latest post-Codex-env full-gate/install head | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
@@ -54,6 +55,13 @@ generation run with zero fixture failures and no quality claim.
 on `86f9bb16fa52`: it prepares blank digest-bound reviewer packets from checked
 artifacts and rejects scored human-review reports without reviewer/artifact
 provenance.
+`EV-20260622-061` records the no-live WP-107 hosted-readiness smoke harness
+added on `2312eae6cc7b`: a sanitized localhost `share=False` Gradio copy
+launched with hosted safety flags, fake startup credential sentinels were absent
+from the served config/report, no `Apply Keys` control or API-key textbox labels
+were exposed, two independent clients called `/load_method_example`, and the
+temporary server stopped with its port closed. This is not a Hugging Face Space
+deployment proof or provider-backed hosted-generation proof.
 `EV-20260622-055` validates post-WP-208 branch head `1fa6cbe90e6f` through
 remote structural/Python workflow checks, the local aggregate
 native/Python/Xcode 27 gate with 165 Swift tests, 102 Python tests, and
@@ -137,6 +145,7 @@ channel approval, upgrade proof, or rollback proof.
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
 | WP-108 no-live artifact-completeness runner | `EV-20260622-051`, `EV-20260622-059` | Synthetic native output/request/metadata/provider-request/provider-response/provider-audit/run-store artifacts produce a fixture-mode report, and a no-live generator now maps explicit native run-store rows to the checker; no image scoring or quality claim |
 | WP-108 human-review packet contract | `EV-20260622-060` | Blank digest-bound two-reviewer packet preparation works from checked artifacts, and scored human-review reports now require reviewer/artifact provenance; no reviewer scores or quality claim |
+| WP-107 no-live hosted-readiness smoke | `EV-20260622-061` | Reusable localhost share=False hosted-readiness smoke passed on the current harness head: fake startup key sentinels were absent, no key-entry UI returned, two clients called a non-provider endpoint, and cleanup closed the port; not a Hugging Face Space deployment proof |
 | Native artifact secret-sentinel scan | `EV-20260622-044` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; live-provider and hosted scans remain open |
 | Temporary distinct-bundle rollback preflight | `EV-20260622-045`, `EV-20260622-058` | The latest run used a prior app from `1fa6cbe90e6f` and the current post-Codex-env candidate `de4c8170952a`; it upgraded in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
 | Runtime user-data migration slice | `EV-20260622-048`, `EV-20260622-058` | Isolated Application Support override, fake sentinel secret-store permissions, legacy run-store schema migration, stale-run recovery, Run Details / Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte preservation passed without live providers; the selected runtime migration/secret-store/RunStore migration slice was rerun on the current post-Codex-env candidate |
@@ -155,7 +164,7 @@ channel approval, upgrade proof, or rollback proof.
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
 | `local/<model>` and `ollama/<model>` text routes | Documented and covered by mocked route/docs tests | `EV-20260622-007` and full Python suites | Optional real local/Ollama endpoint smoke remains open if promoted beyond mocked support |
 | Foundation Models | Unsupported for release | `D-05`, `D-13`, provider-support docs, and `EV-20260622-054` | Release-visible image model choices cannot route to Foundation Models, and the auxiliary assistant defaults to local fallback; do not promote as functional without implementation and tests |
-| Hosted Gradio/Space generation | Not release-verified | Credential/plot policy evidence exists for local code paths; sanitized localhost served credential smoke in `EV-20260622-040` | Real hosted two-session, hosted negative-path, deployed-SHA, provider generation, and rollback proof remain open |
+| Hosted Gradio/Space generation | Not release-verified | Credential/plot policy evidence exists for local code paths; sanitized localhost served credential smoke in `EV-20260622-040`; reusable current-head no-live localhost hosted-readiness smoke in `EV-20260622-061` | Real Hugging Face Space two-session proof, hosted negative-path validation, deployed SHA/logs, provider-backed hosted generation, hosted rollback, and cross-session generation-artifact isolation remain open |
 
 Per `D-05`, only routes with final smoke evidence can be described as supported
 release routes. Routes without final smoke remain experimental, mocked, local
@@ -204,8 +213,10 @@ state is verified.
   real Codex CLI behavior, runtime logs from a live run, or hosted artifacts.
 - Hosted two-session proof on the real hosted surface, hosted negative-path
   validation, deployed SHA, runtime-log review, and hosted rollback before any
-  public hosted-generation claim. `EV-20260622-040` is localhost-only
-  credential/session smoke evidence.
+  public hosted-generation claim. `EV-20260622-040` is historical
+  localhost-only credential/session smoke evidence, and `EV-20260622-061` is a
+  current-head no-live hosted-readiness smoke harness that runs on localhost
+  `share=False`; neither is a Hugging Face Space deployment proof.
 - True install/upgrade/rollback proof and release manifest consistency on the
   final frozen release SHA. Current post-Codex-env full local gate and Release
   install proof are covered by `EV-20260622-056`, earlier pushed
