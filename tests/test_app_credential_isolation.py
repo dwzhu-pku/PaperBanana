@@ -141,15 +141,7 @@ class AppCredentialIsolationTests(unittest.TestCase):
 
     @staticmethod
     def _clear_app_modules():
-        for module_name in list(sys.modules):
-            if (
-                module_name == "app"
-                or module_name == "agents"
-                or module_name.startswith("agents.")
-                or module_name == "utils"
-                or module_name.startswith("utils.")
-            ):
-                sys.modules.pop(module_name, None)
+        sys.modules.pop("app", None)
 
     def _string_constants(self):
         return {
