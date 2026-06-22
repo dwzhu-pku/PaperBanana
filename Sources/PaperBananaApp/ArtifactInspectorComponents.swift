@@ -283,7 +283,8 @@ private struct ArtifactInspectorActionBar: View {
             }
             .disabled(artifact.kind != .image)
             .accessibilityLabel("Export Image")
-            .help("Export image")
+            .accessibilityHint(artifact.kind == .image ? "Exports the selected image artifact." : "Only image artifacts can be exported as images.")
+            .help(artifact.kind == .image ? "Export image" : "Only image artifacts can be exported as images")
 
             Button {
                 onExportWithMetadata(artifact)
@@ -291,6 +292,7 @@ private struct ArtifactInspectorActionBar: View {
                 Label("Bundle", systemImage: "shippingbox")
             }
             .accessibilityLabel("Export Bundle With Metadata")
+            .accessibilityHint("Exports the selected artifact with durable run metadata.")
             .help("Export with metadata")
 
             Button {
@@ -306,7 +308,9 @@ private struct ArtifactInspectorActionBar: View {
                 Label("Refine", systemImage: "wand.and.sparkles")
             }
             .disabled(artifact.kind != .image)
-            .help(artifact.wasNativeRefined ? "Refine again" : "Refine image")
+            .accessibilityLabel(artifact.wasNativeRefined ? "Refine Again" : "Refine Image")
+            .accessibilityHint(artifact.kind == .image ? "Uses this image as the source for native refinement." : "Only image artifacts can be refined.")
+            .help(artifact.kind == .image ? (artifact.wasNativeRefined ? "Refine again" : "Refine image") : "Only image artifacts can be refined")
         }
     }
 }

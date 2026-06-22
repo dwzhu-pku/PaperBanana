@@ -73,6 +73,7 @@ struct ReferenceExamplePickerView: View {
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Reference examples")
         .accessibilityValue(accessibilityValue)
+        .accessibilityIdentifier("reference-examples-panel")
     }
 
     private var sectionSubtitle: String {
@@ -159,7 +160,11 @@ struct ReferenceExamplePickerView: View {
             .controlSize(.small)
             .disabled(selectedIDs.isEmpty || isRunning)
             .help("Clear selected reference examples")
+            .accessibilityLabel("Clear selected reference examples")
+            .accessibilityHint("Removes all manual reference examples from the next run.")
+            .accessibilityIdentifier("reference-examples-clear-selection")
         }
+        .accessibilityIdentifier("reference-examples-selection-summary")
     }
 
     @ViewBuilder
@@ -301,7 +306,10 @@ private struct ReferenceExampleRow: View {
         .disabled(isRunning || (!isSelected && !canSelect))
         .accessibilityLabel("Reference example \(example.id)")
         .accessibilityValue(accessibilityValue)
-        .help(isSelected ? "Remove this reference example" : "Select this reference example")
+        .accessibilityHint(accessibilityHint)
+        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
+        .accessibilityIdentifier("reference-example-\(example.id)")
+        .help(rowHelp)
     }
 
     @ViewBuilder
@@ -319,6 +327,32 @@ private struct ReferenceExampleRow: View {
             return "Not selected. \(imageState) \(example.visualIntent)"
         }
         return "Selection limit reached. \(imageState) \(example.visualIntent)"
+    }
+
+    private var accessibilityHint: String {
+        if isRunning {
+            return "Reference selection is disabled while a native run is active."
+        }
+        if isSelected {
+            return "Removes this reference example from the next provider prompt."
+        }
+        if canSelect {
+            return "Selects this reference example for the next provider prompt and run metadata."
+        }
+        return "Selection limit reached. Clear another example before selecting this one."
+    }
+
+    private var rowHelp: String {
+        if isRunning {
+            return "Reference selection is disabled while a native run is active"
+        }
+        if isSelected {
+            return "Remove this reference example"
+        }
+        if canSelect {
+            return "Select this reference example"
+        }
+        return "Selection limit reached"
     }
 }
 

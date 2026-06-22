@@ -282,6 +282,14 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/NativePromptStudioView.swift"),
             encoding: .utf8
         )
+        let referencePicker = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ReferenceExamplePickerView.swift"),
+            encoding: .utf8
+        )
+        let preflightSheet = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/NativeRunPreflightPlan.swift"),
+            encoding: .utf8
+        )
         let artifactCard = try String(
             contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ArtifactLibraryPreviewComponents.swift"),
             encoding: .utf8
@@ -330,6 +338,44 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             artifactInspector.contains(#".accessibilityLabel("Export Image")"#) &&
                 artifactInspector.contains(#".accessibilityLabel("Export Bundle With Metadata")"#),
             "Compact artifact export buttons should expose descriptive accessibility labels."
+        )
+        XCTAssertTrue(
+            artifactInspector.contains(#""Only image artifacts can be exported as images.""#) &&
+                artifactInspector.contains(#".accessibilityLabel(artifact.wasNativeRefined ? "Refine Again" : "Refine Image")"#) &&
+                artifactInspector.contains(#""Only image artifacts can be refined.""#),
+            "Disabled artifact image/refine actions should explain their image-only requirement to assistive technology."
+        )
+        XCTAssertTrue(
+            referencePicker.contains(#".accessibilityIdentifier("reference-examples-panel")"#) &&
+                referencePicker.contains(#".accessibilityIdentifier("reference-examples-selection-summary")"#) &&
+                referencePicker.contains(#".accessibilityIdentifier("reference-example-\(example.id)")"#),
+            "Reference examples should expose stable panel, summary, and row landmarks for keyboard and VoiceOver review."
+        )
+        XCTAssertTrue(
+            referencePicker.contains(".accessibilityAddTraits(isSelected ? [.isSelected] : [])") &&
+                referencePicker.contains("Selection limit reached. Clear another example before selecting this one.") &&
+                referencePicker.contains("Reference selection is disabled while a native run is active."),
+            "Reference example rows should announce selected, running-disabled, and selection-limit states."
+        )
+        XCTAssertTrue(
+            preflightSheet.contains(#".accessibilityIdentifier("native-run-preflight-sheet")"#) &&
+                preflightSheet.contains(#".accessibilityLabel("\(plan.workflow) preflight confirmation")"#) &&
+                preflightSheet.contains(".accessibilityValue(preflightAccessibilitySummary)"),
+            "The native preflight sheet should expose a stable confirmation landmark and a concise run summary."
+        )
+        XCTAssertTrue(
+            preflightSheet.contains(".accessibilityElement(children: .combine)") &&
+                preflightSheet.contains(".accessibilityIdentifier(preflightRowIdentifier(title))") &&
+                preflightSheet.contains(#".accessibilityIdentifier("native-run-preflight-paid-provider-warning")"#),
+            "Preflight rows and spend warnings should be read as combined label/value elements rather than disconnected grid text."
+        )
+        XCTAssertTrue(
+            preflightSheet.contains(#".accessibilityIdentifier("native-run-preflight-reveal-parent")"#) &&
+                preflightSheet.contains(#".accessibilityIdentifier("native-run-preflight-cancel")"#) &&
+                preflightSheet.contains(#".accessibilityIdentifier("native-run-preflight-confirm")"#) &&
+                preflightSheet.contains(#".keyboardShortcut(.cancelAction)"#) &&
+                preflightSheet.contains(#".keyboardShortcut(.defaultAction)"#),
+            "Preflight footer actions should keep named keyboard-reachable controls."
         )
         XCTAssertTrue(promptStudio.contains("@FocusState private var focusedElement"))
         XCTAssertTrue(promptStudio.contains("enum PromptStudioFocusTarget"))

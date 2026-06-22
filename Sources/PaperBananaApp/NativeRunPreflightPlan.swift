@@ -133,6 +133,10 @@ struct NativeRunPreflightSheet: View {
         }
         .frame(minWidth: 680, idealWidth: 760, minHeight: 520)
         .background(AppDesignSystem.Surfaces.content)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("\(plan.workflow) preflight confirmation")
+        .accessibilityValue(preflightAccessibilitySummary)
+        .accessibilityIdentifier("native-run-preflight-sheet")
     }
 
     private var header: some View {
@@ -171,6 +175,10 @@ struct NativeRunPreflightSheet: View {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .stroke(AppDesignSystem.SemanticColors.statusStarting.opacity(0.35), lineWidth: 1)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Provider spend warning")
+        .accessibilityValue("This run can spend provider credits. Confirm the model, resolution, and output location before starting.")
+        .accessibilityIdentifier("native-run-preflight-paid-provider-warning")
     }
 
     private var runSummary: some View {
@@ -212,6 +220,10 @@ struct NativeRunPreflightSheet: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .textSelection(.enabled)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(title)
+        .accessibilityValue(value)
+        .accessibilityIdentifier(preflightRowIdentifier(title))
     }
 
     private var footer: some View {
@@ -222,11 +234,17 @@ struct NativeRunPreflightSheet: View {
                 Label("Reveal Parent Folder", systemImage: "finder")
             }
             .help("Reveal the parent folder where this run will be created")
+            .accessibilityLabel("Reveal parent folder")
+            .accessibilityHint("Opens Finder at the folder that will contain this run.")
+            .accessibilityIdentifier("native-run-preflight-reveal-parent")
 
             Spacer()
 
             Button("Cancel", action: onCancel)
                 .keyboardShortcut(.cancelAction)
+                .accessibilityLabel("Cancel preflight")
+                .accessibilityHint("Dismisses this confirmation without starting the run.")
+                .accessibilityIdentifier("native-run-preflight-cancel")
 
             Button {
                 onConfirm()
@@ -235,6 +253,20 @@ struct NativeRunPreflightSheet: View {
             }
             .buttonStyle(.borderedProminent)
             .keyboardShortcut(.defaultAction)
+            .accessibilityLabel(plan.usesPaidProvider ? "Confirm paid provider call" : "Start run")
+            .accessibilityHint(plan.usesPaidProvider ? "Starts this run and may spend provider credits." : "Starts this run without provider API spend.")
+            .accessibilityIdentifier("native-run-preflight-confirm")
         }
+    }
+
+    private var preflightAccessibilitySummary: String {
+        "\(plan.providerLabel), \(plan.modelLabel), \(plan.spendSafetyLabel), \(plan.resolution), \(plan.aspectRatio), run \(plan.runID)."
+    }
+
+    private func preflightRowIdentifier(_ title: String) -> String {
+        let slug = title
+            .lowercased()
+            .replacingOccurrences(of: " ", with: "-")
+        return "native-run-preflight-\(slug)"
     }
 }
