@@ -13,6 +13,7 @@ struct NativePromptStudioView: View {
     @State private var aspectRatio = "16:9"
     @State private var task = "scientific diagram"
     @State private var selectedReferenceIDs = Set<String>()
+    @State private var loadedReferenceBenchmarkTask = ReferenceExampleBenchmarkTask.diagram
     @State private var previewImage: NSImage?
     @State private var pendingPreflightPlan: NativeRunPreflightPlan?
     @State private var pendingGenerationRequest: NativeImageGenerationRequest?
@@ -52,6 +53,9 @@ struct NativePromptStudioView: View {
             loadReferenceExamples()
         }
         .onChange(of: settings.repoPath) { _ in
+            loadReferenceExamples()
+        }
+        .onChange(of: task) { _ in
             loadReferenceExamples()
         }
         .onChange(of: generationStore.outputURL) { outputURL in
@@ -685,16 +689,22 @@ struct NativePromptStudioView: View {
     }
 
     private var selectedReferenceSelections: [ReferenceExampleSelection] {
-        guard !task.localizedCaseInsensitiveContains("plot") else { return [] }
         return referenceStore.selectedExamples(for: selectedReferenceIDs)
     }
 
-    private func loadReferenceExamples() {
-        referenceStore.load(repoRootPath: settings.repoPath)
-        selectedReferenceIDs = ReferenceExampleSelection.limitedIDs(
+    private var referenceBenchmarkTask: ReferenceExampleBenchmarkTask {
+        ReferenceExampleBenchmarkTask(taskName: task)
+    }
+
+    private func loadReferenceExamples(resetSelection: Bool = false) {
+        let nextBenchmarkTask = referenceBenchmarkTask
+        let shouldResetSelection = resetSelection || nextBenchmarkTask != loadedReferenceBenchmarkTask
+        referenceStore.load(repoRootPath: settings.repoPath, benchmarkTask: referenceBenchmarkTask)
+        selectedReferenceIDs = shouldResetSelection ? [] : ReferenceExampleSelection.limitedIDs(
             selectedReferenceIDs,
             orderedExamples: referenceStore.state.examples
         )
+        loadedReferenceBenchmarkTask = nextBenchmarkTask
     }
 
     private func loadPreview(from outputURL: URL?) {

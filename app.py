@@ -28,7 +28,6 @@ from pathlib import Path
 import sys
 import os
 from datetime import datetime
-import re
 
 # ---------------------------------------------------------------------------
 # Logo (base64-encoded for reliable serving in Gradio)
@@ -63,6 +62,11 @@ from agents.vanilla_agent import VanillaAgent
 from agents.polish_agent import PolishAgent
 from utils import config
 from utils import provider_audit
+from utils.legacy_ui_results import (
+    build_evolution_stages,
+    resolve_final_output,
+    stage_name_from_image_key,
+)
 from utils.paperviz_processor import PaperVizProcessor
 from paperbanana_gui import codex_handoff
 
@@ -125,9 +129,17 @@ def base64_to_image(b64_str):
         return None
 
 
-def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copies=10, max_critic_rounds=3):
+def create_sample_inputs(
+    method_content,
+    caption,
+    aspect_ratio="16:9",
+    num_copies=10,
+    max_critic_rounds=3,
+    task_name="diagram",
+):
     base_input = {
         "filename": "demo_input",
+        "task_name": task_name,
         "caption": caption,
         "content": method_content,
         "visual_intent": caption,
@@ -143,6 +155,12 @@ def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copie
     return inputs
 
 
+def persist_task_name(result_data, task_name):
+    if isinstance(result_data, dict):
+        result_data["task_name"] = task_name or "diagram"
+    return result_data
+
+
 def save_all_stage_images(results, results_dir: Path, timestamp_str: str) -> Path | None:
     """Persist every embedded stage image from a paid run, not only final candidates."""
     stage_dir = results_dir / f"demo_{timestamp_str}_all_stages"
@@ -156,8 +174,7 @@ def save_all_stage_images(results, results_dir: Path, timestamp_str: str) -> Pat
         for key, value in item.items():
             if not key.endswith("_base64_jpg") or not value:
                 continue
-            stage = key.replace("target_diagram_", "").replace("_base64_jpg", "")
-            stage = re.sub(r"[^A-Za-z0-9_.-]+", "_", stage)
+            stage = stage_name_from_image_key(key)
             try:
                 raw = base64.b64decode(value)
                 image = Image.open(BytesIO(raw)).convert("RGB")
@@ -190,10 +207,11 @@ def save_all_stage_images(results, results_dir: Path, timestamp_str: str) -> Pat
 
 async def process_parallel_candidates(
     data_list, exp_mode="dev_planner_critic", retrieval_setting="auto",
-    main_model_name="", image_gen_model_name="",
+    main_model_name="", image_gen_model_name="", task_name="diagram",
 ):
     exp_config = config.ExpConfig(
-        dataset_name="Demo",
+        dataset_name="PaperBananaBench",
+        task_name=task_name,
         split_name="demo",
         exp_mode=exp_mode,
         retrieval_setting=retrieval_setting,
@@ -213,7 +231,7 @@ async def process_parallel_candidates(
     )
     results = []
     async for result_data in processor.process_queries_batch(data_list, max_concurrent=10, do_eval=False):
-        results.append(result_data)
+        results.append(persist_task_name(result_data, task_name))
     return results
 
 
@@ -372,52 +390,15 @@ async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9
         return None, f"{via} error: {str(e)}"
 
 
-def get_evolution_stages(result, exp_mode):
-    task_name = "diagram"
-    stages = []
-    # Planner
-    k = f"target_{task_name}_desc0_base64_jpg"
-    if k in result and result[k]:
-        stages.append({"name": "Planner", "image_key": k, "desc_key": f"target_{task_name}_desc0", "description": "Initial diagram plan"})
-    # Stylist (demo_full only)
-    if exp_mode == "demo_full":
-        k = f"target_{task_name}_stylist_desc0_base64_jpg"
-        if k in result and result[k]:
-            stages.append({"name": "Stylist", "image_key": k, "desc_key": f"target_{task_name}_stylist_desc0", "description": "Stylistically refined"})
-    # Critic rounds
-    for r in range(4):
-        k = f"target_{task_name}_critic_desc{r}_base64_jpg"
-        if k in result and result[k]:
-            stages.append({
-                "name": f"Critic Round {r}",
-                "image_key": k,
-                "desc_key": f"target_{task_name}_critic_desc{r}",
-                "suggestions_key": f"target_{task_name}_critic_suggestions{r}",
-                "description": f"Refined after critic iteration {r}",
-            })
-    return stages
+def get_evolution_stages(result, exp_mode, task_name="diagram"):
+    return build_evolution_stages(result, exp_mode=exp_mode, task_name=task_name)
 
 
-def get_final_image(result, exp_mode):
+def get_final_image(result, exp_mode, task_name="diagram"):
     """Return (PIL.Image, desc_text) for the best available stage."""
-    task_name = "diagram"
-    final_key = None
-    final_desc_key = None
-    for r in range(3, -1, -1):
-        k = f"target_{task_name}_critic_desc{r}_base64_jpg"
-        if k in result and result[k]:
-            final_key = k
-            final_desc_key = f"target_{task_name}_critic_desc{r}"
-            break
-    if not final_key:
-        if exp_mode == "demo_full":
-            final_key = f"target_{task_name}_stylist_desc0_base64_jpg"
-            final_desc_key = f"target_{task_name}_stylist_desc0"
-        else:
-            final_key = f"target_{task_name}_desc0_base64_jpg"
-            final_desc_key = f"target_{task_name}_desc0"
-    img = base64_to_image(result.get(final_key)) if final_key else None
-    desc = clean_text(result.get(final_desc_key, "")) if final_desc_key else ""
+    selection = resolve_final_output(result, exp_mode=exp_mode, task_name=task_name)
+    img = base64_to_image(result.get(selection.image_key)) if selection.image_key else None
+    desc = clean_text(result.get(selection.text_key, "")) if selection.text_key else ""
     return img, desc
 
 
@@ -469,10 +450,12 @@ The Visualizer-Critic loop iterates for $T=3$ rounds."""
 EXAMPLE_CAPTION = "Figure 1: Overview of our PaperBanana framework. Given the source context and communicative intent, we first apply a Linear Planning Phase to retrieve relevant reference examples and synthesize a stylistically optimized description. We then use an Iterative Refinement Loop (consisting of Visualizer and Critic agents) to transform the description into visual output and conduct multi-round refinements to produce the final academic illustration."
 
 PIPELINE_DESCRIPTIONS = {
+    "vanilla": "Vanilla direct generation without retrieval, planning, or critic refinement",
     "demo_planner_critic": "Retriever \u2192 Planner \u2192 Visualizer \u2192 Critic \u2192 Visualizer (no Stylist)",
     "demo_full": "Retriever \u2192 Planner \u2192 Stylist \u2192 Visualizer \u2192 Critic \u2192 Visualizer",
 }
 PIPELINE_MODE_CHOICES = [
+    ("Vanilla", "vanilla"),
     ("Full Pipeline", "demo_full"),
     ("Planner + Critic", "demo_planner_critic"),
 ]
@@ -863,7 +846,7 @@ def build_app():
                     </p>
                     <div class="paperbanana-hero-badges">
                         <span class="paperbanana-hero-badge">Multi-Agent</span>
-                        <span class="paperbanana-hero-badge">Scientific Diagrams</span>
+                        <span class="paperbanana-hero-badge">Scientific Figures & Plots</span>
                     </div>
                 </div>
             </div>
@@ -1080,6 +1063,12 @@ def build_app():
                             label="Pipeline Mode",
                             info="Select which agent pipeline to use",
                         )
+                        task_name = gr.Dropdown(
+                            choices=["diagram", "plot"],
+                            value="diagram",
+                            label="Output Type",
+                            info="Generate a scientific diagram or a statistical plot",
+                        )
                         pipeline_desc = gr.Textbox(
                             label="Pipeline Description",
                             value=PIPELINE_DESCRIPTIONS["demo_full"],
@@ -1095,7 +1084,7 @@ def build_app():
                             choices=["auto", "manual", "random", "none"],
                             value="auto",
                             label="Retrieval Setting",
-                            info="How to retrieve reference diagrams",
+                            info="How to retrieve reference examples",
                         )
                         num_candidates = gr.Number(
                             value=10, minimum=1, maximum=20, step=1,
@@ -1150,12 +1139,12 @@ def build_app():
 
                         with gr.Row(elem_classes=["pb-input-row"]):
                             method_content = gr.Textbox(
-                                label="Method Content",
+                                label="Method Content / Plot Data",
                                 value=EXAMPLE_METHOD,
                                 lines=12, max_lines=30,
                             )
                             caption_input = gr.Textbox(
-                                label="Figure Caption",
+                                label="Figure Caption / Visual Intent",
                                 value=EXAMPLE_CAPTION,
                                 lines=12, max_lines=30,
                             )
@@ -1196,7 +1185,7 @@ def build_app():
 
                 # ---- Generate handler ----
                 def run_generate(
-                    method_text, caption_text, pipe_mode, ret_setting,
+                    method_text, caption_text, pipe_mode, task_name, ret_setting,
                     n_cands, ar, max_rounds, m_model, img_model,
                     figure_size, save_results,
                     progress=gr.Progress(track_tqdm=True),
@@ -1204,6 +1193,7 @@ def build_app():
                     if not method_text or not caption_text:
                         raise gr.Error("Please provide both method content and caption.")
 
+                    task_name = task_name or "diagram"
                     n_cands = int(n_cands)
                     max_rounds = int(max_rounds)
                     timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -1216,6 +1206,7 @@ def build_app():
                         "event": "demo_run_started",
                         "run_id": run_id,
                         "pipeline_mode": pipe_mode,
+                        "task_name": task_name,
                         "candidate_count": n_cands,
                         "max_critic_rounds": max_rounds,
                         "main_model": m_model,
@@ -1227,8 +1218,8 @@ def build_app():
                         input_data = create_sample_inputs(
                             method_content=method_text, caption=caption_text,
                             aspect_ratio=ar, num_copies=n_cands, max_critic_rounds=max_rounds,
+                            task_name=task_name,
                         )
-                        params = {"figure_size": figure_size}
 
                         img_model = normalize_image_model_choice(img_model)
                         progress(0.1, desc=f"Generating {n_cands} candidates in parallel...")
@@ -1245,7 +1236,7 @@ def build_app():
                                     prompt=f"{caption_text}\n\nSource context:\n{method_text}",
                                     output_path=out_path,
                                     aspect_ratio=ar,
-                                    task="diagram",
+                                    task=task_name,
                                     resolution="2K",
                                 )
                                 if not handoff.ok:
@@ -1290,6 +1281,7 @@ def build_app():
                                     process_parallel_candidates(
                                         input_data, exp_mode=pipe_mode, retrieval_setting=ret_setting,
                                         main_model_name=m_model, image_gen_model_name=img_model,
+                                        task_name=task_name,
                                     )
                                 )
                                 loop.close()
@@ -1325,14 +1317,14 @@ def build_app():
                     # Build gallery images
                     gallery_images = []
                     for idx, res in enumerate(results):
-                        img, _ = get_final_image(res, pipe_mode)
+                        img, _ = get_final_image(res, pipe_mode, task_name=task_name)
                         if img:
                             gallery_images.append((img, f"Candidate {idx}"))
 
                     # Build evolution HTML
                     evo_parts = []
                     for idx, res in enumerate(results):
-                        stages = get_evolution_stages(res, pipe_mode)
+                        stages = get_evolution_stages(res, pipe_mode, task_name=task_name)
                         if stages:
                             evo_parts.append(f"<h4>Candidate {idx} ({len(stages)} stages)</h4>")
                             for st in stages:
@@ -1350,7 +1342,7 @@ def build_app():
                             buf = BytesIO()
                             with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
                                 for idx, res in enumerate(results):
-                                    img, _ = get_final_image(res, pipe_mode)
+                                    img, _ = get_final_image(res, pipe_mode, task_name=task_name)
                                     if img:
                                         img.save(str(extracted_dir / f"candidate_{idx}.png"), format="PNG")
                                         ib = BytesIO()
@@ -1413,7 +1405,7 @@ def build_app():
                 generate_btn.click(
                     fn=run_generate,
                     inputs=[
-                        method_content, caption_input, pipeline_mode, retrieval_setting,
+                        method_content, caption_input, pipeline_mode, task_name, retrieval_setting,
                         num_candidates, aspect_ratio, max_critic_rounds,
                         main_model_name, image_model_name,
                         figure_size, save_results,
@@ -1428,7 +1420,7 @@ def build_app():
             # TAB 2 — Refine Image
             # ============================================================
             with gr.TabItem("Refine Image"):
-                gr.Markdown("### Refine and upscale your diagram to high resolution (2K/4K)")
+                gr.Markdown("### Refine and upscale your figure to high resolution (2K/4K)")
                 gr.Markdown("Upload an image, describe changes, and get a high-res version.")
 
                 with gr.Row(elem_classes=["pb-refine-row"]):

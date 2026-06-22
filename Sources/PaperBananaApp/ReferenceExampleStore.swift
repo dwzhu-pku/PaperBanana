@@ -50,7 +50,7 @@ enum ReferenceExampleLoadState: Equatable {
             "PaperBanana has not scanned the local benchmark yet."
         case .available:
             if missingImageCount == 0 {
-                "Manual diagram examples can enrich the next native generation prompt."
+                "Manual reference examples can enrich the next native generation prompt."
             } else {
                 "\(missingImageCount) referenced image path\(missingImageCount == 1 ? " is" : "s are") missing locally."
             }
@@ -69,7 +69,19 @@ final class ReferenceExampleStore: ObservableObject {
     @Published private(set) var state: ReferenceExampleLoadState = .idle
 
     func load(repoRootPath: String, fileManager: FileManager = .default) {
-        state = Self.loadState(repoRootPath: repoRootPath, fileManager: fileManager)
+        load(repoRootPath: repoRootPath, benchmarkTask: .diagram, fileManager: fileManager)
+    }
+
+    func load(
+        repoRootPath: String,
+        benchmarkTask: ReferenceExampleBenchmarkTask,
+        fileManager: FileManager = .default
+    ) {
+        state = Self.loadState(
+            repoRootPath: repoRootPath,
+            benchmarkTask: benchmarkTask,
+            fileManager: fileManager
+        )
     }
 
     func selectedExamples(for ids: Set<String>) -> [ReferenceExampleSelection] {
@@ -82,10 +94,14 @@ final class ReferenceExampleStore: ObservableObject {
 
     static func loadState(
         repoRootPath: String,
+        benchmarkTask: ReferenceExampleBenchmarkTask = .diagram,
         fileManager: FileManager = .default
     ) -> ReferenceExampleLoadState {
         let repoRoot = URL(fileURLWithPath: repoRootPath, isDirectory: true).standardizedFileURL
-        let benchmarkRoot = repoRoot.appendingPathComponent("data/PaperBananaBench/diagram", isDirectory: true)
+        let benchmarkRoot = repoRoot.appendingPathComponent(
+            "data/PaperBananaBench/\(benchmarkTask.rawValue)",
+            isDirectory: true
+        )
         let refURL = benchmarkRoot.appendingPathComponent("ref.json", isDirectory: false)
 
         guard fileManager.fileExists(atPath: refURL.path) else {
@@ -96,6 +112,7 @@ final class ReferenceExampleStore: ObservableObject {
             let examples = try loadExamples(
                 refURL: refURL,
                 benchmarkRoot: benchmarkRoot,
+                benchmarkTask: benchmarkTask,
                 fileManager: fileManager
             )
             guard !examples.isEmpty else { return .empty(refURL) }
@@ -108,6 +125,7 @@ final class ReferenceExampleStore: ObservableObject {
     private static func loadExamples(
         refURL: URL,
         benchmarkRoot: URL,
+        benchmarkTask: ReferenceExampleBenchmarkTask,
         fileManager: FileManager
     ) throws -> [ReferenceExample] {
         let data = try Data(contentsOf: refURL)
@@ -131,7 +149,8 @@ final class ReferenceExampleStore: ObservableObject {
                 contentSummary: summary(contentText, limit: 360),
                 imageRelativePath: imagePath,
                 imageURL: imageURL,
-                imageAvailable: fileManager.fileExists(atPath: imageURL.path)
+                imageAvailable: fileManager.fileExists(atPath: imageURL.path),
+                benchmarkTask: benchmarkTask
             )
         }
         .sorted { lhs, rhs in
@@ -172,7 +191,7 @@ private enum ReferenceExampleStoreError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .expectedArray:
-            "Expected PaperBananaBench diagram ref.json to contain an array of examples."
+            "Expected PaperBananaBench ref.json to contain an array of examples."
         }
     }
 }

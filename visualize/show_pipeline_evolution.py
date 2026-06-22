@@ -14,7 +14,7 @@
 
 """
 Streamlit Visualizer for Pipeline Evolution
-Shows the progression of diagrams through Planner → Stylist → Critic stages
+Shows the progression of figures and plots through Planner → Stylist → Critic stages
 """
 
 import streamlit as st
@@ -27,6 +27,12 @@ import sys
 
 # Ensure local imports work
 sys.path.append(os.getcwd())
+
+from utils.legacy_ui_results import (
+    build_evolution_stages,
+    infer_task_name,
+    resolve_gt_image_path,
+)
 
 st.set_page_config(layout="wide", page_title="PaperVizAgent Pipeline Evolution", page_icon="🍌")
 
@@ -80,21 +86,13 @@ def base64_to_image(b64_str):
 
 def detect_task_type(item):
     """Detect whether data is for diagram or plot task."""
-    # Check for plot-specific fields
-    if "target_plot_desc0" in item or "target_plot_stylist_desc0" in item:
-        return "plot"
-    return "diagram"
+    return infer_task_name(item)
 
-def display_stage_comparison(item):
+def display_stage_comparison(item, results_file_path=None):
     """Display 2x2 grid comparison: Ground Truth + three pipeline stages."""
     st.markdown("### 📊 Pipeline Evolution Comparison")
     
     task_type = detect_task_type(item)
-    prefix = "target_plot" if task_type == "plot" else "target_diagram"
-    
-    # Create two rows with two columns each
-    row1_col1, row1_col2 = st.columns(2)
-    row2_col1, row2_col2 = st.columns(2)
     
     # Detect available stages dynamically
     available_stages = []
@@ -107,43 +105,16 @@ def display_stage_comparison(item):
         "color": "orange",
         "is_human": True
     })
-    
-    # Planner / Vanilla
-    planner_key = f"{prefix}_desc0"
-    if planner_key in item:
+
+    for stage in build_evolution_stages(item, task_name=task_type):
         available_stages.append({
-            "title": "📝 Planner / Vanilla",
-            "desc_key": planner_key,
-            "img_key": f"{planner_key}_base64_jpg",
+            "title": stage["name"],
+            "desc_key": stage.get("desc_key"),
+            "img_key": stage["image_key"],
+            "suggestions_key": stage.get("suggestions_key"),
             "color": "blue",
-            "is_human": False
+            "is_human": False,
         })
-    
-    # Stylist
-    stylist_key = f"{prefix}_stylist_desc0"
-    if stylist_key in item:
-        available_stages.append({
-            "title": "✨ Stylist",
-            "desc_key": stylist_key,
-            "img_key": f"{stylist_key}_base64_jpg",
-            "color": "violet",
-            "is_human": False
-        })
-    
-    # Critic rounds (0, 1, 2)
-    for round_idx in range(3):
-        critic_desc_key = f"{prefix}_critic_desc{round_idx}"
-        if critic_desc_key in item:
-            emoji = ["🔍", "🔍🔍", "🔍🔍🔍"][round_idx]
-            available_stages.append({
-                "title": f"{emoji} Critic Round {round_idx}",
-                "desc_key": critic_desc_key,
-                "img_key": f"{critic_desc_key}_base64_jpg",
-                "suggestions_key": f"{prefix}_critic_suggestions{round_idx}",
-                "color": "green",
-                "is_human": False,
-                "round_idx": round_idx
-            })
             
     # Create dynamic grid based on number of stages
     num_stages = len(available_stages)
@@ -165,7 +136,11 @@ def display_stage_comparison(item):
                 # Display image
                 if stage["is_human"]:
                     # Handle Human (Ground Truth) image
-                    human_path = item.get("path_to_gt_image")
+                    human_path = resolve_gt_image_path(
+                        item,
+                        task_name=task_type,
+                        results_file_path=results_file_path,
+                    )
                     if human_path and os.path.exists(human_path):
                         try:
                             img = Image.open(human_path)
@@ -192,7 +167,8 @@ def display_stage_comparison(item):
                         st.info("No image available")
                     
                     # Display description in expander
-                    desc = item.get(stage["desc_key"], "No description available")
+                    desc_key = stage.get("desc_key")
+                    desc = item.get(desc_key, "No description available") if desc_key else "No description available"
                     with st.expander("View Description", expanded=False):
                         if task_type == "plot" and desc:
                              # Try to format as code if it looks like code, or just text
@@ -288,19 +264,10 @@ def main():
         
         # Simple heuristic: inspect the first item to guess task type for stats
         # (This assumes the file is consistent)
-        sample = data[0] if data else {}
-        is_plot = "target_plot_desc0" in sample or "target_plot_stylist_desc0" in sample
-        
-        if is_plot:
-            has_all_stages = sum(1 for item in data if 
-                item.get("target_plot_desc0") and 
-                item.get("target_plot_stylist_desc0") and 
-                item.get("target_plot_critic_desc0"))
-        else:
-            has_all_stages = sum(1 for item in data if 
-                item.get("target_diagram_desc0") and 
-                item.get("target_diagram_stylist_desc0") and 
-                item.get("target_diagram_critic_desc0"))
+        has_all_stages = sum(
+            1 for item in data
+            if len(build_evolution_stages(item, task_name=detect_task_type(item))) >= 3
+        )
         
         col1, col2, col3 = st.columns(3)
         col1.metric("Total Samples", total)
@@ -370,7 +337,7 @@ def main():
                     st.markdown(method_content)
             
             # Pipeline comparison
-            display_stage_comparison(item)
+            display_stage_comparison(item, results_file_path=file_path)
             
             # Critique
             display_critique(item)

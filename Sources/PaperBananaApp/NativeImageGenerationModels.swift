@@ -28,8 +28,11 @@ struct NativeImageGenerationRequest {
         self.aspectRatio = aspectRatio
         self.task = task
         self.settings = settings
-        let limitedReferenceExamples = Array(referenceExamples.prefix(ReferenceExampleSelection.maximumSelectionCount))
-        self.referenceExamples = task.localizedCaseInsensitiveContains("plot") ? [] : limitedReferenceExamples
+        self.referenceExamples = Array(
+            referenceExamples
+                .filter { $0.isCompatible(with: task) }
+                .prefix(ReferenceExampleSelection.maximumSelectionCount)
+        )
         self.executionMode = executionMode
         self.preflightRunID = preflightRunID
     }

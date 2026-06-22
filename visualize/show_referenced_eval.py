@@ -26,24 +26,16 @@ import re
 # Ensure local imports work
 sys.path.append(os.getcwd())
 
+from utils.legacy_ui_results import (
+    image_key_is_compatible,
+    infer_task_name,
+    resolve_display_mode_output,
+    resolve_final_output,
+    resolve_gt_image_path,
+)
+
 st.set_page_config(layout="wide", page_title="PaperVizAgent Referenced Eval Visualizer", page_icon="🍌")
 
-
-def detect_task_type(data):
-    """Detect whether data is for diagram or plot task."""
-    if not data:
-        return "diagram"
-    
-    sample = data[0]
-    # Check for plot-specific fields
-    if "content" in sample and isinstance(sample.get("content"), dict):
-        return "plot"
-    # Check for diagram-specific fields
-    # Now directly accessible from top level
-        return "diagram"
-    
-    # Default to diagram
-    return "diagram"
 
 @st.cache_data
 def load_data(path):
@@ -165,23 +157,19 @@ async def run_eval_on_sample(sample, task_name="diagram"):
     importlib.reload(utils.eval_toolkits)
     from utils.eval_toolkits import get_score_for_image_referenced
     
-    # Ensure eval_image_field is set
-    if "eval_image_field" not in sample:
-        # Try to infer from available fields or use default
-        if task_name == "plot":
-            if "target_plot_desc0_base64_jpg" in sample:
-                sample["eval_image_field"] = "target_plot_desc0_base64_jpg"
-            elif "target_plot_stylist_desc0_base64_jpg" in sample:
-                sample["eval_image_field"] = "target_plot_stylist_desc0_base64_jpg"
+    # Ensure eval_image_field is set and points at a real model output.
+    eval_image_field = sample.get("eval_image_field")
+    if (
+        not isinstance(eval_image_field, str)
+        or not sample.get(eval_image_field)
+        or not image_key_is_compatible(eval_image_field, task_name)
+    ):
+        selection = resolve_final_output(sample, task_name=task_name)
+        if selection.image_key:
+            sample["eval_image_field"] = selection.image_key
         else:
-            if "target_diagram_critic_desc0_base64_jpg" in sample:
-                sample["eval_image_field"] = "target_diagram_critic_desc0_base64_jpg"
-            elif "target_diagram_stylist_desc0_base64_jpg" in sample:
-                sample["eval_image_field"] = "target_diagram_stylist_desc0_base64_jpg"
-            elif "target_diagram_desc0_base64_jpg" in sample:
-                sample["eval_image_field"] = "target_diagram_desc0_base64_jpg"
-            else:
-                sample["eval_image_field"] = "vanilla_image_base64"  # fallback
+            # Avoid evaluating a stale cross-task image when no compatible output exists.
+            sample["eval_image_field"] = f"missing_{task_name}_image_base64_jpg"
     
     return await get_score_for_image_referenced(sample, task_name=task_name)
 
@@ -194,15 +182,14 @@ def main():
         st.sidebar.divider()
         st.sidebar.subheader("🛠️ Debug Target")
         debug_sample = st.session_state.debug_sample
+        debug_task_type = infer_task_name(debug_sample)
         identifier = debug_sample.get('id')
-        st.sidebar.info(f"Active: {identifier}\nIndex: {st.session_state.debug_idx}")
+        st.sidebar.info(f"Active: {identifier}\nTask: {debug_task_type.title()}\nIndex: {st.session_state.debug_idx}")
         
         if st.sidebar.button("🚀 Re-run Eval (Hot-Reload Prompts)", type="primary"):
             with st.spinner("Running live evaluation..."):
                 try:
-                    # Pass task_name if available
-                    task_name = st.session_state.get("task_type", "diagram")
-                    new_result = asyncio.run(run_eval_on_sample(debug_sample.copy(), task_name))
+                    new_result = asyncio.run(run_eval_on_sample(debug_sample.copy(), debug_task_type))
                     st.session_state.debug_result = new_result
                     st.sidebar.success("Evaluation Complete!")
                 except Exception as e:
@@ -228,34 +215,12 @@ def main():
 
     data = load_data(file_path)
     
-    # Detect task type
-    task_type = detect_task_type(data)
-    st.session_state["task_type"] = task_type
-    
     # --- Display Mode Selection ---
-    if task_type == "plot":
-        display_mode = st.sidebar.selectbox(
-            "Model Display Mode",
-            ["Auto", "Vanilla", "Stylist"],
-            help="Select which stage of the model output to display."
-        )
-        
-        mode_to_keys = {
-            "Vanilla": ("target_plot_desc0_base64_jpg", "target_plot_desc0"),
-            "Stylist": ("target_plot_stylist_desc0_base64_jpg", "target_plot_stylist_desc0"),
-        }
-    else:  # diagram
-        display_mode = st.sidebar.selectbox(
-            "Model Display Mode",
-            ["Auto", "Vanilla", "Stylist", "Critic"],
-            help="Select which stage of the model output to display."
-        )
-        
-        mode_to_keys = {
-            "Vanilla": ("target_diagram_desc0_base64_jpg", "target_diagram_desc0"),
-            "Stylist": ("target_diagram_stylist_desc0_base64_jpg", "target_diagram_stylist_desc0"),
-            "Critic": ("target_diagram_critic_desc0_base64_jpg", "target_diagram_critic_desc0"),
-        }
+    display_mode = st.sidebar.selectbox(
+        "Model Display Mode",
+        ["Auto", "Vanilla", "Planner", "Stylist", "Critic", "Polished"],
+        help="Select which stage of the model output to display."
+    )
     
     # --- Search Functionality ---
     search_field = "id"
@@ -328,11 +293,12 @@ def main():
 
     for i, item in enumerate(batch):
         idx = start_idx + i
+        item_task_type = infer_task_name(item)
         
         # Extract metadata based on task type
         identifier = item.get("id", "Unknown")
         caption_or_desc = item.get("visual_intent") or item.get("brief_desc", "N/A")
-        if task_type == "plot":
+        if item_task_type == "plot":
             raw_content_label = "Raw Data"
             raw_content = json.dumps(item.get("content", {}), indent=2)
         else:  # diagram
@@ -354,24 +320,12 @@ def main():
             st.caption(f"{search_field.title()}: `{identifier}`")
             
             # --- Determine Image and Text for Model ---
-            if display_mode == "Auto":
-                eval_field = item.get("eval_image_field")
-                if eval_field:
-                    model_b64_key = eval_field
-                    model_text_key = eval_field.replace("_base64_jpg", "")
-                else:
-                    # Fallback
-                    if task_type == "plot":
-                        model_b64_key = "target_plot_desc0_base64_jpg"
-                        model_text_key = "target_plot_desc0"
-                    else:
-                        model_b64_key = "target_diagram_critic_desc0_base64_jpg"
-                        model_text_key = "target_diagram_critic_desc0"
-            else:
-                model_b64_key, model_text_key = mode_to_keys[display_mode]
+            selection = resolve_display_mode_output(item, display_mode, task_name=item_task_type)
+            model_b64_key = selection.image_key
+            model_text_key = selection.text_key
 
-            model_b64 = item.get(model_b64_key)
-            model_description = item.get(model_text_key, "N/A")
+            model_b64 = item.get(model_b64_key) if model_b64_key else None
+            model_description = item.get(model_text_key, "N/A") if model_text_key else "N/A"
 
             # Outcome Summary
             outcome_cols = st.columns(len(dimensions))
@@ -391,7 +345,7 @@ def main():
             # Images
             img_col1, img_col2 = st.columns(2)
             with img_col1:
-                model_label = "Model Plot" if task_type == "plot" else "Model Diagram"
+                model_label = "Model Plot" if item_task_type == "plot" else "Model Diagram"
                 st.markdown(f"**{model_label}** ({display_mode})")
                 if model_b64:
                     st.image(base64_to_image(model_b64), use_container_width=True)
@@ -402,35 +356,34 @@ def main():
                     st.write(model_description)
             
             with img_col2:
-                human_label = "Human Plot" if task_type == "plot" else "Human Diagram"
+                human_label = "Human Plot" if item_task_type == "plot" else "Human Diagram"
                 st.markdown(f"**{human_label}** (Reference)")
                 
-                # Get GT image path based on task type
-                if task_type == "plot":
-                    gt_path = item.get("path_to_gt_image")
-                else:
-                    gt_path = item.get("path_to_gt_image")
-                
+                gt_path = resolve_gt_image_path(
+                    item,
+                    task_name=item_task_type,
+                    results_file_path=file_path,
+                )
                 gt_img = load_local_image(gt_path)
                 if gt_img:
                     st.image(gt_img, use_container_width=True)
                 else:
-                    st.error(f"Human image not found at: {gt_path}")
+                    st.error(f"Human image not found at: {item.get('path_to_gt_image')}")
                 
                 with st.expander("📄 Human/Caption Info", expanded=False):
                     st.markdown(f"**Caption/Description:** {caption_or_desc}")
-                    if task_type == "diagram":
+                    if item_task_type == "diagram":
                         st.markdown(f"**Human Analysis:** {item.get('gt_diagram_desc0', 'N/A')}")
             
             # Suggestions (if any)
-            suggestions = item.get("suggestions_diagram") or item.get("suggestions_plot")
+            suggestions = item.get(f"suggestions_{item_task_type}") or item.get("suggestions_diagram") or item.get("suggestions_plot")
             if suggestions:
                 with st.expander("💡 Polish Suggestions", expanded=False):
                     st.markdown(suggestions)
             
             # Raw Content Section - spans full width
             with st.expander(f"📚 {raw_content_label}", expanded=False):
-                if task_type == "plot":
+                if item_task_type == "plot":
                     st.code(raw_content, language="json")
                 else:
                     st.markdown(raw_content)

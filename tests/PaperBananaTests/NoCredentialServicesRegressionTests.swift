@@ -300,13 +300,23 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             "Prompt Studio should keep the native statistical plot task available."
         )
         XCTAssertTrue(
-            promptStudio.contains(#"guard !task.localizedCaseInsensitiveContains("plot") else { return [] }"#),
-            "Prompt Studio plot runs must not reuse manually selected diagram references."
+            promptStudio.contains("ReferenceExampleBenchmarkTask(taskName: task)") &&
+                promptStudio.contains("loadedReferenceBenchmarkTask") &&
+                promptStudio.contains("nextBenchmarkTask != loadedReferenceBenchmarkTask"),
+            "Prompt Studio should load task-specific reference examples without clearing compatible same-family selections."
+        )
+        XCTAssertFalse(
+            promptStudio.contains(".onChange(of: task) { _ in\n            loadReferenceExamples(resetSelection: true)"),
+            "Prompt Studio task label changes should not clear compatible same-family reference selections."
         )
         XCTAssertTrue(
-            referencePicker.contains(#""Manual Plot Examples Unavailable""#) &&
-                referencePicker.contains("Plot generation can still run without manual examples."),
-            "Reference Examples should show an explicit disabled state for plot tasks."
+            referencePicker.contains("Optional manual PaperBananaBench") &&
+                referencePicker.contains("No \\(referenceTask.capitalizedDisplayName) Examples Found"),
+            "Reference Examples should support both diagram and plot benchmark tasks."
+        )
+        XCTAssertFalse(
+            referencePicker.contains("Manual Plot Examples Unavailable"),
+            "Manual plot examples should no longer be hidden behind a disabled state."
         )
         XCTAssertTrue(
             workbench.contains("accessibilityReduceTransparency"),

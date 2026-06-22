@@ -47,6 +47,42 @@ final class ReferenceExampleStoreTests: XCTestCase {
         XCTAssertTrue(examples[1].imageAvailable)
     }
 
+    func testLoadValidPlotReferenceExamples() throws {
+        let repoRoot = try Self.makeRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        try Self.writeReferenceJSON(
+            """
+            [
+              {
+                "id": "plot_001",
+                "visual_intent": "Show a grouped bar chart comparing model accuracy.",
+                "content": {"Model": ["A", "B"], "Accuracy": [0.72, 0.81]},
+                "path_to_gt_image": "images/plot_001.jpg"
+              }
+            ]
+            """,
+            repoRoot: repoRoot,
+            benchmarkTask: .plot
+        )
+        try Self.writeBenchmarkImage("images/plot_001.jpg", repoRoot: repoRoot, benchmarkTask: .plot)
+
+        let state = ReferenceExampleStore.loadState(repoRootPath: repoRoot.path, benchmarkTask: .plot)
+        guard case .available(let examples) = state else {
+            return XCTFail("Expected available examples, got \(state)")
+        }
+
+        let example = try XCTUnwrap(examples.first)
+        XCTAssertEqual(example.id, "plot_001")
+        XCTAssertEqual(example.benchmarkTask, .plot)
+        XCTAssertEqual(example.selection.referenceSource, "PaperBananaBench/plot")
+        XCTAssertTrue(example.contentSummary.contains(#""Accuracy""#))
+        XCTAssertTrue(example.contentSummary.contains(#""Model""#))
+        XCTAssertEqual(
+            example.imageURL.path,
+            repoRoot.appendingPathComponent("data/PaperBananaBench/plot/images/plot_001.jpg").path
+        )
+    }
+
     func testLoadDiagramReferenceExamplesSurfacesMissingImagesWithoutDisablingSelection() throws {
         let repoRoot = try Self.makeRepoRoot()
         defer { try? FileManager.default.removeItem(at: repoRoot) }
@@ -180,6 +216,73 @@ final class ReferenceExampleStoreTests: XCTestCase {
         XCTAssertTrue(request.providerPrompt.contains("Image path: images/diagram_101.png"))
     }
 
+    func testPlotPromptEnrichmentUsesPlotReferenceSourceAndGuidance() {
+        let request = NativeImageGenerationRequest(
+            prompt: "Create a compact accuracy comparison plot.",
+            model: .nanoBananaPro,
+            resolution: "2K",
+            aspectRatio: "16:9",
+            task: "statistical plot",
+            settings: Self.settings(repoPath: "/tmp/PaperBanana"),
+            referenceExamples: [
+                ReferenceExampleSelection(
+                    id: "plot_101",
+                    visualIntent: "Use grouped bars for model comparison.",
+                    contentSummary: "Accuracy by model and dataset.",
+                    imagePath: "images/plot_101.jpg",
+                    referenceSource: ReferenceExampleBenchmarkTask.plot.referenceSource
+                )
+            ]
+        )
+
+        XCTAssertEqual(request.referenceExamples.count, 1)
+        XCTAssertEqual(request.referenceExamples[0].durablePayload["reference_source"], "PaperBananaBench/plot")
+        XCTAssertTrue(request.providerPrompt.contains("Create a compact accuracy comparison plot."))
+        XCTAssertTrue(request.providerPrompt.contains("Selected Reference Examples"))
+        XCTAssertTrue(request.providerPrompt.contains("PaperBananaBench plot examples"))
+        XCTAssertTrue(request.providerPrompt.contains("ID: plot_101"))
+        XCTAssertTrue(request.providerPrompt.contains("Image path: images/plot_101.jpg"))
+    }
+
+    func testNativeRequestFiltersReferenceExamplesByBenchmarkTask() {
+        let diagramSelection = ReferenceExampleSelection(
+            id: "diagram_101",
+            visualIntent: "Show a model architecture.",
+            contentSummary: "Encoder and decoder blocks.",
+            imagePath: "images/diagram_101.png",
+            referenceSource: ReferenceExampleBenchmarkTask.diagram.referenceSource
+        )
+        let plotSelection = ReferenceExampleSelection(
+            id: "plot_101",
+            visualIntent: "Compare accuracy by model.",
+            contentSummary: "Grouped bars by dataset.",
+            imagePath: "images/plot_101.jpg",
+            referenceSource: ReferenceExampleBenchmarkTask.plot.referenceSource
+        )
+
+        let diagramRequest = NativeImageGenerationRequest(
+            prompt: "Create a diagram.",
+            model: .nanoBananaPro,
+            resolution: "2K",
+            aspectRatio: "16:9",
+            task: "scientific diagram",
+            settings: Self.settings(repoPath: "/tmp/PaperBanana"),
+            referenceExamples: [diagramSelection, plotSelection]
+        )
+        let plotRequest = NativeImageGenerationRequest(
+            prompt: "Create a plot.",
+            model: .nanoBananaPro,
+            resolution: "2K",
+            aspectRatio: "16:9",
+            task: "statistical plot",
+            settings: Self.settings(repoPath: "/tmp/PaperBanana"),
+            referenceExamples: [diagramSelection, plotSelection]
+        )
+
+        XCTAssertEqual(diagramRequest.referenceExamples.map(\.id), ["diagram_101"])
+        XCTAssertEqual(plotRequest.referenceExamples.map(\.id), ["plot_101"])
+    }
+
     private static func makeRepoRoot() throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("PaperBananaReferenceExamples-\(UUID().uuidString)", isDirectory: true)
@@ -187,15 +290,26 @@ final class ReferenceExampleStoreTests: XCTestCase {
         return root
     }
 
-    private static func writeReferenceJSON(_ json: String, repoRoot: URL) throws {
-        let directory = repoRoot.appendingPathComponent("data/PaperBananaBench/diagram", isDirectory: true)
+    private static func writeReferenceJSON(
+        _ json: String,
+        repoRoot: URL,
+        benchmarkTask: ReferenceExampleBenchmarkTask = .diagram
+    ) throws {
+        let directory = repoRoot.appendingPathComponent(
+            "data/PaperBananaBench/\(benchmarkTask.rawValue)",
+            isDirectory: true
+        )
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         try Data(json.utf8).write(to: directory.appendingPathComponent("ref.json"), options: .atomic)
     }
 
-    private static func writeBenchmarkImage(_ relativePath: String, repoRoot: URL) throws {
+    private static func writeBenchmarkImage(
+        _ relativePath: String,
+        repoRoot: URL,
+        benchmarkTask: ReferenceExampleBenchmarkTask = .diagram
+    ) throws {
         let url = repoRoot
-            .appendingPathComponent("data/PaperBananaBench/diagram", isDirectory: true)
+            .appendingPathComponent("data/PaperBananaBench/\(benchmarkTask.rawValue)", isDirectory: true)
             .appendingPathComponent(relativePath, isDirectory: false)
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try Data([0x89, 0x50, 0x4E, 0x47]).write(to: url, options: .atomic)
