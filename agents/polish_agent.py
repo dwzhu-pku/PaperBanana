@@ -163,6 +163,10 @@ class PolishAgent(BaseAgent):
         
         # Generate polished image
         aspect_ratio = data.get("additional_info", {}).get("rounded_ratio", "16:9")
+        generation_utils.assert_not_local_openai_image_model(
+            self.image_gen_model_name,
+            route_name="polish image generation",
+        )
         try:
             if generation_utils.openrouter_client is not None:
                 image_config = {

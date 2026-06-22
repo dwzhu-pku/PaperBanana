@@ -61,6 +61,22 @@ local_openai_base_url = ""
 local_openai_api_key = ""
 
 OLLAMA_OPENAI_BASE_URL = "http://localhost:11434/v1"
+LOCAL_OPENAI_MODEL_PREFIXES = ("local/", "ollama/")
+
+
+def is_local_openai_model_name(model_name: str) -> bool:
+    """Return whether a model name targets a local text-only route."""
+    return bool(model_name) and model_name.strip().lower().startswith(LOCAL_OPENAI_MODEL_PREFIXES)
+
+
+def assert_not_local_openai_image_model(model_name: str, route_name: str = "image generation") -> None:
+    """Reject local OpenAI-compatible text routes before image-provider dispatch."""
+    if is_local_openai_model_name(model_name):
+        raise ValueError(
+            f"{model_name!r} uses a local OpenAI-compatible text route. "
+            f"Local/Ollama routes are text-only and cannot be used for {route_name}. "
+            "Set image_gen_model_name to a supported image-capable provider model."
+        )
 
 
 def reinitialize_clients():
