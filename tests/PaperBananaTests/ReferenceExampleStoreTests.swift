@@ -85,10 +85,11 @@ final class ReferenceExampleStoreTests: XCTestCase {
 
         let selected = ReferenceExampleStore()
         selected.load(repoRootPath: repoRoot.path)
-        XCTAssertEqual(
-            selected.selectedExamples(for: ["diagram_missing"]).map(\.id),
-            ["diagram_missing"]
-        )
+        let selectedExamples = selected.selectedExamples(for: ["diagram_missing"])
+        XCTAssertEqual(selectedExamples.map(\.id), ["diagram_missing"])
+        let missingSelection = try XCTUnwrap(selectedExamples.first)
+        XCTAssertNil(missingSelection.durablePayload["image_available"])
+        XCTAssertNil(missingSelection.durablePayload["imageAvailable"])
     }
 
     func testMissingDatasetReportsDisabledState() throws {
