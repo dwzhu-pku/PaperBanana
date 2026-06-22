@@ -30,6 +30,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-007 Settings source-contract test head | `758a3841028d7ec576042a19c0cc65e0c808e469` |
 | Latest WP-108 no-live artifact runner head | `dc8d8e5f5149eb8099a9ecb45628a74dcd610599` |
 | Latest WP-108 human-review packet head | `86f9bb16fa524cc638a39d5c6c7e6d64a5b279c4` |
+| Latest WP-108 quality decision head | `b6a8a2a51d7ffd7ec8f348ecf892467d7cf7abcd` |
 | Latest WP-107 no-live hosted-readiness smoke head | `2312eae6cc7b968512f7dee5bccd8a582fc47113` |
 | Latest WP-208 Foundation Models disposition head | `69e9159ca9078952fc24609ded25995e73fe7c1a` |
 | Latest post-WP-208 full-gate/install head | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
@@ -55,6 +56,13 @@ generation run with zero fixture failures and no quality claim.
 on `86f9bb16fa52`: it prepares blank digest-bound reviewer packets from checked
 artifacts and rejects scored human-review reports without reviewer/artifact
 provenance.
+`EV-20260622-062` records the no-live WP-108 quality decision utility added on
+`b6a8a2a51d7f`: it consumes completed `human_review` reports, reuses the
+manifest/report validators, checks manifest thresholds, rubric dimension pass
+thresholds, adjudicated score-source policy, and case/reviewer
+critical-failure blockers, then emits a `wp108.quality_decision.v1` report with
+`publication_quality_claimed=false`. This is a decision-mechanics proof using
+synthetic scores, not final-candidate quality evidence.
 `EV-20260622-061` records the no-live WP-107 hosted-readiness smoke harness
 added on `2312eae6cc7b`: a sanitized localhost `share=False` Gradio copy
 launched with hosted safety flags, fake startup credential sentinels were absent
@@ -145,6 +153,7 @@ channel approval, upgrade proof, or rollback proof.
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
 | WP-108 no-live artifact-completeness runner | `EV-20260622-051`, `EV-20260622-059` | Synthetic native output/request/metadata/provider-request/provider-response/provider-audit/run-store artifacts produce a fixture-mode report, and a no-live generator now maps explicit native run-store rows to the checker; no image scoring or quality claim |
 | WP-108 human-review packet contract | `EV-20260622-060` | Blank digest-bound two-reviewer packet preparation works from checked artifacts, and scored human-review reports now require reviewer/artifact provenance; no reviewer scores or quality claim |
+| WP-108 quality decision utility | `EV-20260622-062` | Completed human-review reports can now be reduced to an auditable go/no-go decision with manifest thresholds, dimension thresholds, adjudicated score-source policy, and critical-failure blockers; the recorded proof uses synthetic scores and makes no publication-quality claim |
 | WP-107 no-live hosted-readiness smoke | `EV-20260622-061` | Reusable localhost share=False hosted-readiness smoke passed on the current harness head: fake startup key sentinels were absent, no key-entry UI returned, two clients called a non-provider endpoint, and cleanup closed the port; not a Hugging Face Space deployment proof |
 | Native artifact secret-sentinel scan | `EV-20260622-044` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; live-provider and hosted scans remain open |
 | Temporary distinct-bundle rollback preflight | `EV-20260622-045`, `EV-20260622-058` | The latest run used a prior app from `1fa6cbe90e6f` and the current post-Codex-env candidate `de4c8170952a`; it upgraded in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
@@ -239,9 +248,11 @@ state is verified.
   mapped native run artifacts. `EV-20260622-059` adds a run-map generator and
   validates one prior no-spend native generation run through the checker.
   `EV-20260622-060` adds blank human-review packet preparation and stricter
-  scored-report provenance checks. Actual final-candidate outputs, completed
-  reviewer/provider scoring, repeated subset, and go/no-go quality evidence
-  remain open.
+  scored-report provenance checks. `EV-20260622-062` adds deterministic
+  go/no-go decision-report generation for completed human-review reports, but
+  its recorded proof uses synthetic scores. Actual final-candidate outputs,
+  completed real reviewer/provider scoring, repeated subset, stakeholder
+  approval, and publication-quality evidence remain open.
 - Upstream maintainer review, merge, and issue closure before claiming upstream
   closeout.
 
