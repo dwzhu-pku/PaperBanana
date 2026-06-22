@@ -13,7 +13,7 @@ been validated and leaves every unvalidated release claim open.
 
 | Item | Value |
 |---|---|
-| Latest full local native/Python/Xcode gate | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
+| Latest full local native/Python/Xcode gate | `da8329597d196608a40bcf6be823c9ef684a9e16` |
 | Latest recorded remote-check evidence head | `de4c8170952ad8f0efa2aa8e901f248f3c878605` |
 | Latest current-head install/source-contract evidence | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
 | Branch | `integration/native-first-rc-native` |
@@ -72,6 +72,14 @@ binding, completed synthetic `human_review` report validation, and
 `wp108.quality_decision.v1` decision/validation. The chain checks that provider
 payload sentinel text is not copied into the packet, report, or decision. This
 is stitched tooling evidence, not final-candidate quality evidence.
+`EV-20260622-064` records a sanitized current-head full local
+native/Python/Xcode 27 gate on `da8329597d19`: a temporary tracked-file clone
+with provider credentials and local routing variables unset installed a fresh Python 3.12.13 environment, passed the native source-control and Xcode project
+contracts, passed the Xcode 27 baseline guard, passed the repeated Xcode test
+command with 166 Swift tests and 0 failures, passed 126 Python tests with 8
+warnings, and emitted a passing `codex-xcode27 proof`. This is current-head
+full-gate evidence, not install, live-provider, hosted, visual/manual AX,
+quality, release, or upstream-acceptance evidence.
 `EV-20260622-061` records the no-live WP-107 hosted-readiness smoke harness
 added on `2312eae6cc7b`: a sanitized localhost `share=False` Gradio copy
 launched with hosted safety flags, fake startup credential sentinels were absent
@@ -151,8 +159,8 @@ channel approval, upgrade proof, or rollback proof.
 
 | Area | Evidence | Status |
 |---|---|---|
-| Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-057` | Passed with limitation |
-| Local aggregate native gate | `EV-20260622-056` | 166 Swift tests, 102 Python tests, and `codex-xcode27 proof` passed on the current post-Codex-env hardening product head |
+| Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-057`, `EV-20260622-064` | Passed with limitation |
+| Local aggregate native gate | `EV-20260622-064` | Sanitized current-head full gate passed from a tracked-file temporary clone with provider credentials unset: 166 Swift tests, 126 Python tests, and `codex-xcode27 proof` passed |
 | Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056` | Current post-Codex-env hardening Release build/install and post-install sanity checks passed |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057` | Passed with limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034` | Real local data, search/filter, 10-example cap, and no-spend persistence validated |
@@ -249,7 +257,9 @@ state is verified.
   full runtime user-data migration proof, or hosted rollback proof.
 - Repeat the full local/self-hosted native/Python/Xcode gate if a later
   product-code change lands or if the final frozen release-candidate SHA
-  differs from `8ce7f3a2cca30d2572144d8edd5e7b52490938e4`.
+  differs from `da8329597d196608a40bcf6be823c9ef684a9e16`. `EV-20260622-064`
+  is current-head sanitized full-gate evidence only; release install/rollback
+  proof remains separate.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
   `EV-20260622-043` confirms the current branch has evaluation-adjacent code but
   no safe no-live release-quality benchmark runner, frozen manifest, threshold,
