@@ -142,6 +142,10 @@ Current evidence:
   legacy run-store schema migration, stale running-run recovery, Run Details /
   Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte
   preservation.
+- `EV-20260622-049`: generation and refinement store-level Codex fallback tests
+  now exercise the real Swift `CodexFallbackProviderClient` through a
+  deterministic fake Codex executable, proving local no-key `swift_codex`
+  durable provenance without live providers.
 
 Open gaps:
 
@@ -663,7 +667,8 @@ README.md
   no-spend generation/refinement store artifact and provenance behavior only;
   `EV-20260622-039` covers mocked/no-live cancellation, timeout, and stale-run
   recovery only; `EV-20260622-044` covers dry-run artifact secret-sentinel
-  scanning only.
+  scanning only; `EV-20260622-049` covers deterministic fake-Codex store
+  handoff only.
 - Complete real hosted two-session/negative-path validation before any public
   hosted claim. `EV-20260622-040` is localhost-only served credential smoke,
   not public hosted deployment evidence.

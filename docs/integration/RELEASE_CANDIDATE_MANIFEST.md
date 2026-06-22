@@ -23,6 +23,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest temporary rollback preflight head | `c976aca0ee70f26a8473f7024deb0b11ae2fe884` |
 | Latest WP-108 no-live contract head | `37b44c04dcbdb680a043553684e1d15b3a568f52` |
 | Latest WP-109 runtime migration head | `439419e1fbf76162eec622745d2e655f6915267b` |
+| Latest WP-106 fake-Codex handoff test head | `6f48b2dcd055a32f0fa3cdca899ddcff7a9fd009` |
 | Manifest status | Draft; not a frozen release tag |
 
 Commits after `cf9531cfdd4e` are evidence, documentation, runbook, screenshot,
@@ -42,7 +43,9 @@ does not replace a real quality benchmark run or publication-quality decision.
 `EV-20260622-048` validates the later `439419e1fbf7` no-live runtime user-data
 migration slice with isolated Application Support, legacy run-store migration,
 stale-run recovery, scanner rediscovery, and synthetic artifact byte
-preservation.
+preservation. `EV-20260622-049` validates the later `6f48b2dcd055` no-live
+store-level fake-Codex fallback handoff through the real Swift
+`CodexFallbackProviderClient`.
 
 ## Installed App Artifact
 
@@ -77,13 +80,14 @@ channel approval, upgrade proof, or rollback proof.
 | Native artifact secret-sentinel scan | `EV-20260622-044` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; live-provider and hosted scans remain open |
 | Temporary distinct-bundle rollback preflight | `EV-20260622-045` | Prior app from `261ad29fb0c4` upgraded to the current candidate in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
 | Runtime user-data migration slice | `EV-20260622-048` | Isolated Application Support override, fake sentinel secret-store permissions, legacy run-store schema migration, stale-run recovery, Run Details / Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte preservation passed without live providers |
+| Fake-Codex fallback store handoff | `EV-20260622-049` | Native generation and refinement stores now execute the real Swift Codex fallback adapter with a deterministic fake executable and persist `swift_codex`/`provider_spend=none` provenance without live provider keys |
 
 ## Provider Support Matrix
 
 | Route | Current release-candidate status | Evidence | Limitation |
 |---|---|---|---|
 | Native no-spend dry run | Validated for local provenance, manual-reference persistence, generation/refinement store artifact behavior, and dry-run artifact secret-sentinel scanning | `EV-20260622-024`, `EV-20260622-025`, `EV-20260622-026`, `EV-20260622-038`, `EV-20260622-044` | Not a live provider generation result |
-| Codex fallback | Implemented and covered by unit/component tests as a no-paid-provider path | Swift/Python test suites in `EV-20260622-035`; focused refinement fallback evidence in `EV-20260622-038` | Approved live fallback E2E remains open |
+| Codex fallback | Implemented and covered by unit/component/store tests as a no-paid-provider path | Swift/Python test suites in `EV-20260622-035`; focused refinement fallback evidence in `EV-20260622-038`; store-level fake-Codex handoff evidence in `EV-20260622-049` | Approved real Codex/live fallback E2E remains open |
 | Google Gemini / Nano Banana | Implemented and covered by mocked/error-path tests | Swift/Python test suites in `EV-20260622-035`; focused cancellation/timeout recovery evidence in `EV-20260622-039` | Approved live provider E2E remains open |
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
 | `local/<model>` and `ollama/<model>` text routes | Documented and covered by mocked route/docs tests | `EV-20260622-007` and full Python suites | Optional real local/Ollama endpoint smoke remains open if promoted beyond mocked support |
@@ -126,8 +130,10 @@ state is verified.
   adaptive visual review remain open.
 - Approved live provider/fallback native E2E with non-private fixtures, spend
   limit, redacted request/metadata/provider-artifact review, and
-  failure/recovery proof. `EV-20260622-044` covers dry-run artifact secret-sentinel scanning only; it does not cover live provider responses,
-  runtime logs, or hosted artifacts.
+  failure/recovery proof. `EV-20260622-044` covers dry-run artifact
+  secret-sentinel scanning only, and `EV-20260622-049` covers a deterministic
+  fake-Codex handoff only; they do not cover live provider responses, real Codex
+  CLI behavior, runtime logs from a live run, or hosted artifacts.
 - Hosted two-session proof on the real hosted surface, hosted negative-path
   validation, deployed SHA, runtime-log review, and hosted rollback before any
   public hosted-generation claim. `EV-20260622-040` is localhost-only
