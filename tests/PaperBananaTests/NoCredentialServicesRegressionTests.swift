@@ -476,6 +476,17 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             settingsRoot.contains(".scenePadding()"),
             "The Settings scene should use native scene padding instead of a fixed old panel frame."
         )
+        XCTAssertTrue(
+            settingsRoot.contains("TabView(selection: $selection)") &&
+                settingsRoot.contains("SettingsPaneContent") &&
+                settingsRoot.contains(".frame(maxWidth: 860") &&
+                settingsRoot.contains(#".accessibilityIdentifier("paperbanana-settings-window")"#),
+            "Settings should retain native tabbed preferences while constraining form width and exposing a named window landmark."
+        )
+        XCTAssertTrue(
+            settingsRoot.contains(#".accessibilityIdentifier("settings-pane-\(pane.rawValue)")"#),
+            "Every Settings tab should expose a stable pane accessibility identifier for keyboard and VoiceOver review."
+        )
         XCTAssertFalse(
             settingsRoot.contains(".frame(width: 680, height: 520)") ||
                 settingsRoot.contains("private var generalTab") ||
@@ -485,6 +496,15 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
         XCTAssertTrue(
             workspacePane.contains(#"Section("Native Workspace")"#),
             "Settings Workspace should frame the checkout path as native workspace configuration."
+        )
+        XCTAssertTrue(
+            workspacePane.contains("SettingsReadinessSummary(snapshot: settings.readinessSnapshot())") &&
+                panes.contains("private struct SettingsReadinessSummary"),
+            "Settings Workspace should present readiness as native form rows rather than nesting a workbench card in a Settings form."
+        )
+        XCTAssertFalse(
+            workspacePane.contains("PaperBananaReadinessPanel(snapshot: settings.readinessSnapshot())"),
+            "Settings Workspace should not embed the main workbench readiness card inside the grouped Settings form."
         )
         XCTAssertFalse(
             workspacePane.contains("Legacy Gradio"),
@@ -506,6 +526,28 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
         XCTAssertTrue(
             panes.contains("SettingsStatusPill"),
             "Settings provider state should use the rebuilt settings-specific status pill."
+        )
+        XCTAssertTrue(
+            panes.contains("ViewThatFits(in: .horizontal)") &&
+                panes.contains(#".accessibilityIdentifier("settings-workspace-repo-path")"#) &&
+                panes.contains(#".accessibilityIdentifier("settings-secret-store-location")"#) &&
+                panes.contains(#".accessibilityIdentifier("settings-google-api-key-field")"#) &&
+                panes.contains(#".accessibilityIdentifier("settings-openrouter-api-key-field")"#) &&
+                panes.contains(#".accessibilityIdentifier("settings-start-compatibility-runtime")"#),
+            "Settings forms should use responsive action rows and named controls for accessibility and screenshot-state review."
+        )
+        XCTAssertTrue(
+            workspacePane.contains(".help(settings.repoPath)") &&
+                workspacePane.contains(#".accessibilityLabel("PaperBanana checkout")"#) &&
+                workspacePane.contains(".accessibilityValue(settings.repoPath)"),
+            "The Workspace checkout path should remain discoverable when visually truncated or selected."
+        )
+        XCTAssertTrue(
+            panes.contains(".lineLimit(1)") &&
+                panes.contains(".truncationMode(.middle)") &&
+                panes.contains(".help(settings.secretStoreURL.path)") &&
+                panes.contains(#".accessibilityLabel("Secret storage location")"#),
+            "Long local secret-store paths should truncate visually while remaining discoverable and readable to assistive technology."
         )
     }
 
@@ -542,8 +584,8 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
 
         XCTAssertTrue(
             settingsPanes.contains(#"Section("PaperBanana Readiness")"#) &&
-                settingsPanes.contains("PaperBananaReadinessPanel(snapshot: settings.readinessSnapshot())"),
-            "Setup should expose PaperBanana readiness in the native Workspace settings pane."
+                settingsPanes.contains("SettingsReadinessSummary(snapshot: settings.readinessSnapshot())"),
+            "Setup should expose PaperBanana readiness as a native Settings form section."
         )
         XCTAssertTrue(
             promptStudio.contains("PaperBananaReadinessPanel(") &&
