@@ -150,6 +150,10 @@ Current evidence:
   `Native Structural Checks` and `Python Tests` plus the full local
   native/Python/Xcode 27 aggregate gate with 163 Swift tests, 102 Python tests,
   and `codex-xcode27 proof`.
+- `EV-20260622-054`: later product-code change `69e9159ca907` dispositioned
+  the unsupported Foundation Models release surface with focused and
+  affected-class Swift tests; repeat the full local/self-hosted gate on the next
+  frozen release-candidate SHA.
 
 Open gaps:
 
@@ -358,6 +362,10 @@ Current evidence:
   configured provider-key sentinels, provider environment variable names, and
   auth header markers were not persisted in the tested temporary `results/`
   trees.
+- `EV-20260622-054`: release-visible image model choices cannot route to
+  Foundation Models or `FoundationModelsProviderClient`, and the auxiliary
+  native assistant defaults to deterministic local fallback. Foundation Models
+  remains unsupported for release.
 
 Open gaps:
 
@@ -637,17 +645,18 @@ README.md
 | Area | Current status | Why |
 |---|---|---|
 | Native implementation existence | Implemented | Native source, tests, scripts, assets, and docs are present on `integration/native-first-rc-native`. |
-| Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. `EV-20260622-052` covers the latest full local native/Python/Xcode 27 gate and remote structural/Python checks on pushed branch head `f5ac81459047`; `EV-20260622-053` covers current-head `6c42b340f4a9` Release build/install, codesign, focused source-level accessibility/keyboard contracts, project-drift, and remote structural/Python checks; `EV-20260622-035` covers earlier Release build/install proof for `f360dc6d5ccd`. A final release-candidate rerun remains required if product code changes land or if the release decision requires a full Xcode gate on a later frozen SHA. |
+| Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. `EV-20260622-052` covers the latest full local native/Python/Xcode 27 gate and remote structural/Python checks on pushed branch head `f5ac81459047`; `EV-20260622-053` covers current-head `6c42b340f4a9` Release build/install, codesign, focused source-level accessibility/keyboard contracts, project-drift, and remote structural/Python checks; `EV-20260622-054` covers a later WP-208 product-code change with focused and affected-class Swift tests only; `EV-20260622-035` covers earlier Release build/install proof for `f360dc6d5ccd`. A final release-candidate rerun remains required because product code changed after the latest full gate and if the release decision requires a full Xcode gate on a later frozen SHA. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings, Settings adaptive screenshots are covered by `EV-20260622-022`, bounded Settings inactive-window screenshots are covered by `EV-20260622-032`, and Dark Settings Increased Text Size visible-content screenshots are covered by `EV-20260622-041`. Lower Workspace content, Light Mode Settings Increased Text Size plus broader full-app Increased Text Size and adaptive states remain open. |
 | Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`, live no-spend preflight plus non-image Artifact disabled-action AX proof is covered by `EV-20260622-033`, live reference-row selectable/selected/search/cap AX proof is covered by `EV-20260622-034`, Settings source-level accessibility/adaptive regression contracts are covered by `EV-20260622-050`, and current-head focused accessibility/keyboard plus Settings source contracts are covered by `EV-20260622-053`. Full manual keyboard/VoiceOver traversal remains open; `EV-20260622-053` records that the current desktop AX/window capture path was not trustworthy for manual signoff. |
-| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, real-data search/filter plus 10-reference cap persistence, focused no-spend generation/refinement store provenance tests, focused no-live cancellation/timeout/stale-run recovery tests, dry-run artifact secret-sentinel scanning in `EV-20260622-044`, and sanitized localhost served credential smoke are covered. Live provider artifact/log scanning and real hosted session proof remain open. |
+| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, real-data search/filter plus 10-reference cap persistence, focused no-spend generation/refinement store provenance tests, focused no-live cancellation/timeout/stale-run recovery tests, dry-run artifact secret-sentinel scanning in `EV-20260622-044`, Foundation Models disposition in `EV-20260622-054`, and sanitized localhost served credential smoke are covered. Live provider artifact/log scanning and real hosted session proof remain open. |
 | Quality benchmark | Not complete | `EV-20260622-043` found evaluation-adjacent code and a referenced-evaluation viewer, but no runnable no-live WP-108 benchmark command, frozen manifest, threshold, report schema, reviewer rubric, or CI gate. `EV-20260622-046` adds a CI-safe no-live manifest/report contract scaffold and validator. `EV-20260622-051` adds a no-live artifact-completeness runner for mapped native run artifacts. Actual generated final-candidate outputs, reviewer/provider scoring, repeated subset, and go/no-go quality evidence remain open. |
-| Release readiness | Not complete | Current-head install provenance is covered by `EV-20260622-035`, draft release-manifest consistency is covered by `EV-20260622-036`, real `/Applications` app-bundle rollback mechanics are covered by `EV-20260622-037`, and temporary distinct-bundle replacement/restore with synthetic data preservation is covered by `EV-20260622-045`; provider E2E, public prior-release upgrade proof, runtime user-data migration, hosted rollback, final frozen-SHA manifest consistency, quality benchmark, notarization/distribution decision, and upstream maintainer acceptance remain open. |
+| Release readiness | Not complete | Current-head install provenance is covered by `EV-20260622-035`, draft release-manifest consistency is covered by `EV-20260622-036`, real `/Applications` app-bundle rollback mechanics are covered by `EV-20260622-037`, temporary distinct-bundle replacement/restore with synthetic data preservation is covered by `EV-20260622-045`, and Foundation Models release-surface disposition is covered by `EV-20260622-054`; provider E2E, public prior-release upgrade proof, runtime user-data migration, hosted rollback, final frozen-SHA manifest consistency, quality benchmark, notarization/distribution decision, and upstream maintainer acceptance remain open. |
 
 ## Required Follow-Up Before Full Signoff
 
 - Record a final full native/Python/Xcode gate on the frozen release-candidate
-  SHA if it differs from `f5ac81459047` or later product code changes land.
+  SHA because `EV-20260622-054` is a later product-code change after the full
+  local aggregate gate in `EV-20260622-052`.
 - Run the full manual keyboard and VoiceOver traversal, including Run Details
   and Provider Run Ledger table focus beyond the AX summary proof in
   `EV-20260622-021`, plus Prompt Studio states beyond the focused

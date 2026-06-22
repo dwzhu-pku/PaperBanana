@@ -19,7 +19,7 @@ been validated and leaves every unvalidated release claim open.
 | Branch | `integration/native-first-rc-native` |
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
 | Upstream base | `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b` |
-| Latest product-source change | `cf9531cfdd4e` |
+| Latest product-source change | `69e9159ca9078952fc24609ded25995e73fe7c1a` |
 | Latest native artifact-secret test head | `59e40f7b7c33b5e449a44224edc1d8dfb1508a6c` |
 | Latest temporary rollback preflight head | `c976aca0ee70f26a8473f7024deb0b11ae2fe884` |
 | Latest WP-108 no-live contract head | `37b44c04dcbdb680a043553684e1d15b3a568f52` |
@@ -27,13 +27,20 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-106 fake-Codex handoff test head | `6f48b2dcd055a32f0fa3cdca899ddcff7a9fd009` |
 | Latest WP-007 Settings source-contract test head | `758a3841028d7ec576042a19c0cc65e0c808e469` |
 | Latest WP-108 no-live artifact runner head | `46f9a937480c77ba8f8ffcea8d3d970ab51f5c08` |
+| Latest WP-208 Foundation Models disposition head | `69e9159ca9078952fc24609ded25995e73fe7c1a` |
 | Manifest status | Draft; not a frozen release tag |
 
-Commits after `cf9531cfdd4e` are evidence, documentation, runbook, screenshot,
-rollback-preflight, and no-live benchmark-contract commits. `EV-20260622-052`
-validates current pushed branch head `f5ac81459047` through remote
-structural/Python workflow checks and the local aggregate native/Python/Xcode 27
-gate with 163 Swift tests, 102 Python tests, and `codex-xcode27 proof`.
+Commits after the last recorded full local gate include evidence,
+documentation, runbook, screenshot, rollback-preflight, no-live
+benchmark-contract commits, and the later WP-208 Foundation Models disposition
+product change at `69e9159ca907`. `EV-20260622-052` validates pushed branch head
+`f5ac81459047` through remote structural/Python workflow checks and the local
+aggregate native/Python/Xcode 27 gate with 163 Swift tests, 102 Python tests,
+and `codex-xcode27 proof`; it is historical relative to the later WP-208
+product-code change. `EV-20260622-054` validates that release-visible image
+model choices cannot route to Foundation Models and that the auxiliary assistant
+defaults to local fallback, but the full local/self-hosted gate must still be
+repeated on the next frozen release-candidate SHA.
 `EV-20260622-047` remains historical full-gate evidence for
 `eebe3928f63a48b8fe56ba23c8c637ddf129d299`, and
 `EV-20260622-035` separately validates
@@ -69,6 +76,10 @@ Settings accessibility/adaptive contracts, project-drift check, and remote
 `Native Structural Checks` / `Python Tests` workflow success; its GUI
 AX/window screenshot traversal attempt remained blocked by the current desktop
 capture/AX surface.
+`EV-20260622-054` validates the later WP-208 Foundation Models disposition:
+release-visible image model choices do not route to Foundation Models, the
+auxiliary assistant defaults to local fallback, and Foundation Models remains
+unsupported for release.
 
 ## Installed App Artifact
 
@@ -105,6 +116,7 @@ channel approval, upgrade proof, or rollback proof.
 | Temporary distinct-bundle rollback preflight | `EV-20260622-045` | Prior app from `261ad29fb0c4` upgraded to the current candidate in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
 | Runtime user-data migration slice | `EV-20260622-048` | Isolated Application Support override, fake sentinel secret-store permissions, legacy run-store schema migration, stale-run recovery, Run Details / Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte preservation passed without live providers |
 | Fake-Codex fallback store handoff | `EV-20260622-049` | Native generation and refinement stores now execute the real Swift Codex fallback adapter with a deterministic fake executable and persist `swift_codex`/`provider_spend=none` provenance without live provider keys |
+| Foundation Models disposition | `EV-20260622-054` | Release-visible image model choices do not route to Foundation Models, and the auxiliary assistant defaults to local fallback; Foundation Models remains unsupported |
 
 ## Provider Support Matrix
 
@@ -115,7 +127,7 @@ channel approval, upgrade proof, or rollback proof.
 | Google Gemini / Nano Banana | Implemented and covered by mocked/error-path tests | Swift/Python test suites in `EV-20260622-035`; focused cancellation/timeout recovery evidence in `EV-20260622-039` | Approved live provider E2E remains open |
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
 | `local/<model>` and `ollama/<model>` text routes | Documented and covered by mocked route/docs tests | `EV-20260622-007` and full Python suites | Optional real local/Ollama endpoint smoke remains open if promoted beyond mocked support |
-| Foundation Models | Unsupported for release | `D-05`, `D-13`, and provider-support docs | Do not promote as functional without implementation and tests |
+| Foundation Models | Unsupported for release | `D-05`, `D-13`, provider-support docs, and `EV-20260622-054` | Release-visible image model choices cannot route to Foundation Models, and the auxiliary assistant defaults to local fallback; do not promote as functional without implementation and tests |
 | Hosted Gradio/Space generation | Not release-verified | Credential/plot policy evidence exists for local code paths; sanitized localhost served credential smoke in `EV-20260622-040` | Real hosted two-session, hosted negative-path, deployed-SHA, provider generation, and rollback proof remain open |
 
 Per `D-05`, only routes with final smoke evidence can be described as supported
@@ -174,6 +186,10 @@ state is verified.
   `EV-20260622-048`, but these are not frozen release approval, public
   prior-release upgrade proof, full runtime user-data migration proof, or
   hosted rollback proof.
+- A full local/self-hosted native/Python/Xcode gate on the next frozen
+  release-candidate SHA remains required because `EV-20260622-054` records a
+  product-code change after the last full local aggregate gate in
+  `EV-20260622-052`.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
   `EV-20260622-043` confirms the current branch has evaluation-adjacent code but
   no safe no-live release-quality benchmark runner, frozen manifest, threshold,
