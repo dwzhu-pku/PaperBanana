@@ -7,6 +7,9 @@ README = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
 RELEASE_MANIFEST = (
     REPO_ROOT / "docs" / "integration" / "RELEASE_CANDIDATE_MANIFEST.md"
 ).read_text(encoding="utf-8")
+ROLLBACK_RUNBOOK = (
+    REPO_ROOT / "docs" / "integration" / "LOCAL_INSTALL_ROLLBACK_RUNBOOK.md"
+).read_text(encoding="utf-8")
 
 
 def test_support_doc_contains_public_artifact_contract():
@@ -81,3 +84,25 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
 
     for phrase in required_phrases:
         assert phrase in RELEASE_MANIFEST
+
+
+def test_local_install_rollback_runbook_keeps_preflight_scope_and_secret_boundary():
+    required_phrases = [
+        "Local Install And Rollback Preflight Runbook",
+        "WP-109/T-028",
+        "Do not read, copy, or print `~/Library/Application Support/PaperBanana/secrets.json`",
+        "Do not run live provider generation",
+        "Back up `/Applications/PaperBanana.app` before replacing it",
+        "DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer",
+        "script/build_and_run.sh --release --install --no-open",
+        "defaults export local.paperbanana.gui",
+        "Restored app hash matches the backup app hash",
+        "No app or legacy backend process remains running after `--no-open`",
+        "Limitation Boundary",
+        "no-live-provider local rollback preflight",
+        "It does not prove full release readiness",
+        "secret-store migration/preservation",
+    ]
+
+    for phrase in required_phrases:
+        assert phrase in ROLLBACK_RUNBOOK
