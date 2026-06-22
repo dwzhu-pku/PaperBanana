@@ -52,7 +52,7 @@ native PR head.
 | Native prompt/provider integration | `7594d4d`, `fac7cc8`, `79425e8`, `7ce4f07` | Plot fallback prompt behavior, provider audit calls, clean-worktree native gate portability, local-route image rejection, and direct Gemini refinement audit preservation. |
 | CI and gate portability | `26adc46`, `75f6d99` | Portable CI workflows, native structural checks, Ruby pinning, and script portability away from a single local host path. |
 | Evidence records | `1524a00`, `d43a6c8`, `4a8df78`, `7271e07`, `1e1688f`, `949bd3c`, `4c9d779` | SHA-linked validation records and manifest updates. Review for accuracy and limitations, not product behavior. |
-| Visual/accessibility polish | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26` | Sidebar/settings polish, search/card accessibility landmarks, Settings form layout, native table accessibility summaries, and source-level regression contracts. |
+| Visual/accessibility polish | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812` | Sidebar/settings polish, search/card accessibility landmarks, Settings form layout, native table accessibility summaries, Prompt Studio keyboard focus escape, and source-level regression contracts. |
 
 ## Original PR #72 Source Stack Mapping
 
@@ -74,7 +74,7 @@ original PR body with the integrated branch:
 | `e0cea78` | `79425e8` | Clean-worktree native gate support. |
 | n/a | `7ce4f07` | Post-integration fix: local image-route rejection and direct Gemini refinement provider-audit preservation. |
 | n/a | `26adc46`, `75f6d99` | CI portability and Ruby pinning added after native integration. |
-| n/a | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26` | Native visual/accessibility follow-up after evidence review. |
+| n/a | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812` | Native visual/accessibility follow-up after evidence review. |
 
 ## Component Lanes
 
@@ -155,6 +155,9 @@ Current evidence:
 - `EV-20260622-014`: accessibility landmark source/AX spot checks.
 - `EV-20260622-015`: Settings layout/screenshots.
 - `EV-20260622-016`: table accessibility follow-up and 154 passing Swift tests.
+- `EV-20260622-027`: Prompt Studio keyboard focus escape from the multiline
+  prompt editor to Run Controls and back passed source tests, installed-app AX
+  proof, and the full native/Python/Xcode 27 aggregate gate.
 - `EV-20260622-022`: Settings effective-minimum and adaptive appearance
   screenshots covered the Workspace pane in Dark/Light with Increased Contrast,
   Reduce Transparency, and Reduce Motion. Independent macOS design critique
@@ -163,6 +166,8 @@ Current evidence:
 Open gaps:
 
 - Full manual VoiceOver and keyboard traversal remain required.
+- Prompt Studio prompt-to-run-control keyboard escape is covered by
+  `EV-20260622-027`.
 - Increased Text Size and inactive-window Settings review remain open. Broader
   full-app hover/focus and adaptive-state review remains required outside the
   Settings increment.
@@ -209,6 +214,9 @@ Current evidence:
   missing-image, and cleared-search counts; native UI blocked an eleventh
   selection at `10/10`; a no-spend run persisted exactly `ref_1` through
   `ref_10` and excluded `ref_11` from the provider prompt.
+- `EV-20260622-027`: installed-app AX proof confirmed Prompt Studio can move
+  keyboard focus from the multiline prompt editor to Run Controls with
+  Command-Option-R and back with Command-Option-P.
 
 Open gaps:
 
@@ -513,7 +521,7 @@ README.md
 | Native implementation existence | Implemented | Native source, tests, scripts, assets, and docs are present on `integration/native-first-rc-native`. |
 | Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. Final release-candidate rerun remains required. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings. Adaptive states remain open. |
-| Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Full keyboard/VoiceOver traversal and live table AX re-probe remain open. |
+| Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, and Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`. Full manual keyboard/VoiceOver traversal remains open. |
 | Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, and real-data search/filter plus 10-reference cap persistence are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
 | Release readiness | Not complete | Provider E2E, rollback, final install provenance, quality benchmark, and upstream maintainer acceptance remain open. |
 
@@ -522,7 +530,9 @@ README.md
 - Record a final full native/Python/Xcode gate on the frozen release-candidate
   SHA.
 - Run the full manual keyboard and VoiceOver traversal, including Run Details
-  and Provider Run Ledger table focus.
+  and Provider Run Ledger table focus beyond the AX summary proof in
+  `EV-20260622-021`, plus Prompt Studio states beyond the focused
+  prompt/run-control escape path in `EV-20260622-027`.
 - Capture adaptive visual evidence for Increased Contrast, Increased Text Size,
   Reduce Transparency, Reduce Motion, hover/focus, inactive-window, and narrow
   widths.
