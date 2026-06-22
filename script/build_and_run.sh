@@ -20,6 +20,10 @@ SHOULD_CHECK_PROJECT=0
 SHOULD_GUARD=0
 SHOULD_STOP_LEGACY_BACKEND=0
 INSTALL_PATH="/Applications/${APP_NAME}.app"
+if [[ -n "${PAPERBANANA_INSTALL_PATH:-}" ]]; then
+  INSTALL_PATH="$PAPERBANANA_INSTALL_PATH"
+fi
+SKIP_APP_STOP="${PAPERBANANA_SKIP_APP_STOP:-0}"
 LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister"
 export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode-beta.app/Contents/Developer}"
 
@@ -148,7 +152,20 @@ run_icon_resource_helper() {
   "$ruby_bin" "$ROOT_DIR/script/ensure_xcode_icon_resource.rb"
 }
 
-if pgrep -x "$APP_NAME" >/dev/null 2>&1; then
+validate_install_path() {
+  if [[ -z "$INSTALL_PATH" || "$INSTALL_PATH" != /* || "$INSTALL_PATH" != *.app ]]; then
+    echo "ERROR: install path must be an absolute .app bundle path: $INSTALL_PATH" >&2
+    exit 2
+  fi
+  case "$INSTALL_PATH" in
+    "/"|"/Applications"|"/Applications/"|"$HOME"|"$HOME/")
+      echo "ERROR: refusing unsafe install path: $INSTALL_PATH" >&2
+      exit 2
+      ;;
+  esac
+}
+
+if [[ "$SKIP_APP_STOP" != "1" ]] && pgrep -x "$APP_NAME" >/dev/null 2>&1; then
   pkill -x "$APP_NAME" || true
   sleep 1
 fi
@@ -186,6 +203,8 @@ if [[ "$SHOULD_TEST" == "1" ]]; then
 fi
 
 if [[ "$SHOULD_INSTALL" == "1" ]]; then
+  validate_install_path
+  mkdir -p "$(dirname "$INSTALL_PATH")"
   rm -rf "$INSTALL_PATH"
   ditto "$BUILT_APP" "$INSTALL_PATH"
   "$LSREGISTER" -f -R -trusted "$INSTALL_PATH" >/dev/null 2>&1 || true

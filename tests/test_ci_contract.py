@@ -57,3 +57,30 @@ def test_ci_policy_documents_manual_xcode27_gate_and_no_secret_pr_policy():
 
     for phrase in required_phrases:
         assert phrase in text
+
+
+def test_native_install_scripts_support_safe_temporary_rollback_preflight():
+    build_script = _read("script/build_and_run.sh")
+    preflight_script = _read("script/preflight_local_upgrade_rollback.sh")
+
+    build_required = [
+        "PAPERBANANA_INSTALL_PATH",
+        "PAPERBANANA_SKIP_APP_STOP",
+        "validate_install_path",
+        "install path must be an absolute .app bundle path",
+        "refusing unsafe install path",
+    ]
+    for phrase in build_required:
+        assert phrase in build_script
+
+    preflight_required = [
+        "--prior-app",
+        "PAPERBANANA_INSTALL_PATH",
+        "PAPERBANANA_SKIP_APP_STOP=1",
+        "candidate app binary hash matches prior app; distinct upgrade was not proven",
+        "Application Support fixture changed during candidate install",
+        "results fixture changed during restore",
+        "does not read, copy, or print the real PaperBanana",
+    ]
+    for phrase in preflight_required:
+        assert phrase in preflight_script

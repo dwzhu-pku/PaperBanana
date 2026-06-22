@@ -66,6 +66,7 @@ required_paths=(
   "script/check_native_xcode_contract.sh"
   "script/check_xcode_project_drift.sh"
   "script/ensure_xcode_icon_resource.rb"
+  "script/preflight_local_upgrade_rollback.sh"
   "script/test_all.sh"
   "script/xcode27_baseline_guard.sh"
 )
@@ -96,6 +97,7 @@ durable_roots=(
   "script/check_native_xcode_contract.sh"
   "script/check_xcode_project_drift.sh"
   "script/ensure_xcode_icon_resource.rb"
+  "script/preflight_local_upgrade_rollback.sh"
   "script/test_all.sh"
   "script/xcode27_baseline_guard.sh"
 )

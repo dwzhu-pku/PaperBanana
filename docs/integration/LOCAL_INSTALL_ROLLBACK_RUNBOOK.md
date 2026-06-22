@@ -10,6 +10,23 @@ preflight for release rollback work; it does not prove a true upgrade from a
 distinct prior public release unless the backup app is a retained known-good
 prior release.
 
+For repeated, non-destructive release-candidate rehearsal, prefer the temporary
+install harness:
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer \
+  script/preflight_local_upgrade_rollback.sh \
+  --prior-app /path/to/prior/PaperBanana.app
+```
+
+That harness installs into a temporary `.app` path through
+`PAPERBANANA_INSTALL_PATH`, keeps `PAPERBANANA_SKIP_APP_STOP=1`, requires the
+candidate binary hash to differ from the supplied prior app, verifies code
+signing before and after restore, and hashes synthetic Application Support and
+`results/` fixtures before install, after install, and after restore. It does
+not read, copy, or print the real `~/Library/Application Support/PaperBanana`
+secret store.
+
 ## Safety Rules
 
 - Do not read, copy, or print `~/Library/Application Support/PaperBanana/secrets.json`.
@@ -116,3 +133,8 @@ hosted validation, final frozen-SHA release consistency,
 notarization/distribution readiness, full manual accessibility,
 publication-quality output, upstream maintainer acceptance, or
 secret-store migration/preservation.
+
+The temporary harness can prove distinct local bundle replacement and synthetic
+data preservation without touching `/Applications`; it still does not prove a
+publicly distributed upgrade unless the supplied `--prior-app` is a retained
+known-good prior release artifact.
