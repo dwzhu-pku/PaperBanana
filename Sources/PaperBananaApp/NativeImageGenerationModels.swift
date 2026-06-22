@@ -28,7 +28,11 @@ struct NativeImageGenerationRequest {
         self.aspectRatio = aspectRatio
         self.task = task
         self.settings = settings
-        self.referenceExamples = Array(referenceExamples.prefix(ReferenceExampleSelection.maximumSelectionCount))
+        self.referenceExamples = Array(
+            referenceExamples
+                .filter { $0.isCompatible(with: task) }
+                .prefix(ReferenceExampleSelection.maximumSelectionCount)
+        )
         self.executionMode = executionMode
         self.preflightRunID = preflightRunID
     }

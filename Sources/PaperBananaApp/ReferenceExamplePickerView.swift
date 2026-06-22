@@ -32,45 +32,41 @@ struct ReferenceExamplePickerView: View {
             systemImage: "quote.bubble",
             subtitle: sectionSubtitle
         ) {
-            if taskIsPlot {
-                unsupportedPlotState
-            } else {
-                switch store.state {
-                case .available:
-                    availableState
-                case .idle:
-                    statusState(
-                        title: "Dataset Not Loaded",
-                        systemImage: "clock",
-                        detail: "PaperBanana will scan the local benchmark before manual references are available.",
-                        tint: .secondary,
-                        action: nil
-                    )
-                case .missing:
-                    statusState(
-                        title: "Download PaperBananaBench",
-                        systemImage: "tray.and.arrow.down",
-                        detail: store.state.statusDetail,
-                        tint: AppDesignSystem.SemanticColors.statusStarting,
-                        action: openDatasetPage
-                    )
-                case .malformed:
-                    statusState(
-                        title: "Reference File Needs Review",
-                        systemImage: "exclamationmark.triangle",
-                        detail: store.state.statusDetail,
-                        tint: AppDesignSystem.SemanticColors.statusFailed,
-                        action: nil
-                    )
-                case .empty:
-                    statusState(
-                        title: "No Diagram Examples Found",
-                        systemImage: "doc.text.magnifyingglass",
-                        detail: store.state.statusDetail,
-                        tint: AppDesignSystem.SemanticColors.statusStarting,
-                        action: nil
-                    )
-                }
+            switch store.state {
+            case .available:
+                availableState
+            case .idle:
+                statusState(
+                    title: "Dataset Not Loaded",
+                    systemImage: "clock",
+                    detail: "PaperBanana will scan the local benchmark before manual references are available.",
+                    tint: .secondary,
+                    action: nil
+                )
+            case .missing:
+                statusState(
+                    title: "Download PaperBananaBench",
+                    systemImage: "tray.and.arrow.down",
+                    detail: store.state.statusDetail,
+                    tint: AppDesignSystem.SemanticColors.statusStarting,
+                    action: openDatasetPage
+                )
+            case .malformed:
+                statusState(
+                    title: "Reference File Needs Review",
+                    systemImage: "exclamationmark.triangle",
+                    detail: store.state.statusDetail,
+                    tint: AppDesignSystem.SemanticColors.statusFailed,
+                    action: nil
+                )
+            case .empty:
+                statusState(
+                    title: "No \(referenceTask.capitalizedDisplayName) Examples Found",
+                    systemImage: "doc.text.magnifyingglass",
+                    detail: store.state.statusDetail,
+                    tint: AppDesignSystem.SemanticColors.statusStarting,
+                    action: nil
+                )
             }
         }
         .disabled(isRunning)
@@ -80,18 +76,15 @@ struct ReferenceExamplePickerView: View {
     }
 
     private var sectionSubtitle: String {
-        if taskIsPlot {
-            return "Manual plot examples are not available yet."
-        }
         let count = store.selectedExamples(for: selectedIDs).count
         if count == 0 {
-            return "Optional manual PaperBananaBench diagram guidance."
+            return "Optional manual PaperBananaBench \(referenceTask.displayName) guidance."
         }
         return "\(count) of \(ReferenceExampleSelection.maximumSelectionCount) selected for prompt enrichment."
     }
 
-    private var taskIsPlot: Bool {
-        task.localizedCaseInsensitiveContains("plot")
+    private var referenceTask: ReferenceExampleBenchmarkTask {
+        ReferenceExampleBenchmarkTask(taskName: task)
     }
 
     private var availableState: some View {
@@ -115,7 +108,7 @@ struct ReferenceExamplePickerView: View {
                 ArtifactEmptyStateView(
                     title: scope == .selected ? "No Selected Examples" : "No Matches",
                     systemImage: "doc.text.magnifyingglass",
-                    description: scope == .selected ? "Select up to 10 diagram examples to guide the next run." : "Try a different id, caption, or methodology keyword."
+                    description: scope == .selected ? "Select up to 10 \(referenceTask.displayName) examples to guide the next run." : "Try a different id, caption, or methodology keyword."
                 )
                 .frame(maxWidth: .infinity, minHeight: 130)
             } else {
@@ -181,16 +174,6 @@ struct ReferenceExamplePickerView: View {
         }
     }
 
-    private var unsupportedPlotState: some View {
-        statusState(
-            title: "Manual Plot Examples Unavailable",
-            systemImage: "chart.xyaxis.line",
-            detail: "Native manual selection currently supports PaperBananaBench diagrams only. Plot generation can still run without manual examples.",
-            tint: AppDesignSystem.SemanticColors.statusStarting,
-            action: nil
-        )
-    }
-
     private func statusState(
         title: String,
         systemImage: String,
@@ -250,9 +233,6 @@ struct ReferenceExamplePickerView: View {
     }
 
     private var accessibilityValue: String {
-        if taskIsPlot {
-            return "Manual plot examples are unavailable."
-        }
         switch store.state {
         case .available:
             let selectedCount = store.selectedExamples(for: selectedIDs).count
