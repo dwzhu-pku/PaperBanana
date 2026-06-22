@@ -191,6 +191,37 @@ final class NativeImageGenerationStoreTests: XCTestCase {
         XCTAssertTrue(plan.usesPaidProvider)
     }
 
+    func testPreflightPlanTreatsDryRunAsNoProviderSpend() throws {
+        let repoRoot = FileManager.default.temporaryDirectory
+            .appendingPathComponent("PaperBananaGenerationDryRunPreflight-\(UUID().uuidString)", isDirectory: true)
+        let request = NativeImageGenerationRequest(
+            prompt: "Create a dry run request.",
+            model: .nanoBananaPro,
+            resolution: "2K",
+            aspectRatio: "16:9",
+            task: "scientific diagram",
+            settings: PaperBananaSettingsSnapshot(
+                repoPath: repoRoot.path,
+                serverPort: 7860,
+                defaultImageModel: .nanoBananaPro,
+                codexModel: "gpt-5.5",
+                codexReasoning: "xhigh",
+                googleAPIKey: "test-google-key",
+                openRouterAPIKey: ""
+            ),
+            executionMode: .dryRun
+        )
+
+        let plan = NativeRunPreflightPlan.generation(request: request, runID: "native_generate_20260430_121500")
+
+        XCTAssertEqual(plan.providerLabel, "Google Gemini")
+        XCTAssertEqual(plan.modelLabel, "Nano Banana Pro")
+        XCTAssertEqual(plan.credentialSource, "Google API key")
+        XCTAssertEqual(plan.spendSafetyLabel, "No provider API spend (local dry run)")
+        XCTAssertFalse(plan.usesPaidProvider)
+        XCTAssertEqual(plan.runDirectoryURL.path, repoRoot.appendingPathComponent("results/native_generate/native_generate_20260430_121500").path)
+    }
+
     @MainActor
     func testStartCreatesDurableGenerationRunRecordBeforeProcessLaunchFailure() throws {
         let repoRoot = FileManager.default.temporaryDirectory

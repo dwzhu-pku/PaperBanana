@@ -12,6 +12,7 @@ struct NativePromptStudioView: View {
     @State private var resolution = "2K"
     @State private var aspectRatio = "16:9"
     @State private var task = "scientific diagram"
+    @State private var isDryRun = false
     @State private var selectedReferenceIDs = Set<String>()
     @State private var loadedReferenceBenchmarkTask = ReferenceExampleBenchmarkTask.diagram
     @State private var previewImage: NSImage?
@@ -277,10 +278,21 @@ struct NativePromptStudioView: View {
             }
             .controlSize(.small)
 
+            Toggle("No-spend dry run", isOn: $isDryRun)
+                .controlSize(.small)
+                .disabled(generationStore.isRunning)
+                .accessibilityHint("Writes native run, request, metadata, and provider audit artifacts without provider spend.")
+
             if model != .codexFallback && settings.snapshot.googleAPIKey.isEmpty && settings.snapshot.openRouterAPIKey.isEmpty {
                 Label("Provider key missing", systemImage: "key")
                     .font(AppDesignSystem.Typography.caption)
                     .foregroundStyle(AppDesignSystem.SemanticColors.statusStarting)
+            }
+
+            if isDryRun {
+                Label("Local dry run: writes artifacts without provider spend", systemImage: "checkmark.shield")
+                    .font(AppDesignSystem.Typography.caption)
+                    .foregroundStyle(AppDesignSystem.SemanticColors.statusReady)
             }
 
             if !selectedReferenceSelections.isEmpty {
@@ -296,7 +308,7 @@ struct NativePromptStudioView: View {
         Button {
             startGeneration()
         } label: {
-            Label(generationStore.isRunning ? "Running" : "Generate", systemImage: "wand.and.sparkles")
+            Label(generationStore.isRunning ? "Running" : (isDryRun ? "Dry Run" : "Generate"), systemImage: isDryRun ? "checkmark.shield" : "wand.and.sparkles")
         }
         .buttonStyle(.borderedProminent)
         .disabled(generationStore.isRunning || prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
@@ -632,7 +644,8 @@ struct NativePromptStudioView: View {
             aspectRatio: aspectRatio,
             task: task,
             settings: settings.snapshot,
-            referenceExamples: selectedReferenceSelections
+            referenceExamples: selectedReferenceSelections,
+            executionMode: isDryRun ? .dryRun : .live
         )
         let plan = NativeRunPreflightPlan.generation(request: request)
         pendingGenerationRequest = request

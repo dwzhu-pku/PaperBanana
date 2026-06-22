@@ -26,6 +26,7 @@ struct NativeRunPreflightPlan: Equatable, Identifiable {
 
     static func generation(request: NativeImageGenerationRequest, runID suppliedRunID: String? = nil) -> NativeRunPreflightPlan {
         let providerPlan = ImageProviderExecutionPlan(requestedModel: request.model, settings: request.settings)
+        let isDryRun = request.executionMode == .dryRun
         let runID = suppliedRunID ?? makeGenerationRunID()
         let repoRoot = URL(fileURLWithPath: request.settings.repoPath, isDirectory: true)
         let runDirectory = repoRoot
@@ -39,7 +40,7 @@ struct NativeRunPreflightPlan: Equatable, Identifiable {
             providerLabel: providerPlan.providerLabel,
             modelLabel: providerPlan.modelLabel,
             credentialSource: providerPlan.credentialSourceLabel,
-            spendSafetyLabel: providerPlan.spendSafetyLabel,
+            spendSafetyLabel: isDryRun ? "No provider API spend (local dry run)" : providerPlan.spendSafetyLabel,
             resolution: request.resolution,
             aspectRatio: request.aspectRatio,
             runID: runID,
@@ -48,7 +49,7 @@ struct NativeRunPreflightPlan: Equatable, Identifiable {
             requestURL: runDirectory.appendingPathComponent("request.json"),
             logURL: runDirectory.appendingPathComponent("events.jsonl"),
             sourceURL: nil,
-            usesPaidProvider: providerPlan.canSpendProviderCredits
+            usesPaidProvider: !isDryRun && providerPlan.canSpendProviderCredits
         )
     }
 

@@ -365,6 +365,13 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             "Prompt Studio should expose manual PaperBananaBench examples as a compact native workbench section."
         )
         XCTAssertTrue(
+            promptStudio.contains("@State private var isDryRun") &&
+                promptStudio.contains(#"Toggle("No-spend dry run""#) &&
+                promptStudio.contains("executionMode: isDryRun ? .dryRun : .live") &&
+                promptStudio.contains(#"isDryRun ? "Dry Run" : "Generate""#),
+            "Prompt Studio should expose the native no-spend dry run path without routing users through a separate legacy planner surface."
+        )
+        XCTAssertTrue(
             promptStudio.contains(#""statistical plot""#),
             "Prompt Studio should keep the native statistical plot task available."
         )
