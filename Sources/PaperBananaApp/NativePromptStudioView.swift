@@ -20,11 +20,17 @@ struct NativePromptStudioView: View {
     @State private var pendingGenerationRequest: NativeImageGenerationRequest?
     @State private var assistantResult: PaperBananaAssistantResult?
     @State private var assistantIsRunning = false
+    @FocusState private var focusedElement: PromptStudioFocusTarget?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private let resolutions = ["1K", "2K", "4K"]
     private let aspectRatios = ["1:1", "4:3", "3:2", "16:9", "9:16", "21:9"]
     private let tasks = ["scientific diagram", "publication figure", "workflow schematic", "concept art", "graphical abstract", "statistical plot"]
+
+    private enum PromptStudioFocusTarget: Hashable {
+        case promptEditor
+        case runButton
+    }
 
     init(
         settings: AppSettingsStore,
@@ -113,6 +119,24 @@ struct NativePromptStudioView: View {
     private var toolbarActions: some View {
         HStack(spacing: AppDesignSystem.Spacing.sm) {
             Button {
+                focusedElement = .promptEditor
+            } label: {
+                Label("Prompt Editor", systemImage: "text.alignleft")
+            }
+            .keyboardShortcut("p", modifiers: [.command, .option])
+            .help("Move keyboard focus to the prompt editor")
+            .accessibilityHint("Moves keyboard focus to the prompt editor.")
+
+            Button {
+                focusedElement = .runButton
+            } label: {
+                Label("Run Controls", systemImage: "play.rectangle")
+            }
+            .keyboardShortcut("r", modifiers: [.command, .option])
+            .help("Move keyboard focus to Run Controls")
+            .accessibilityHint("Moves keyboard focus to the main run control.")
+
+            Button {
                 NSWorkspace.shared.activateFileViewerSelecting([nativeGenerateDirectory])
             } label: {
                 Label("Reveal Runs", systemImage: "folder")
@@ -150,11 +174,7 @@ struct NativePromptStudioView: View {
             promptEditorToolbar
 
             WorkbenchEditorSurface(minHeight: 360) {
-                TextEditor(text: $prompt)
-                    .font(AppDesignSystem.Typography.body)
-                    .scrollContentBackground(.hidden)
-                    .disabled(generationStore.isRunning)
-                    .accessibilityLabel("Image generation prompt")
+                promptEditorTextView
             }
 
             promptMetadata
@@ -163,6 +183,43 @@ struct NativePromptStudioView: View {
                 assistantReport(assistantResult)
             }
         }
+    }
+
+    @ViewBuilder
+    private var promptEditorTextView: some View {
+        if #available(macOS 14.0, *) {
+            promptEditorTextViewBase
+                .onKeyPress(phases: .down) { keyPress in
+                    guard keyPress.modifiers.contains(.command),
+                          keyPress.modifiers.contains(.option)
+                    else {
+                        return .ignored
+                    }
+
+                    switch keyPress.characters.lowercased() {
+                    case "r":
+                        focusedElement = .runButton
+                        return .handled
+                    case "p":
+                        focusedElement = .promptEditor
+                        return .handled
+                    default:
+                        return .ignored
+                    }
+                }
+        } else {
+            promptEditorTextViewBase
+        }
+    }
+
+    private var promptEditorTextViewBase: some View {
+        TextEditor(text: $prompt)
+            .font(AppDesignSystem.Typography.body)
+            .scrollContentBackground(.hidden)
+            .disabled(generationStore.isRunning)
+            .focused($focusedElement, equals: .promptEditor)
+            .accessibilityLabel("Image generation prompt")
+            .accessibilityHint("Press Command-Option-R to move keyboard focus to Run Controls.")
     }
 
     private var promptEditorToolbar: some View {
@@ -313,6 +370,9 @@ struct NativePromptStudioView: View {
         .buttonStyle(.borderedProminent)
         .disabled(generationStore.isRunning || prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         .keyboardShortcut(.return, modifiers: [.command])
+        .focusable()
+        .focused($focusedElement, equals: .runButton)
+        .accessibilityHint("Starts the native generation flow. Press Command-Option-P to return to the prompt editor.")
 
         Button {
             NSWorkspace.shared.activateFileViewerSelecting([nativeGenerateDirectory])

@@ -269,6 +269,10 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ArtifactInspectorComponents.swift"),
             encoding: .utf8
         )
+        let promptStudio = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/NativePromptStudioView.swift"),
+            encoding: .utf8
+        )
         let artifactCard = try String(
             contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ArtifactLibraryPreviewComponents.swift"),
             encoding: .utf8
@@ -313,6 +317,19 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             artifactInspector.contains(#".accessibilityLabel("Export Image")"#) &&
                 artifactInspector.contains(#".accessibilityLabel("Export Bundle With Metadata")"#),
             "Compact artifact export buttons should expose descriptive accessibility labels."
+        )
+        XCTAssertTrue(promptStudio.contains("@FocusState private var focusedElement"))
+        XCTAssertTrue(promptStudio.contains("enum PromptStudioFocusTarget"))
+        XCTAssertTrue(promptStudio.contains(#".keyboardShortcut("r", modifiers: [.command, .option])"#))
+        XCTAssertTrue(promptStudio.contains(#".keyboardShortcut("p", modifiers: [.command, .option])"#))
+        XCTAssertTrue(promptStudio.contains(".focused($focusedElement, equals: .promptEditor)"))
+        XCTAssertTrue(promptStudio.contains(".focused($focusedElement, equals: .runButton)"))
+        XCTAssertTrue(promptStudio.contains(".onKeyPress(phases: .down)"))
+        XCTAssertTrue(promptStudio.contains(#"keyPress.characters.lowercased()"#))
+        XCTAssertTrue(
+            promptStudio.contains("Press Command-Option-R to move keyboard focus to Run Controls.") &&
+                promptStudio.contains("Press Command-Option-P to return to the prompt editor."),
+            "Prompt Studio should expose an explicit keyboard path out of the multiline prompt editor because Tab is text input there."
         )
     }
 
