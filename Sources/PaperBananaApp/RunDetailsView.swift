@@ -38,6 +38,7 @@ struct RunDetailsView: View {
                 || item.workflow.localizedCaseInsensitiveContains(trimmedSearch)
                 || item.currentStage.localizedCaseInsensitiveContains(trimmedSearch)
                 || (item.providerRequestURL?.path.localizedCaseInsensitiveContains(trimmedSearch) ?? false)
+                || item.referenceProvenance.searchableText.localizedCaseInsensitiveContains(trimmedSearch)
                 || item.outputURLs.contains { $0.path.localizedCaseInsensitiveContains(trimmedSearch) }
                 || item.rawResponseURLs.contains { $0.path.localizedCaseInsensitiveContains(trimmedSearch) }
                 || item.rawPayloadURLs.contains { $0.path.localizedCaseInsensitiveContains(trimmedSearch) }

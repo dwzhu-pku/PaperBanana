@@ -116,6 +116,8 @@ struct ArtifactInspectorView: View {
                 CompanionRow(title: "Metadata", url: artifact.metadataURL)
             }
 
+            ReferenceExampleProvenanceSection(provenance: artifact.referenceProvenance)
+
             PaperBananaAssistantPanel(
                 title: "Local Assistant",
                 tasks: assistantTasks(for: artifact),
@@ -155,6 +157,7 @@ struct ArtifactInspectorView: View {
         if let status = artifact.runStatus {
             lines.append("Run status: \(status.label)")
         }
+        lines.append("Reference examples: \(artifact.referenceProvenance.summaryText.isEmpty ? "None" : artifact.referenceProvenance.summaryText)")
         if let quality = PaperBananaImageQualityInspector.inspect(artifact.url) {
             lines.append("Resolution: \(quality.resolutionText)")
             lines.append("Megapixels: \(quality.megapixelsText)")
@@ -178,6 +181,9 @@ struct ArtifactInspectorView: View {
             "Recovered: \(artifact.isRecovered ? "yes" : "no")",
             "Favorite: \(isFavorite ? "yes" : "no")"
         ]
+        if artifact.referenceProvenance.isManual {
+            lines.append("Reference provenance: \(artifact.referenceProvenance.searchableText)")
+        }
         if let metadataPreview = previewText(from: artifact.metadataURL, limit: 700) {
             lines.append("Metadata preview: \(metadataPreview)")
         }

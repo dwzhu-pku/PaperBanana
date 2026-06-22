@@ -94,7 +94,11 @@ enum ProviderRunLedgerScanner {
             nativeRequestURL: nativeRun?.requestURL ?? jsonFallback?.nativeRequestURL,
             nativeProviderRequestURL: nativeRun?.providerRequestURL ?? jsonFallback?.nativeProviderRequestURL,
             nativeEventLogURL: nativeRun?.eventLogURL ?? jsonFallback?.nativeEventLogURL,
-            auditLogURL: jsonFallback?.auditLogURL
+            auditLogURL: jsonFallback?.auditLogURL,
+            referenceProvenance: ReferenceExampleProvenance.best(
+                nativeRun?.referenceProvenance ?? .empty,
+                jsonFallback?.referenceProvenance ?? .empty
+            )
         )
     }
 
@@ -296,7 +300,8 @@ private struct ProviderRunBuilder {
             nativeRequestURL: nativeRun?.requestURL,
             nativeProviderRequestURL: nativeRun?.providerRequestURL,
             nativeEventLogURL: nativeRun?.eventLogURL,
-            auditLogURL: auditLogURL
+            auditLogURL: auditLogURL,
+            referenceProvenance: nativeRun?.referenceProvenance ?? .empty
         )
     }
 

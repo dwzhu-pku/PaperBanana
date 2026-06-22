@@ -36,6 +36,7 @@ struct NativeRunFolderRecord: Hashable {
     let providerRequestURL: URL?
     let eventLogURL: URL?
     let metadataURL: URL?
+    let referenceProvenance: ReferenceExampleProvenance
 
     var needsAttention: Bool {
         if status.needsAttention { return true }
@@ -152,6 +153,10 @@ private extension NativeRunFolderRecord {
         let primaryMetadata = metadataPayloads.first
         let requestURL = Self.existing(directoryURL.appendingPathComponent("request.json"), fileManager: fileManager)
         let requestRecord = requestURL.flatMap { NativeRunRequestRecord(url: $0) }
+        let referenceProvenance = ReferenceExampleProvenance.best(
+            requestRecord?.referenceProvenance ?? .empty,
+            primaryMetadata?.referenceProvenance ?? .empty
+        )
 
         let resolvedRunID = primaryMetadata?.runID.nilIfBlank
             ?? requestRecord?.runID.nilIfBlank
@@ -237,6 +242,7 @@ private extension NativeRunFolderRecord {
         self.providerRequestURL = providerRequestURL
         self.eventLogURL = eventLogURL
         self.metadataURL = metadataURL
+        self.referenceProvenance = referenceProvenance
     }
 
     private static func events(from eventLogURL: URL?, fileManager: FileManager) -> [NativeRunTimelineEvent] {
@@ -352,6 +358,7 @@ private struct NativeRunMetadata {
     let model: String
     let resolution: String
     let aspectRatio: String
+    let referenceProvenance: ReferenceExampleProvenance
 
     var runDirectoryURL: URL? {
         guard let path = runDirectoryPath.nilIfBlank else { return nil }
@@ -380,6 +387,7 @@ private struct NativeRunMetadata {
         model = payload.model ?? ""
         resolution = payload.resolution ?? ""
         aspectRatio = payload.aspectRatio ?? ""
+        referenceProvenance = payload.referenceProvenance
     }
 
     func outputURL(existingWith fileManager: FileManager) -> URL? {
@@ -420,6 +428,7 @@ private struct NativeRunMetadata {
         let model: String?
         let resolution: String?
         let aspectRatio: String?
+        let referenceProvenance: ReferenceExampleProvenance
 
         enum CodingKeys: String, CodingKey {
             case runID = "run_id"
@@ -433,6 +442,22 @@ private struct NativeRunMetadata {
             case model
             case resolution
             case aspectRatio = "aspect_ratio"
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            runID = try container.decodeIfPresent(String.self, forKey: .runID)
+            runDirectory = try container.decodeIfPresent(String.self, forKey: .runDirectory)
+            outputPath = try container.decodeIfPresent(String.self, forKey: .outputPath)
+            promptPath = try container.decodeIfPresent(String.self, forKey: .promptPath)
+            providerRequestPath = try container.decodeIfPresent(String.self, forKey: .providerRequestPath)
+            logPath = try container.decodeIfPresent(String.self, forKey: .logPath)
+            metadataPath = try container.decodeIfPresent(String.self, forKey: .metadataPath)
+            workflow = try container.decodeIfPresent(String.self, forKey: .workflow)
+            model = try container.decodeIfPresent(String.self, forKey: .model)
+            resolution = try container.decodeIfPresent(String.self, forKey: .resolution)
+            aspectRatio = try container.decodeIfPresent(String.self, forKey: .aspectRatio)
+            referenceProvenance = (try? ReferenceExampleProvenance(from: decoder)) ?? .empty
         }
     }
 }
@@ -450,6 +475,7 @@ private struct NativeRunRequestRecord {
     let model: String
     let resolution: String
     let aspectRatio: String
+    let referenceProvenance: ReferenceExampleProvenance
 
     var runDirectoryURL: URL? {
         guard let path = runDirectoryPath.nilIfBlank else { return nil }
@@ -477,6 +503,7 @@ private struct NativeRunRequestRecord {
         model = payload.model ?? ""
         resolution = payload.resolution ?? ""
         aspectRatio = payload.aspectRatio ?? ""
+        referenceProvenance = payload.referenceProvenance
         if let sourceCopyPath = payload.sourceCopyPath?.nilIfBlank {
             sourceURL = URL(fileURLWithPath: sourceCopyPath).standardizedFileURL
         } else if let sourcePath = payload.sourcePath?.nilIfBlank {
@@ -526,6 +553,7 @@ private struct NativeRunRequestRecord {
         let aspectRatio: String?
         let sourcePath: String?
         let sourceCopyPath: String?
+        let referenceProvenance: ReferenceExampleProvenance
 
         enum CodingKeys: String, CodingKey {
             case runID = "run_id"
@@ -541,6 +569,24 @@ private struct NativeRunRequestRecord {
             case aspectRatio = "aspect_ratio"
             case sourcePath = "source_path"
             case sourceCopyPath = "source_copy_path"
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            runID = try container.decodeIfPresent(String.self, forKey: .runID)
+            runDirectory = try container.decodeIfPresent(String.self, forKey: .runDirectory)
+            outputPath = try container.decodeIfPresent(String.self, forKey: .outputPath)
+            promptPath = try container.decodeIfPresent(String.self, forKey: .promptPath)
+            providerRequestPath = try container.decodeIfPresent(String.self, forKey: .providerRequestPath)
+            logPath = try container.decodeIfPresent(String.self, forKey: .logPath)
+            metadataPath = try container.decodeIfPresent(String.self, forKey: .metadataPath)
+            workflow = try container.decodeIfPresent(String.self, forKey: .workflow)
+            model = try container.decodeIfPresent(String.self, forKey: .model)
+            resolution = try container.decodeIfPresent(String.self, forKey: .resolution)
+            aspectRatio = try container.decodeIfPresent(String.self, forKey: .aspectRatio)
+            sourcePath = try container.decodeIfPresent(String.self, forKey: .sourcePath)
+            sourceCopyPath = try container.decodeIfPresent(String.self, forKey: .sourceCopyPath)
+            referenceProvenance = (try? ReferenceExampleProvenance(from: decoder)) ?? .empty
         }
     }
 }
