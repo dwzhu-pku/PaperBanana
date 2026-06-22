@@ -23,6 +23,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest native artifact-secret test head | `59e40f7b7c33b5e449a44224edc1d8dfb1508a6c` |
 | Latest temporary rollback preflight head | `c976aca0ee70f26a8473f7024deb0b11ae2fe884` |
 | Latest current-head rollback preflight head | `ad07fcc594dc4fa231724c8bf6831a03e191ee8a` |
+| Latest provider-free native validation head | `ddbf64bd1949e352b6c67261cbc39399d496231d` |
 | Latest WP-108 no-live contract head | `37b44c04dcbdb680a043553684e1d15b3a568f52` |
 | Latest WP-109 runtime migration head | `439419e1fbf76162eec622745d2e655f6915267b` |
 | Latest WP-106 fake-Codex handoff test head | `6f48b2dcd055a32f0fa3cdca899ddcff7a9fd009` |
@@ -133,7 +134,18 @@ protection only and does not replace screenshot-based lower Workspace/full-app
 visual signoff. `EV-20260622-067` refreshes the no-live temporary distinct-bundle rollback plus runtime-migration slice on `ad07fcc594dc`: the prior app from
 `1fa6cbe90e6f` restored exactly by binary hash, the candidate hash differed,
 synthetic Application Support and `results/` fixtures stayed unchanged, and 6
-selected runtime-migration/secret-store Swift tests passed.
+selected runtime-migration/secret-store Swift tests passed. `EV-20260622-068`
+refreshes provider-free native validation on `ddbf64bd1949`: docs/CI
+claim-boundary tests passed with 11 Python tests, the full
+`ReferenceExampleStoreTests` class passed 10 Swift tests, a selected no-live
+generation/recovery store slice passed 8 Swift tests, and a broader
+provider-free native slice passed 16 Swift tests covering reference
+loading/cap/filtering/prompt enrichment, source-level AX landmarks, dry-run
+artifacts, secret-sentinel checks, cancellation/timeout/stale-run recovery, and
+recovered-audit metadata. This is provider-free validation only; full manual
+VoiceOver/visual signoff, approved live provider/fallback E2E, hosted
+validation, quality scoring, release approval, and upstream acceptance remain
+open.
 `EV-20260622-051` validates the later `46f9a937480c` no-live WP-108
 artifact-completeness runner using synthetic native run artifacts. It does not
 score output quality, run providers, perform reviewer scoring, or support
@@ -184,8 +196,8 @@ channel approval, upgrade proof, or rollback proof.
 | Local aggregate native gate | `EV-20260622-064` | Sanitized current-head full gate passed from a tracked-file temporary clone with provider credentials unset: 166 Swift tests, 126 Python tests, and `codex-xcode27 proof` passed |
 | Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065` | Current branch-head Release build/install and installed-app artifact provenance passed with binary SHA-256 `d251ae8559d6fbcdb94c3e23b4449207a6ec842ce492f40c37944d12ce189591`; this does not replace full-gate evidence or rollback proof |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057` | Passed with limitation |
-| Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034` | Real local data, search/filter, 10-example cap, and no-spend persistence validated |
-| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053` | Partial; includes current-head source-level accessibility/keyboard contracts and source-level Settings accessibility/adaptive regression coverage, but not full manual VoiceOver traversal |
+| Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
+| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068` | Partial; includes current-head source-level accessibility/keyboard contracts and source-level Settings accessibility/adaptive regression coverage, but not full manual VoiceOver traversal |
 | Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066` | Partial; source-level lower Workspace content regression protection is covered, but broader screenshot-based full-app adaptive signoff remains open |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
@@ -194,10 +206,11 @@ channel approval, upgrade proof, or rollback proof.
 | WP-108 quality decision utility | `EV-20260622-062` | Completed human-review reports can now be reduced to an auditable go/no-go decision with manifest thresholds, dimension thresholds, adjudicated score-source policy, and critical-failure blockers; the recorded proof uses synthetic scores and makes no publication-quality claim |
 | WP-108 offline evidence chain | `EV-20260622-063` | Synthetic native artifacts now flow through run-map generation, artifact-completeness reporting, packet binding, completed synthetic human-review validation, and quality decision validation while preserving claim boundaries and excluding provider payload sentinel text; no real reviewer scores or quality claim |
 | WP-107 no-live hosted-readiness smoke | `EV-20260622-061` | Reusable localhost share=False hosted-readiness smoke passed on the current harness head: fake startup key sentinels were absent, no key-entry UI returned, two clients called a non-provider endpoint, and cleanup closed the port; not a Hugging Face Space deployment proof |
-| Native artifact secret-sentinel scan | `EV-20260622-044` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; live-provider and hosted scans remain open |
+| Native artifact secret-sentinel scan | `EV-20260622-044`, `EV-20260622-068` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; current-head provider-free secret-sentinel checks passed; live-provider and hosted scans remain open |
 | Temporary distinct-bundle rollback preflight | `EV-20260622-045`, `EV-20260622-058`, `EV-20260622-067` | The latest run used a prior app from `1fa6cbe90e6f` and the current branch head `ad07fcc594dc`; it upgraded in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
 | Runtime user-data migration slice | `EV-20260622-048`, `EV-20260622-058`, `EV-20260622-067` | Isolated Application Support override, fake sentinel secret-store permissions, legacy run-store schema migration, stale-run recovery, Run Details / Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte preservation passed without live providers; the selected runtime migration/secret-store/RunStore migration slice was rerun on the current branch head |
 | Fake-Codex fallback store handoff | `EV-20260622-049` | Native generation and refinement stores now execute the real Swift Codex fallback adapter with a deterministic fake executable and persist `swift_codex`/`provider_spend=none` provenance without live provider keys |
+| Current-head provider-free native validation | `EV-20260622-068` | Docs/CI contracts, full ReferenceExampleStore coverage, selected no-live generation/recovery store coverage, source-level AX landmarks, dry-run artifacts, secret-sentinel checks, cancellation/timeout/stale-run recovery, and recovered-audit metadata passed without live providers |
 | Foundation Models disposition | `EV-20260622-054` | Release-visible image model choices do not route to Foundation Models, and the auxiliary assistant defaults to local fallback; Foundation Models remains unsupported |
 | Post-WP-208 full-gate/install proof | `EV-20260622-055` | Current branch head passed the full local aggregate gate, remote structural/Python checks, and Release build/install after the Foundation Models disposition |
 | Codex fallback environment hardening and full-gate/install proof | `EV-20260622-056` | The Swift Codex fallback handoff now launches with a constrained non-secret subprocess environment; focused and selected no-live fallback tests passed, then the full local aggregate gate, proof, and Release install passed |
@@ -207,7 +220,7 @@ channel approval, upgrade proof, or rollback proof.
 
 | Route | Current release-candidate status | Evidence | Limitation |
 |---|---|---|---|
-| Native no-spend dry run | Validated for local provenance, manual-reference persistence, generation/refinement store artifact behavior, and dry-run artifact secret-sentinel scanning | `EV-20260622-024`, `EV-20260622-025`, `EV-20260622-026`, `EV-20260622-038`, `EV-20260622-044` | Not a live provider generation result |
+| Native no-spend dry run | Validated for local provenance, manual-reference persistence, generation/refinement store artifact behavior, and dry-run artifact secret-sentinel scanning | `EV-20260622-024`, `EV-20260622-025`, `EV-20260622-026`, `EV-20260622-038`, `EV-20260622-044`, `EV-20260622-068` | Not a live provider generation result |
 | Codex fallback | Implemented and covered by unit/component/store tests as a no-paid-provider path | Swift/Python test suites in `EV-20260622-035`; focused refinement fallback evidence in `EV-20260622-038`; store-level fake-Codex handoff evidence in `EV-20260622-049`; constrained handoff environment evidence in `EV-20260622-056` | Approved real Codex/live fallback E2E remains open |
 | Google Gemini / Nano Banana | Implemented and covered by mocked/error-path tests | Swift/Python test suites in `EV-20260622-035`; focused cancellation/timeout recovery evidence in `EV-20260622-039` | Approved live provider E2E remains open |
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
