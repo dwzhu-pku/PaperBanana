@@ -115,10 +115,15 @@ Current evidence:
 - `EV-20260622-012`: exact-head native gate at `d43a6c8a9556`.
 - `EV-20260622-016`: source-control/project-drift checks still passed after the
   table accessibility slice.
+- `EV-20260622-028`: remote GitHub Actions evidence for current pushed head
+  `5628b3050aa6`; workflow `Python Tests` / check-run `Python 3.12 Tests`
+  succeeded, and workflow `Native Structural Checks` / check-run
+  `Native Source And Project Contracts` succeeded.
 
 Open gaps:
 
-- Remote GitHub check-run evidence remains required before claiming CI closure.
+- The manual/self-hosted Xcode 27 full gate remains required only if selected
+  as required branch/release evidence.
 - A final release-candidate install proof remains required on the final SHA.
 
 ### 2. App Shell, Navigation, Settings, And Design System
