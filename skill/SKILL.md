@@ -1,7 +1,7 @@
 ---
 name: paperbanana
 description: Generate publication-quality academic diagrams and statistical plots from paper methodology text or structured data
-license: MIT-0
+license: Apache-2.0
 dependencies:
   env:
     - OPENROUTER_API_KEY (recommended)
@@ -35,6 +35,10 @@ export GOOGLE_API_KEY="your-key-here"
 ```
 
 If both keys are configured, OpenRouter is used by default.
+
+Do not paste API keys into public issues, prompts, logs, or screenshots. If a key
+was exposed, revoke or rotate it with the provider before running PaperBanana
+again.
 
 ## Usage
 
@@ -107,6 +111,9 @@ python skill/run.py \
 - **Runtime**: A single candidate typically takes 3-10 minutes depending on model and network conditions. With the default 10 candidates running in parallel, expect ~10-30 minutes total. Plan accordingly.
 - **API calls**: Each candidate involves multiple LLM calls (Retriever + Planner + Stylist + Visualizer + up to 3 Critic rounds). Candidates run in parallel for efficiency.
 - **Image generation**: The Visualizer agent calls an image generation model to render diagrams and uses generated Matplotlib code to render plots.
+- **Provider quota**: Quota, billing, rate-limit, and suspension errors are controlled by the provider account. Reduce `--num-candidates`, critic rounds, and parallel runs before retrying, and use the provider's support channel for account suspensions.
+- **Local LLMs**: Ollama and other local LLMs are not a full image backend. Use them only where an OpenAI-compatible text route is explicitly configured; diagram/image generation still requires a supported image-generation provider.
+- **Artifacts**: PaperBananaBench is available at https://huggingface.co/datasets/dwzhu/PaperBananaBench and the hosted demo is at https://huggingface.co/spaces/dwzhu/PaperBanana.
 
 ## About
 

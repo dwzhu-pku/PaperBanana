@@ -87,6 +87,7 @@ class PaperVizProcessor:
                 critic_suggestions = "" if critic_suggestions is None or (
                     isinstance(critic_suggestions, float) and str(critic_suggestions) == "nan"
                 ) else str(critic_suggestions)
+                data[critic_suggestions_key] = critic_suggestions
 
             if critic_suggestions.strip() == "No changes needed.":
                 print(f"[Critic Round {round_idx}] No changes needed. Stopping iteration.")
@@ -256,4 +257,3 @@ class PaperVizProcessor:
             data, task_name=exp_config.task_name, work_dir=exp_config.work_dir
         )
         return data
-

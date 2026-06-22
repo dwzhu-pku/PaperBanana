@@ -36,6 +36,7 @@ class ExpConfig:
     exp_mode: str = ""
     retrieval_setting: Literal["auto", "manual", "random", "none"] = "auto"
     max_critic_rounds: int = 3
+    agentic_critic: bool = False
     main_model_name: str = ""
     image_gen_model_name: str = ""
     work_dir: Path = Path(__file__).parent.parent

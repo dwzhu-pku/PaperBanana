@@ -18,6 +18,8 @@ Vanilla Agent - Directly rendering images based on the method section.
 
 import json
 import os
+import re
+import time
 from typing import Dict, Any
 from google.genai import types
 import base64, io, asyncio
@@ -27,6 +29,12 @@ import json_repair
 from utils import generation_utils
 from utils.legacy_generation_options import is_plot_task
 from .base_agent import BaseAgent
+
+
+AGENTIC_VISION_PROMPT_SUPPLEMENT = """
+Structural Verification:
+You may use the Gemini code_execution tool for lightweight image analysis before writing the final JSON critique. When useful, inspect the provided image with Python libraries such as PIL or OpenCV to estimate visible components, arrows, panel boundaries, text-density risk, and connection integrity. First enumerate the expected major components from the provided content and visual intent, then compare them with visible components so missing output stages are not ignored. Use code results as supporting evidence only; the final answer must still be the requested JSON object with critic_suggestions and revised_description.
+"""
 
 
 class CriticAgent(BaseAgent):
@@ -54,6 +62,13 @@ class CriticAgent(BaseAgent):
                 "context_labels": ["Methodology Section", "Figure Caption"],
             }
         self.style_guide = self._load_style_guide()
+
+    def _validate_agentic_critic_model(self) -> None:
+        if not self.model_name.startswith("gemini"):
+            raise RuntimeError(
+                "Agentic critic requires a native Gemini model because code_execution "
+                f"is Gemini-specific. Received {self.model_name!r}."
+            )
 
     def _style_guide_filename(self, task_name: str) -> str:
         style_prefix = os.environ.get("PAPERBANANA_STYLE_GUIDE_PREFIX", "neurips2025")
@@ -136,38 +151,68 @@ class CriticAgent(BaseAgent):
                 "text": "\n[SYSTEM NOTICE] The plot image could not be generated based on the current description (likely due to invalid code). Please check the description for errors (e.g., syntax issues, missing data) and provide a revised version."
             })
 
+        if self.exp_config.agentic_critic:
+            content_list.append({
+                "type": "text",
+                "text": AGENTIC_VISION_PROMPT_SUPPLEMENT,
+            })
+
         content_list.append({
             "type": "text",
             "text": f"Detailed Description: {detailed_description}\n{cfg['context_labels'][0]}: {content}\n{cfg['context_labels'][1]}: {visual_intent}\nYour Output:",
         })
 
-        response_list = await generation_utils.call_model_with_retry_async(
-            model_name=self.model_name,
-            contents=content_list,
-            config=types.GenerateContentConfig(
-                system_instruction=self.system_prompt,
-                temperature=self.exp_config.temperature,
-                candidate_count=1,
-                max_output_tokens=50000,
-            ),
-            max_attempts=5,
-            retry_delay=5,
-            error_context=f"critic:{cfg['task_name']}:round_{round_idx}:candidate_{data.get('candidate_id', 'unknown')}",
+        generation_config = types.GenerateContentConfig(
+            system_instruction=self.system_prompt,
+            temperature=self.exp_config.temperature,
+            candidate_count=1,
+            max_output_tokens=50000,
         )
-        
-        cleaned_response = (
-            response_list[0].replace("```json", "").replace("```", "").strip()
-        )
-        try:
-            eval_result = json_repair.loads(cleaned_response)
-            if not isinstance(eval_result, dict):
-                eval_result = {}
-        except Exception as e:
-            eval_result = {}
-            print(e, cleaned_response)
+        error_context = f"critic:{cfg['task_name']}:round_{round_idx}:candidate_{data.get('candidate_id', 'unknown')}"
 
-        critic_suggestions = eval_result.get("critic_suggestions", "No changes needed.")
-        revised_description = eval_result.get("revised_description", "No changes needed.")
+        if self.exp_config.agentic_critic:
+            self._validate_agentic_critic_model()
+            generation_config.tools = [types.Tool(code_execution=types.ToolCodeExecution())]
+            started_at = time.monotonic()
+            response_list = await generation_utils.call_gemini_agentic_with_retry_async(
+                model_name=self.model_name,
+                contents=content_list,
+                config=generation_config,
+                max_attempts=5,
+                retry_delay=5,
+                error_context=error_context,
+            )
+            response_payload = response_list[0] if response_list else {}
+            cleaned_response = str(response_payload.get("text", "")).strip()
+            data[f"target_{task_name}_critic_code_execution{round_idx}"] = (
+                response_payload.get("code_execution_parts", [])
+            )
+            data[f"target_{task_name}_critic_code_execution_time_s{round_idx}"] = round(
+                time.monotonic() - started_at,
+                3,
+            )
+        else:
+            response_list = await generation_utils.call_model_with_retry_async(
+                model_name=self.model_name,
+                contents=content_list,
+                config=generation_config,
+                max_attempts=5,
+                retry_delay=5,
+                error_context=error_context,
+            )
+            cleaned_response = (
+                response_list[0].replace("```json", "").replace("```", "").strip()
+            )
+
+        eval_result = self._parse_critic_json_response(cleaned_response)
+        critic_suggestions = self._normalize_critic_text(
+            eval_result.get("critic_suggestions"),
+            default="No changes needed.",
+        )
+        revised_description = self._normalize_critic_text(
+            eval_result.get("revised_description"),
+            default="No changes needed.",
+        )
         
         data[f"target_{task_name}_critic_suggestions{round_idx}"] = critic_suggestions
         data[f"target_{task_name}_critic_desc{round_idx}"] = revised_description
@@ -176,6 +221,41 @@ class CriticAgent(BaseAgent):
             data[f"target_{task_name}_critic_desc{round_idx}"] = detailed_description
 
         return data
+
+    @staticmethod
+    def _normalize_critic_text(value: Any, default: str) -> str:
+        if isinstance(value, str):
+            return value
+        if value is None:
+            return default
+        if isinstance(value, float) and str(value) == "nan":
+            return default
+        return str(value)
+
+    @staticmethod
+    def _parse_critic_json_response(response_text: str) -> Dict[str, Any]:
+        candidates = []
+        stripped = (response_text or "").strip()
+        if stripped:
+            candidates.append(stripped.replace("```json", "").replace("```", "").strip())
+
+        fenced_match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", response_text or "", re.DOTALL)
+        if fenced_match:
+            candidates.insert(0, fenced_match.group(1).strip())
+
+        brace_start = (response_text or "").find("{")
+        brace_end = (response_text or "").rfind("}")
+        if brace_start != -1 and brace_end > brace_start:
+            candidates.append(response_text[brace_start:brace_end + 1])
+
+        for candidate in candidates:
+            try:
+                parsed = json_repair.loads(candidate)
+            except Exception:
+                continue
+            if isinstance(parsed, dict):
+                return parsed
+        return {}
 
 
 DIAGRAM_CRITIC_AGENT_SYSTEM_PROMPT = """

@@ -34,9 +34,8 @@ from agents.polish_agent import PolishAgent
 from utils import config, paperviz_processor
 
 
-async def main():
-    """Main function"""
-    # add command line args
+def build_arg_parser() -> argparse.ArgumentParser:
+    """Build the command-line parser for PaperVizAgent."""
     parser = argparse.ArgumentParser(description="PaperVizAgent processing script")
     parser.add_argument(
         "--dataset_name",
@@ -88,7 +87,17 @@ async def main():
         default="",
         help="image generation model name to use (default: "")",
     )
-    args = parser.parse_args()
+    parser.add_argument(
+        "--agentic-critic",
+        action="store_true",
+        help="enable Gemini code_execution structural checks in the Critic Agent",
+    )
+    return parser
+
+
+async def main():
+    """Main function"""
+    args = build_arg_parser().parse_args()
 
     exp_config = config.ExpConfig(
         dataset_name=args.dataset_name,
@@ -97,6 +106,7 @@ async def main():
         exp_mode=args.exp_mode,
         retrieval_setting=args.retrieval_setting,
         max_critic_rounds=args.max_critic_rounds,
+        agentic_critic=args.agentic_critic,
         main_model_name=args.main_model_name,
         image_gen_model_name=args.image_gen_model_name,
         work_dir=Path(__file__).parent,

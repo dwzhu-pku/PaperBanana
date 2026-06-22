@@ -20,8 +20,31 @@ defaults:
   image_gen_model_name: "gemini-3.1-flash-image-preview"
   
 # API Keys. If you are using all gemini models, you can leave the other keys empty.
+# Copy this file to configs/model_config.yaml before adding real secrets.
+# configs/model_config.yaml is ignored by git.
+#
+# Never paste API keys into GitHub issues, prompts, logs, screenshots, or docs.
+# If a key is exposed publicly, revoke or rotate it in the provider dashboard.
+#
+# Provider quota, billing, and suspension errors must be resolved in the
+# provider account. Lower candidate counts and critic rounds before retrying
+# after a quota or rate-limit response.
+#
+# Ollama/local LLMs are not a full image backend. Use them only for explicitly
+# configured OpenAI-compatible text routes; diagram/image generation still needs
+# a supported image-generation provider.
 api_keys:
   google_api_key: "" # e.g. "xxxxxxxxxxxxx"
   openai_api_key: ""
   anthropic_api_key: ""
   openrouter_api_key: "" # e.g. "sk-or-v1-xxxxx". Set model_name to "openrouter/<model>" to use.
+
+# Optional legacy Python text-only local route.
+# Example for Ollama:
+#   base_url: "http://127.0.0.1:11434/v1"
+#   api_key: "ollama"
+# Then set a text model name such as "ollama/llama3.2" or "local/qwen2.5-coder".
+# This route is for text/code stages only; it does not replace image generation.
+local_openai:
+  base_url: ""
+  api_key: ""

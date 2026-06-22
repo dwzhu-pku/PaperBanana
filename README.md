@@ -21,6 +21,11 @@ This repository forked the content of that repo and aims to keep evolving toward
 - **2026-03-11**: Added OpenRouter support — use models from OpenAI, Anthropic, and other providers via a unified API.
 - **2026-03-11**: Added Contributors section with all-contributors bot support.
 
+## Release Artifacts And Support
+- **Try the demo**: use the hosted [PaperBanana Hugging Face Space](https://huggingface.co/spaces/dwzhu/PaperBanana) for a quick web trial. Space availability can depend on current provider quota and Space capacity; for reproducible local runs, use the native macOS app or the legacy local tools with your own configured provider key.
+- **Get the benchmark**: [PaperBananaBench](https://huggingface.co/datasets/dwzhu/PaperBananaBench) is available on Hugging Face. Download it into `data/PaperBananaBench/` when you want Retriever few-shot examples or manual native reference selection. The app can run without the dataset, but reference mode is disabled.
+- **Support FAQ**: see [`docs/FAQ.md`](docs/FAQ.md) for provider quota and suspension guidance, local/Ollama model caveats, API-key safety, and how to propose large agent or prompt changes.
+
 ## TODO List
 - [x] Add support for using manually selected examples. Provide **a** user-friendly interface.
 - [x] Upload code for generating statistical plots.
@@ -123,6 +128,12 @@ When no paid provider key is configured, paid Google model selections resolve to
 
 The legacy Python tools also support configuring API keys from a YAML configuration file or environment variables. To use that path, duplicate `configs/model_config.template.yaml` into `configs/model_config.yaml`. This file is ignored by git. In `model_config.yaml`, fill in the two model names (`defaults.main_model_name` and `defaults.image_gen_model_name`) and set at least one API key under `api_keys`, such as `google_api_key` or `openrouter_api_key`. You do not need both. If you need to generate many candidates simultaneously, use a provider key that supports high concurrency.
 
+Do not paste API keys into GitHub issues, discussions, prompts, screenshots, or logs. If a key was exposed publicly, revoke or rotate it with the provider before trying another run.
+
+If you hit quota, billing, rate-limit, or account-suspension errors, stop retrying the same high-concurrency job, check the provider dashboard, lower candidate count or `--num-candidates` and critic rounds, and contact the provider for account-specific suspension appeals. PaperBanana maintainers cannot raise third-party quotas or bypass provider terms.
+
+Ollama and other local LLMs are not a full native image backend for PaperBanana. They may be useful only for text-reasoning routes that are explicitly configured through an OpenAI-compatible endpoint. Native diagram generation and image refinement still require a supported image-generation provider that returns image artifacts.
+
 For missing outputs, provider spend questions, no-key fallback behavior, or timeout recovery, see [`docs/NATIVE_MACOS_TROUBLESHOOTING.md`](docs/NATIVE_MACOS_TROUBLESHOOTING.md).
 
 ### Optional Dataset
@@ -154,7 +165,7 @@ The local Gradio, Streamlit, and CLI surfaces remain available for compatibility
 **Try it online — no setup required:**  
 👉 **[PaperBanana on Hugging Face Spaces](https://huggingface.co/spaces/dwzhu/PaperBanana)**
 
-To use the legacy Gradio surface, enter your API key, configure output type (`diagram` or `plot`), pipeline mode, candidate count, aspect ratio, and related parameters, paste method text or plot data plus a visual intent, then click **Generate**.
+To use the legacy Gradio surface, enter your API key, configure output type (`diagram` or `plot`), pipeline mode, candidate count, aspect ratio, and related parameters, paste method text or plot data plus a visual intent, then click **Generate**. If the hosted Space is busy or quota-limited, run the local app with your own provider account.
 
 ```bash
 python app.py

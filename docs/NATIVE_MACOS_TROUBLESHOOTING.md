@@ -57,6 +57,23 @@ When no Google/OpenRouter key is configured, paid Google model selections resolv
 
 The no-key regression tests also check that Keychain and SecurityAgent APIs are not reintroduced.
 
+## Quota, Billing, Or Suspension Errors
+
+Provider quota and account-enforcement decisions are handled by the provider account, not by PaperBanana. If you see quota, billing, rate-limit, 429, `RESOURCE_EXHAUSTED`, or suspension errors:
+
+- Stop retrying the same high-concurrency run.
+- Check the provider dashboard for quota, billing, regional access, model availability, and policy notices.
+- Reduce candidate count, critic rounds, and simultaneous runs before trying again.
+- Use the provider's official support or appeal flow for suspended projects.
+
+PaperBanana maintainers cannot raise provider limits or bypass provider terms. When opening a public issue, redact account identifiers, request bodies, prompts, and all API keys.
+
+If you already pasted a key into an issue, discussion, screenshot, or log, revoke or rotate it in the provider dashboard before continuing.
+
+## Local LLMs And Ollama
+
+Ollama and other local LLMs are not a full native image backend. They can be used only where PaperBanana is routed through an explicitly configured OpenAI-compatible text endpoint. Native diagram generation and image refinement still require a supported image-generation provider that returns image artifacts.
+
 ## Timeout Or Hung Runs
 
 Long-running native generation/refinement runs should move through progress milestones and eventually become `timedOut` rather than remaining invisible. Use **Run Details** to inspect:

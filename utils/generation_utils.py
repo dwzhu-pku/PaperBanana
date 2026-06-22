@@ -57,6 +57,7 @@ anthropic_client = None
 openai_client = None
 openrouter_client = None
 openrouter_api_key = ""
+local_openai_client = None
 
 
 def reinitialize_clients():
@@ -69,6 +70,7 @@ def reinitialize_clients():
     """
     global gemini_client, anthropic_client, openai_client
     global openrouter_client, openrouter_api_key
+    global local_openai_client
 
     initialized = []
 
@@ -95,6 +97,18 @@ def reinitialize_clients():
         initialized.append("OpenAI")
     else:
         openai_client = None
+
+    local_base_url = get_config_val("local_openai", "base_url", "LOCAL_OPENAI_BASE_URL", "").strip()
+    local_api_key = get_config_val("local_openai", "api_key", "LOCAL_OPENAI_API_KEY", "").strip()
+    if local_base_url:
+        local_openai_client = AsyncOpenAI(
+            base_url=local_base_url,
+            api_key=local_api_key or "ollama",
+        )
+        print("Initialized Local OpenAI-compatible Client")
+        initialized.append("LocalOpenAI")
+    else:
+        local_openai_client = None
 
     openrouter_api_key = get_config_val("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY", "")
     if openrouter_api_key:
@@ -287,6 +301,141 @@ async def call_gemini_with_retry_async(
         result_list.extend(["Error"] * (target_candidate_count - len(result_list)))
     return result_list
 
+
+def parse_gemini_code_execution_response(response) -> List[Dict[str, Any]]:
+    """Return ordered text plus code-execution evidence from a Gemini response."""
+    parsed_candidates: List[Dict[str, Any]] = []
+    for candidate_index, candidate in enumerate(getattr(response, "candidates", []) or []):
+        content = getattr(candidate, "content", None)
+        parts = getattr(content, "parts", []) or []
+        text_parts: List[str] = []
+        code_execution_parts: List[Dict[str, Any]] = []
+        for part_index, part in enumerate(parts):
+            text = getattr(part, "text", None)
+            if text is not None:
+                text_parts.append(str(text))
+
+            executable_code = getattr(part, "executable_code", None)
+            if executable_code is not None:
+                language = getattr(executable_code, "language", "")
+                if hasattr(language, "name"):
+                    language = language.name
+                code_execution_parts.append({
+                    "type": "executable_code",
+                    "candidate_index": candidate_index,
+                    "part_index": part_index,
+                    "id": getattr(executable_code, "id", None),
+                    "language": str(language),
+                    "code": getattr(executable_code, "code", "") or "",
+                })
+
+            code_execution_result = getattr(part, "code_execution_result", None)
+            if code_execution_result is not None:
+                outcome = getattr(code_execution_result, "outcome", "")
+                if hasattr(outcome, "name"):
+                    outcome = outcome.name
+                code_execution_parts.append({
+                    "type": "code_execution_result",
+                    "candidate_index": candidate_index,
+                    "part_index": part_index,
+                    "id": getattr(code_execution_result, "id", None),
+                    "outcome": str(outcome),
+                    "output": getattr(code_execution_result, "output", "") or "",
+                })
+
+        parsed_candidates.append({
+            "text": "\n".join(part for part in text_parts if part).strip(),
+            "code_execution_parts": code_execution_parts,
+        })
+    return parsed_candidates
+
+
+async def call_gemini_agentic_with_retry_async(
+    model_name, contents, config, max_attempts=5, retry_delay=5, error_context=""
+):
+    """Call Gemini directly and preserve code_execution response parts."""
+    if gemini_client is None:
+        raise RuntimeError(
+            "Gemini client was not initialized: missing Google API key. "
+            "Agentic critic requires a native Gemini client."
+        )
+
+    result_list: List[Dict[str, Any]] = []
+    target_candidate_count = config.candidate_count
+    if config.candidate_count > 8:
+        config.candidate_count = 8
+
+    current_contents = contents
+    for attempt in range(max_attempts):
+        call_id = provider_audit.start_call(
+            provider="gemini",
+            model=model_name,
+            modality="agentic_critic",
+            context=error_context,
+            attempt=attempt + 1,
+            max_attempts=max_attempts,
+            contents=current_contents,
+            config=config,
+        )
+        try:
+            gemini_contents = _convert_to_gemini_parts(current_contents)
+            response = await gemini_client.aio.models.generate_content(
+                model=model_name,
+                contents=gemini_contents,
+                config=config,
+            )
+            parsed = parse_gemini_code_execution_response(response)
+            usable = [
+                item for item in parsed
+                if item.get("text") or item.get("code_execution_parts")
+            ]
+            result_list.extend(usable)
+            provider_audit.finish_call(
+                call_id=call_id,
+                provider="gemini",
+                model=model_name,
+                modality="agentic_critic",
+                context=error_context,
+                attempt=attempt + 1,
+                success=bool(usable),
+                response_count=len(usable),
+                message=(
+                    "Agentic critic response received."
+                    if usable else
+                    "No text or code execution parts returned."
+                ),
+            )
+            if len(result_list) >= target_candidate_count:
+                result_list = result_list[:target_candidate_count]
+                break
+        except Exception as e:
+            provider_audit.fail_call(
+                call_id=call_id,
+                provider="gemini",
+                model=model_name,
+                modality="agentic_critic",
+                context=error_context,
+                attempt=attempt + 1,
+                error=e,
+            )
+            context_msg = f" for {error_context}" if error_context else ""
+            current_delay = min(retry_delay * (2 ** attempt), 30)
+            print(
+                f"Agentic Gemini attempt {attempt + 1} for model {model_name} "
+                f"failed{context_msg}: {e}. Retrying in {current_delay} seconds..."
+            )
+            if attempt < max_attempts - 1:
+                await asyncio.sleep(current_delay)
+            else:
+                print(f"Error: All {max_attempts} agentic Gemini attempts failed{context_msg}")
+
+    if len(result_list) < target_candidate_count:
+        result_list.extend(
+            {"text": "Error", "code_execution_parts": []}
+            for _ in range(target_candidate_count - len(result_list))
+        )
+    return result_list
+
 def _convert_to_claude_format(contents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
     Converts the generic content list to Claude's API format.
@@ -429,13 +578,20 @@ async def call_claude_with_retry_async(
 
     return response_text_list
 
-async def call_openai_with_retry_async(
-    model_name, contents, config, max_attempts=5, retry_delay=30, error_context=""
+async def _call_openai_compatible_text_with_retry_async(
+    client,
+    provider_label,
+    model_name,
+    contents,
+    config,
+    max_attempts=5,
+    retry_delay=30,
+    error_context="",
 ):
-    """
-    ASYNC: Call OpenAI API with asynchronous retry logic.
-    This follows the same pattern as Claude's implementation.
-    """
+    """Call an OpenAI-compatible chat completions endpoint with retry logic."""
+    if client is None:
+        raise RuntimeError(f"{provider_label} client was not initialized.")
+
     system_prompt = config["system_prompt"]
     temperature = config["temperature"]
     candidate_num = config["candidate_num"]
@@ -453,7 +609,7 @@ async def call_openai_with_retry_async(
         try:
             openai_contents = _convert_to_openai_format(current_contents)
             # Attempt to generate the very first candidate.
-            first_response = await openai_client.chat.completions.create(
+            first_response = await client.chat.completions.create(
                 model=model_name,
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -477,7 +633,8 @@ async def call_openai_with_retry_async(
             error_str = str(e).lower()
             context_msg = f" for {error_context}" if error_context else ""
             print(
-                f"Validation attempt {attempt + 1} failed{context_msg}: {error_str}. Retrying in {retry_delay} seconds..."
+                f"{provider_label} validation attempt {attempt + 1} failed{context_msg}: "
+                f"{error_str}. Retrying in {retry_delay} seconds..."
             )
             if attempt < max_attempts - 1:
                 await asyncio.sleep(retry_delay)
@@ -497,7 +654,7 @@ async def call_openai_with_retry_async(
         )
         valid_openai_contents = _convert_to_openai_format(current_contents)
         tasks = [
-            openai_client.chat.completions.create(
+            client.chat.completions.create(
                 model=model_name,
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -512,12 +669,50 @@ async def call_openai_with_retry_async(
         results = await asyncio.gather(*tasks, return_exceptions=True)
         for res in results:
             if isinstance(res, Exception):
-                print(f"Error generating a subsequent candidate: {res}")
+                print(f"Error generating a subsequent {provider_label} candidate: {res}")
                 response_text_list.append("Error")
             else:
                 response_text_list.append(res.choices[0].message.content or "Error")
 
     return response_text_list
+
+
+async def call_openai_with_retry_async(
+    model_name, contents, config, max_attempts=5, retry_delay=30, error_context=""
+):
+    """
+    ASYNC: Call OpenAI API with asynchronous retry logic.
+    This follows the same pattern as Claude's implementation.
+    """
+    return await _call_openai_compatible_text_with_retry_async(
+        client=openai_client,
+        provider_label="OpenAI",
+        model_name=model_name,
+        contents=contents,
+        config=config,
+        max_attempts=max_attempts,
+        retry_delay=retry_delay,
+        error_context=error_context,
+    )
+
+
+async def call_local_openai_with_retry_async(
+    model_name, contents, config, max_attempts=5, retry_delay=30, error_context=""
+):
+    """
+    ASYNC: Call an explicitly configured local/OpenAI-compatible text endpoint.
+    This is intended for text/code stages only; image generation paths do not use it.
+    """
+    return await _call_openai_compatible_text_with_retry_async(
+        client=local_openai_client,
+        provider_label="Local OpenAI-compatible",
+        model_name=model_name,
+        contents=contents,
+        config=config,
+        max_attempts=max_attempts,
+        retry_delay=retry_delay,
+        error_context=error_context,
+    )
 
 
 async def call_openai_image_generation_with_retry_async(
@@ -968,7 +1163,8 @@ async def call_model_with_retry_async(
     Unified router that dispatches to the correct provider based on model_name.
 
     Routing rules:
-      1. Explicit prefix overrides: "openrouter/" -> OpenRouter, "claude-" -> Anthropic,
+      1. Explicit prefix overrides: "openrouter/" -> OpenRouter, "local/" or
+         "ollama/" -> configured local OpenAI-compatible endpoint, "claude-" -> Anthropic,
          "gpt-"/"o1-"/"o3-"/"o4-" -> OpenAI
       2. No prefix: auto-detect based on which API key is configured.
          Priority: OpenRouter > Gemini > Anthropic > OpenAI
@@ -977,6 +1173,12 @@ async def call_model_with_retry_async(
     if model_name.startswith("openrouter/"):
         provider = "openrouter"
         actual_model = model_name[len("openrouter/"):]
+    elif model_name.startswith("local/"):
+        provider = "local_openai"
+        actual_model = model_name[len("local/"):]
+    elif model_name.startswith("ollama/"):
+        provider = "local_openai"
+        actual_model = model_name[len("ollama/"):]
     elif model_name.startswith("claude-"):
         provider = "anthropic"
         actual_model = model_name
@@ -1023,6 +1225,7 @@ async def call_model_with_retry_async(
         "openrouter": call_openrouter_with_retry_async,
         "anthropic": call_claude_with_retry_async,
         "openai": call_openai_with_retry_async,
+        "local_openai": call_local_openai_with_retry_async,
     }[provider]
 
     return await call_fn(
