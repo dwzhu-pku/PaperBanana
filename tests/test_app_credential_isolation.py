@@ -1,6 +1,12 @@
 import ast
+import contextlib
+import importlib
+import io
+import os
 from pathlib import Path
+import sys
 import unittest
+from unittest import mock
 
 
 APP_PATH = Path(__file__).resolve().parents[1] / "app.py"
@@ -75,6 +81,62 @@ class AppCredentialIsolationTests(unittest.TestCase):
 
         self.assertEqual([], key_textboxes)
 
+    def test_api_key_reads_are_not_bound_to_gradio_component_values(self):
+        leaks = []
+
+        for node in ast.walk(self.tree):
+            if not isinstance(node, ast.Call) or not self._is_gradio_constructor_call(node):
+                continue
+            for keyword in node.keywords:
+                if keyword.arg != "value":
+                    continue
+                env_var = self._credential_get_config_env_var(keyword.value)
+                if env_var in CREDENTIAL_ENV_VARS:
+                    leaks.append((node.func.attr, env_var, node.lineno))
+
+        self.assertEqual([], leaks)
+
+    def test_runtime_ui_config_does_not_render_sentinel_api_keys(self):
+        sentinels = {
+            "OPENROUTER_API_KEY": "sentinel-openrouter-key-credential-isolation",
+            "GOOGLE_API_KEY": "sentinel-google-key-credential-isolation",
+        }
+
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        self._clear_app_modules()
+        try:
+            with (
+                mock.patch.dict(os.environ, sentinels, clear=False),
+                mock.patch("shutil.copy2"),
+                mock.patch("google.genai.Client"),
+                mock.patch("openai.AsyncOpenAI"),
+                mock.patch("anthropic.AsyncAnthropic"),
+                contextlib.redirect_stdout(stdout),
+                contextlib.redirect_stderr(stderr),
+            ):
+                app_module = importlib.import_module("app")
+                interface = app_module.build_app()
+                config_text = str(interface.get_config_file())
+        finally:
+            self._clear_app_modules()
+
+        captured = "\n".join([stdout.getvalue(), stderr.getvalue(), config_text])
+        for secret in sentinels.values():
+            self.assertNotIn(secret, captured)
+
+    @staticmethod
+    def _clear_app_modules():
+        for module_name in list(sys.modules):
+            if (
+                module_name == "app"
+                or module_name == "agents"
+                or module_name.startswith("agents.")
+                or module_name == "utils"
+                or module_name.startswith("utils.")
+            ):
+                sys.modules.pop(module_name, None)
+
     def _string_constants(self):
         return {
             node.value
@@ -102,6 +164,25 @@ class AppCredentialIsolationTests(unittest.TestCase):
             and node.func.value.id == "gr"
             and node.func.attr == name
         )
+
+    @staticmethod
+    def _is_gradio_constructor_call(node):
+        return (
+            isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Name)
+            and node.func.value.id == "gr"
+        )
+
+    @classmethod
+    def _credential_get_config_env_var(cls, node):
+        if not (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "get_config_val"
+            and len(node.args) >= 3
+        ):
+            return None
+        return cls._constant_value(node.args[2])
 
     @classmethod
     def _os_environ_subscript_key(cls, target):
