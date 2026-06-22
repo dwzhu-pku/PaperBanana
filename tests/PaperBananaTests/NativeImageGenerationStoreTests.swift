@@ -627,6 +627,115 @@ final class NativeImageGenerationStoreTests: XCTestCase {
     }
 
     @MainActor
+    func testNativeCodexGenerationFallbackRunsFakeCodexHandoffEndToEndWithoutLiveProvider() async throws {
+        let repoRoot = FileManager.default.temporaryDirectory
+            .appendingPathComponent("PaperBananaNativeCodexGenerationHandoff-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: repoRoot, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+
+        let fakeCodexURL = try Self.installFakeCodexExecutable(repoRoot: repoRoot)
+        let store = NativeImageGenerationStore(
+            stallWarningInterval: 60,
+            hardTimeoutInterval: 120,
+            providerClientFactory: ProviderClientFactory(
+                codexClient: CodexFallbackProviderClient(
+                    codexExecutableURL: fakeCodexURL,
+                    timeoutSeconds: 5,
+                    pollInterval: 0.05,
+                    extraEnvironment: [
+                        "PAPERBANANA_FAKE_CODEX_IMAGE_BASE64": Self.tinyPNGData.base64EncodedString()
+                    ]
+                )
+            )
+        )
+
+        store.start(
+            request: NativeImageGenerationRequest(
+                prompt: "Create a no-key native Codex fallback figure through the real handoff adapter.",
+                model: .nanoBananaPro,
+                resolution: "4K",
+                aspectRatio: "16:9",
+                task: "scientific diagram",
+                settings: PaperBananaSettingsSnapshot(
+                    repoPath: repoRoot.path,
+                    serverPort: 7860,
+                    defaultImageModel: .nanoBananaPro,
+                    codexModel: "gpt-5.5",
+                    codexReasoning: "xhigh",
+                    googleAPIKey: "",
+                    openRouterAPIKey: ""
+                )
+            ),
+            onCompletion: { _ in }
+        )
+
+        try await Self.waitForGenerationStore(store, timeoutNanoseconds: 6_000_000_000) {
+            if case .complete = $0.runState { return true }
+            return false
+        }
+
+        let outputURL = try XCTUnwrap(store.outputURL)
+        let rawResponseURL = try XCTUnwrap(store.rawResponseURL)
+        let rawPayloadURL = try XCTUnwrap(store.rawPayloadURL)
+        let providerRequestURL = try XCTUnwrap(store.providerRequestURL)
+        let metadataURL = try XCTUnwrap(store.metadataURL)
+        let runID = store.runID
+        let callID = store.providerCallID
+
+        XCTAssertTrue(callID.hasPrefix("swift-codex-"))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outputURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: rawResponseURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: rawPayloadURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: providerRequestURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: metadataURL.path))
+
+        let providerRequest = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: providerRequestURL)) as? [String: Any])
+        XCTAssertEqual(providerRequest["adapter"] as? String, "swift_codex")
+        XCTAssertEqual(providerRequest["workflow"] as? String, "native_generate")
+        XCTAssertEqual(providerRequest["call_id"] as? String, callID)
+        XCTAssertEqual(providerRequest["output_path"] as? String, outputURL.path)
+
+        let rawResponseText = try String(contentsOf: rawResponseURL, encoding: .utf8)
+        XCTAssertTrue(rawResponseText.contains(#""adapter" : "swift_codex""#))
+        XCTAssertTrue(rawResponseText.contains(callID))
+
+        let metadata = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: metadataURL)) as? [String: Any])
+        XCTAssertEqual(metadata["provider_call_id"] as? String, callID)
+        XCTAssertEqual(metadata["provider_request_path"] as? String, providerRequestURL.path)
+        let usageMetadata = try XCTUnwrap(metadata["usage_metadata"] as? [String: String])
+        XCTAssertEqual(usageMetadata["provider_spend"], "none")
+        XCTAssertEqual(usageMetadata["handoff_adapter"], "swift_codex")
+
+        let durableText = [
+            try String(contentsOf: providerRequestURL, encoding: .utf8),
+            rawResponseText,
+            try String(contentsOf: metadataURL, encoding: .utf8)
+        ].joined(separator: "\n")
+        XCTAssertFalse(durableText.contains("GOOGLE_API_KEY"))
+        XCTAssertFalse(durableText.contains("OPENROUTER_API_KEY"))
+        XCTAssertFalse(durableText.contains("test-google-key"))
+        XCTAssertFalse(durableText.contains("test-openrouter-key"))
+
+        let record = try XCTUnwrap(PaperBananaRunStore.fetchRunSynchronously(id: runID, repoRoot: repoRoot))
+        XCTAssertEqual(record.status, .completed)
+        XCTAssertEqual(record.providerKind, "codex_fallback")
+        XCTAssertEqual(record.model, ImageModelChoice.codexFallback.backendValue)
+        XCTAssertEqual(record.providerCallID, callID)
+        XCTAssertEqual(record.providerRequestPath, providerRequestURL.path)
+        XCTAssertEqual(record.rawResponsePath, rawResponseURL.path)
+        XCTAssertEqual(record.spendClass, "codex_fallback")
+
+        let calls = ProviderRunLedgerScanner.scan(repoRootPath: repoRoot.path)
+        let call = try XCTUnwrap(calls.first { $0.callID == callID })
+        XCTAssertEqual(call.status, .succeeded)
+        XCTAssertEqual(call.provider, "codex_fallback")
+        XCTAssertEqual(call.runID, runID)
+        XCTAssertEqual(call.usageMetadata["provider_spend"], "none")
+        XCTAssertEqual(call.usageMetadata["handoff_adapter"], "swift_codex")
+        XCTAssertEqual(call.nativeArtifactURLs.map(\.standardizedFileURL), [outputURL.standardizedFileURL])
+    }
+
+    @MainActor
     func testNativeGoogleGenerationProviderFailureKeepsCallVisibleWithoutResponseBytes() async throws {
         let repoRoot = FileManager.default.temporaryDirectory
             .appendingPathComponent("PaperBananaNativeGoogleProviderFailure-\(UUID().uuidString)", isDirectory: true)
@@ -1227,6 +1336,33 @@ final class NativeImageGenerationStoreTests: XCTestCase {
 
     private static func writeTinyPNG(to url: URL) throws {
         try tinyPNGData.write(to: url)
+    }
+
+    private static func installFakeCodexExecutable(repoRoot: URL) throws -> URL {
+        let binDirectory = repoRoot.appendingPathComponent("bin", isDirectory: true)
+        try FileManager.default.createDirectory(at: binDirectory, withIntermediateDirectories: true)
+        let executableURL = binDirectory.appendingPathComponent("codex-fake")
+        let script = """
+        #!/usr/bin/env python3
+        import base64
+        import os
+        import pathlib
+        import re
+        import sys
+
+        prompt = sys.argv[-1]
+        match = re.search(r"(?:directly at:|Output path:)\\s*\\n([^\\n]+)", prompt)
+        if match is None:
+            print("No output path in prompt", file=sys.stderr)
+            sys.exit(12)
+        output = pathlib.Path(match.group(1).strip())
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_bytes(base64.b64decode(os.environ["PAPERBANANA_FAKE_CODEX_IMAGE_BASE64"]))
+        print(f"fake codex wrote {output}")
+        """
+        try script.write(to: executableURL, atomically: true, encoding: .utf8)
+        try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: executableURL.path)
+        return executableURL
     }
 
     private static var tinyPNGData: Data {
