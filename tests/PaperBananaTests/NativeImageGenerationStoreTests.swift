@@ -1076,6 +1076,93 @@ final class NativeImageGenerationStoreTests: XCTestCase {
         XCTAssertEqual(artifact.runStatus, .completed)
     }
 
+    @MainActor
+    func testStatisticalPlotDryRunPersistsOnlyPlotReferenceArtifacts() async throws {
+        let repoRoot = FileManager.default.temporaryDirectory
+            .appendingPathComponent("PaperBananaNativePlotDryRun-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: repoRoot, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+
+        let prompt = "Create a statistical plot comparing two accuracy values."
+        let staleDiagramReference = ReferenceExampleSelection(
+            id: "diagram_999",
+            visualIntent: "Show a diagram reference that should not affect plot runs.",
+            contentSummary: "Diagram-only example that must be discarded for statistical plots.",
+            imagePath: "images/diagram_999.png"
+        )
+        let plotReference = ReferenceExampleSelection(
+            id: "plot_042",
+            visualIntent: "Use grouped bars to compare model accuracy.",
+            contentSummary: "Accuracy values by model and dataset.",
+            imagePath: "images/plot_042.jpg",
+            referenceSource: ReferenceExampleBenchmarkTask.plot.referenceSource
+        )
+        let request = NativeImageGenerationRequest(
+            prompt: prompt,
+            model: .codexFallback,
+            resolution: "2K",
+            aspectRatio: "16:9",
+            task: "statistical plot",
+            settings: PaperBananaSettingsSnapshot(
+                repoPath: repoRoot.path,
+                serverPort: 7860,
+                defaultImageModel: .codexFallback,
+                codexModel: "gpt-5.5",
+                codexReasoning: "xhigh",
+                googleAPIKey: "",
+                openRouterAPIKey: ""
+            ),
+            referenceExamples: [staleDiagramReference, plotReference],
+            executionMode: .dryRun
+        )
+        XCTAssertEqual(request.referenceExamples.map(\.id), ["plot_042"])
+        XCTAssertTrue(request.providerPrompt.contains("Selected Reference Examples"))
+        XCTAssertTrue(request.providerPrompt.contains("ID: plot_042"))
+        XCTAssertFalse(request.providerPrompt.contains("diagram_999"))
+
+        let store = NativeImageGenerationStore(stallWarningInterval: 60, hardTimeoutInterval: 120)
+        let outputURL = await withCheckedContinuation { continuation in
+            store.start(
+                request: request,
+                onCompletion: { url in
+                    continuation.resume(returning: url)
+                }
+            )
+        }
+
+        let runDirectory = outputURL.deletingLastPathComponent()
+        let requestURL = runDirectory.appendingPathComponent("request.json")
+        let providerRequestURL = runDirectory.appendingPathComponent("provider_request.json")
+        let metadataURL = outputURL.deletingPathExtension().appendingPathExtension("json")
+
+        let requestPayload = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: requestURL)) as? [String: Any])
+        XCTAssertEqual(requestPayload["task"] as? String, "statistical plot")
+        XCTAssertEqual(requestPayload["source_prompt"] as? String, prompt)
+        XCTAssertEqual(requestPayload["reference_mode"] as? String, "manual_native_prompt_enrichment")
+        XCTAssertEqual(requestPayload["reference_example_count"] as? Int, 1)
+        let requestReferences = try XCTUnwrap(requestPayload["reference_examples"] as? [[String: Any]])
+        XCTAssertEqual(requestReferences.first?["id"] as? String, "plot_042")
+        XCTAssertEqual(requestReferences.first?["reference_source"] as? String, "PaperBananaBench/plot")
+        let requestPrompt = try XCTUnwrap(requestPayload["prompt"] as? String)
+        XCTAssertTrue(requestPrompt.contains("Selected Reference Examples"))
+        XCTAssertTrue(requestPrompt.contains("ID: plot_042"))
+        XCTAssertFalse(requestPrompt.contains("diagram_999"))
+
+        let providerPayload = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: providerRequestURL)) as? [String: Any])
+        XCTAssertEqual(providerPayload["task"] as? String, "statistical plot")
+        XCTAssertEqual(providerPayload["prompt"] as? String, requestPrompt)
+
+        let metadata = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: metadataURL)) as? [String: Any])
+        XCTAssertEqual(metadata["task"] as? String, "statistical plot")
+        XCTAssertEqual(metadata["source_prompt"] as? String, prompt)
+        XCTAssertEqual(metadata["prompt"] as? String, requestPrompt)
+        XCTAssertEqual(metadata["reference_mode"] as? String, "manual_native_prompt_enrichment")
+        XCTAssertEqual(metadata["reference_example_count"] as? Int, 1)
+        let metadataReferences = try XCTUnwrap(metadata["reference_examples"] as? [[String: Any]])
+        XCTAssertEqual(metadataReferences.first?["id"] as? String, "plot_042")
+        XCTAssertEqual(metadataReferences.first?["reference_source"] as? String, "PaperBananaBench/plot")
+    }
+
     private static func repoRoot() -> URL {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()

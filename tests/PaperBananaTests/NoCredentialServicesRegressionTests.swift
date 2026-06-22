@@ -253,6 +253,10 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/NativePromptStudioView.swift"),
             encoding: .utf8
         )
+        let referencePicker = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ReferenceExamplePickerView.swift"),
+            encoding: .utf8
+        )
         let workbench = try String(
             contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/WorkbenchComponents.swift"),
             encoding: .utf8
@@ -290,6 +294,29 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
         XCTAssertTrue(
             promptStudio.contains("ReferenceExamplePickerView") && promptStudio.contains("referenceExamplesPanel"),
             "Prompt Studio should expose manual PaperBananaBench examples as a compact native workbench section."
+        )
+        XCTAssertTrue(
+            promptStudio.contains(#""statistical plot""#),
+            "Prompt Studio should keep the native statistical plot task available."
+        )
+        XCTAssertTrue(
+            promptStudio.contains("ReferenceExampleBenchmarkTask(taskName: task)") &&
+                promptStudio.contains("loadedReferenceBenchmarkTask") &&
+                promptStudio.contains("nextBenchmarkTask != loadedReferenceBenchmarkTask"),
+            "Prompt Studio should load task-specific reference examples without clearing compatible same-family selections."
+        )
+        XCTAssertFalse(
+            promptStudio.contains(".onChange(of: task) { _ in\n            loadReferenceExamples(resetSelection: true)"),
+            "Prompt Studio task label changes should not clear compatible same-family reference selections."
+        )
+        XCTAssertTrue(
+            referencePicker.contains("Optional manual PaperBananaBench") &&
+                referencePicker.contains("No \\(referenceTask.capitalizedDisplayName) Examples Found"),
+            "Reference Examples should support both diagram and plot benchmark tasks."
+        )
+        XCTAssertFalse(
+            referencePicker.contains("Manual Plot Examples Unavailable"),
+            "Manual plot examples should no longer be hidden behind a disabled state."
         )
         XCTAssertTrue(
             workbench.contains("accessibilityReduceTransparency"),

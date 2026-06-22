@@ -1,5 +1,41 @@
 import Foundation
 
+enum ReferenceExampleBenchmarkTask: String, Hashable, Sendable {
+    case diagram
+    case plot
+
+    init(taskName: String) {
+        self = taskName.localizedCaseInsensitiveContains("plot") ? .plot : .diagram
+    }
+
+    var referenceSource: String {
+        "PaperBananaBench/\(rawValue)"
+    }
+
+    var displayName: String {
+        switch self {
+        case .diagram: "diagram"
+        case .plot: "plot"
+        }
+    }
+
+    var capitalizedDisplayName: String {
+        switch self {
+        case .diagram: "Diagram"
+        case .plot: "Plot"
+        }
+    }
+
+    var promptGuidance: String {
+        switch self {
+        case .diagram:
+            "Use these manually selected PaperBananaBench diagram examples as style, structure, and content guidance. Do not copy paper-specific identifiers unless they are explicitly present in the requested figure."
+        case .plot:
+            "Use these manually selected PaperBananaBench plot examples as chart-type, data-encoding, and styling guidance. Do not copy source data values unless they are explicitly present in the requested plot."
+        }
+    }
+}
+
 struct ReferenceExample: Identifiable, Hashable {
     let id: String
     let visualIntent: String
@@ -8,6 +44,7 @@ struct ReferenceExample: Identifiable, Hashable {
     let imageRelativePath: String
     let imageURL: URL
     let imageAvailable: Bool
+    let benchmarkTask: ReferenceExampleBenchmarkTask
 
     init(
         id: String,
@@ -16,7 +53,8 @@ struct ReferenceExample: Identifiable, Hashable {
         contentSummary: String,
         imageRelativePath: String,
         imageURL: URL,
-        imageAvailable: Bool = true
+        imageAvailable: Bool = true,
+        benchmarkTask: ReferenceExampleBenchmarkTask = .diagram
     ) {
         self.id = id
         self.visualIntent = visualIntent
@@ -25,6 +63,7 @@ struct ReferenceExample: Identifiable, Hashable {
         self.imageRelativePath = imageRelativePath
         self.imageURL = imageURL
         self.imageAvailable = imageAvailable
+        self.benchmarkTask = benchmarkTask
     }
 
     var selection: ReferenceExampleSelection {
@@ -32,7 +71,8 @@ struct ReferenceExample: Identifiable, Hashable {
             id: id,
             visualIntent: visualIntent,
             contentSummary: contentSummary,
-            imagePath: imageRelativePath
+            imagePath: imageRelativePath,
+            referenceSource: benchmarkTask.referenceSource
         )
     }
 }
@@ -44,17 +84,20 @@ struct ReferenceExampleSelection: Codable, Hashable, Identifiable, Sendable {
     let visualIntent: String
     let contentSummary: String
     let imagePath: String
+    let referenceSource: String
 
     init(
         id: String,
         visualIntent: String,
         contentSummary: String,
-        imagePath: String
+        imagePath: String,
+        referenceSource: String = ReferenceExampleBenchmarkTask.diagram.referenceSource
     ) {
         self.id = id
         self.visualIntent = visualIntent
         self.contentSummary = contentSummary
         self.imagePath = imagePath
+        self.referenceSource = referenceSource
     }
 
     var durablePayload: [String: String] {
@@ -63,8 +106,39 @@ struct ReferenceExampleSelection: Codable, Hashable, Identifiable, Sendable {
             "visual_intent": visualIntent,
             "content_summary": contentSummary,
             "image_path": imagePath,
-            "reference_source": "PaperBananaBench/diagram"
+            "reference_source": referenceSource
         ]
+    }
+
+    func isCompatible(with taskName: String) -> Bool {
+        referenceSource == ReferenceExampleBenchmarkTask(taskName: taskName).referenceSource
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case visualIntent = "visual_intent"
+        case contentSummary = "content_summary"
+        case imagePath = "image_path"
+        case referenceSource = "reference_source"
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        visualIntent = try container.decode(String.self, forKey: .visualIntent)
+        contentSummary = try container.decode(String.self, forKey: .contentSummary)
+        imagePath = try container.decode(String.self, forKey: .imagePath)
+        referenceSource = try container.decodeIfPresent(String.self, forKey: .referenceSource)
+            ?? ReferenceExampleBenchmarkTask.diagram.referenceSource
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(visualIntent, forKey: .visualIntent)
+        try container.encode(contentSummary, forKey: .contentSummary)
+        try container.encode(imagePath, forKey: .imagePath)
+        try container.encode(referenceSource, forKey: .referenceSource)
     }
 
     static func durablePayload(for selections: [ReferenceExampleSelection]) -> [[String: String]] {
@@ -109,6 +183,10 @@ enum ReferenceExamplePromptBuilder {
         let trimmedPrompt = sourcePrompt.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !referenceExamples.isEmpty else { return trimmedPrompt }
 
+        let benchmarkTask = referenceExamples.contains {
+            $0.referenceSource == ReferenceExampleBenchmarkTask.plot.referenceSource
+        } ? ReferenceExampleBenchmarkTask.plot : .diagram
+
         let examplesBlock = referenceExamples.enumerated().map { index, example in
             """
             \(index + 1). ID: \(example.id)
@@ -123,7 +201,7 @@ enum ReferenceExamplePromptBuilder {
         \(trimmedPrompt)
 
         Selected Reference Examples
-        Use these manually selected PaperBananaBench diagram examples as style, structure, and content guidance. Do not copy paper-specific identifiers unless they are explicitly present in the requested figure.
+        \(benchmarkTask.promptGuidance)
         \(examplesBlock)
         """
     }
