@@ -124,6 +124,7 @@ class CriticAgent(BaseAgent):
             ),
             max_attempts=5,
             retry_delay=5,
+            error_context=f"critic:{cfg['task_name']}:round_{round_idx}:candidate_{data.get('candidate_id', 'unknown')}",
         )
         
         cleaned_response = (

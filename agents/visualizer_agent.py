@@ -168,6 +168,7 @@ class VisualizerAgent(BaseAgent):
                         config=image_config,
                         max_attempts=5,
                         retry_delay=30,
+                        error_context=f"visualizer:{task_name}:{desc_key}:candidate_{data.get('candidate_id', 'unknown')}",
                     )
                 elif generation_utils.openrouter_client is not None:
                     # OpenRouter image generation
@@ -183,6 +184,7 @@ class VisualizerAgent(BaseAgent):
                         config=image_config,
                         max_attempts=5,
                         retry_delay=30,
+                        error_context=f"visualizer:{task_name}:{desc_key}:candidate_{data.get('candidate_id', 'unknown')}",
                     )
                 else:
                     # Gemini direct image generation
@@ -197,6 +199,7 @@ class VisualizerAgent(BaseAgent):
                         config=types.GenerateContentConfig(**gen_config_args),
                         max_attempts=5,
                         retry_delay=30,
+                        error_context=f"visualizer:{task_name}:{desc_key}:candidate_{data.get('candidate_id', 'unknown')}",
                     )
             else:
                 # Code generation for plots — use the unified router
@@ -206,6 +209,7 @@ class VisualizerAgent(BaseAgent):
                     config=types.GenerateContentConfig(**gen_config_args),
                     max_attempts=5,
                     retry_delay=30,
+                    error_context=f"visualizer:{task_name}:{desc_key}:candidate_{data.get('candidate_id', 'unknown')}",
                 )
             
             if not response_list or not response_list[0]:

@@ -86,6 +86,7 @@ class StylistAgent(BaseAgent):
             ),
             max_attempts=5,
             retry_delay=5,
+            error_context=f"stylist:{cfg['task_name']}:candidate_{data.get('candidate_id', 'unknown')}",
         )
         
         data[output_desc_key] = response_list[0]

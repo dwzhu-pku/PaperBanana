@@ -112,6 +112,7 @@ class PlannerAgent(BaseAgent):
             ),
             max_attempts=5,
             retry_delay=5,
+            error_context=f"planner:{cfg['task_name']}:candidate_{data.get('candidate_id', 'unknown')}",
         )
         
         for idx, response in enumerate(response_list):
@@ -139,4 +140,3 @@ To help you understand the task better, and grasp the principles for generating 
 ** IMPORTANT: **
 Your description should be as detailed as possible. For content, explain the precise mapping of variables to visual channels (x, y, hue) and explicitly enumerate every raw data point's coordinate to be drawn to ensure accuracy. For presentation, specify the exact aesthetic parameters, including specific HEX color codes, font sizes for all labels, line widths, marker dimensions, legend placement, and grid styles. You should learn from the examples' content presentation and aesthetic design (e.g., color schemes).
 """
-

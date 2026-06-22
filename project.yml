@@ -1,0 +1,49 @@
+name: PaperBanana
+options:
+  bundleIdPrefix: local
+  deploymentTarget:
+    macOS: "13.0"
+settings:
+  base:
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "0.1.0"
+    SWIFT_VERSION: "6.0"
+targets:
+  PaperBanana:
+    type: application
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: Sources/PaperBananaApp
+      - path: PaperBanana/Assets.xcassets
+    resources:
+      - path: PaperBanana/Resources/AppIcon.icon
+    dependencies:
+      - sdk: libsqlite3.tbd
+    settings:
+      base:
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        COMBINE_HIDPI_IMAGES: YES
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: PaperBanana
+        INFOPLIST_KEY_CFBundleName: PaperBanana
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.graphics-design
+        INFOPLIST_KEY_LSMinimumSystemVersion: "13.0"
+        INFOPLIST_KEY_NSHighResolutionCapable: YES
+        PRODUCT_BUNDLE_IDENTIFIER: local.paperbanana.gui
+        PRODUCT_NAME: PaperBanana
+  PaperBananaTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: tests/PaperBananaTests
+    dependencies:
+      - target: PaperBanana
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: local.paperbanana.gui.tests
