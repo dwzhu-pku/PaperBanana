@@ -1,0 +1,792 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		007310BC55A3351335BE3385471467D9 /* ArtifactLibraryScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C85A30B7990C1DC0C2A6307A75F7268 /* ArtifactLibraryScanner.swift */; };
+		0129E83FA641C3026A3E777BB9E77C7F /* GoogleGeminiProviderClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A58C8A5B056CE160A94757FF56072A5 /* GoogleGeminiProviderClient.swift */; };
+		05AE3ED86B70A7E6B2CC761E76E85848 /* PaperBananaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FF102D1194EF660D4C9B695C0CDE8B /* PaperBananaApp.swift */; };
+		0A66F174AF8CDECC1E560637007095E1 /* PaperBananaSecretStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0630A3F9F36BD7F53EA714B38EA2ACC7 /* PaperBananaSecretStoreTests.swift */; };
+		0CB5ECD3E13940A6D1FD3DBB1CCA5431 /* PaperBananaAppEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC94510E52A17AA7E260AFBF22860CF /* PaperBananaAppEntities.swift */; };
+		12A2C0BECE968ADA76AB502AA70D06D6 /* LegacyPythonProviderClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755BDFD12D929ED0DEE95719E93E5C75 /* LegacyPythonProviderClient.swift */; };
+		18526C1A265A7786E2D5C53FA2217412 /* ProviderRunLedgerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6CD58EDC4DCE5C3DABC32D5EC2FD8 /* ProviderRunLedgerModels.swift */; };
+		1B2949E9A8C26C276D111441E3CD83FA /* RefinementSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AC0F0167BD0099A19EFB41118F989D /* RefinementSheetView.swift */; };
+		207470A19215B0E8EC8EA1BD790791BA /* NativeRefinementWorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E15EA958DE2F43965E66B08A1CC9812 /* NativeRefinementWorkspaceView.swift */; };
+		25440A71D532EB03C039B3B39E093817 /* AppRootContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B9F2087D646F56D3F972341A8772B1 /* AppRootContainer.swift */; };
+		274B01ECB2C842DBDAFA8930F0A52BD2 /* RefinementOptionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358191DA2BB2B6549ED66D4E6E7C7738 /* RefinementOptionBar.swift */; };
+		2CCA486F03AAD318E52E3D215D00DF6A /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 4110DC38264B24F5E3AB30238B100DC2 /* AppIcon.icon */; };
+		2F4C9A4CD6D261FDF6A905C25A40A9A2 /* PaperBananaRuntimeEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CA0A46A017D61A1E19710281A1A8AE /* PaperBananaRuntimeEnvironment.swift */; };
+		2F6C905D983D92983D12555F35AF6073 /* PaperBananaSecretStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C019943A5A996A7052BCB3C72CEE7A13 /* PaperBananaSecretStore.swift */; };
+		334B3ED8B2C38AB1FD42DD2E3DB4F558 /* ProviderRunLedgerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F16133406CF733333EEB142BE68F48 /* ProviderRunLedgerStore.swift */; };
+		33FC06E1E44F869C24C383D2CF526126 /* NativeRunPreflightPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7EB33B466C3D19B563F8F863A0843F /* NativeRunPreflightPlan.swift */; };
+		3EBC376FD9A89F8F94B955093C5A768B /* MetalImagePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FB867ED92B93654BB2E3FC09E416C9 /* MetalImagePreviewView.swift */; };
+		466C22EB42B05D7BBA3C0AF90381BA37 /* NativePromptStudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4804FD437CA578BE547803A3B05B277 /* NativePromptStudioView.swift */; };
+		47C844B698A2A853AE9B80669F92930D /* ArtifactLibraryPreviewComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64A4063B43E505A285944D269332412 /* ArtifactLibraryPreviewComponents.swift */; };
+		4A18F05581BCB9AEBC69A694721C8B1C /* ProviderRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609F4F878658D82D1BAA9D7681BF4061 /* ProviderRuntime.swift */; };
+		5057CDEF07C01D6713D75FCEF3A367C3 /* NativeImageGenerationStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A42BB5E7098E6503D589F599F4490FE /* NativeImageGenerationStoreTests.swift */; };
+		50A52C68423A1F3F93C850BA2D9EB6E0 /* CodexFallbackProviderClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0609A41AC502B412F9C4310B2173E563 /* CodexFallbackProviderClient.swift */; };
+		5782FF906DB55E6069E07081F5848454 /* BackendSupervisorHeartbeatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CB00D8BDD7CECCCA92BC15F9F386B8 /* BackendSupervisorHeartbeatTests.swift */; };
+		57FC8EBA4D10AD65E922669F26FB0450 /* NativeProviderCallRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03EFFA4926A4F50BC2159ED25CD2A4D9 /* NativeProviderCallRecorder.swift */; };
+		5F1BE261AA7CFDAD22D871E94F506C7F /* ProviderAuditWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7FF745A10EF3D52751181A80368A11 /* ProviderAuditWriter.swift */; };
+		5F7338F537C8C99C96FAB7C4D0B69A77 /* PaperBananaModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693849B56CF6C2EFF2163CB65E923714 /* PaperBananaModels.swift */; };
+		623060707A7F87D1499CD05F6C4F97A6 /* NativeRefinementModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF514619DD67E68495101D8BDC32DB2 /* NativeRefinementModels.swift */; };
+		62E6FD5B3159FE75B329EF5C72E7ECD4 /* RunStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B65CB5E97F631A680902EBD223C57 /* RunStore.swift */; };
+		699C2394CCDC54FC7F4B75231170B182 /* PaperBananaSpotlightIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4E999693791C545617CC2A44DDAA2F /* PaperBananaSpotlightIndexer.swift */; };
+		6B6291DE90978D202C519A6AB5E70FB5 /* PaperBananaAppEntityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE16A5F368AD41349F83415FF1DB820 /* PaperBananaAppEntityTests.swift */; };
+		6C6827CD477B03A7F8726F4B2C5C1686 /* ArtifactLibraryScannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFBDA81031F3965732B93489B641DA6 /* ArtifactLibraryScannerTests.swift */; };
+		71FF829DFD5AB251823DFC4617CDCDB5 /* BackendSupervisor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980FCB1B9ACE17C07E9E27FA5A6785D /* BackendSupervisor.swift */; };
+		76CE03F07F9197E67225AEB791531C0F /* RunDetailsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7AA72D0F7064F40DA99CE9135151CE /* RunDetailsSections.swift */; };
+		77E5BF6E80A63BD37B06871A90A7F4C8 /* RunStoreProviderCalls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DF368DE30B6DE440E3F491898FE54F /* RunStoreProviderCalls.swift */; };
+		77F4E067B77AD3A44B4CA3DC4CAC0D0B /* ArtifactLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B51AC64737FB9E40E88F7CD7C3F864 /* ArtifactLibraryView.swift */; };
+		7860A5AC0BDC79BECBF818CDF29BAF12 /* PaperBananaWindowPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB047B74827F48928E7E2E03291E70 /* PaperBananaWindowPlacement.swift */; };
+		78BB891708598FBF886262921F187596 /* ArtifactLineage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD58652467869660D702A5D6691F36E8 /* ArtifactLineage.swift */; };
+		7B2A1870B90A0E8E0BDCA6039AB99E00 /* NativeRefinementSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18CF8FA22871823416458D72E067187 /* NativeRefinementSupport.swift */; };
+		7C98BA674F7095DA4DAF59B3781789AF /* ProviderRecoverySurfacer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52113FF034B0C7025749AC6AA0EEA812 /* ProviderRecoverySurfacer.swift */; };
+		83580F3956F46724A0D5625B7C801157 /* NativeProviderResponsePersister.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698414E478631356345AD423EF8A5B56 /* NativeProviderResponsePersister.swift */; };
+		876B7A7340F2A7334BC0A88DAF404ECE /* NativeImageGenerationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5D84DC54DF7DDCC9A6D78F42014E21 /* NativeImageGenerationModels.swift */; };
+		87772E24990754F541112C916C8641C3 /* RunDetailsRunListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB7ACE2DD7F405338BF9B628C778779 /* RunDetailsRunListView.swift */; };
+		882604908EB7FB602FB6D67569E21C46 /* NativeRunFolderIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FEDEF46212C86C545C7E4EF970B8DA /* NativeRunFolderIndex.swift */; };
+		8E09D203964DFC31E234DAB52F41BC47 /* ProviderRunLedgerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D21A614E05970C787E052D6A0A24B2 /* ProviderRunLedgerTests.swift */; };
+		8ECA2162A27B3B2B4B9FF7A6B15659FD /* ProviderRunLedgerScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7F0FD4D9B8E807C23E0F2EEA8A5257 /* ProviderRunLedgerScanner.swift */; };
+		8F44FFB9C12D0DC4799EE7902912A6FB /* NativeImageGenerationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDA73F082AB921A6DC2F74AC8CAB992A /* NativeImageGenerationStore.swift */; };
+		91364B581610C1680D6D7A78C0264C55 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ACCE2B682690F8F7028C8FE36122E766 /* libsqlite3.tbd */; };
+		922BFB8A92B60C944C46C864E723A894 /* ArtifactInspectorComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A9DA53DAA73194B9CE807B8AEEA75A7 /* ArtifactInspectorComponents.swift */; };
+		965E89C12FFE57B22DBC3F34691C13B9 /* BackendDiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD759E265AB088BB601A3D6A52505C20 /* BackendDiagnosticsView.swift */; };
+		A0BE1215ACBEE05DCA96D83F387CA668 /* AppIconController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A807572561FA41FC80AED51B6235A9 /* AppIconController.swift */; };
+		A3700BAF1873F06B211B803A17383355 /* NoCredentialServicesRegressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A377957BDDEF9D337B301CF500F5E48 /* NoCredentialServicesRegressionTests.swift */; };
+		AC595795CD6BBAC2D953874B8D248D80 /* OpenRouterProviderClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3856276799021037AE715410E878DDCF /* OpenRouterProviderClient.swift */; };
+		AEDC215EF8CADB6B2891A7E9A913CB44 /* ProviderRunLedgerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000EC52E5E544E7385B66317B0C6193B /* ProviderRunLedgerView.swift */; };
+		B272653A8A732A68C29D75B21F5B66BF /* RunStoreQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7624834E8C6982C04800214412D25310 /* RunStoreQueries.swift */; };
+		B329B67249FCF43CE1168F48D6A4820F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B6EA6EAB1D75B58544CA920227DD805 /* Assets.xcassets */; };
+		B3E754CB07ADD18A8AA6C54C15B542C0 /* AppSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6EC598C01396DE66C0FEBB7CB2765B /* AppSettingsStore.swift */; };
+		BB2D833A24C3F0BFBBEC0E19F330BBEB /* ArtifactLibraryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBCE6A7C07C6E029A227AD3C3205874 /* ArtifactLibraryModels.swift */; };
+		BBC4F2B61B89AE8C1320DC77855A2562 /* NativeProviderRelays.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28913DA727FB59222A78FD3D16974E8 /* NativeProviderRelays.swift */; };
+		BD9F19ECA5A14C1E5B96D601DEE019F1 /* RunDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB9F85071037BF7717F1339D422C61 /* RunDetailsView.swift */; };
+		C0D290BE89CBC5BAD8EF295DD2F8474F /* RunDetailsInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DCE5D2BA8A18C4FE05460EA813ADA2 /* RunDetailsInspectorView.swift */; };
+		C5A660B77B40C7A450D5DB0C5DFD70FC /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = BE637B90E80C11A80DA16020567FA53D /* README.txt */; };
+		C710E93F4B0071EF79C903EC6A3D5244 /* ArtifactLibraryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4B192B6CC89A426BCB88FEC63DCB27 /* ArtifactLibraryStore.swift */; };
+		C9DFAA5AAE2C7AB5F3BE08D3BE3E8079 /* RunStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786B0F7D31D4E7B501FB1CB8D9DF0223 /* RunStoreTests.swift */; };
+		CD13F094088204BC5BD60380F604CE94 /* NativeRunEventRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F4498711E883C96263D658D2ECAF3 /* NativeRunEventRecorder.swift */; };
+		CE5A4D804DB5440F31B94DB4ECEDC4CF /* ProviderRuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0738294FA2AFEAF677285748FF5A135 /* ProviderRuntimeTests.swift */; };
+		CFE9DE48BEADE980EF850613177206C6 /* NativeRefinementStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09625FD05E85222762E7C60B9D9719DF /* NativeRefinementStoreTests.swift */; };
+		CFF804658AA5668F39FC692B2DEE0EF5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E847C472F6B9D43982908D80A2474 /* SettingsView.swift */; };
+		D60CB5B73DB7D9D6E594D86FF03B7099 /* NativeRefinementStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275D657ED355383A2893DE82C7D7661A /* NativeRefinementStore.swift */; };
+		D7356F4AB5DB22DC75BF0FBFD98C2FC4 /* RootSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EA7C647E9DCC7BAF4553A8FDFB5B12 /* RootSidebarView.swift */; };
+		D75DD34AB7D30696A10C726C9B17E8EE /* RunStoreRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2739824E6493A8AD22837BBCE48D6 /* RunStoreRecovery.swift */; };
+		D79DF9C83DE237B79F9FFB5AA413B220 /* PaperBananaImageQualityInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03FCADF8861CC736E28146AF1BC84D8 /* PaperBananaImageQualityInspector.swift */; };
+		DDC87617A3B443FA92617ECC4BB85ED3 /* AppDesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE740B4C903D3BB869262901B3A6F96A /* AppDesignSystem.swift */; };
+		DE6AF9F70F7F30D7139E8652ADD7CBAF /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288B20DDF8A43403AC37340418527267 /* RootView.swift */; };
+		E67EB8FDE0BFF91178D547D54185C5F0 /* SettingsPanes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D793B53886B2B1B69B187E94876EB63C /* SettingsPanes.swift */; };
+		E6C2D4371D76BEB70DD68297E133CC09 /* NativeLocalProviderClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542C3D5DF51D9673B8041D1324B81CC3 /* NativeLocalProviderClient.swift */; };
+		E905CD86F8C0FD22D5B4A33265198D93 /* NativeImageGenerationSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9B0AD93D4759D93B78D87CBDB7F5F3 /* NativeImageGenerationSupport.swift */; };
+		EA23F2103E702F9910D7E80A7E4D21F9 /* PaperBananaRepoLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70058CCE8E00CE481766C2768C63B61 /* PaperBananaRepoLocator.swift */; };
+		ED8B74C89B80BD983C1385496D231F5C /* WorkbenchComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACCEB58873D90F25C802DF23C75F421 /* WorkbenchComponents.swift */; };
+		F3D586C5FC23224CB9F79790C16C7ABB /* WorkspaceScopeStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0E9C94594356A86F782678D180283C /* WorkspaceScopeStrip.swift */; };
+		FA068613B5AE53B3FD627FAF2C2DDD95 /* WindowPlacementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A1FA9EF9A431AB3EF8FAF8631C88BB /* WindowPlacementTests.swift */; };
+		FA987F4F9394FFFA56A5C1D60C498ABD /* RunDetailsScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE13F3BED8209F89954288743F53A014 /* RunDetailsScanner.swift */; };
+		FB73A58D6FE45412A44B41AEBD522A55 /* NativeProviderCompletionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EF983561486214AC95FF3E3950038D /* NativeProviderCompletionCoordinator.swift */; };
+		FF241CF1EDD70E7F5E4811CD0DAE60AD /* RunDetailsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770408EBF742318FBD9BD48003B0A01D /* RunDetailsStore.swift */; };
+		FF93779BFC925F210AA1B553BA7A151D /* PaperBananaWorkflowEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E1509F3C72979540F0BAC84ED7050B /* PaperBananaWorkflowEvaluator.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B9C56B4EDD3AB116ED8A3A39F5B5131D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C759DE2735B90563363BA45A09BB6B93 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5DECE2C547A618EB8462D7B9AC3B7403;
+			remoteInfo = PaperBanana;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		000EC52E5E544E7385B66317B0C6193B /* ProviderRunLedgerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderRunLedgerView.swift; sourceTree = "<group>"; };
+		01D21A614E05970C787E052D6A0A24B2 /* ProviderRunLedgerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderRunLedgerTests.swift; sourceTree = "<group>"; };
+		03EFFA4926A4F50BC2159ED25CD2A4D9 /* NativeProviderCallRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeProviderCallRecorder.swift; sourceTree = "<group>"; };
+		0609A41AC502B412F9C4310B2173E563 /* CodexFallbackProviderClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexFallbackProviderClient.swift; sourceTree = "<group>"; };
+		0630A3F9F36BD7F53EA714B38EA2ACC7 /* PaperBananaSecretStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperBananaSecretStoreTests.swift; sourceTree = "<group>"; };
+		09625FD05E85222762E7C60B9D9719DF /* NativeRefinementStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeRefinementStoreTests.swift; sourceTree = "<group>"; };
+		0A58C8A5B056CE160A94757FF56072A5 /* GoogleGeminiProviderClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleGeminiProviderClient.swift; sourceTree = "<group>"; };
+		0ACCEB58873D90F25C802DF23C75F421 /* WorkbenchComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbenchComponents.swift; sourceTree = "<group>"; };
+		1E0E9C94594356A86F782678D180283C /* WorkspaceScopeStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceScopeStrip.swift; sourceTree = "<group>"; };
+		1FD2739824E6493A8AD22837BBCE48D6 /* RunStoreRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStoreRecovery.swift; sourceTree = "<group>"; };
+		21E6CD58EDC4DCE5C3DABC32D5EC2FD8 /* ProviderRunLedgerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderRunLedgerModels.swift; sourceTree = "<group>"; };
+		24EA7C647E9DCC7BAF4553A8FDFB5B12 /* RootSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootSidebarView.swift; sourceTree = "<group>"; };
+		275D657ED355383A2893DE82C7D7661A /* NativeRefinementStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeRefinementStore.swift; sourceTree = "<group>"; };
+		288B20DDF8A43403AC37340418527267 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		28DB047B74827F48928E7E2E03291E70 /* PaperBananaWindowPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperBananaWindowPlacement.swift; sourceTree = "<group>"; };
+		2A377957BDDEF9D337B301CF500F5E48 /* NoCredentialServicesRegressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCredentialServicesRegressionTests.swift; sourceTree = "<group>"; };
+		2E7FF745A10EF3D52751181A80368A11 /* ProviderAuditWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderAuditWriter.swift; sourceTree = "<group>"; };
+		31DF368DE30B6DE440E3F491898FE54F /* RunStoreProviderCalls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStoreProviderCalls.swift; sourceTree = "<group>"; };
+		358191DA2BB2B6549ED66D4E6E7C7738 /* RefinementOptionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefinementOptionBar.swift; sourceTree = "<group>"; };
+		37B9F2087D646F56D3F972341A8772B1 /* AppRootContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootContainer.swift; sourceTree = "<group>"; };
+		37F16133406CF733333EEB142BE68F48 /* ProviderRunLedgerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderRunLedgerStore.swift; sourceTree = "<group>"; };
+		3856276799021037AE715410E878DDCF /* OpenRouterProviderClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterProviderClient.swift; sourceTree = "<group>"; };
+		38A807572561FA41FC80AED51B6235A9 /* AppIconController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconController.swift; sourceTree = "<group>"; };
+		39FF102D1194EF660D4C9B695C0CDE8B /* PaperBananaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperBananaApp.swift; sourceTree = "<group>"; };
+		3A42BB5E7098E6503D589F599F4490FE /* NativeImageGenerationStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeImageGenerationStoreTests.swift; sourceTree = "<group>"; };
+		3C85A30B7990C1DC0C2A6307A75F7268 /* ArtifactLibraryScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtifactLibraryScanner.swift; sourceTree = "<group>"; };
+		3C8B65CB5E97F631A680902EBD223C57 /* RunStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStore.swift; sourceTree = "<group>"; };
+		4110DC38264B24F5E3AB30238B100DC2 /* AppIcon.icon */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		41CB00D8BDD7CECCCA92BC15F9F386B8 /* BackendSupervisorHeartbeatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendSupervisorHeartbeatTests.swift; sourceTree = "<group>"; };
+		41DCE5D2BA8A18C4FE05460EA813ADA2 /* RunDetailsInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunDetailsInspectorView.swift; sourceTree = "<group>"; };
+		52113FF034B0C7025749AC6AA0EEA812 /* ProviderRecoverySurfacer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderRecoverySurfacer.swift; sourceTree = "<group>"; };
+		542C3D5DF51D9673B8041D1324B81CC3 /* NativeLocalProviderClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeLocalProviderClient.swift; sourceTree = "<group>"; };
+		58CA0A46A017D61A1E19710281A1A8AE /* PaperBananaRuntimeEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperBananaRuntimeEnvironment.swift; sourceTree = "<group>"; };
+		5B8F4498711E883C96263D658D2ECAF3 /* NativeRunEventRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeRunEventRecorder.swift; sourceTree = "<group>"; };
+		5F7F0FD4D9B8E807C23E0F2EEA8A5257 /* ProviderRunLedgerScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderRunLedgerScanner.swift; sourceTree = "<group>"; };
+		609F4F878658D82D1BAA9D7681BF4061 /* ProviderRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderRuntime.swift; sourceTree = "<group>"; };
+		63FB867ED92B93654BB2E3FC09E416C9 /* MetalImagePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalImagePreviewView.swift; sourceTree = "<group>"; };
+		693849B56CF6C2EFF2163CB65E923714 /* PaperBananaModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperBananaModels.swift; sourceTree = "<group>"; };
+		698414E478631356345AD423EF8A5B56 /* NativeProviderResponsePersister.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeProviderResponsePersister.swift; sourceTree = "<group>"; };
+		6C0E847C472F6B9D43982908D80A2474 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		72A1FA9EF9A431AB3EF8FAF8631C88BB /* WindowPlacementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowPlacementTests.swift; sourceTree = "<group>"; };
+		755BDFD12D929ED0DEE95719E93E5C75 /* LegacyPythonProviderClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyPythonProviderClient.swift; sourceTree = "<group>"; };
+		75B51AC64737FB9E40E88F7CD7C3F864 /* ArtifactLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtifactLibraryView.swift; sourceTree = "<group>"; };
+		7624834E8C6982C04800214412D25310 /* RunStoreQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStoreQueries.swift; sourceTree = "<group>"; };
+		770408EBF742318FBD9BD48003B0A01D /* RunDetailsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunDetailsStore.swift; sourceTree = "<group>"; };
+		786B0F7D31D4E7B501FB1CB8D9DF0223 /* RunStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStoreTests.swift; sourceTree = "<group>"; };
+		7A6EC598C01396DE66C0FEBB7CB2765B /* AppSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsStore.swift; sourceTree = "<group>"; };
+		7A9DA53DAA73194B9CE807B8AEEA75A7 /* ArtifactInspectorComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtifactInspectorComponents.swift; sourceTree = "<group>"; };
+		7E15EA958DE2F43965E66B08A1CC9812 /* NativeRefinementWorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeRefinementWorkspaceView.swift; sourceTree = "<group>"; };
+		7EBB9F85071037BF7717F1339D422C61 /* RunDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunDetailsView.swift; sourceTree = "<group>"; };
+		8B6EA6EAB1D75B58544CA920227DD805 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8FBCE6A7C07C6E029A227AD3C3205874 /* ArtifactLibraryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtifactLibraryModels.swift; sourceTree = "<group>"; };
+		990E6FF14AD02B6CD4EF0C723897D333 /* PaperBananaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaperBananaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A980FCB1B9ACE17C07E9E27FA5A6785D /* BackendSupervisor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendSupervisor.swift; sourceTree = "<group>"; };
+		A9E1509F3C72979540F0BAC84ED7050B /* PaperBananaWorkflowEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperBananaWorkflowEvaluator.swift; sourceTree = "<group>"; };
+		AA5D84DC54DF7DDCC9A6D78F42014E21 /* NativeImageGenerationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeImageGenerationModels.swift; sourceTree = "<group>"; };
+		ACCE2B682690F8F7028C8FE36122E766 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		B4804FD437CA578BE547803A3B05B277 /* NativePromptStudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativePromptStudioView.swift; sourceTree = "<group>"; };
+		B68DCADD08649693FF6D1CEAA2F7E30F /* PaperBanana.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaperBanana.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B70058CCE8E00CE481766C2768C63B61 /* PaperBananaRepoLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperBananaRepoLocator.swift; sourceTree = "<group>"; };
+		BD58652467869660D702A5D6691F36E8 /* ArtifactLineage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtifactLineage.swift; sourceTree = "<group>"; };
+		BE13F3BED8209F89954288743F53A014 /* RunDetailsScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunDetailsScanner.swift; sourceTree = "<group>"; };
+		BE637B90E80C11A80DA16020567FA53D /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		C019943A5A996A7052BCB3C72CEE7A13 /* PaperBananaSecretStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperBananaSecretStore.swift; sourceTree = "<group>"; };
+		C03FCADF8861CC736E28146AF1BC84D8 /* PaperBananaImageQualityInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperBananaImageQualityInspector.swift; sourceTree = "<group>"; };
+		C0738294FA2AFEAF677285748FF5A135 /* ProviderRuntimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderRuntimeTests.swift; sourceTree = "<group>"; };
+		C18CF8FA22871823416458D72E067187 /* NativeRefinementSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeRefinementSupport.swift; sourceTree = "<group>"; };
+		C1AC0F0167BD0099A19EFB41118F989D /* RefinementSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefinementSheetView.swift; sourceTree = "<group>"; };
+		C64A4063B43E505A285944D269332412 /* ArtifactLibraryPreviewComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtifactLibraryPreviewComponents.swift; sourceTree = "<group>"; };
+		CE7AA72D0F7064F40DA99CE9135151CE /* RunDetailsSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunDetailsSections.swift; sourceTree = "<group>"; };
+		D793B53886B2B1B69B187E94876EB63C /* SettingsPanes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPanes.swift; sourceTree = "<group>"; };
+		DBB7ACE2DD7F405338BF9B628C778779 /* RunDetailsRunListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunDetailsRunListView.swift; sourceTree = "<group>"; };
+		DBC94510E52A17AA7E260AFBF22860CF /* PaperBananaAppEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperBananaAppEntities.swift; sourceTree = "<group>"; };
+		DDA73F082AB921A6DC2F74AC8CAB992A /* NativeImageGenerationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeImageGenerationStore.swift; sourceTree = "<group>"; };
+		DFF514619DD67E68495101D8BDC32DB2 /* NativeRefinementModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeRefinementModels.swift; sourceTree = "<group>"; };
+		E4EF983561486214AC95FF3E3950038D /* NativeProviderCompletionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeProviderCompletionCoordinator.swift; sourceTree = "<group>"; };
+		EA7EB33B466C3D19B563F8F863A0843F /* NativeRunPreflightPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeRunPreflightPlan.swift; sourceTree = "<group>"; };
+		EA9B0AD93D4759D93B78D87CBDB7F5F3 /* NativeImageGenerationSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeImageGenerationSupport.swift; sourceTree = "<group>"; };
+		EE740B4C903D3BB869262901B3A6F96A /* AppDesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDesignSystem.swift; sourceTree = "<group>"; };
+		F28913DA727FB59222A78FD3D16974E8 /* NativeProviderRelays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeProviderRelays.swift; sourceTree = "<group>"; };
+		F9FEDEF46212C86C545C7E4EF970B8DA /* NativeRunFolderIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeRunFolderIndex.swift; sourceTree = "<group>"; };
+		FB4E999693791C545617CC2A44DDAA2F /* PaperBananaSpotlightIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperBananaSpotlightIndexer.swift; sourceTree = "<group>"; };
+		FC4B192B6CC89A426BCB88FEC63DCB27 /* ArtifactLibraryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtifactLibraryStore.swift; sourceTree = "<group>"; };
+		FD759E265AB088BB601A3D6A52505C20 /* BackendDiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendDiagnosticsView.swift; sourceTree = "<group>"; };
+		FFE16A5F368AD41349F83415FF1DB820 /* PaperBananaAppEntityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperBananaAppEntityTests.swift; sourceTree = "<group>"; };
+		FFFBDA81031F3965732B93489B641DA6 /* ArtifactLibraryScannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtifactLibraryScannerTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C702FCE0F2C853B0F693E6D009F374C5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91364B581610C1680D6D7A78C0264C55 /* libsqlite3.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		27AC029D2999D6ABA361BBCED8952728 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4110DC38264B24F5E3AB30238B100DC2 /* AppIcon.icon */,
+			);
+			name = Resources;
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		34384B6A42396B5DD945B892E4706AFF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ACCE2B682690F8F7028C8FE36122E766 /* libsqlite3.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		51195C457D0FBF7A0384EDB002716F06 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BE637B90E80C11A80DA16020567FA53D /* README.txt */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		7C5DE7E87519AB04E208C704893AF6AB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B68DCADD08649693FF6D1CEAA2F7E30F /* PaperBanana.app */,
+				990E6FF14AD02B6CD4EF0C723897D333 /* PaperBananaTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		89D277758BEE2559C14EBD0FF29FE4C4 = {
+			isa = PBXGroup;
+			children = (
+				B2EA621E912D63CFBB1DC9A61D6BFA50 /* PaperBanana */,
+				FBD83CC314D3FAA9C98F88F9ECC2737C /* PaperBananaApp */,
+				92A7C69AB18B885C76C282FC9DDA886C /* PaperBananaTests */,
+				34384B6A42396B5DD945B892E4706AFF /* Frameworks */,
+				7C5DE7E87519AB04E208C704893AF6AB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		92A7C69AB18B885C76C282FC9DDA886C /* PaperBananaTests */ = {
+			isa = PBXGroup;
+			children = (
+				FFFBDA81031F3965732B93489B641DA6 /* ArtifactLibraryScannerTests.swift */,
+				41CB00D8BDD7CECCCA92BC15F9F386B8 /* BackendSupervisorHeartbeatTests.swift */,
+				3A42BB5E7098E6503D589F599F4490FE /* NativeImageGenerationStoreTests.swift */,
+				09625FD05E85222762E7C60B9D9719DF /* NativeRefinementStoreTests.swift */,
+				2A377957BDDEF9D337B301CF500F5E48 /* NoCredentialServicesRegressionTests.swift */,
+				FFE16A5F368AD41349F83415FF1DB820 /* PaperBananaAppEntityTests.swift */,
+				0630A3F9F36BD7F53EA714B38EA2ACC7 /* PaperBananaSecretStoreTests.swift */,
+				01D21A614E05970C787E052D6A0A24B2 /* ProviderRunLedgerTests.swift */,
+				C0738294FA2AFEAF677285748FF5A135 /* ProviderRuntimeTests.swift */,
+				786B0F7D31D4E7B501FB1CB8D9DF0223 /* RunStoreTests.swift */,
+				72A1FA9EF9A431AB3EF8FAF8631C88BB /* WindowPlacementTests.swift */,
+			);
+			name = PaperBananaTests;
+			path = tests/PaperBananaTests;
+			sourceTree = "<group>";
+		};
+		B2EA621E912D63CFBB1DC9A61D6BFA50 /* PaperBanana */ = {
+			isa = PBXGroup;
+			children = (
+				8B6EA6EAB1D75B58544CA920227DD805 /* Assets.xcassets */,
+				27AC029D2999D6ABA361BBCED8952728 /* Resources */,
+			);
+			path = PaperBanana;
+			sourceTree = "<group>";
+		};
+		FBD83CC314D3FAA9C98F88F9ECC2737C /* PaperBananaApp */ = {
+			isa = PBXGroup;
+			children = (
+				EE740B4C903D3BB869262901B3A6F96A /* AppDesignSystem.swift */,
+				38A807572561FA41FC80AED51B6235A9 /* AppIconController.swift */,
+				37B9F2087D646F56D3F972341A8772B1 /* AppRootContainer.swift */,
+				7A6EC598C01396DE66C0FEBB7CB2765B /* AppSettingsStore.swift */,
+				7A9DA53DAA73194B9CE807B8AEEA75A7 /* ArtifactInspectorComponents.swift */,
+				8FBCE6A7C07C6E029A227AD3C3205874 /* ArtifactLibraryModels.swift */,
+				C64A4063B43E505A285944D269332412 /* ArtifactLibraryPreviewComponents.swift */,
+				3C85A30B7990C1DC0C2A6307A75F7268 /* ArtifactLibraryScanner.swift */,
+				FC4B192B6CC89A426BCB88FEC63DCB27 /* ArtifactLibraryStore.swift */,
+				75B51AC64737FB9E40E88F7CD7C3F864 /* ArtifactLibraryView.swift */,
+				BD58652467869660D702A5D6691F36E8 /* ArtifactLineage.swift */,
+				FD759E265AB088BB601A3D6A52505C20 /* BackendDiagnosticsView.swift */,
+				A980FCB1B9ACE17C07E9E27FA5A6785D /* BackendSupervisor.swift */,
+				0609A41AC502B412F9C4310B2173E563 /* CodexFallbackProviderClient.swift */,
+				0A58C8A5B056CE160A94757FF56072A5 /* GoogleGeminiProviderClient.swift */,
+				755BDFD12D929ED0DEE95719E93E5C75 /* LegacyPythonProviderClient.swift */,
+				63FB867ED92B93654BB2E3FC09E416C9 /* MetalImagePreviewView.swift */,
+				AA5D84DC54DF7DDCC9A6D78F42014E21 /* NativeImageGenerationModels.swift */,
+				DDA73F082AB921A6DC2F74AC8CAB992A /* NativeImageGenerationStore.swift */,
+				EA9B0AD93D4759D93B78D87CBDB7F5F3 /* NativeImageGenerationSupport.swift */,
+				542C3D5DF51D9673B8041D1324B81CC3 /* NativeLocalProviderClient.swift */,
+				B4804FD437CA578BE547803A3B05B277 /* NativePromptStudioView.swift */,
+				03EFFA4926A4F50BC2159ED25CD2A4D9 /* NativeProviderCallRecorder.swift */,
+				E4EF983561486214AC95FF3E3950038D /* NativeProviderCompletionCoordinator.swift */,
+				F28913DA727FB59222A78FD3D16974E8 /* NativeProviderRelays.swift */,
+				698414E478631356345AD423EF8A5B56 /* NativeProviderResponsePersister.swift */,
+				DFF514619DD67E68495101D8BDC32DB2 /* NativeRefinementModels.swift */,
+				275D657ED355383A2893DE82C7D7661A /* NativeRefinementStore.swift */,
+				C18CF8FA22871823416458D72E067187 /* NativeRefinementSupport.swift */,
+				7E15EA958DE2F43965E66B08A1CC9812 /* NativeRefinementWorkspaceView.swift */,
+				5B8F4498711E883C96263D658D2ECAF3 /* NativeRunEventRecorder.swift */,
+				F9FEDEF46212C86C545C7E4EF970B8DA /* NativeRunFolderIndex.swift */,
+				EA7EB33B466C3D19B563F8F863A0843F /* NativeRunPreflightPlan.swift */,
+				3856276799021037AE715410E878DDCF /* OpenRouterProviderClient.swift */,
+				39FF102D1194EF660D4C9B695C0CDE8B /* PaperBananaApp.swift */,
+				DBC94510E52A17AA7E260AFBF22860CF /* PaperBananaAppEntities.swift */,
+				C03FCADF8861CC736E28146AF1BC84D8 /* PaperBananaImageQualityInspector.swift */,
+				693849B56CF6C2EFF2163CB65E923714 /* PaperBananaModels.swift */,
+				B70058CCE8E00CE481766C2768C63B61 /* PaperBananaRepoLocator.swift */,
+				58CA0A46A017D61A1E19710281A1A8AE /* PaperBananaRuntimeEnvironment.swift */,
+				C019943A5A996A7052BCB3C72CEE7A13 /* PaperBananaSecretStore.swift */,
+				FB4E999693791C545617CC2A44DDAA2F /* PaperBananaSpotlightIndexer.swift */,
+				28DB047B74827F48928E7E2E03291E70 /* PaperBananaWindowPlacement.swift */,
+				A9E1509F3C72979540F0BAC84ED7050B /* PaperBananaWorkflowEvaluator.swift */,
+				2E7FF745A10EF3D52751181A80368A11 /* ProviderAuditWriter.swift */,
+				52113FF034B0C7025749AC6AA0EEA812 /* ProviderRecoverySurfacer.swift */,
+				21E6CD58EDC4DCE5C3DABC32D5EC2FD8 /* ProviderRunLedgerModels.swift */,
+				5F7F0FD4D9B8E807C23E0F2EEA8A5257 /* ProviderRunLedgerScanner.swift */,
+				37F16133406CF733333EEB142BE68F48 /* ProviderRunLedgerStore.swift */,
+				000EC52E5E544E7385B66317B0C6193B /* ProviderRunLedgerView.swift */,
+				609F4F878658D82D1BAA9D7681BF4061 /* ProviderRuntime.swift */,
+				358191DA2BB2B6549ED66D4E6E7C7738 /* RefinementOptionBar.swift */,
+				C1AC0F0167BD0099A19EFB41118F989D /* RefinementSheetView.swift */,
+				24EA7C647E9DCC7BAF4553A8FDFB5B12 /* RootSidebarView.swift */,
+				288B20DDF8A43403AC37340418527267 /* RootView.swift */,
+				41DCE5D2BA8A18C4FE05460EA813ADA2 /* RunDetailsInspectorView.swift */,
+				DBB7ACE2DD7F405338BF9B628C778779 /* RunDetailsRunListView.swift */,
+				BE13F3BED8209F89954288743F53A014 /* RunDetailsScanner.swift */,
+				CE7AA72D0F7064F40DA99CE9135151CE /* RunDetailsSections.swift */,
+				770408EBF742318FBD9BD48003B0A01D /* RunDetailsStore.swift */,
+				7EBB9F85071037BF7717F1339D422C61 /* RunDetailsView.swift */,
+				3C8B65CB5E97F631A680902EBD223C57 /* RunStore.swift */,
+				31DF368DE30B6DE440E3F491898FE54F /* RunStoreProviderCalls.swift */,
+				7624834E8C6982C04800214412D25310 /* RunStoreQueries.swift */,
+				1FD2739824E6493A8AD22837BBCE48D6 /* RunStoreRecovery.swift */,
+				D793B53886B2B1B69B187E94876EB63C /* SettingsPanes.swift */,
+				6C0E847C472F6B9D43982908D80A2474 /* SettingsView.swift */,
+				0ACCEB58873D90F25C802DF23C75F421 /* WorkbenchComponents.swift */,
+				1E0E9C94594356A86F782678D180283C /* WorkspaceScopeStrip.swift */,
+				51195C457D0FBF7A0384EDB002716F06 /* Resources */,
+			);
+			name = PaperBananaApp;
+			path = Sources/PaperBananaApp;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5DECE2C547A618EB8462D7B9AC3B7403 /* PaperBanana */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C2F79F115882F05E39D4AF4D042E470 /* Build configuration list for PBXNativeTarget "PaperBanana" */;
+			buildPhases = (
+				B465E0BC0EE70BC8B8A38B8230D85C30 /* Sources */,
+				73D4D0E66ADB178D068A83A006F8A3F6 /* Resources */,
+				C702FCE0F2C853B0F693E6D009F374C5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PaperBanana;
+			productName = PaperBanana;
+			productReference = B68DCADD08649693FF6D1CEAA2F7E30F /* PaperBanana.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E1F2E43C2BAC5ED54D621E0493407AA1 /* PaperBananaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8EC774702AE8E0C025B3D2FD1D8CD4F5 /* Build configuration list for PBXNativeTarget "PaperBananaTests" */;
+			buildPhases = (
+				83D1249968246C61DDC6E259A47D876C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F186F4232665357E93DF0979DDA21501 /* PBXTargetDependency */,
+			);
+			name = PaperBananaTests;
+			productName = PaperBananaTests;
+			productReference = 990E6FF14AD02B6CD4EF0C723897D333 /* PaperBananaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C759DE2735B90563363BA45A09BB6B93 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					5DECE2C547A618EB8462D7B9AC3B7403 = {
+						ProvisioningStyle = Manual;
+					};
+					E1F2E43C2BAC5ED54D621E0493407AA1 = {
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = E22D938667B31F0C25A8D89AAA034264 /* Build configuration list for PBXProject "PaperBanana" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 89D277758BEE2559C14EBD0FF29FE4C4;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7C5DE7E87519AB04E208C704893AF6AB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DECE2C547A618EB8462D7B9AC3B7403 /* PaperBanana */,
+				E1F2E43C2BAC5ED54D621E0493407AA1 /* PaperBananaTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		73D4D0E66ADB178D068A83A006F8A3F6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B329B67249FCF43CE1168F48D6A4820F /* Assets.xcassets in Resources */,
+				C5A660B77B40C7A450D5DB0C5DFD70FC /* README.txt in Resources */,
+				2CCA486F03AAD318E52E3D215D00DF6A /* AppIcon.icon in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		83D1249968246C61DDC6E259A47D876C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6C6827CD477B03A7F8726F4B2C5C1686 /* ArtifactLibraryScannerTests.swift in Sources */,
+				5782FF906DB55E6069E07081F5848454 /* BackendSupervisorHeartbeatTests.swift in Sources */,
+				5057CDEF07C01D6713D75FCEF3A367C3 /* NativeImageGenerationStoreTests.swift in Sources */,
+				CFE9DE48BEADE980EF850613177206C6 /* NativeRefinementStoreTests.swift in Sources */,
+				A3700BAF1873F06B211B803A17383355 /* NoCredentialServicesRegressionTests.swift in Sources */,
+				6B6291DE90978D202C519A6AB5E70FB5 /* PaperBananaAppEntityTests.swift in Sources */,
+				0A66F174AF8CDECC1E560637007095E1 /* PaperBananaSecretStoreTests.swift in Sources */,
+				8E09D203964DFC31E234DAB52F41BC47 /* ProviderRunLedgerTests.swift in Sources */,
+				CE5A4D804DB5440F31B94DB4ECEDC4CF /* ProviderRuntimeTests.swift in Sources */,
+				C9DFAA5AAE2C7AB5F3BE08D3BE3E8079 /* RunStoreTests.swift in Sources */,
+				FA068613B5AE53B3FD627FAF2C2DDD95 /* WindowPlacementTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B465E0BC0EE70BC8B8A38B8230D85C30 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDC87617A3B443FA92617ECC4BB85ED3 /* AppDesignSystem.swift in Sources */,
+				A0BE1215ACBEE05DCA96D83F387CA668 /* AppIconController.swift in Sources */,
+				25440A71D532EB03C039B3B39E093817 /* AppRootContainer.swift in Sources */,
+				B3E754CB07ADD18A8AA6C54C15B542C0 /* AppSettingsStore.swift in Sources */,
+				922BFB8A92B60C944C46C864E723A894 /* ArtifactInspectorComponents.swift in Sources */,
+				BB2D833A24C3F0BFBBEC0E19F330BBEB /* ArtifactLibraryModels.swift in Sources */,
+				47C844B698A2A853AE9B80669F92930D /* ArtifactLibraryPreviewComponents.swift in Sources */,
+				007310BC55A3351335BE3385471467D9 /* ArtifactLibraryScanner.swift in Sources */,
+				C710E93F4B0071EF79C903EC6A3D5244 /* ArtifactLibraryStore.swift in Sources */,
+				77F4E067B77AD3A44B4CA3DC4CAC0D0B /* ArtifactLibraryView.swift in Sources */,
+				78BB891708598FBF886262921F187596 /* ArtifactLineage.swift in Sources */,
+				965E89C12FFE57B22DBC3F34691C13B9 /* BackendDiagnosticsView.swift in Sources */,
+				71FF829DFD5AB251823DFC4617CDCDB5 /* BackendSupervisor.swift in Sources */,
+				50A52C68423A1F3F93C850BA2D9EB6E0 /* CodexFallbackProviderClient.swift in Sources */,
+				0129E83FA641C3026A3E777BB9E77C7F /* GoogleGeminiProviderClient.swift in Sources */,
+				12A2C0BECE968ADA76AB502AA70D06D6 /* LegacyPythonProviderClient.swift in Sources */,
+				3EBC376FD9A89F8F94B955093C5A768B /* MetalImagePreviewView.swift in Sources */,
+				876B7A7340F2A7334BC0A88DAF404ECE /* NativeImageGenerationModels.swift in Sources */,
+				8F44FFB9C12D0DC4799EE7902912A6FB /* NativeImageGenerationStore.swift in Sources */,
+				E905CD86F8C0FD22D5B4A33265198D93 /* NativeImageGenerationSupport.swift in Sources */,
+				E6C2D4371D76BEB70DD68297E133CC09 /* NativeLocalProviderClient.swift in Sources */,
+				466C22EB42B05D7BBA3C0AF90381BA37 /* NativePromptStudioView.swift in Sources */,
+				57FC8EBA4D10AD65E922669F26FB0450 /* NativeProviderCallRecorder.swift in Sources */,
+				FB73A58D6FE45412A44B41AEBD522A55 /* NativeProviderCompletionCoordinator.swift in Sources */,
+				BBC4F2B61B89AE8C1320DC77855A2562 /* NativeProviderRelays.swift in Sources */,
+				83580F3956F46724A0D5625B7C801157 /* NativeProviderResponsePersister.swift in Sources */,
+				623060707A7F87D1499CD05F6C4F97A6 /* NativeRefinementModels.swift in Sources */,
+				D60CB5B73DB7D9D6E594D86FF03B7099 /* NativeRefinementStore.swift in Sources */,
+				7B2A1870B90A0E8E0BDCA6039AB99E00 /* NativeRefinementSupport.swift in Sources */,
+				207470A19215B0E8EC8EA1BD790791BA /* NativeRefinementWorkspaceView.swift in Sources */,
+				CD13F094088204BC5BD60380F604CE94 /* NativeRunEventRecorder.swift in Sources */,
+				882604908EB7FB602FB6D67569E21C46 /* NativeRunFolderIndex.swift in Sources */,
+				33FC06E1E44F869C24C383D2CF526126 /* NativeRunPreflightPlan.swift in Sources */,
+				AC595795CD6BBAC2D953874B8D248D80 /* OpenRouterProviderClient.swift in Sources */,
+				05AE3ED86B70A7E6B2CC761E76E85848 /* PaperBananaApp.swift in Sources */,
+				0CB5ECD3E13940A6D1FD3DBB1CCA5431 /* PaperBananaAppEntities.swift in Sources */,
+				D79DF9C83DE237B79F9FFB5AA413B220 /* PaperBananaImageQualityInspector.swift in Sources */,
+				5F7338F537C8C99C96FAB7C4D0B69A77 /* PaperBananaModels.swift in Sources */,
+				EA23F2103E702F9910D7E80A7E4D21F9 /* PaperBananaRepoLocator.swift in Sources */,
+				2F4C9A4CD6D261FDF6A905C25A40A9A2 /* PaperBananaRuntimeEnvironment.swift in Sources */,
+				2F6C905D983D92983D12555F35AF6073 /* PaperBananaSecretStore.swift in Sources */,
+				699C2394CCDC54FC7F4B75231170B182 /* PaperBananaSpotlightIndexer.swift in Sources */,
+				7860A5AC0BDC79BECBF818CDF29BAF12 /* PaperBananaWindowPlacement.swift in Sources */,
+				FF93779BFC925F210AA1B553BA7A151D /* PaperBananaWorkflowEvaluator.swift in Sources */,
+				5F1BE261AA7CFDAD22D871E94F506C7F /* ProviderAuditWriter.swift in Sources */,
+				7C98BA674F7095DA4DAF59B3781789AF /* ProviderRecoverySurfacer.swift in Sources */,
+				18526C1A265A7786E2D5C53FA2217412 /* ProviderRunLedgerModels.swift in Sources */,
+				8ECA2162A27B3B2B4B9FF7A6B15659FD /* ProviderRunLedgerScanner.swift in Sources */,
+				334B3ED8B2C38AB1FD42DD2E3DB4F558 /* ProviderRunLedgerStore.swift in Sources */,
+				AEDC215EF8CADB6B2891A7E9A913CB44 /* ProviderRunLedgerView.swift in Sources */,
+				4A18F05581BCB9AEBC69A694721C8B1C /* ProviderRuntime.swift in Sources */,
+				274B01ECB2C842DBDAFA8930F0A52BD2 /* RefinementOptionBar.swift in Sources */,
+				1B2949E9A8C26C276D111441E3CD83FA /* RefinementSheetView.swift in Sources */,
+				D7356F4AB5DB22DC75BF0FBFD98C2FC4 /* RootSidebarView.swift in Sources */,
+				DE6AF9F70F7F30D7139E8652ADD7CBAF /* RootView.swift in Sources */,
+				C0D290BE89CBC5BAD8EF295DD2F8474F /* RunDetailsInspectorView.swift in Sources */,
+				87772E24990754F541112C916C8641C3 /* RunDetailsRunListView.swift in Sources */,
+				FA987F4F9394FFFA56A5C1D60C498ABD /* RunDetailsScanner.swift in Sources */,
+				76CE03F07F9197E67225AEB791531C0F /* RunDetailsSections.swift in Sources */,
+				FF241CF1EDD70E7F5E4811CD0DAE60AD /* RunDetailsStore.swift in Sources */,
+				BD9F19ECA5A14C1E5B96D601DEE019F1 /* RunDetailsView.swift in Sources */,
+				62E6FD5B3159FE75B329EF5C72E7ECD4 /* RunStore.swift in Sources */,
+				77E5BF6E80A63BD37B06871A90A7F4C8 /* RunStoreProviderCalls.swift in Sources */,
+				B272653A8A732A68C29D75B21F5B66BF /* RunStoreQueries.swift in Sources */,
+				D75DD34AB7D30696A10C726C9B17E8EE /* RunStoreRecovery.swift in Sources */,
+				E67EB8FDE0BFF91178D547D54185C5F0 /* SettingsPanes.swift in Sources */,
+				CFF804658AA5668F39FC692B2DEE0EF5 /* SettingsView.swift in Sources */,
+				ED8B74C89B80BD983C1385496D231F5C /* WorkbenchComponents.swift in Sources */,
+				F3D586C5FC23224CB9F79790C16C7ABB /* WorkspaceScopeStrip.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F186F4232665357E93DF0979DDA21501 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5DECE2C547A618EB8462D7B9AC3B7403 /* PaperBanana */;
+			targetProxy = B9C56B4EDD3AB116ED8A3A39F5B5131D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1D3534D5920B6083C8C6445C1823F3D9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		3A5E344720CCAB6A5B4256B51A6384FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		3EADC2F4DC0A3D010DB84BA05431696E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = local.paperbanana.gui.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PaperBanana.app/Contents/MacOS/PaperBanana";
+			};
+			name = Release;
+		};
+		4D773CC5F9D2CF04E22EE0519C96877B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = local.paperbanana.gui.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PaperBanana.app/Contents/MacOS/PaperBanana";
+			};
+			name = Debug;
+		};
+		894150074B7D1C8164E094DCE81E695B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PaperBanana;
+				INFOPLIST_KEY_CFBundleName = PaperBanana;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.graphics-design";
+				INFOPLIST_KEY_LSMinimumSystemVersion = 13.0;
+				INFOPLIST_KEY_NSHighResolutionCapable = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = local.paperbanana.gui;
+				PRODUCT_NAME = PaperBanana;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C1025C1C5964F19BCBDBBC96EB162A98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PaperBanana;
+				INFOPLIST_KEY_CFBundleName = PaperBanana;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.graphics-design";
+				INFOPLIST_KEY_LSMinimumSystemVersion = 13.0;
+				INFOPLIST_KEY_NSHighResolutionCapable = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = local.paperbanana.gui;
+				PRODUCT_NAME = PaperBanana;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C2F79F115882F05E39D4AF4D042E470 /* Build configuration list for PBXNativeTarget "PaperBanana" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				894150074B7D1C8164E094DCE81E695B /* Debug */,
+				C1025C1C5964F19BCBDBBC96EB162A98 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8EC774702AE8E0C025B3D2FD1D8CD4F5 /* Build configuration list for PBXNativeTarget "PaperBananaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D773CC5F9D2CF04E22EE0519C96877B /* Debug */,
+				3EADC2F4DC0A3D010DB84BA05431696E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E22D938667B31F0C25A8D89AAA034264 /* Build configuration list for PBXProject "PaperBanana" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A5E344720CCAB6A5B4256B51A6384FF /* Debug */,
+				1D3534D5920B6083C8C6445C1823F3D9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C759DE2735B90563363BA45A09BB6B93 /* Project object */;
+}

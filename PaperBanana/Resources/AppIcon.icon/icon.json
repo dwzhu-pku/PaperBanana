@@ -1,0 +1,34 @@
+{
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name-specializations" : [
+            {
+              "value" : "PaperBanana-Light.png"
+            },
+            {
+              "appearance" : "dark",
+              "value" : "PaperBanana-Dark.png"
+            }
+          ],
+          "name" : "PaperBanana"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
