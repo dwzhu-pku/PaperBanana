@@ -35,6 +35,7 @@ class ExpConfig:
     temperature: float = 1.0
     exp_mode: str = ""
     retrieval_setting: Literal["auto", "manual", "random", "none"] = "auto"
+    planner_metaphor: bool = False
     max_critic_rounds: int = 3
     main_model_name: str = ""
     image_gen_model_name: str = ""

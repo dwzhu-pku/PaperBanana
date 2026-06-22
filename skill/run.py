@@ -111,6 +111,7 @@ async def run(args):
         split_name="demo",
         exp_mode=exp_mode,
         retrieval_setting=args.retrieval_setting,
+        planner_metaphor=args.planner_metaphor,
         main_model_name=args.main_model_name,
         image_gen_model_name=args.image_gen_model_name,
         work_dir=PROJECT_ROOT,
@@ -209,6 +210,8 @@ def main():
     parser.add_argument("--retrieval-setting", type=str, default="auto",
                         choices=["auto", "manual", "random", "none"],
                         help="Retrieval mode: auto (VLM selects refs), manual, random, or none (default: auto)")
+    parser.add_argument("--planner-metaphor", action="store_true",
+                        help="Enable diagram-only Planner visual-metaphor discovery before detailed description output")
     parser.add_argument("--main-model-name", type=str, default="",
                         help="Main model name for VLM agents (default: from config, currently gemini-3.1-pro-preview)")
     parser.add_argument("--image-gen-model-name", type=str, default="",
