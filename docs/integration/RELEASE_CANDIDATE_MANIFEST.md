@@ -22,6 +22,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest native artifact-secret test head | `59e40f7b7c33b5e449a44224edc1d8dfb1508a6c` |
 | Latest temporary rollback preflight head | `c976aca0ee70f26a8473f7024deb0b11ae2fe884` |
 | Latest WP-108 no-live contract head | `37b44c04dcbdb680a043553684e1d15b3a568f52` |
+| Latest WP-109 runtime migration head | `439419e1fbf76162eec622745d2e655f6915267b` |
 | Manifest status | Draft; not a frozen release tag |
 
 Commits after `cf9531cfdd4e` are evidence, documentation, runbook, screenshot,
@@ -38,6 +39,10 @@ the later `59e40f7b7c33` native artifact-secret sentinel test slice.
 distinct-bundle upgrade/rollback harness and preflight. `EV-20260622-046`
 validates the later `37b44c04dcbd` no-live benchmark contract scaffold, but it
 does not replace a real quality benchmark run or publication-quality decision.
+`EV-20260622-048` validates the later `439419e1fbf7` no-live runtime user-data
+migration slice with isolated Application Support, legacy run-store migration,
+stale-run recovery, scanner rediscovery, and synthetic artifact byte
+preservation.
 
 ## Installed App Artifact
 
@@ -71,6 +76,7 @@ channel approval, upgrade proof, or rollback proof.
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
 | Native artifact secret-sentinel scan | `EV-20260622-044` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; live-provider and hosted scans remain open |
 | Temporary distinct-bundle rollback preflight | `EV-20260622-045` | Prior app from `261ad29fb0c4` upgraded to the current candidate in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
+| Runtime user-data migration slice | `EV-20260622-048` | Isolated Application Support override, fake sentinel secret-store permissions, legacy run-store schema migration, stale-run recovery, Run Details / Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte preservation passed without live providers |
 
 ## Provider Support Matrix
 
@@ -99,7 +105,7 @@ only, or unsupported as stated above.
 | App-bundle rollback to a distinct prior app bundle | Temporarily proven by `EV-20260622-045`; final release/distribution proof remains open |
 | Selected non-secret defaults preservation during install/restore | Covered by `EV-20260622-037` via plist hash comparison |
 | Synthetic Application Support and `results/` fixture preservation | Covered by `EV-20260622-045` |
-| User data / Application Support preservation across runtime upgrade and rollback | Not yet proven |
+| User data / Application Support preservation across runtime migration | No-live isolated runtime migration slice covered by `EV-20260622-048`; true public prior-release upgrade and final frozen-SHA rollback remain open |
 | Run-folder/schema compatibility after candidate upgrade and rollback | Source-level legacy migration tests passed in `EV-20260622-037`; end-to-end app upgrade remains open |
 | Hosted rollback | Not applicable until hosted deployment is selected and validated |
 
@@ -129,9 +135,10 @@ state is verified.
 - True install/upgrade/rollback proof and release manifest consistency on the
   final frozen release SHA. Current full local gate evidence is covered by
   `EV-20260622-047`, pushed evidence-head consistency is covered by
-  `EV-20260622-042`, and temporary distinct-bundle replacement/restore is
-  covered by `EV-20260622-045`, but these are not frozen release approval,
-  public prior-release upgrade proof, runtime user-data migration proof, or
+  `EV-20260622-042`, temporary distinct-bundle replacement/restore is covered by
+  `EV-20260622-045`, and isolated runtime user-data migration is covered by
+  `EV-20260622-048`, but these are not frozen release approval, public
+  prior-release upgrade proof, full runtime user-data migration proof, or
   hosted rollback proof.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
   `EV-20260622-043` confirms the current branch has evaluation-adjacent code but

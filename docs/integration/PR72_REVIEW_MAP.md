@@ -137,6 +137,11 @@ Current evidence:
   install used a temporary `.app` path, restored binary hash matched the prior
   hash, and synthetic Application Support plus `results/` fixture hashes stayed
   unchanged.
+- `EV-20260622-048`: runtime user-data migration test slice was added and
+  exercised with isolated Application Support, fake sentinel native secrets,
+  legacy run-store schema migration, stale running-run recovery, Run Details /
+  Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte
+  preservation.
 
 Open gaps:
 
