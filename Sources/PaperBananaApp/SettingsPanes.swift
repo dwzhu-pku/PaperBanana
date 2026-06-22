@@ -155,20 +155,13 @@ struct LegacySettingsPane: View {
     @ObservedObject var backend: BackendSupervisor
 
     var body: some View {
-        VStack(alignment: .leading, spacing: AppDesignSystem.Spacing.md) {
-            legacyCompatibilityPanel
-            diagnosticsActions
-            diagnosticsList
-        }
-    }
+        Form {
+            Section("Legacy Gradio Compatibility") {
+                Text("Use only for the older pipeline UI. Native generation, refinement, recovery, and provider auditing do not require this backend.")
+                    .font(AppDesignSystem.Typography.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
 
-    private var legacyCompatibilityPanel: some View {
-        WorkbenchSection(
-            "Legacy Gradio Compatibility",
-            systemImage: "globe.badge.chevron.backward",
-            subtitle: "Use only for the older pipeline UI. Native generation, refinement, recovery, and provider auditing do not require this backend."
-        ) {
-            HStack(spacing: AppDesignSystem.Spacing.md) {
                 Stepper(value: $settings.serverPort, in: 1024...65535) {
                     LabeledContent("Local server port") {
                         Text("\(settings.serverPort)")
@@ -176,27 +169,33 @@ struct LegacySettingsPane: View {
                     }
                 }
 
-                Spacer(minLength: AppDesignSystem.Spacing.lg)
+                HStack {
+                    Button {
+                        applySettings(restart: false)
+                    } label: {
+                        Label("Apply Legacy Settings", systemImage: "checkmark")
+                    }
 
-                Button {
-                    applySettings(restart: false)
-                } label: {
-                    Label("Apply Legacy Settings", systemImage: "checkmark")
-                }
+                    Button {
+                        applySettings(restart: true)
+                    } label: {
+                        Label("Apply and Start Compatibility Runtime", systemImage: "play")
+                    }
 
-                Button {
-                    applySettings(restart: true)
-                } label: {
-                    Label("Apply and Start Compatibility Runtime", systemImage: "play")
+                    Spacer()
                 }
-                .buttonStyle(.borderedProminent)
             }
-            .controlSize(.small)
+
+            Section("Diagnostics") {
+                diagnosticsActions
+                diagnosticsRows
+            }
         }
+        .formStyle(.grouped)
     }
 
     private var diagnosticsActions: some View {
-        HStack {
+        HStack(spacing: AppDesignSystem.Spacing.sm) {
             Button {
                 backend.runDiagnostics(configuration: settings.snapshot)
             } label: {
@@ -215,28 +214,34 @@ struct LegacySettingsPane: View {
         .controlSize(.small)
     }
 
-    private var diagnosticsList: some View {
-        List(backend.diagnostics) { item in
-            HStack(alignment: .top, spacing: AppDesignSystem.Spacing.sm) {
-                Image(systemName: iconName(for: item.severity))
-                    .foregroundStyle(color(for: item.severity))
-                    .frame(width: 18)
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(item.title)
-                        .font(AppDesignSystem.Typography.headline)
-                    Text(item.detail)
+    @ViewBuilder
+    private var diagnosticsRows: some View {
+        if backend.diagnostics.isEmpty {
+            Text("No diagnostics have been captured yet.")
+                .font(AppDesignSystem.Typography.caption)
+                .foregroundStyle(.secondary)
+        } else {
+            ForEach(backend.diagnostics) { item in
+                HStack(alignment: .top, spacing: AppDesignSystem.Spacing.sm) {
+                    Image(systemName: iconName(for: item.severity))
+                        .foregroundStyle(color(for: item.severity))
+                        .frame(width: 18)
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(item.title)
+                            .font(AppDesignSystem.Typography.headline)
+                        Text(item.detail)
+                            .font(AppDesignSystem.Typography.caption)
+                            .foregroundStyle(.secondary)
+                            .textSelection(.enabled)
+                    }
+                    Spacer()
+                    Text(item.severity.rawValue)
                         .font(AppDesignSystem.Typography.caption)
-                        .foregroundStyle(.secondary)
-                        .textSelection(.enabled)
+                        .foregroundStyle(color(for: item.severity))
                 }
-                Spacer()
-                Text(item.severity.rawValue)
-                    .font(AppDesignSystem.Typography.caption)
-                    .foregroundStyle(color(for: item.severity))
+                .padding(.vertical, 4)
             }
-            .padding(.vertical, 4)
         }
-        .listStyle(.inset)
     }
 
     private func applySettings(restart: Bool) {

@@ -179,6 +179,8 @@ struct PaperBananaReadinessPanel: View {
                     .lineLimit(1)
                     .truncationMode(.middle)
                     .textSelection(.enabled)
+                    .help(snapshot.configuredPath)
+                    .accessibilityValue(snapshot.configuredPath)
             }
 
             Grid(alignment: .leading, horizontalSpacing: AppDesignSystem.Spacing.md, verticalSpacing: AppDesignSystem.Spacing.sm) {

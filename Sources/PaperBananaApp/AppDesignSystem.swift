@@ -32,6 +32,7 @@ enum AppDesignSystem {
 
     enum SemanticColors {
         static let accent = Color.orange
+        static let sidebarLabel = Color.primary.opacity(0.74)
         static let statusReady = Color.green
         static let statusStarting = Color.orange
         static let statusRecovered = Color.green

@@ -103,7 +103,7 @@ private struct RootSidebarNavigationPane: View {
                 HStack(spacing: AppDesignSystem.Spacing.sm) {
                     Image(systemName: "gearshape")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppDesignSystem.SemanticColors.sidebarLabel)
                         .frame(width: 18, alignment: .center)
                         .accessibilityHidden(true)
 
@@ -118,7 +118,7 @@ private struct RootSidebarNavigationPane: View {
                 .contentShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
             }
             .buttonStyle(.plain)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(AppDesignSystem.SemanticColors.sidebarLabel)
             .padding(.horizontal, AppDesignSystem.Layout.sidebarHorizontalPadding)
             .padding(.vertical, AppDesignSystem.Spacing.md)
             .accessibilityLabel("Settings")
@@ -190,7 +190,7 @@ private struct RootActivityRail: View {
                     .contentShape(Circle())
             }
             .buttonStyle(.plain)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(AppDesignSystem.SemanticColors.sidebarLabel)
             .help("Settings")
             .accessibilityLabel("Settings")
 
@@ -220,7 +220,7 @@ private struct RootActivityRailButton: View {
                 .contentShape(Circle())
         }
         .buttonStyle(.plain)
-        .foregroundStyle(isSelected ? .primary : .secondary)
+        .foregroundStyle(isSelected ? Color.primary : AppDesignSystem.SemanticColors.sidebarLabel)
         .background {
             if isSelected {
                 Circle()
@@ -294,6 +294,7 @@ private struct RootRuntimeBlock: View {
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Native PaperBanana app is ready")
+        .help(readiness.statusMessage)
     }
 
     private func statusColor(_ severity: PaperBananaReadinessSeverity) -> Color {
@@ -315,7 +316,7 @@ private struct RootSidebarCommandRow: View {
             HStack(spacing: AppDesignSystem.Spacing.sm) {
                 Image(systemName: destination.systemImage)
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(isSelected ? .primary : .secondary)
+                    .foregroundStyle(isSelected ? Color.primary : AppDesignSystem.SemanticColors.sidebarLabel)
                     .frame(width: 18, alignment: .center)
                     .accessibilityHidden(true)
 
@@ -331,7 +332,7 @@ private struct RootSidebarCommandRow: View {
             .contentShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
         }
         .buttonStyle(.plain)
-        .foregroundStyle(isSelected ? .primary : .secondary)
+        .foregroundStyle(isSelected ? Color.primary : AppDesignSystem.SemanticColors.sidebarLabel)
         .background {
             if isSelected {
                 RoundedRectangle(cornerRadius: 7, style: .continuous)
@@ -364,5 +365,7 @@ private struct SidebarMetadataRow: View {
         }
         .font(AppDesignSystem.Typography.caption)
         .accessibilityElement(children: .combine)
+        .accessibilityValue("\(title): \(value)")
+        .help(value)
     }
 }
