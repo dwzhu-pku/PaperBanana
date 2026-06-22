@@ -2,11 +2,16 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import importlib
 import json
+import os
+import shutil
+import sys
 import tempfile
 import unittest
 from io import BytesIO
 from pathlib import Path
+from unittest import mock
 
 from PIL import Image
 
@@ -124,6 +129,72 @@ class ProviderAuditLossProtectionTests(unittest.TestCase):
         self.assertEqual(finish["response_count"], 2)
         self.assertEqual(len(finish["artifacts"]), 2)
 
+    def test_legacy_gradio_gemini_refine_records_provider_audit(self) -> None:
+        app_module = self._import_app_without_config_copy()
+        refined_bytes = _png_bytes("green")
+
+        class FakeInlineData:
+            def __init__(self, data: bytes):
+                self.data = data
+
+        class FakePart:
+            text = None
+
+            def __init__(self, data: bytes):
+                self.inline_data = FakeInlineData(data)
+
+        class FakeContent:
+            def __init__(self, parts):
+                self.parts = parts
+
+        class FakeCandidate:
+            def __init__(self, parts):
+                self.content = FakeContent(parts)
+
+        class FakeResponse:
+            def __init__(self, parts):
+                self.candidates = [FakeCandidate(parts)]
+
+        class FakeModels:
+            def generate_content(self, **_kwargs):
+                return FakeResponse([FakePart(refined_bytes)])
+
+        class FakeClient:
+            def __init__(self, *_args, **_kwargs):
+                self.models = FakeModels()
+
+        def fake_get_config_val(section, key, env_var, default=""):
+            if (section, key, env_var) == ("defaults", "image_gen_model_name", "IMAGE_GEN_MODEL_NAME"):
+                return "gemini-3-pro-image-preview"
+            if env_var == "GOOGLE_API_KEY":
+                return "configured-google-key"
+            return default
+
+        with (
+            mock.patch.object(app_module, "get_config_val", side_effect=fake_get_config_val),
+            mock.patch("google.genai.Client", FakeClient),
+        ):
+            image_bytes, message = asyncio.run(
+                app_module.refine_image_with_nanoviz(
+                    _png_bytes("white"),
+                    "make the figure publication ready",
+                    aspect_ratio="1:1",
+                    image_size="1K",
+                )
+            )
+
+        self.assertEqual(image_bytes, refined_bytes)
+        self.assertIn("Image refined successfully", message)
+        events = self._events()
+        self.assertTrue(any(event["event"] == "provider_call_started" for event in events))
+        finish = [event for event in events if event["event"] == "provider_call_finished"][-1]
+        self.assertTrue(finish["success"])
+        self.assertEqual(finish["provider"], "gemini")
+        self.assertEqual(finish["context"], "refine_image")
+        self.assertEqual(finish["response_count"], 1)
+        self.assertEqual(len(finish["artifacts"]), 1)
+        self.assertTrue(Path(finish["artifacts"][0]).exists())
+
     def _events(self) -> list[dict]:
         paths = sorted(self.provider_audit.AUDIT_ROOT.glob("provider_calls_*.jsonl"))
         self.assertTrue(paths)
@@ -131,6 +202,29 @@ class ProviderAuditLossProtectionTests(unittest.TestCase):
         for path in paths:
             events.extend(json.loads(line) for line in path.read_text().splitlines() if line.strip())
         return events
+
+    @staticmethod
+    def _import_app_without_config_copy():
+        sys.modules.pop("app", None)
+        clean_env = {
+            key: value
+            for key, value in os.environ.items()
+            if key
+            not in {
+                "GOOGLE_API_KEY",
+                "OPENROUTER_API_KEY",
+                "ANTHROPIC_API_KEY",
+                "OPENAI_API_KEY",
+            }
+        }
+        with (
+            mock.patch.dict(os.environ, clean_env, clear=True),
+            mock.patch.object(shutil, "copy2", lambda *_args, **_kwargs: None),
+            mock.patch("google.genai.Client"),
+            mock.patch("openai.AsyncOpenAI"),
+            mock.patch("anthropic.AsyncAnthropic"),
+        ):
+            return importlib.import_module("app")
 
 
 if __name__ == "__main__":

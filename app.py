@@ -166,23 +166,28 @@ async def process_parallel_candidates(
 
 async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9", image_size="2K"):
     image_model = get_config_val("defaults", "image_gen_model_name", "IMAGE_GEN_MODEL_NAME", "")
+    from utils import generation_utils, provider_audit
+
+    try:
+        generation_utils.assert_not_local_openai_image_model(
+            image_model,
+            route_name="legacy Gradio image refinement",
+        )
+    except ValueError as e:
+        return None, f"Error: {e}"
+
     image_b64 = base64.b64encode(image_bytes).decode("utf-8")
 
     # Path 1: OpenRouter
-    try:
-        from utils.generation_utils import call_openrouter_image_generation_with_retry_async
-        _has_openrouter = True
-    except ImportError:
-        _has_openrouter = False
     openrouter_api_key = get_config_val("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY", "")
-    if _has_openrouter and openrouter_api_key:
+    if openrouter_api_key:
         try:
             contents = [
                 {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": image_b64}},
                 {"type": "text", "text": edit_prompt},
             ]
             cfg = {"system_prompt": "", "temperature": 1.0, "aspect_ratio": aspect_ratio, "image_size": image_size}
-            result = await call_openrouter_image_generation_with_retry_async(
+            result = await generation_utils.call_openrouter_image_generation_with_retry_async(
                 model_name=image_model, contents=contents, config=cfg, max_attempts=3, retry_delay=10, error_context="refine_image",
             )
             if result and result[0] != "Error":
@@ -216,22 +221,98 @@ async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9
             types.Part.from_bytes(mime_type="image/jpeg", data=image_bytes),
         ]
         gen_config = types.GenerateContentConfig(
-            temperature=1.0, max_output_tokens=8192, response_modalities=["IMAGE"],
+            temperature=1.0, candidate_count=1, max_output_tokens=8192, response_modalities=["IMAGE"],
             image_config=types.ImageConfig(aspect_ratio=aspect_ratio, image_size=image_size),
+        )
+        audit_contents = [
+            {"type": "text", "text": edit_prompt},
+            {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": image_b64}},
+        ]
+        call_id = provider_audit.start_call(
+            provider="gemini",
+            model=image_model,
+            modality="image",
+            context="refine_image",
+            attempt=1,
+            max_attempts=1,
+            contents=audit_contents,
+            config=gen_config,
         )
         response = await asyncio.to_thread(
             client.models.generate_content, model=image_model, contents=contents, config=gen_config,
         )
+        artifact_paths = []
         if response.candidates and response.candidates[0].content.parts:
             for part in response.candidates[0].content.parts:
                 if hasattr(part, "inline_data") and part.inline_data:
                     data = part.inline_data.data
                     if isinstance(data, bytes):
+                        artifact_path = provider_audit.save_image_bytes(
+                            call_id=call_id,
+                            provider="gemini",
+                            model=image_model,
+                            image_bytes=data,
+                            suffix="png",
+                        )
+                        artifact_paths.append(str(artifact_path))
+                        provider_audit.finish_call(
+                            call_id=call_id,
+                            provider="gemini",
+                            model=image_model,
+                            modality="image",
+                            context="refine_image",
+                            attempt=1,
+                            success=True,
+                            response_count=1,
+                            artifacts=artifact_paths,
+                            message=f"Image response received via {via}.",
+                        )
                         return data, f"Image refined successfully! (via {via})"
                     elif isinstance(data, str):
-                        return base64.b64decode(data), f"Image refined successfully! (via {via})"
+                        image_data = base64.b64decode(data)
+                        artifact_path = provider_audit.save_image_bytes(
+                            call_id=call_id,
+                            provider="gemini",
+                            model=image_model,
+                            image_bytes=image_data,
+                            suffix="png",
+                        )
+                        artifact_paths.append(str(artifact_path))
+                        provider_audit.finish_call(
+                            call_id=call_id,
+                            provider="gemini",
+                            model=image_model,
+                            modality="image",
+                            context="refine_image",
+                            attempt=1,
+                            success=True,
+                            response_count=1,
+                            artifacts=artifact_paths,
+                            message=f"Image response received via {via}.",
+                        )
+                        return image_data, f"Image refined successfully! (via {via})"
+        provider_audit.finish_call(
+            call_id=call_id,
+            provider="gemini",
+            model=image_model,
+            modality="image",
+            context="refine_image",
+            attempt=1,
+            success=False,
+            message=f"No image data found in {via} response",
+        )
         return None, f"No image data found in {via} response"
     except Exception as e:
+        if "call_id" in locals():
+            provider_audit.fail_call(
+                call_id=call_id,
+                provider="gemini",
+                model=image_model,
+                modality="image",
+                context="refine_image",
+                attempt=1,
+                error=e,
+            )
         return None, f"{via} error: {str(e)}"
 
 

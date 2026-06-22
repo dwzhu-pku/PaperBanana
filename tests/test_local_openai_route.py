@@ -1,4 +1,7 @@
 import asyncio
+import importlib
+import shutil
+import sys
 
 import pytest
 from PIL import Image
@@ -15,6 +18,19 @@ class DummyGenerateConfig:
     temperature = 0.25
     candidate_count = 2
     max_output_tokens = 1234
+
+
+def _import_app_without_config_copy(monkeypatch):
+    monkeypatch.setattr(shutil, "copy2", lambda *_args, **_kwargs: None)
+    for env_var in (
+        "GOOGLE_API_KEY",
+        "OPENROUTER_API_KEY",
+        "ANTHROPIC_API_KEY",
+        "OPENAI_API_KEY",
+    ):
+        monkeypatch.delenv(env_var, raising=False)
+    sys.modules.pop("app", None)
+    return importlib.import_module("app")
 
 
 def test_local_model_prefix_routes_to_local_openai(monkeypatch):
@@ -205,3 +221,35 @@ def test_polish_rejects_local_image_model_before_hosted_provider(monkeypatch, tm
 
     with pytest.raises(ValueError, match="text-only"):
         asyncio.run(agent.process(data))
+
+
+def test_legacy_gradio_refine_rejects_local_image_model_before_hosted_provider(monkeypatch):
+    app_module = _import_app_without_config_copy(monkeypatch)
+
+    def fake_get_config_val(section, key, env_var, default=""):
+        if (section, key, env_var) == ("defaults", "image_gen_model_name", "IMAGE_GEN_MODEL_NAME"):
+            return "local/refine-image"
+        if env_var in {"OPENROUTER_API_KEY", "GOOGLE_API_KEY", "GOOGLE_CLOUD_PROJECT"}:
+            return "configured"
+        return default
+
+    async def fail_if_called(**_kwargs):
+        raise AssertionError("hosted image provider should not be called for local image routes")
+
+    monkeypatch.setattr(app_module, "get_config_val", fake_get_config_val)
+    monkeypatch.setattr(
+        generation_utils,
+        "call_openrouter_image_generation_with_retry_async",
+        fail_if_called,
+    )
+
+    image_bytes, message = asyncio.run(
+        app_module.refine_image_with_nanoviz(
+            b"image bytes are not inspected before route validation",
+            "make it clearer",
+        )
+    )
+
+    assert image_bytes is None
+    assert "text-only" in message
+    assert "legacy Gradio image refinement" in message
