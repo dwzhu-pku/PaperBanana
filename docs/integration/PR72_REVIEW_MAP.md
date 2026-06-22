@@ -53,6 +53,7 @@ native PR head.
 | CI and gate portability | `26adc46`, `75f6d99` | Portable CI workflows, native structural checks, Ruby pinning, and script portability away from a single local host path. |
 | Evidence records | `1524a00`, `d43a6c8`, `4a8df78`, `7271e07`, `1e1688f`, `949bd3c`, `4c9d779` | SHA-linked validation records and manifest updates. Review for accuracy and limitations, not product behavior. |
 | Visual/accessibility polish | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812`, `261ad29`, `cf9531c`, `706e054` | Sidebar/settings polish, search/card accessibility landmarks, Settings form layout, native table accessibility summaries, Prompt Studio keyboard focus escape, adaptive material fallback, minimum-window contract, preflight/reference/disabled-action landmarks, Settings inactive-window evidence, and source-level regression contracts. |
+| Live accessibility evidence | `fdcaad1` | Installed-app AX proof for no-spend preflight row semantics and non-image Artifact inspector disabled-action hints. |
 
 ## Original PR #72 Source Stack Mapping
 
@@ -179,6 +180,9 @@ Current evidence:
 - `EV-20260622-032`: Settings active/inactive window screenshots in Dark and
   Light appearance confirm the bounded Settings Workspace pane remains legible
   and correctly de-emphasized while inactive.
+- `EV-20260622-033`: installed-app live AX probe confirms the no-spend preflight
+  sheet row semantics and Artifact Library non-image disabled-action hints are
+  exposed at runtime.
 
 Open gaps:
 
@@ -237,6 +241,8 @@ Current evidence:
   Command-Option-R and back with Command-Option-P.
 - `EV-20260622-031`: reference example rows now expose stable row identifiers,
   selected traits, and explicit selected/running-disabled/selection-limit hints.
+- `EV-20260622-033`: no-spend preflight sheet row semantics are live-probed,
+  but reference-example row traversal remains manual follow-up.
 
 Open gaps:
 
@@ -349,6 +355,9 @@ Current evidence:
   passed.
 - `EV-20260622-031`: image-only Export Image and Refine actions now provide
   disabled-state accessibility hints explaining the image-artifact requirement.
+- `EV-20260622-033`: the installed app exposes those non-image disabled hints in
+  the right inspector action bar while metadata export, copy, open, and reveal
+  remain enabled.
 - Read-only design review on 2026-06-22 found the lower inspector screenshot
   risk most likely reflected scroll position rather than true action-bar
   occlusion because `ScrollView`, `Divider`, and `ArtifactInspectorActionBar`
@@ -359,8 +368,10 @@ Open gaps:
 - Artifact Library lower inspector reachability now has normal Light/Dark
   top/bottom screenshot proof. Artifact card action-menu reachability is covered
   by `EV-20260622-029`, and image-only disabled-state source hints are covered
-  by `EV-20260622-031`. Remaining Artifact Library work is broader keyboard,
-  VoiceOver, live disabled-state traversal, and adaptive-mode validation.
+  by `EV-20260622-031`, with live non-image inspector disabled-action AX proof
+  covered by `EV-20260622-033`. Remaining Artifact Library work is broader
+  keyboard, VoiceOver speech-output, disabled-state exploration across more
+  file kinds, and adaptive-mode validation.
 - Live refinement/provider E2E remains required before release claims.
 
 ### 6. Run Details, Provider Ledger, Recovery, And Workflow Evaluation
@@ -542,6 +553,7 @@ docs/integration/evidence/20260622-072829_1963b57b42a3_WP-106-real-data-search-c
 docs/integration/evidence/20260622-102900_261ad29fb0c4_WP-007-adaptive-layout-policy.md
 docs/integration/evidence/20260622-103842_cf9531cfdd4e_WP-007-preflight-reference-accessibility.md
 docs/integration/evidence/20260622-104120_706e054453d5_WP-007-settings-inactive-window.md
+docs/integration/evidence/20260622-105100_fdcaad163836_WP-007-live-preflight-artifact-ax.md
 Design/DesignBrief.md
 README.md
 ```
@@ -553,7 +565,7 @@ README.md
 | Native implementation existence | Implemented | Native source, tests, scripts, assets, and docs are present on `integration/native-first-rc-native`. |
 | Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. Final release-candidate rerun remains required. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings, Settings adaptive screenshots are covered by `EV-20260622-022`, and bounded Settings inactive-window screenshots are covered by `EV-20260622-032`. Increased Text Size and broader full-app adaptive states remain open. |
-| Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, and preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`. Full manual keyboard/VoiceOver traversal remains open. |
+| Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`, and live no-spend preflight plus non-image Artifact disabled-action AX proof is covered by `EV-20260622-033`. Full manual keyboard/VoiceOver traversal remains open. |
 | Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, and real-data search/filter plus 10-reference cap persistence are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
 | Release readiness | Not complete | Provider E2E, rollback, final install provenance, quality benchmark, and upstream maintainer acceptance remain open. |
 
@@ -564,9 +576,10 @@ README.md
 - Run the full manual keyboard and VoiceOver traversal, including Run Details
   and Provider Run Ledger table focus beyond the AX summary proof in
   `EV-20260622-021`, plus Prompt Studio states beyond the focused
-  prompt/run-control escape path in `EV-20260622-027`, and live traversal proof
-  for the preflight/reference/disabled-action contracts added in
-  `EV-20260622-031`.
+  prompt/run-control escape path in `EV-20260622-027`, reference-example rows
+  beyond the source-level contracts in `EV-20260622-031`, and VoiceOver speech
+  output beyond the live preflight/Artifact disabled-action AX proof in
+  `EV-20260622-033`.
 - Capture adaptive visual evidence for Increased Text Size, hover/focus, and
   narrow widths; broader full-app inactive-window evidence also remains open.
   `EV-20260622-022` covers Settings Increased Contrast, Reduce Transparency,
@@ -576,7 +589,8 @@ README.md
   adaptive-mode behavior now that lower inspector scroll reachability has
   top/bottom Light/Dark screenshot evidence and card action-menu reachability
   is covered by `EV-20260622-029`, with disabled-action source hints covered by
-  `EV-20260622-031`.
+  `EV-20260622-031` and live non-image inspector disabled-action AX proof
+  covered by `EV-20260622-033`.
 - Run at least one approved live provider/fallback native E2E and inspect
   durable request/metadata/provider artifacts.
 - Complete hosted two-session/negative-path validation before any public hosted
