@@ -327,6 +327,10 @@ Current evidence:
   passed, including durable pre-provider run records, mocked native Google
   raw-payload/no-image recovery, provider-audit writing, and recovered-artifact
   surfacing.
+- `EV-20260622-029`: Artifact Library cards now expose a native
+  `Artifact Actions` menu button; focused tests, Release build/install,
+  installed-app AX proof, and the full native/Python/Xcode 27 aggregate gate
+  passed.
 - Read-only design review on 2026-06-22 found the lower inspector screenshot
   risk most likely reflected scroll position rather than true action-bar
   occlusion because `ScrollView`, `Divider`, and `ArtifactInspectorActionBar`
@@ -335,8 +339,9 @@ Current evidence:
 Open gaps:
 
 - Artifact Library lower inspector reachability now has normal Light/Dark
-  top/bottom screenshot proof. Remaining Artifact Library work is keyboard,
-  VoiceOver, context-menu, disabled-state, and adaptive-mode validation.
+  top/bottom screenshot proof. Artifact card action-menu reachability is covered
+  by `EV-20260622-029`. Remaining Artifact Library work is broader keyboard,
+  VoiceOver, disabled-state, and adaptive-mode validation.
 - Live refinement/provider E2E remains required before release claims.
 
 ### 6. Run Details, Provider Ledger, Recovery, And Workflow Evaluation
@@ -526,7 +531,7 @@ README.md
 | Native implementation existence | Implemented | Native source, tests, scripts, assets, and docs are present on `integration/native-first-rc-native`. |
 | Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. Final release-candidate rerun remains required. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings. Adaptive states remain open. |
-| Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, and Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`. Full manual keyboard/VoiceOver traversal remains open. |
+| Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, and Artifact Library card action-menu reachability is covered by `EV-20260622-029`. Full manual keyboard/VoiceOver traversal remains open. |
 | Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, and real-data search/filter plus 10-reference cap persistence are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
 | Release readiness | Not complete | Provider E2E, rollback, final install provenance, quality benchmark, and upstream maintainer acceptance remain open. |
 
@@ -541,9 +546,10 @@ README.md
 - Capture adaptive visual evidence for Increased Contrast, Increased Text Size,
   Reduce Transparency, Reduce Motion, hover/focus, inactive-window, and narrow
   widths.
-- Validate Artifact Library keyboard, VoiceOver, context-menu, disabled-state,
-  and adaptive-mode behavior now that lower inspector scroll reachability has
-  top/bottom Light/Dark screenshot evidence.
+- Validate Artifact Library broader keyboard, VoiceOver, disabled-state, and
+  adaptive-mode behavior now that lower inspector scroll reachability has
+  top/bottom Light/Dark screenshot evidence and card action-menu reachability
+  is covered by `EV-20260622-029`.
 - Run at least one approved live provider/fallback native E2E and inspect
   durable request/metadata/provider artifacts.
 - Complete hosted two-session/negative-path validation before any public hosted
