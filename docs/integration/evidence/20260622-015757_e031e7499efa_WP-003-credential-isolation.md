@@ -10,7 +10,8 @@ Integration worktree: `/Users/jeff/Codex_projects/PaperBanana-integration`
 |---|---|
 | Upstream baseline | `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b` |
 | PR #70 isolated integration commit | `7c41b4223e9074e6c4c1721003aef3b67c86daf6` |
-| Current evidence/test commit | `b32617490290d9c77120c425f9bf1200310e7406` |
+| Initial evidence/test commit | `b32617490290d9c77120c425f9bf1200310e7406` |
+| Final strengthened runtime-proof commit | `e031e7499efa4553c2ad3948e9bf68169fbd723e` |
 
 ## Baseline Red Test
 
@@ -51,7 +52,7 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /Users/jeff/Codex_projects/PaperBanana/.v
   -m unittest tests.test_app_credential_isolation
 ```
 
-Result on current commit `b32617490290d9c77120c425f9bf1200310e7406`:
+Result on final commit `e031e7499efa4553c2ad3948e9bf68169fbd723e`:
 
 ```text
 Ran 6 tests in 4.022s
