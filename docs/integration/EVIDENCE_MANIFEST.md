@@ -72,6 +72,7 @@ content, or raw provider payloads in shared evidence.
 | EV-20260622-001 | WP-001 | `ddeb2a9a8cf6` | Created | Provisional release contract added in `docs/RELEASE_CONTRACT.md`. |
 | EV-20260622-002 | WP-002 | `ddeb2a9a8cf6` | Created | Branch map and initial evidence manifest added. |
 | EV-20260622-003 | WP-003/T-003 | `e031e7499efa` | Passed with limitation | Baseline red test and integration green credential-isolation evidence recorded in `docs/integration/evidence/20260622-015757_e031e7499efa_WP-003-credential-isolation.md`. |
+| EV-20260622-004 | WP-101/T-001 | `1cd601ee348f` | Passed with limitation | PR #69 legacy plot/Figure Size integration and cumulative credential regression evidence recorded in `docs/integration/evidence/20260622-020143_1cd601ee348f_WP-101-legacy-plot-integration.md`. |
 
 ## Required Next Evidence
 
