@@ -47,6 +47,8 @@ required_paths=(
   "paperbanana_gui/codex_handoff.py"
   "paperbanana_gui/native_generate.py"
   "paperbanana_gui/native_refine.py"
+  "skill/SKILL.md"
+  "skill/run.py"
   "utils/generation_utils.py"
   "utils/provider_audit.py"
   "tests/PaperBananaTests/ProviderRunLedgerTests.swift"
@@ -65,7 +67,7 @@ required_paths=(
   "script/xcode27_baseline_guard.sh"
 )
 
-durable_roots=(
+durable_pathspecs=(
   ".codex/environments"
   ".gitignore"
   "Package.swift"
@@ -76,19 +78,14 @@ durable_roots=(
   "PaperBanana/Resources"
   "Sources/PaperBananaApp"
   "app.py"
-  "agents/critic_agent.py"
-  "agents/planner_agent.py"
-  "agents/stylist_agent.py"
-  "agents/visualizer_agent.py"
+  "agents"
   "docs"
   "paperbanana_gui"
+  "skill"
   "tests/PaperBananaTests"
-  "tests/test_codex_handoff.py"
-  "tests/test_native_generate_cli.py"
-  "tests/test_native_refine_cli.py"
-  "tests/test_provider_audit_loss_protection.py"
-  "utils/generation_utils.py"
-  "utils/provider_audit.py"
+  ":(glob)tests/test_*.py"
+  "utils"
+  "visualize"
   "script/build_and_run.sh"
   "script/check_native_source_control_contract.sh"
   "script/check_native_xcode_contract.sh"
@@ -114,13 +111,13 @@ untracked_durable_paths=()
 while IFS= read -r line; do
   [[ -n "$line" ]] || continue
   untracked_durable_paths+=("$line")
-done < <(git ls-files --others --exclude-standard -- "${durable_roots[@]}" | sort)
+done < <(git ls-files --others --exclude-standard -- "${durable_pathspecs[@]}" | sort)
 
 unstaged_durable_paths=()
 while IFS= read -r line; do
   [[ -n "$line" ]] || continue
   unstaged_durable_paths+=("$line")
-done < <(git diff --name-only -- "${durable_roots[@]}" | sort)
+done < <(git diff --name-only -- "${durable_pathspecs[@]}" | sort)
 
 if (( ${#missing[@]} > 0 )); then
   printf 'ERROR: native Xcode contract paths are missing:\n' >&2

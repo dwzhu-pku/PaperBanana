@@ -69,6 +69,48 @@ class NativeGenerateCliTests(TestCase):
             self.assertEqual(metadata["prompt"], "Create a publication-ready workflow diagram.")
             self.assertEqual(metadata["model"], "__codex_gpt55_xhigh__")
 
+    def test_dry_run_preserves_statistical_plot_task_in_request_and_metadata(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "results" / "native_generate"
+
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "paperbanana_gui.native_generate",
+                    "--prompt",
+                    "Create a grouped bar chart comparing baseline and PaperBanana accuracy.",
+                    "--model",
+                    "__codex_gpt55_xhigh__",
+                    "--resolution",
+                    "2K",
+                    "--aspect-ratio",
+                    "16:9",
+                    "--task",
+                    "statistical plot",
+                    "--output-dir",
+                    str(output_dir),
+                    "--run-id",
+                    "native_generate_plot_test",
+                    "--dry-run",
+                ],
+                cwd=Path(__file__).resolve().parents[1],
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+
+            events = [json.loads(line) for line in proc.stdout.splitlines() if line.strip()]
+            run_dir = Path(events[-1]["run_dir"])
+            request = json.loads((run_dir / "request.json").read_text(encoding="utf-8"))
+            metadata = json.loads(Path(events[-1]["metadata_path"]).read_text(encoding="utf-8"))
+
+            self.assertEqual(request["task"], "statistical plot")
+            self.assertEqual(metadata["task"], "statistical plot")
+            self.assertIn("grouped bar chart", request["prompt"])
+            self.assertNotIn("scientific diagram", request["prompt"].lower())
+
     def test_mock_provider_validImagePreservesRawResponseAndAuditTrail(self) -> None:
         with TemporaryDirectory() as tmp:
             root = Path(tmp)

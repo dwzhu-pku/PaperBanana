@@ -17,6 +17,7 @@ Vanilla Agent - Directly rendering images based on the method section.
 """
 
 import json
+import os
 from typing import Dict, Any
 from google.genai import types
 import base64, io, asyncio
@@ -24,6 +25,7 @@ from PIL import Image
 import json_repair
 
 from utils import generation_utils
+from utils.legacy_generation_options import is_plot_task
 from .base_agent import BaseAgent
 
 
@@ -35,8 +37,9 @@ class CriticAgent(BaseAgent):
         self.model_name = self.exp_config.main_model_name
 
         # Task-specific configurations
-        if self.exp_config.task_name == "plot":
+        if is_plot_task(self.exp_config.task_name):
             self.system_prompt = PLOT_CRITIC_AGENT_SYSTEM_PROMPT
+            self.style_guide_filename = self._style_guide_filename("plot")
             self.task_config = {
                 "task_name": "plot",
                 "critique_target": "Target Plot for Critique:",
@@ -44,11 +47,24 @@ class CriticAgent(BaseAgent):
             }
         else:
             self.system_prompt = DIAGRAM_CRITIC_AGENT_SYSTEM_PROMPT
+            self.style_guide_filename = self._style_guide_filename("diagram")
             self.task_config = {
                 "task_name": "diagram",
                 "critique_target": "Target Diagram for Critique:",
                 "context_labels": ["Methodology Section", "Figure Caption"],
             }
+        self.style_guide = self._load_style_guide()
+
+    def _style_guide_filename(self, task_name: str) -> str:
+        style_prefix = os.environ.get("PAPERBANANA_STYLE_GUIDE_PREFIX", "neurips2025")
+        return f"{style_prefix}_{task_name}_style_guide.md"
+
+    def _load_style_guide(self) -> str:
+        guide_path = self.exp_config.work_dir / "style_guides" / self.style_guide_filename
+        try:
+            return guide_path.read_text(encoding="utf-8")
+        except FileNotFoundError:
+            return ""
 
     async def process(self, data: Dict[str, Any], source: str = "stylist") -> Dict[str, Any]:
         """
@@ -91,6 +107,18 @@ class CriticAgent(BaseAgent):
             content = json.dumps(content)
         visual_intent = data["visual_intent"]
         content_list = [{"type": "text", "text": cfg["critique_target"]}]
+
+        if self.style_guide:
+            content_list.append({
+                "type": "text",
+                "text": (
+                    "Style Guidelines:\n"
+                    f"{self.style_guide}\n\n"
+                    "Before suggesting changes, verify each suggestion preserves these style guidelines. "
+                    "If closing a fidelity gap would make the figure more cluttered or violate the style guide, "
+                    "prefer the smallest style-preserving correction or leave that element unchanged."
+                ),
+            })
         
         if image_base64 and len(image_base64) > 100:
             content_list.append({

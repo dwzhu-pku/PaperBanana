@@ -685,7 +685,7 @@ enum PaperBananaFoundationAssistant {
         let text: String
         switch task {
         case .improvePrompt:
-            text = deterministicPromptImprovement(input)
+            text = deterministicPromptImprovement(input: input, context: context)
         case .critiqueFigure:
             text = deterministicCritique(input)
         case .extractText:
@@ -741,19 +741,52 @@ enum PaperBananaFoundationAssistant {
     }
     #endif
 
-    private static func deterministicPromptImprovement(_ input: String) -> String {
+    private static func deterministicPromptImprovement(input: String, context: String) -> String {
         let base = input.trimmingCharacters(in: .whitespacesAndNewlines)
-        let seed = base.isEmpty ? "Create a publication-ready scientific figure." : base
+        let contextBase = context.trimmingCharacters(in: .whitespacesAndNewlines)
+        let isStatisticalPlot = deterministicPromptIsStatisticalPlot(input: base, context: contextBase)
+        let seed = base.isEmpty
+            ? (isStatisticalPlot ? "Create a publication-ready statistical plot." : "Create a publication-ready scientific figure.")
+            : base
+        let requirements = isStatisticalPlot
+            ? """
+            Requirements:
+            - Build a clean publication-ready statistical plot with explicit chart type and data series.
+            - Preserve all domain terms, abbreviations, numeric values, units, and statistical labels exactly.
+            - Specify x-axis and y-axis titles, scales, tick labels, legends, and uncertainty or sample-size annotations.
+            - Define the visual encoding for categories, groups, colors, markers, bars, lines, and direct labels.
+            - Render at the selected PaperBanana resolution and aspect ratio with high-contrast, legible typography.
+            """
+            : """
+            Requirements:
+            - Build a clean publication-ready scientific diagram with clear panel structure.
+            - Preserve all domain terms, abbreviations, numeric values, and labels exactly.
+            - Use high-contrast text, aligned connectors, consistent spacing, and legible typography.
+            - Avoid decorative clutter; prioritize traceable workflow logic and figure readability.
+            - Render at the selected PaperBanana resolution and aspect ratio.
+            """
         return """
         \(seed)
 
-        Requirements:
-        - Build a clean publication-ready scientific diagram with clear panel structure.
-        - Preserve all domain terms, abbreviations, numeric values, and labels exactly.
-        - Use high-contrast text, aligned connectors, consistent spacing, and legible typography.
-        - Avoid decorative clutter; prioritize traceable workflow logic and figure readability.
-        - Render at the selected PaperBanana resolution and aspect ratio.
+        \(requirements)
         """
+    }
+
+    private static func deterministicPromptIsStatisticalPlot(input: String, context: String) -> Bool {
+        let contextLowercased = context.lowercased()
+        if contextLowercased.contains("task: statistical plot") {
+            return true
+        }
+
+        let promptLowercased = [contextLowercased, input.lowercased()]
+            .filter { $0.isEmpty == false }
+            .joined(separator: " ")
+        return promptLowercased.contains("statistical plot")
+            || promptLowercased.contains("bar chart")
+            || promptLowercased.contains("line chart")
+            || promptLowercased.contains("scatter plot")
+            || promptLowercased.contains("box plot")
+            || promptLowercased.contains("forest plot")
     }
 
     private static func deterministicCritique(_ input: String) -> String {

@@ -67,6 +67,10 @@ from utils.legacy_ui_results import (
     resolve_final_output,
     stage_name_from_image_key,
 )
+from utils.legacy_generation_options import (
+    generation_additional_info,
+    normalize_legacy_input_content,
+)
 from utils.paperviz_processor import PaperVizProcessor
 from paperbanana_gui import codex_handoff
 
@@ -133,6 +137,7 @@ def create_sample_inputs(
     method_content,
     caption,
     aspect_ratio="16:9",
+    figure_size=None,
     num_copies=10,
     max_critic_rounds=3,
     task_name="diagram",
@@ -141,9 +146,9 @@ def create_sample_inputs(
         "filename": "demo_input",
         "task_name": task_name,
         "caption": caption,
-        "content": method_content,
+        "content": normalize_legacy_input_content(method_content, task_name),
         "visual_intent": caption,
-        "additional_info": {"rounded_ratio": aspect_ratio},
+        "additional_info": generation_additional_info(aspect_ratio, figure_size),
         "max_critic_rounds": max_critic_rounds,
     }
     inputs = []
@@ -1101,7 +1106,7 @@ def build_app():
                             label="Figure Size",
                         )
                         max_critic_rounds = gr.Slider(
-                            minimum=1, maximum=5, value=3, step=1,
+                            minimum=0, maximum=5, value=3, step=1,
                             label="Max Critic Rounds",
                         )
                         main_model_name = gr.Textbox(
@@ -1217,7 +1222,8 @@ def build_app():
                     try:
                         input_data = create_sample_inputs(
                             method_content=method_text, caption=caption_text,
-                            aspect_ratio=ar, num_copies=n_cands, max_critic_rounds=max_rounds,
+                            aspect_ratio=ar, figure_size=figure_size,
+                            num_copies=n_cands, max_critic_rounds=max_rounds,
                             task_name=task_name,
                         )
 

@@ -1,6 +1,6 @@
 ---
 name: paperbanana
-description: Generate publication-quality academic diagrams from paper methodology text
+description: Generate publication-quality academic diagrams and statistical plots from paper methodology text or structured data
 license: MIT-0
 dependencies:
   env:
@@ -13,7 +13,7 @@ dependencies:
 
 # PaperBanana
 
-Generate publication-quality academic diagrams and pipeline figures from a paper's methodology section and figure caption. PaperBanana orchestrates a multi-agent pipeline (Retriever, Planner, Stylist, Visualizer, Critic) to produce camera-ready figures suitable for venues like NeurIPS, ICML, and ACL.
+Generate publication-quality academic diagrams, pipeline figures, and statistical plots from a paper's methodology section, structured data, and figure caption or visual intent. PaperBanana orchestrates a multi-agent pipeline (Retriever, Planner, Stylist, Visualizer, Critic) to produce camera-ready figures suitable for venues like NeurIPS, ICML, and ACL.
 
 ## Environment Setup
 
@@ -46,14 +46,23 @@ python skill/run.py \
   --output output.png
 ```
 
+For statistical plots, pass JSON or tabular data as `--content` and select the plot task:
+```bash
+python skill/run.py \
+  --content '{"labels":["Baseline","PaperBanana"],"accuracy":[0.61,0.78]}' \
+  --caption "Accuracy comparison by method" \
+  --task plot \
+  --output accuracy_plot.png
+```
+
 ## Parameters
 
 | Parameter | Required | Default | Description |
 |-----------|----------|---------|-------------|
-| `--content` | Yes* | | Method section text to visualize |
-| `--content-file` | Yes* | | Path to a file containing the method text (alternative to `--content`) |
-| `--caption` | Yes | | Figure caption or visual intent |
-| `--task` | No | `diagram` | Task type: `diagram` |
+| `--content` | Yes* | | Method section text or plot data to visualize |
+| `--content-file` | Yes* | | Path to a file containing method text or plot data (alternative to `--content`) |
+| `--caption` | Yes | | Figure caption or plot visual intent |
+| `--task` | No | `diagram` | Task type: `diagram` or `plot` |
 | `--output` | No | `output.png` | Output image file path |
 | `--aspect-ratio` | No | `21:9` | Aspect ratio: `21:9`, `16:9`, or `3:2` |
 | `--max-critic-rounds` | No | `3` | Maximum critic refinement iterations |
@@ -83,12 +92,21 @@ python skill/run.py \
   --output architecture.png
 ```
 
+### Plot
+
+```bash
+python skill/run.py \
+  --content '{"labels":["Integration","Security"],"current":[0,2],"target":[4,4]}' \
+  --caption "Grouped bar chart comparing current and target capability levels" \
+  --task plot \
+  --output capabilities.png
+```
 
 ## Important Notes
 
 - **Runtime**: A single candidate typically takes 3-10 minutes depending on model and network conditions. With the default 10 candidates running in parallel, expect ~10-30 minutes total. Plan accordingly.
 - **API calls**: Each candidate involves multiple LLM calls (Retriever + Planner + Stylist + Visualizer + up to 3 Critic rounds). Candidates run in parallel for efficiency.
-- **Image generation**: The Visualizer agent calls an image generation model (Gemini Image) to render diagrams.
+- **Image generation**: The Visualizer agent calls an image generation model to render diagrams and uses generated Matplotlib code to render plots.
 
 ## About
 
@@ -98,5 +116,4 @@ PaperBanana is based on the **PaperVizAgent** framework, a reference-driven mult
 > Dawei Zhu, Rui Meng, Yale Song, Xiyu Wei, Sujian Li, Tomas Pfister, Jinsung Yoon
 > arXiv:2601.23265
 
-The framework introduces a collaborative team of five specialized agents — Retriever, Planner, Stylist, Visualizer, and Critic — to transform raw scientific content into publication-quality diagrams. Evaluation is conducted on the **PaperBananaBench** benchmark.
-
+The framework introduces a collaborative team of five specialized agents — Retriever, Planner, Stylist, Visualizer, and Critic — to transform raw scientific content into publication-quality diagrams and plots. Evaluation is conducted on the **PaperBananaBench** benchmark.

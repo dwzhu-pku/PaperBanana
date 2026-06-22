@@ -20,6 +20,7 @@ Generates publication-quality academic diagrams and plots from method text.
 import argparse
 import asyncio
 import base64
+import copy
 import shutil
 import sys
 from io import BytesIO
@@ -61,25 +62,46 @@ def ensure_dataset(task_name: str):
     )
 
 
-def extract_final_image_b64(result: dict, exp_mode: str) -> str | None:
+def extract_final_image_b64(
+    result: dict, exp_mode: str, task_name: str = "diagram"
+) -> str | None:
     """Return the base64-encoded final image from a pipeline result dict.
 
-    Follows the same fallback order as demo.py:display_candidate_result.
+    Follows the same fallback order as the legacy UI result helpers.
     """
-    task_name = "diagram"
+    from utils.legacy_ui_results import resolve_final_output
 
-    # Try critic rounds 3 → 0
-    for round_idx in range(3, -1, -1):
-        key = f"target_{task_name}_critic_desc{round_idx}_base64_jpg"
-        if key in result and result[key]:
-            return result[key]
+    selection = resolve_final_output(result, exp_mode=exp_mode, task_name=task_name)
+    if not selection.image_key:
+        return None
+    return result.get(selection.image_key)
 
-    # Fallback: stylist (demo_full) or planner
-    if exp_mode == "demo_full":
-        key = f"target_{task_name}_stylist_desc0_base64_jpg"
-    else:
-        key = f"target_{task_name}_desc0_base64_jpg"
-    return result.get(key)
+
+def build_candidate_data_list(
+    *,
+    content,
+    caption: str,
+    task_name: str,
+    aspect_ratio: str,
+    max_critic_rounds: int,
+    num_candidates: int,
+) -> list[dict]:
+    """Build normalized, task-aware candidate records for the skill pipeline."""
+    from utils.legacy_generation_options import normalize_legacy_input_content
+
+    normalized_content = normalize_legacy_input_content(content, task_name)
+    data_list = []
+    for i in range(num_candidates):
+        data_list.append({
+            "filename": f"skill_candidate_{i}",
+            "task_name": task_name,
+            "caption": caption,
+            "content": copy.deepcopy(normalized_content),
+            "visual_intent": caption,
+            "additional_info": {"rounded_ratio": aspect_ratio},
+            "max_critic_rounds": max_critic_rounds,
+        })
+    return data_list
 
 
 async def run(args):
@@ -108,6 +130,7 @@ async def run(args):
     exp_mode = args.exp_mode
     exp_config = config.ExpConfig(
         dataset_name="Demo",
+        task_name=args.task,
         split_name="demo",
         exp_mode=exp_mode,
         retrieval_setting=args.retrieval_setting,
@@ -130,22 +153,22 @@ async def run(args):
     num_candidates = args.num_candidates
 
     # Build data dicts
-    data_list = []
-    for i in range(num_candidates):
-        data_list.append({
-            "filename": f"skill_candidate_{i}",
-            "caption": args.caption,
-            "content": content,
-            "visual_intent": args.caption,
-            "additional_info": {"rounded_ratio": args.aspect_ratio},
-            "max_critic_rounds": args.max_critic_rounds,
-        })
+    data_list = build_candidate_data_list(
+        content=content,
+        caption=args.caption,
+        task_name=args.task,
+        aspect_ratio=args.aspect_ratio,
+        max_critic_rounds=args.max_critic_rounds,
+        num_candidates=num_candidates,
+    )
 
     # Process (parallel when multiple candidates)
     results = []
     async for result_data in processor.process_queries_batch(
         data_list, max_concurrent=num_candidates, do_eval=False
     ):
+        if isinstance(result_data, dict):
+            result_data["task_name"] = args.task
         results.append(result_data)
 
     if not results:
@@ -160,7 +183,7 @@ async def run(args):
 
     saved_paths = []
     for idx, result in enumerate(results):
-        b64 = extract_final_image_b64(result, exp_mode)
+        b64 = extract_final_image_b64(result, exp_mode, args.task)
         if not b64:
             print(f"WARNING: No image produced for candidate {idx}.", file=sys.stderr)
             continue

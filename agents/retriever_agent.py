@@ -24,6 +24,7 @@ import base64, io, asyncio
 from PIL import Image
 
 from utils import generation_utils
+from utils.legacy_generation_options import is_plot_task
 from .base_agent import BaseAgent
 
 
@@ -35,7 +36,7 @@ class RetrieverAgent(BaseAgent):
         self.model_name = self.exp_config.main_model_name
         
         # Task-specific configurations
-        if self.exp_config.task_name == "plot":
+        if is_plot_task(self.exp_config.task_name):
             self.system_prompt = PLOT_RETRIEVER_AGENT_SYSTEM_PROMPT
             self.task_config = {
                 "task_name": "plot",
@@ -336,4 +337,3 @@ Provide your output strictly in the following JSON format, containing only the *
   ]
 }```
 """
-

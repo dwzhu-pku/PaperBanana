@@ -57,6 +57,10 @@ try:
         build_evolution_stages,
         resolve_final_output,
     )
+    from utils.legacy_generation_options import (
+        generation_additional_info,
+        normalize_legacy_input_content,
+    )
     from utils.paperviz_processor import PaperVizProcessor
     print("DEBUG: Imported utils")
 
@@ -114,6 +118,7 @@ def create_sample_inputs(
     caption,
     diagram_type="Pipeline",
     aspect_ratio="16:9",
+    figure_size=None,
     num_copies=10,
     max_critic_rounds=3,
     task_name="diagram",
@@ -123,11 +128,9 @@ def create_sample_inputs(
         "filename": "demo_input",
         "task_name": task_name,
         "caption": caption,
-        "content": method_content,
+        "content": normalize_legacy_input_content(method_content, task_name),
         "visual_intent": caption,
-        "additional_info": {
-            "rounded_ratio": aspect_ratio
-        },
+        "additional_info": generation_additional_info(aspect_ratio, figure_size),
         "max_critic_rounds": max_critic_rounds  # Add critic rounds control
     }
     
@@ -431,10 +434,18 @@ def main():
                 key="tab1_aspect_ratio",
                 help="Aspect ratio for the generated output"
             )
+
+            figure_size = st.selectbox(
+                "Figure Size",
+                ["1-3cm", "4-6cm", "7-9cm", "10-13cm", "14-17cm"],
+                index=2,
+                key="tab1_figure_size",
+                help="Publication size target used to choose image-generation resolution"
+            )
             
             max_critic_rounds = st.number_input(
                 "Max Critic Rounds",
-                min_value=1,
+                min_value=0,
                 max_value=5,
                 value=3,
                 key="tab1_max_critic_rounds",
@@ -608,6 +619,7 @@ The framework extends to statistical plots by adjusting the Visualizer and Criti
                         method_content=method_content,
                         caption=caption,
                         aspect_ratio=aspect_ratio,
+                        figure_size=figure_size,
                         num_copies=num_candidates,
                         max_critic_rounds=max_critic_rounds,
                         task_name=task_name,

@@ -22,6 +22,7 @@ from google.genai import types
 import asyncio
 
 from utils import generation_utils, image_utils
+from utils.legacy_generation_options import image_size_from_data
 from utils.plot_execution import execute_plot_code_worker
 from .base_agent import BaseAgent
 
@@ -85,8 +86,16 @@ class VisualizerAgent(BaseAgent):
             if key in data and f"{key}_base64_jpg" not in data:
                 desc_keys_to_process.append(key)
         
-        for round_idx in range(3):
-            key = f"target_{task_name}_critic_desc{round_idx}"
+        critic_desc_prefix = f"target_{task_name}_critic_desc"
+        critic_desc_items = []
+        for key in data:
+            if not key.startswith(critic_desc_prefix):
+                continue
+            suffix = key[len(critic_desc_prefix):]
+            if suffix.isdigit():
+                critic_desc_items.append((int(suffix), key))
+
+        for round_idx, key in sorted(critic_desc_items):
             if key in data and f"{key}_base64_jpg" not in data:
                 critic_suggestions_key = f"target_{task_name}_critic_suggestions{round_idx}"
                 critic_suggestions = data.get(critic_suggestions_key, "")
@@ -119,6 +128,7 @@ class VisualizerAgent(BaseAgent):
             aspect_ratio = "1:1"
             if "additional_info" in data and "rounded_ratio" in data["additional_info"]:
                 aspect_ratio = data["additional_info"]["rounded_ratio"]
+            image_size = image_size_from_data(data)
 
             if cfg["use_image_generation"]:
                 if "gpt-image" in self.model_name:
@@ -142,7 +152,7 @@ class VisualizerAgent(BaseAgent):
                         "system_prompt": self.system_prompt,
                         "temperature": self.exp_config.temperature,
                         "aspect_ratio": aspect_ratio,
-                        "image_size": "1k",
+                        "image_size": image_size,
                     }
                     response_list = await generation_utils.call_openrouter_image_generation_with_retry_async(
                         model_name=self.model_name,
@@ -157,7 +167,7 @@ class VisualizerAgent(BaseAgent):
                     gen_config_args["response_modalities"] = ["IMAGE"]
                     gen_config_args["image_config"] = types.ImageConfig(
                         aspect_ratio=aspect_ratio,
-                        image_size="1k",
+                        image_size=image_size,
                     )
                     response_list = await generation_utils.call_gemini_with_retry_async(
                         model_name=self.model_name,
