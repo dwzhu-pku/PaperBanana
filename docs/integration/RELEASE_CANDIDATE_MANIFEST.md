@@ -13,24 +13,34 @@ been validated and leaves every unvalidated release claim open.
 
 | Item | Value |
 |---|---|
-| Latest full local native/Python/Xcode gate | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
-| Latest recorded remote-check evidence head | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
-| Latest current-head install/source-contract evidence | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
+| Latest full local native/Python/Xcode gate | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
+| Latest recorded remote-check evidence head | `92faf9d931f0a3cc9964ac5b4c26680053d2a97d` |
+| Latest current-head install/source-contract evidence | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
 | Branch | `integration/native-first-rc-native` |
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
 | Upstream base | `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b` |
-| Latest product-source change | `69e9159ca9078952fc24609ded25995e73fe7c1a` |
+| Latest product-source change | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
 | Latest native artifact-secret test head | `59e40f7b7c33b5e449a44224edc1d8dfb1508a6c` |
 | Latest temporary rollback preflight head | `c976aca0ee70f26a8473f7024deb0b11ae2fe884` |
 | Latest WP-108 no-live contract head | `37b44c04dcbdb680a043553684e1d15b3a568f52` |
 | Latest WP-109 runtime migration head | `439419e1fbf76162eec622745d2e655f6915267b` |
 | Latest WP-106 fake-Codex handoff test head | `6f48b2dcd055a32f0fa3cdca899ddcff7a9fd009` |
+| Latest WP-106 Codex handoff environment hardening head | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
 | Latest WP-007 Settings source-contract test head | `758a3841028d7ec576042a19c0cc65e0c808e469` |
 | Latest WP-108 no-live artifact runner head | `46f9a937480c77ba8f8ffcea8d3d970ab51f5c08` |
 | Latest WP-208 Foundation Models disposition head | `69e9159ca9078952fc24609ded25995e73fe7c1a` |
 | Latest post-WP-208 full-gate/install head | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
+| Latest post-Codex-env full-gate/install head | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
 | Manifest status | Draft; not a frozen release tag |
 
+`EV-20260622-056` validates the later product-code head `8ce7f3a2cca3`
+through focused Codex fallback environment/subprocess tests, a 10-test no-live
+fallback/artifact slice, the local aggregate native/Python/Xcode 27 gate with
+166 Swift tests, 102 Python tests, and `codex-xcode27 proof`, plus Release
+build/install proof for `/Applications/PaperBanana.app`. This closes the local
+full-gate/install gap introduced by the Codex fallback handoff environment
+hardening. Remote structural/Python checks remain to be recorded for the pushed
+post-hardening evidence head.
 `EV-20260622-055` validates post-WP-208 branch head `1fa6cbe90e6f` through
 remote structural/Python workflow checks, the local aggregate
 native/Python/Xcode 27 gate with 165 Swift tests, 102 Python tests, and
@@ -78,7 +88,9 @@ release-visible image model choices do not route to Foundation Models, the
 auxiliary assistant defaults to local fallback, and Foundation Models remains
 unsupported for release.
 `EV-20260622-055` validates the current post-WP-208 full gate and install
-provenance for the same branch head.
+provenance for the same branch head. `EV-20260622-056` validates the later
+Codex fallback handoff environment hardening and current local full-gate/install
+provenance for product head `8ce7f3a2cca3`.
 
 ## Installed App Artifact
 
@@ -90,9 +102,9 @@ provenance for the same branch head.
 | Bundle version | `1` |
 | Binary architecture | `arm64` |
 | Code-signing check | Valid on disk; satisfies designated requirement |
-| Binary SHA-256 | `45692c786c04fdc395b237ac9d5b099bb07456033b7329584fe9c91a9cff57ba` |
+| Binary SHA-256 | `4ff238fd30857ad8df4a4b56197ae92759f7767b2f96a4d75f9b21bda88bcfb3` |
 | Install command | `DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer ./script/build_and_run.sh --release --install --no-open` |
-| Artifact evidence | `EV-20260622-055` |
+| Artifact evidence | `EV-20260622-056` |
 
 This is local install provenance only. It is not notarization, distribution
 channel approval, upgrade proof, or rollback proof.
@@ -101,9 +113,9 @@ channel approval, upgrade proof, or rollback proof.
 
 | Area | Evidence | Status |
 |---|---|---|
-| Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055` | Passed with limitation |
-| Local aggregate native gate | `EV-20260622-055` | 165 Swift tests, 102 Python tests, and `codex-xcode27 proof` passed on the current post-WP-208 branch head |
-| Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055` | Current post-WP-208 Release build/install and post-install sanity checks passed |
+| Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056` | Passed with limitation |
+| Local aggregate native gate | `EV-20260622-056` | 166 Swift tests, 102 Python tests, and `codex-xcode27 proof` passed on the current post-Codex-env hardening product head |
+| Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056` | Current post-Codex-env hardening Release build/install and post-install sanity checks passed |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055` | Passed with limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034` | Real local data, search/filter, 10-example cap, and no-spend persistence validated |
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053` | Partial; includes current-head source-level accessibility/keyboard contracts and source-level Settings accessibility/adaptive regression coverage, but not full manual VoiceOver traversal |
@@ -117,13 +129,14 @@ channel approval, upgrade proof, or rollback proof.
 | Fake-Codex fallback store handoff | `EV-20260622-049` | Native generation and refinement stores now execute the real Swift Codex fallback adapter with a deterministic fake executable and persist `swift_codex`/`provider_spend=none` provenance without live provider keys |
 | Foundation Models disposition | `EV-20260622-054` | Release-visible image model choices do not route to Foundation Models, and the auxiliary assistant defaults to local fallback; Foundation Models remains unsupported |
 | Post-WP-208 full-gate/install proof | `EV-20260622-055` | Current branch head passed the full local aggregate gate, remote structural/Python checks, and Release build/install after the Foundation Models disposition |
+| Codex fallback environment hardening and full-gate/install proof | `EV-20260622-056` | The Swift Codex fallback handoff now launches with a constrained non-secret subprocess environment; focused and selected no-live fallback tests passed, then the full local aggregate gate, proof, and Release install passed |
 
 ## Provider Support Matrix
 
 | Route | Current release-candidate status | Evidence | Limitation |
 |---|---|---|---|
 | Native no-spend dry run | Validated for local provenance, manual-reference persistence, generation/refinement store artifact behavior, and dry-run artifact secret-sentinel scanning | `EV-20260622-024`, `EV-20260622-025`, `EV-20260622-026`, `EV-20260622-038`, `EV-20260622-044` | Not a live provider generation result |
-| Codex fallback | Implemented and covered by unit/component/store tests as a no-paid-provider path | Swift/Python test suites in `EV-20260622-035`; focused refinement fallback evidence in `EV-20260622-038`; store-level fake-Codex handoff evidence in `EV-20260622-049` | Approved real Codex/live fallback E2E remains open |
+| Codex fallback | Implemented and covered by unit/component/store tests as a no-paid-provider path | Swift/Python test suites in `EV-20260622-035`; focused refinement fallback evidence in `EV-20260622-038`; store-level fake-Codex handoff evidence in `EV-20260622-049`; constrained handoff environment evidence in `EV-20260622-056` | Approved real Codex/live fallback E2E remains open |
 | Google Gemini / Nano Banana | Implemented and covered by mocked/error-path tests | Swift/Python test suites in `EV-20260622-035`; focused cancellation/timeout recovery evidence in `EV-20260622-039` | Approved live provider E2E remains open |
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
 | `local/<model>` and `ollama/<model>` text routes | Documented and covered by mocked route/docs tests | `EV-20260622-007` and full Python suites | Optional real local/Ollama endpoint smoke remains open if promoted beyond mocked support |
@@ -138,7 +151,7 @@ only, or unsupported as stated above.
 
 | Requirement | Current status |
 |---|---|
-| Current app install provenance | Covered by `EV-20260622-055` |
+| Current app install provenance | Covered by `EV-20260622-056` |
 | Local app-bundle backup/install/restore preflight | Covered by `EV-20260622-037`; before, candidate, and restored binary hashes matched |
 | Temporary distinct-bundle upgrade from an older validated product commit | Covered by `EV-20260622-045`; prior app was built from `261ad29fb0c4`, candidate hash differed, and restored hash matched prior |
 | True upgrade from a retained public prior release artifact | Not yet proven |
@@ -171,24 +184,25 @@ state is verified.
 - Approved live provider/fallback native E2E with non-private fixtures, spend
   limit, redacted request/metadata/provider-artifact review, and
   failure/recovery proof. `EV-20260622-044` covers dry-run artifact
-  secret-sentinel scanning only, and `EV-20260622-049` covers a deterministic
-  fake-Codex handoff only; they do not cover live provider responses, real Codex
-  CLI behavior, runtime logs from a live run, or hosted artifacts.
+  secret-sentinel scanning only, `EV-20260622-049` covers a deterministic
+  fake-Codex handoff only, and `EV-20260622-056` covers a constrained no-live
+  Codex handoff environment only; they do not cover live provider responses,
+  real Codex CLI behavior, runtime logs from a live run, or hosted artifacts.
 - Hosted two-session proof on the real hosted surface, hosted negative-path
   validation, deployed SHA, runtime-log review, and hosted rollback before any
   public hosted-generation claim. `EV-20260622-040` is localhost-only
   credential/session smoke evidence.
 - True install/upgrade/rollback proof and release manifest consistency on the
-  final frozen release SHA. Current post-WP-208 full local gate, pushed
-  evidence-head consistency, and Release install proof are covered by
-  `EV-20260622-055`, temporary distinct-bundle replacement/restore is covered by
-  `EV-20260622-045`, and isolated runtime user-data migration is covered by
-  `EV-20260622-048`, but these are not frozen release approval, public
-  prior-release upgrade proof, full runtime user-data migration proof, or
-  hosted rollback proof.
+  final frozen release SHA. Current post-Codex-env full local gate and Release
+  install proof are covered by `EV-20260622-056`, earlier pushed
+  evidence-head consistency is covered by `EV-20260622-055`, temporary
+  distinct-bundle replacement/restore is covered by `EV-20260622-045`, and
+  isolated runtime user-data migration is covered by `EV-20260622-048`, but
+  these are not frozen release approval, public prior-release upgrade proof,
+  full runtime user-data migration proof, or hosted rollback proof.
 - Repeat the full local/self-hosted native/Python/Xcode gate if a later
   product-code change lands or if the final frozen release-candidate SHA
-  differs from `1fa6cbe90e6f585c33bad323febd80fbade6d340`.
+  differs from `8ce7f3a2cca30d2572144d8edd5e7b52490938e4`.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
   `EV-20260622-043` confirms the current branch has evaluation-adjacent code but
   no safe no-live release-quality benchmark runner, frozen manifest, threshold,
