@@ -123,6 +123,9 @@ Current evidence:
 - `EV-20260622-035`: current branch head `f360dc6d5ccd` passed the local
   aggregate native/Python/Xcode 27 gate plus Release build/install and
   post-install sanity checks.
+- `EV-20260622-036`: draft current-candidate release manifest and contract test
+  were added for source snapshot, installed app identity, provider matrix,
+  rollback/upgrade status, open gates, and release-claim boundary.
 
 Open gaps:
 
@@ -581,7 +584,7 @@ README.md
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings, Settings adaptive screenshots are covered by `EV-20260622-022`, and bounded Settings inactive-window screenshots are covered by `EV-20260622-032`. Increased Text Size and broader full-app adaptive states remain open. |
 | Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`, live no-spend preflight plus non-image Artifact disabled-action AX proof is covered by `EV-20260622-033`, and live reference-row selectable/selected/search/cap AX proof is covered by `EV-20260622-034`. Full manual keyboard/VoiceOver traversal remains open. |
 | Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, and real-data search/filter plus 10-reference cap persistence are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
-| Release readiness | Not complete | Current-head install provenance is covered by `EV-20260622-035`, but provider E2E, rollback/upgrade proof, release manifest consistency, quality benchmark, and upstream maintainer acceptance remain open. |
+| Release readiness | Not complete | Current-head install provenance is covered by `EV-20260622-035`, and draft release-manifest consistency is covered by `EV-20260622-036`; provider E2E, true rollback/upgrade proof, final frozen-SHA manifest consistency, quality benchmark, notarization/distribution decision, and upstream maintainer acceptance remain open. |
 
 ## Required Follow-Up Before Full Signoff
 
@@ -609,5 +612,6 @@ README.md
   durable request/metadata/provider artifacts.
 - Complete hosted two-session/negative-path validation before any public hosted
   claim.
-- Produce the release manifest, install/upgrade/rollback proof, and upstream
-  review handoff before calling the project complete.
+- Produce final frozen-SHA release manifest consistency, install/upgrade/
+  rollback proof, and upstream review handoff before calling the project
+  complete. `EV-20260622-036` covers only the draft current-candidate manifest.
