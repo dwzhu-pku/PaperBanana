@@ -84,6 +84,7 @@ content, or raw provider payloads in shared evidence.
 | EV-20260622-013 | WP-007/T-020 | `1c7452754839` | Passed with limitation | Native sidebar/settings polish applied, Release build installed, 153 Swift tests passed, and polished Light/Dark screenshots captured; evidence recorded in `docs/integration/evidence/20260622-093954_1c7452754839_WP-007-native-visual-polish.md`. |
 | EV-20260622-014 | WP-007/T-021 | `14cc59e7ee57` | Passed with limitation | Native accessibility landmarks improved for workspace search fields and Artifact Library cards, 154 Swift tests passed, and local AX spot checks confirmed improved search/card exposure while the native Table focus path remains an unlabeled `AXOutline`; evidence recorded in `docs/integration/evidence/20260622-095249_14cc59e7ee57_WP-007-native-accessibility-landmarks.md`. |
 | EV-20260622-015 | WP-007/T-020/T-021 | `3d7ad20f3994` | Passed with limitation | Native Settings forms were tightened with bounded tabbed Preferences layout, Settings-native readiness rows, responsive actions, path help/accessibility values, and refreshed Light/Dark screenshots from the installed Release app; evidence recorded in `docs/integration/evidence/20260622-101600_3d7ad20f3994_WP-007-settings-polish.md`. |
+| EV-20260622-016 | WP-007/T-021 | `632ed269b3dd` | Passed with limitation | Native Run Details and Provider Run Ledger tables now expose virtual row descriptions and named selected-row summaries while preserving SwiftUI `Table`; 154 Swift tests passed and Release build/install succeeded; evidence recorded in `docs/integration/evidence/20260622-102857_632ed269b3dd_WP-007-native-table-accessibility.md`. |
 
 ## Required Next Evidence
 
@@ -96,7 +97,8 @@ content, or raw provider payloads in shared evidence.
 | WP-102 | Optional real local/Ollama endpoint smoke if local-route support is promoted beyond mocked route coverage. |
 | WP-103 | Output-value comparison before claiming metaphor mode improves quality. |
 | WP-104 | Bounded live Gemini code-execution fixture and privacy/retention review before promoting agentic Critic beyond experimental opt-in. |
-| WP-007 | Full manual keyboard navigation and VoiceOver traversal, including native Table focus naming, Settings, reference rows, artifact grid context menus, disabled states, and preflight sheets. |
+| WP-007 | Full manual keyboard navigation and VoiceOver traversal, including live AX re-probe of Run Details and Provider Run Ledger selection-summary exposure, Settings, reference rows, artifact grid context menus, disabled states, and preflight sheets. |
 | WP-007 | Reduce Motion, Reduce Transparency, Increased Contrast, Increased Text Size, hover/focus, and inactive-window visual review. |
 | WP-007 | Remaining Settings narrow-width, focused, inactive-window, increased-contrast, increased-text-size, reduced-transparency, and reduced-motion review before full visual signoff. |
+| WP-007 | Artifact Library lower inspector clipping/occlusion review and fix if the issue reproduces in the current installed Release app. |
 | WP-007 | Repeat Release build/install proof on the final release-candidate SHA if that distribution path remains in scope. |
