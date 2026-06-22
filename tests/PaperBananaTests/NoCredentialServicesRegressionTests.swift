@@ -826,6 +826,74 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
         )
     }
 
+    func testWorkspaceSettingsLowerContentRemainsScrollableAndTextSizeResilient() throws {
+        let repoRoot = Self.repoRoot()
+        let panes = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/SettingsPanes.swift"),
+            encoding: .utf8
+        )
+
+        let workspacePane = panes.section(after: "struct WorkspaceSettingsPane", before: "struct ProviderSettingsPane")
+        let applyRow = panes.section(after: "private struct SettingsApplyRow", before: "private struct SettingsReadinessSummary")
+        let readinessSummary = panes.section(after: "private struct SettingsReadinessSummary", before: "private struct SettingsReadinessStatusPill")
+
+        XCTAssertTrue(
+            workspacePane.contains("Form {") &&
+                workspacePane.contains(".formStyle(.grouped)") &&
+                workspacePane.contains(#".accessibilityIdentifier("settings-workspace-pane-form")"#),
+            "Workspace Settings must remain a native grouped Form with a stable accessibility identifier for focused Settings review."
+        )
+
+        let expectedOrder = [
+            #"Section("Native Workspace")"#,
+            #"Section("PaperBanana Readiness")"#,
+            #"Section("Image Defaults")"#,
+            #"Section("Codex Fallback")"#,
+            "SettingsApplyRow"
+        ]
+        var previousIndex = workspacePane.startIndex
+        for marker in expectedOrder {
+            guard let range = workspacePane.range(of: marker, range: previousIndex..<workspacePane.endIndex) else {
+                XCTFail("Workspace Settings should keep lower content reachable in native form order; missing marker: \(marker)")
+                return
+            }
+            previousIndex = range.upperBound
+        }
+
+        let forbiddenWorkspaceLayout = [
+            ".frame(height:",
+            ".frame(width:",
+            ".clipped()",
+            ".scrollDisabled(true)"
+        ]
+        let workspaceLayoutHits = forbiddenWorkspaceLayout.filter { workspacePane.contains($0) }
+        XCTAssertTrue(
+            workspaceLayoutHits.isEmpty,
+            "Workspace Settings must not add fixed/clipped/disabled-scroll layout that can hide lower content: \(workspaceLayoutHits)"
+        )
+
+        XCTAssertTrue(
+            workspacePane.contains(".fixedSize(horizontal: false, vertical: true)") &&
+                readinessSummary.contains(".fixedSize(horizontal: false, vertical: true)"),
+            "Workspace explanatory and readiness detail text should remain vertically resilient for Increased Text Size."
+        )
+
+        XCTAssertTrue(
+            workspacePane.contains(#".accessibilityIdentifier("settings-codex-model")"#) &&
+                workspacePane.contains(#".accessibilityIdentifier("settings-codex-reasoning")"#) &&
+                applyRow.contains(#".accessibilityIdentifier("settings-apply")"#),
+            "Lower Workspace and Apply controls should keep stable identifiers for keyboard and VoiceOver traversal."
+        )
+
+        XCTAssertTrue(
+            readinessSummary.contains(".accessibilityElement(children: .combine)") &&
+                readinessSummary.contains(".accessibilityLabel(row.title)") &&
+                readinessSummary.contains(#".accessibilityValue("\(row.value). \(row.detail)")"#) &&
+                readinessSummary.contains(".help(row.value)"),
+            "Readiness rows should remain combined, labelled, valued, and help-discoverable when lower Settings content is reviewed."
+        )
+    }
+
     func testPaperBananaReadinessSurfaceAppearsInSetupRunAndReviewWorkspaces() throws {
         let repoRoot = Self.repoRoot()
         let settingsPanes = try String(
