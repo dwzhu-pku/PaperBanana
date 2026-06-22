@@ -89,6 +89,7 @@ content, or raw provider payloads in shared evidence.
 | EV-20260622-018 | WP-007/T-020 | `698286ef9601` | Passed with limitation | Artifact Library now has a deterministic native intent route and fresh Light/Dark top/bottom inspector screenshots showing lower content reachable above the fixed two-row action footer; evidence recorded in `docs/integration/evidence/20260622-104603_698286ef9601_WP-007-artifact-library-scroll.md`. |
 | EV-20260622-019 | WP-105/T-017/T-018/T-019 | `b792efededfd` | Passed with limitation | Current product-code head passed the documented aggregate native/Python/Xcode 27 gate and Release build/install after the Artifact Library evidence commits; the undocumented system-Python run failed due missing dependencies and is recorded as an environment-selection limitation in `docs/integration/evidence/20260622-105221_b792efededfd_WP-105-current-head-gate.md`. |
 | EV-20260622-020 | WP-106/T-023/T-025/T-026/T-027 | `8fae6a7c502b` | Passed with limitation | No-live native durability/provider-safety slice passed with 11 selected Swift tests and 17 focused Python tests; artifact/run-store and filename-only leak inspections are recorded in `docs/integration/evidence/20260622-065555_8fae6a7c502b_WP-106-no-live-durability-safety.md`. This does not close real-data, live-provider, hosted, or quality validation. |
+| EV-20260622-021 | WP-007/T-021 | `59d039ddf4ab` | Passed with limitation | Live AX re-probe of the installed Release app confirmed Run Details and Provider Run Ledger expose their table identifiers and selected-row summaries with concrete values; evidence recorded in `docs/integration/evidence/20260622-070148_59d039ddf4ab_WP-007-table-ax-reprobe.md`. This does not close broader manual VoiceOver, keyboard, or adaptive-state review. |
 
 ## Required Next Evidence
 
@@ -101,7 +102,7 @@ content, or raw provider payloads in shared evidence.
 | WP-102 | Optional real local/Ollama endpoint smoke if local-route support is promoted beyond mocked route coverage. |
 | WP-103 | Output-value comparison before claiming metaphor mode improves quality. |
 | WP-104 | Bounded live Gemini code-execution fixture and privacy/retention review before promoting agentic Critic beyond experimental opt-in. |
-| WP-007 | Full manual keyboard navigation and VoiceOver traversal, including live AX re-probe of Run Details and Provider Run Ledger selection-summary exposure, Settings, reference rows, artifact grid context menus, disabled states, and preflight sheets. |
+| WP-007 | Full manual keyboard navigation and VoiceOver traversal across Settings, reference rows, artifact grid context menus, disabled states, preflight sheets, and table workflows beyond the table-selection AX summary proof in `EV-20260622-021`. |
 | WP-007 | Reduce Motion, Reduce Transparency, Increased Contrast, Increased Text Size, hover/focus, and inactive-window visual review. |
 | WP-007 | Remaining Settings narrow-width, focused, inactive-window, increased-contrast, increased-text-size, reduced-transparency, and reduced-motion review before full visual signoff. |
 | WP-007/WP-105 | Repeat aggregate native/Python/Xcode gate plus Release build/install proof on any later product-code SHA selected as the frozen release candidate. |

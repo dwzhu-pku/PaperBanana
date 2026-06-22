@@ -354,11 +354,16 @@ Current evidence:
 - `EV-20260622-020`: focused no-live tests passed for provider-call to
   run-folder/artifact linkage, recovery-surfacer companion metadata, and stale
   running provider-call recovery after relaunch.
+- `EV-20260622-021`: live AX re-probe of the installed Release app confirmed
+  `run-details-table`, `run-details-table-selection-summary`,
+  `provider-run-ledger-table`, and
+  `provider-run-ledger-table-selection-summary` are exposed with concrete
+  selected-row values.
 
 Open gaps:
 
-- Live AX re-probe and manual VoiceOver traversal remain required for the table
-  surfaces.
+- Manual VoiceOver and keyboard traversal remain required for the table
+  workflows beyond the table-selection AX summary proof.
 - Live provider/failure/recovery E2E on a final candidate remains required.
 
 ### 7. Python Bridge And Legacy Compatibility
