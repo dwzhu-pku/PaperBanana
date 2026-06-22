@@ -1,6 +1,6 @@
 # PaperBanana Evidence Manifest
 
-Created: 2026-06-22  
+Created: 2026-06-22
 Purpose: SHA-linked evidence ledger for the native-first integration plan.
 
 ## Baseline State
@@ -79,14 +79,16 @@ content, or raw provider payloads in shared evidence.
 | EV-20260622-008 | WP-103/T-103 | `48039406aae0` | Passed with limitation | PR #71 opt-in Planner metaphor mode integrated as default-off and diagram-only; evidence recorded in `docs/integration/evidence/20260622-023000_48039406aae0_WP-103-planner-metaphor.md`. |
 | EV-20260622-009 | WP-104/T-104 | `1e67cb5164c7` | Passed with limitation | PR #73 critic controls and opt-in Gemini agentic Critic integrated with default path unchanged; evidence recorded in `docs/integration/evidence/20260622-023145_1e67cb5164c7_WP-104-critic-agentic.md`. |
 | EV-20260622-010 | WP-105/T-105 | `7ce4f079f614` | Passed with limitation | Native macOS stack integrated onto the Python/security branch, reviewer-found route/audit gaps fixed, and full native/Python/Xcode 27 gate passed; evidence recorded in `docs/integration/evidence/20260622-065855_7ce4f079f614_WP-105-native-integrated-candidate.md`. |
+| EV-20260622-011 | WP-005/T-034/T-035 | `26adc4670944` | Passed with limitation | Portable CI workflows and native gate scripts added; clean temporary Python 3.12 suite and full local native/Python/Xcode 27 gate passed; evidence recorded in `docs/integration/evidence/20260622-070737_26adc4670944_WP-005-ci-portability.md`. |
 
 ## Required Next Evidence
 
 | WP/Test | Required artifact |
 |---|---|
 | WP-003 | Full two-client hosted/session proof before public hosted release. |
-| WP-003 | Clean environment Python 3.12 validation once WP-005/WP-201 defines the environment. |
 | WP-004 | Hosted deployment negative test before any public hosted release claim. |
+| WP-005 | Remote GitHub check-run evidence after branch push, including Python Tests and Native Structural Checks. |
+| WP-005 | Self-hosted Xcode 27 workflow run, if that manual gate is selected as required branch/release evidence. |
 | WP-102 | Optional real local/Ollama endpoint smoke if local-route support is promoted beyond mocked route coverage. |
 | WP-103 | Output-value comparison before claiming metaphor mode improves quality. |
 | WP-104 | Bounded live Gemini code-execution fixture and privacy/retention review before promoting agentic Critic beyond experimental opt-in. |

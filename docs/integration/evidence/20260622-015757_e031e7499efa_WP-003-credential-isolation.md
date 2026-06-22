@@ -1,7 +1,7 @@
 # WP-003 Credential Isolation Evidence
 
-Timestamp: 2026-06-22 01:57:57 EDT  
-Integration branch: `integration/native-first-rc`  
+Timestamp: 2026-06-22 01:57:57 EDT
+Integration branch: `integration/native-first-rc`
 Integration worktree: `/Users/jeff/Codex_projects/PaperBanana-integration`
 
 ## SHAs
@@ -15,7 +15,7 @@ Integration worktree: `/Users/jeff/Codex_projects/PaperBanana-integration`
 
 ## Baseline Red Test
 
-Worktree: `/Users/jeff/Codex_projects/PaperBanana-baseline`  
+Worktree: `/Users/jeff/Codex_projects/PaperBanana-baseline`
 Procedure: temporarily copied
 `/Users/jeff/Codex_projects/PaperBanana-pr2-credential-isolation/tests/test_app_credential_isolation.py`
 into the detached upstream baseline, ran the focused unittest, then removed the

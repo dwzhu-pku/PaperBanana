@@ -1,7 +1,7 @@
 # PaperBanana Integration Branch Map
 
-Created: 2026-06-22  
-Integration branch: `integration/native-first-rc`  
+Created: 2026-06-22
+Integration branch: `integration/native-first-rc`
 Integration worktree: `/Users/jeff/Codex_projects/PaperBanana-integration`
 
 ## Remotes

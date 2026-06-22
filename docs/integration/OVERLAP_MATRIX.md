@@ -1,6 +1,6 @@
 # PaperBanana PR Overlap Matrix
 
-Created: 2026-06-22  
+Created: 2026-06-22
 Baseline: `origin/main` at `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b`
 
 This matrix was generated from `git diff --name-only origin/main...<ref>` for

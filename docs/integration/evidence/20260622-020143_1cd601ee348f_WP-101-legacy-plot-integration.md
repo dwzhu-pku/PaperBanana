@@ -1,7 +1,7 @@
 # WP-101 Legacy Plot And Figure Size Integration Evidence
 
-Timestamp: 2026-06-22 02:01:43 EDT  
-Integration branch: `integration/native-first-rc`  
+Timestamp: 2026-06-22 02:01:43 EDT
+Integration branch: `integration/native-first-rc`
 Integration worktree: `/Users/jeff/Codex_projects/PaperBanana-integration`
 
 ## SHAs

@@ -1,7 +1,7 @@
 # PaperBanana Release Contract
 
-Status: provisional execution baseline  
-Created: 2026-06-22  
+Status: provisional execution baseline
+Created: 2026-06-22
 Scope: native-first local release candidate plus focused upstream issue closeout evidence
 
 This document records the governing defaults for the first execution cycle in
