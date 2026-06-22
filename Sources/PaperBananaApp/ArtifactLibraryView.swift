@@ -248,35 +248,35 @@ struct ArtifactLibraryView: View {
                     spacing: AppDesignSystem.Spacing.md
                 ) {
                     ForEach(filteredArtifacts) { artifact in
-                        Button {
-                            store.selectedArtifactID = artifact.id
-                        } label: {
-                            ArtifactCardView(
-                                artifact: artifact,
-                                isSelected: artifact.id == store.selectedArtifactID,
-                                isFavorite: store.isFavorite(artifact)
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        .contentShape(Rectangle())
-                        .accessibilityIdentifier("artifact-card-\(artifact.relativePath)")
-                        .contextMenu {
-                            Button("Open") { store.open(artifact) }
-                            Button("Reveal in Finder") { store.reveal(artifact) }
-                            Button("Copy Path") { store.copyPath(artifact) }
-                            Button("Export Image...") { store.exportImage(artifact) }
-                                .disabled(artifact.kind != .image)
-                            Button("Export with Metadata...") { store.exportWithMetadata(artifact) }
-                            if artifact.kind == .image {
-                                Divider()
-                                Button(artifact.wasNativeRefined ? "Refine Again..." : "Refine...") {
-                                    refinementArtifact = artifact
-                                }
+                        ZStack(alignment: .topTrailing) {
+                            Button {
+                                store.selectedArtifactID = artifact.id
+                            } label: {
+                                ArtifactCardView(
+                                    artifact: artifact,
+                                    isSelected: artifact.id == store.selectedArtifactID,
+                                    isFavorite: store.isFavorite(artifact)
+                                )
                             }
-                            Divider()
-                            Button(store.isFavorite(artifact) ? "Remove Favorite" : "Favorite") {
-                                store.toggleFavorite(artifact)
+                            .buttonStyle(.plain)
+                            .contentShape(Rectangle())
+                            .accessibilityIdentifier("artifact-card-\(artifact.relativePath)")
+                            .contextMenu {
+                                artifactActions(for: artifact)
                             }
+
+                            Menu {
+                                artifactActions(for: artifact)
+                            } label: {
+                                Label("Artifact Actions", systemImage: "ellipsis.circle")
+                                    .labelStyle(.iconOnly)
+                            }
+                            .controlSize(.small)
+                            .help("Artifact actions")
+                            .accessibilityLabel("Artifact Actions")
+                            .accessibilityHint("Opens actions for this artifact, including reveal, export, copy, refine, and favorite.")
+                            .accessibilityIdentifier("artifact-actions-\(artifact.relativePath)")
+                            .padding(AppDesignSystem.Spacing.sm)
                         }
                     }
                 }
@@ -286,6 +286,26 @@ struct ArtifactLibraryView: View {
                 .accessibilityHint("Use Tab to focus an artifact, Return to select it, and the context menu for actions.")
                 .accessibilityIdentifier("artifact-grid")
             }
+        }
+    }
+
+    @ViewBuilder
+    private func artifactActions(for artifact: PaperBananaArtifact) -> some View {
+        Button("Open") { store.open(artifact) }
+        Button("Reveal in Finder") { store.reveal(artifact) }
+        Button("Copy Path") { store.copyPath(artifact) }
+        Button("Export Image...") { store.exportImage(artifact) }
+            .disabled(artifact.kind != .image)
+        Button("Export with Metadata...") { store.exportWithMetadata(artifact) }
+        if artifact.kind == .image {
+            Divider()
+            Button(artifact.wasNativeRefined ? "Refine Again..." : "Refine...") {
+                refinementArtifact = artifact
+            }
+        }
+        Divider()
+        Button(store.isFavorite(artifact) ? "Remove Favorite" : "Favorite") {
+            store.toggleFavorite(artifact)
         }
     }
 }

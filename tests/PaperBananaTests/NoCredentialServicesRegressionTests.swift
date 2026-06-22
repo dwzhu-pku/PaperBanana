@@ -302,6 +302,10 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
         )
         XCTAssertTrue(artifactLibrary.contains(#".accessibilityIdentifier("artifact-grid")"#))
         XCTAssertTrue(artifactLibrary.contains(#".accessibilityIdentifier("artifact-card-\(artifact.relativePath)")"#))
+        XCTAssertTrue(artifactLibrary.contains(#".accessibilityIdentifier("artifact-actions-\(artifact.relativePath)")"#))
+        XCTAssertTrue(artifactLibrary.contains(#"Label("Artifact Actions", systemImage: "ellipsis.circle")"#))
+        XCTAssertTrue(artifactLibrary.contains(#".accessibilityLabel("Artifact Actions")"#))
+        XCTAssertTrue(artifactLibrary.contains("private func artifactActions(for artifact: PaperBananaArtifact)"))
         XCTAssertTrue(artifactLibrary.contains(#".buttonStyle(.plain)"#))
         XCTAssertFalse(
             artifactLibrary.contains(".onTapGesture {\n                            store.selectedArtifactID = artifact.id"),
