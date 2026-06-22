@@ -489,38 +489,18 @@ def build_app():
         # API KEYS ACCORDION
         # ================================================================
         with gr.Accordion("API Keys", open=False):
+            openrouter_configured = bool(get_config_val("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY", ""))
+            google_configured = bool(get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", ""))
+            openrouter_status = "configured" if openrouter_configured else "not configured"
+            google_status = "configured" if google_configured else "not configured"
             gr.Markdown(
-                "**You do not need both keys.** Fill **at least one**: **OpenRouter** *or* **Google (Gemini)**. "
-                "If both are set, OpenRouter is preferred for automatic routing when available."
+                "**Credentials are loaded at server startup only.** Configure `OPENROUTER_API_KEY` "
+                "or `GOOGLE_API_KEY` in the environment, or set them in `configs/model_config.yaml` "
+                "before launching PaperBanana. If both are set, OpenRouter is preferred for automatic "
+                "routing when available.\n\n"
+                f"- OpenRouter: **{openrouter_status}**\n"
+                f"- Google Gemini: **{google_status}**"
             )
-            with gr.Row():
-                openrouter_key_input = gr.Textbox(
-                    label="OpenRouter API Key (optional)", type="password", placeholder="sk-or-...",
-                    value=get_config_val("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY", ""),
-                )
-                google_key_input = gr.Textbox(
-                    label="Google API Key (optional)", type="password", placeholder="AIza...",
-                    value=get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", ""),
-                )
-            gr.Markdown("*Keys are used only for this session and never stored.*")
-
-            def apply_keys(or_key, g_key):
-                if or_key:
-                    os.environ["OPENROUTER_API_KEY"] = or_key
-                if g_key:
-                    os.environ["GOOGLE_API_KEY"] = g_key
-                from utils.generation_utils import reinitialize_clients
-                initialized = reinitialize_clients()
-                if initialized:
-                    return f"Clients initialized: {', '.join(initialized)}."
-                return (
-                    "Warning: no API clients could be initialized. "
-                    "Enter at least one key—OpenRouter or Google (Gemini)."
-                )
-
-            apply_keys_btn = gr.Button("Apply Keys", size="sm")
-            keys_status = gr.Textbox(visible=False)
-            apply_keys_btn.click(apply_keys, inputs=[openrouter_key_input, google_key_input], outputs=[keys_status])
 
         # ================================================================
         # TABS
