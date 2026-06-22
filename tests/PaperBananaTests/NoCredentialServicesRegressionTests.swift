@@ -723,6 +723,109 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
         )
     }
 
+    func testSettingsAccessibilityAndAdaptiveSourceContractRemainsExplicit() throws {
+        let repoRoot = Self.repoRoot()
+        let settingsRoot = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/SettingsView.swift"),
+            encoding: .utf8
+        )
+        let panes = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/SettingsPanes.swift"),
+            encoding: .utf8
+        )
+        let designSystem = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/AppDesignSystem.swift"),
+            encoding: .utf8
+        )
+
+        let paneWrapper = settingsRoot.section(after: "private struct SettingsPaneContent", before: "private enum SettingsPane")
+        let workspacePane = panes.section(after: "struct WorkspaceSettingsPane", before: "struct ProviderSettingsPane")
+        let providerPane = panes.section(after: "struct ProviderSettingsPane", before: "struct LegacySettingsPane")
+        let providerActions = providerPane.section(after: "private func providerKeyActions", before: "private func providerSaveButton")
+        let legacyPane = panes.section(after: "struct LegacySettingsPane", before: "private struct SettingsApplyRow")
+        let legacyActions = legacyPane.section(after: "private var legacyCompatibilityActions", before: "private var applyLegacyButton")
+        let diagnosticsActions = legacyPane.section(after: "private var diagnosticsActions", before: "private var runDiagnosticsButton")
+        let readinessSummary = panes.section(after: "private struct SettingsReadinessSummary", before: "private struct SettingsReadinessStatusPill")
+
+        XCTAssertTrue(settingsRoot.contains(#".accessibilityLabel("PaperBanana Settings")"#))
+        XCTAssertTrue(settingsRoot.contains(".accessibilityValue(selection.subtitle)"))
+        XCTAssertTrue(settingsRoot.contains(#".accessibilityIdentifier("paperbanana-settings-window")"#))
+
+        XCTAssertTrue(paneWrapper.contains(#".accessibilityLabel("\(pane.title) settings")"#))
+        XCTAssertTrue(paneWrapper.contains(".accessibilityValue(pane.subtitle)"))
+        XCTAssertTrue(paneWrapper.contains(#".accessibilityIdentifier("settings-pane-\(pane.rawValue)")"#))
+
+        XCTAssertTrue(workspacePane.contains(#".accessibilityIdentifier("settings-workspace-pane-form")"#))
+        XCTAssertTrue(workspacePane.contains(#".accessibilityIdentifier("settings-workspace-repo-path")"#))
+        XCTAssertTrue(workspacePane.contains(".help(settings.repoPath)"))
+        XCTAssertTrue(workspacePane.contains(#".accessibilityLabel("PaperBanana checkout")"#))
+        XCTAssertTrue(workspacePane.contains(".accessibilityValue(settings.repoPath)"))
+
+        XCTAssertTrue(readinessSummary.contains(".lineLimit(row.id == .configuredPath ? 2 : 1)"))
+        XCTAssertTrue(readinessSummary.contains(".truncationMode(.middle)"))
+        XCTAssertTrue(readinessSummary.contains(".textSelection(.enabled)"))
+        XCTAssertTrue(readinessSummary.contains(".help(row.value)"))
+        XCTAssertTrue(readinessSummary.contains(".accessibilityElement(children: .combine)"))
+        XCTAssertTrue(readinessSummary.contains(".accessibilityLabel(row.title)"))
+        XCTAssertTrue(readinessSummary.contains(#".accessibilityValue("\(row.value). \(row.detail)")"#))
+
+        XCTAssertTrue(providerPane.contains(#".accessibilityIdentifier("settings-provider-pane-form")"#))
+        XCTAssertTrue(providerPane.contains(#"SecureField("Google API key", text: $settings.pendingGoogleAPIKey)"#))
+        XCTAssertTrue(providerPane.contains(#"SecureField("OpenRouter API key", text: $settings.pendingOpenRouterAPIKey)"#))
+        XCTAssertTrue(providerPane.contains(#".accessibilityIdentifier("settings-google-api-key-field")"#))
+        XCTAssertTrue(providerPane.contains(#".accessibilityIdentifier("settings-openrouter-api-key-field")"#))
+        XCTAssertTrue(providerPane.contains(#".accessibilityIdentifier("settings-secret-store-location")"#))
+        XCTAssertTrue(providerPane.contains(#".accessibilityLabel("Secret storage location")"#))
+        XCTAssertTrue(providerPane.contains(".accessibilityValue(settings.secretStoreURL.path)"))
+        XCTAssertTrue(providerPane.contains(".lineLimit(1)") && providerPane.contains(".truncationMode(.middle)"))
+        XCTAssertFalse(providerPane.contains(#"TextField("Google API key""#))
+        XCTAssertFalse(providerPane.contains(#"TextField("OpenRouter API key""#))
+
+        XCTAssertTrue(providerActions.contains("ViewThatFits(in: .horizontal)"))
+        XCTAssertTrue(legacyActions.contains("ViewThatFits(in: .horizontal)"))
+        XCTAssertTrue(diagnosticsActions.contains("ViewThatFits(in: .horizontal)"))
+        XCTAssertTrue(legacyPane.contains(#".accessibilityIdentifier("settings-legacy-pane-form")"#))
+        XCTAssertTrue(legacyPane.contains(#".accessibilityIdentifier("settings-legacy-server-port")"#))
+        XCTAssertTrue(legacyPane.contains(#".accessibilityIdentifier("settings-run-diagnostics")"#))
+        XCTAssertTrue(legacyPane.contains(#".accessibilityIdentifier("settings-copy-diagnostics")"#))
+
+        XCTAssertTrue(panes.contains(#"@Environment(\.colorSchemeContrast)"#))
+        XCTAssertTrue(panes.contains("AppDesignSystem.Adaptive.statusFill"))
+        XCTAssertTrue(panes.contains("AppDesignSystem.Adaptive.statusStroke"))
+
+        XCTAssertTrue(designSystem.contains("struct AdaptiveMaterialSurface"))
+        XCTAssertTrue(designSystem.contains(#"@Environment(\.accessibilityReduceTransparency)"#))
+        XCTAssertTrue(designSystem.contains("if reduceTransparency || colorSchemeContrast == .increased"))
+        XCTAssertTrue(designSystem.contains("func appAdaptiveMaterialBackground"))
+        XCTAssertTrue(designSystem.contains("static func statusFill"))
+        XCTAssertTrue(designSystem.contains("static func statusStroke"))
+
+        let settingsSource = settingsRoot + panes
+        let forbiddenSettingsPatterns = [
+            ".preferredColorScheme(",
+            ".colorScheme(",
+            #".environment(\.colorScheme"#,
+            ".background(.regularMaterial",
+            ".background(.thinMaterial",
+            ".fill(.regularMaterial",
+            ".fill(.thinMaterial",
+            ".blur(",
+            ".shadow(",
+            "withAnimation(",
+            "Animation.ease",
+            "Animation.spring",
+            "matchedGeometryEffect",
+            "phaseAnimator",
+            "keyframeAnimator",
+            ".symbolEffect"
+        ]
+        let hits = forbiddenSettingsPatterns.filter { settingsSource.contains($0) }
+        XCTAssertTrue(
+            hits.isEmpty,
+            "Settings must stay native/adaptive without custom appearance or motion bypasses: \(hits)"
+        )
+    }
+
     func testPaperBananaReadinessSurfaceAppearsInSetupRunAndReviewWorkspaces() throws {
         let repoRoot = Self.repoRoot()
         let settingsPanes = try String(
