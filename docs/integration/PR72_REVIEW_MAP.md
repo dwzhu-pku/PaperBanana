@@ -53,7 +53,7 @@ native PR head.
 | CI and gate portability | `26adc46`, `75f6d99` | Portable CI workflows, native structural checks, Ruby pinning, and script portability away from a single local host path. |
 | Evidence records | `1524a00`, `d43a6c8`, `4a8df78`, `7271e07`, `1e1688f`, `949bd3c`, `4c9d779` | SHA-linked validation records and manifest updates. Review for accuracy and limitations, not product behavior. |
 | Visual/accessibility polish | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812`, `261ad29`, `cf9531c`, `706e054` | Sidebar/settings polish, search/card accessibility landmarks, Settings form layout, native table accessibility summaries, Prompt Studio keyboard focus escape, adaptive material fallback, minimum-window contract, preflight/reference/disabled-action landmarks, Settings inactive-window evidence, and source-level regression contracts. |
-| Live accessibility evidence | `fdcaad1` | Installed-app AX proof for no-spend preflight row semantics and non-image Artifact inspector disabled-action hints. |
+| Live accessibility evidence | `fdcaad1`, `e393430` | Installed-app AX proof for no-spend preflight row semantics, non-image Artifact inspector disabled-action hints, and manual reference-row selectable/selected/search/selection-limit states. |
 
 ## Original PR #72 Source Stack Mapping
 
@@ -183,6 +183,9 @@ Current evidence:
 - `EV-20260622-033`: installed-app live AX probe confirms the no-spend preflight
   sheet row semantics and Artifact Library non-image disabled-action hints are
   exposed at runtime.
+- `EV-20260622-034`: installed-app live AX probe confirms manual reference rows
+  expose selectable, selected, keyboard-search, `10/10`, and selection-limit
+  disabled states at runtime without starting generation.
 
 Open gaps:
 
@@ -243,13 +246,18 @@ Current evidence:
   selected traits, and explicit selected/running-disabled/selection-limit hints.
 - `EV-20260622-033`: no-spend preflight sheet row semantics are live-probed,
   but reference-example row traversal remains manual follow-up.
+- `EV-20260622-034`: reference-example row selectable, selected, search, cap,
+  and eleventh-row disabled states are live-probed. Running-disabled row state
+  remains source-level only.
 
 Open gaps:
 
 - No open manual-reference gap remains for no-spend real-data search/filter,
   missing-image filtering, 10-of-10 selection cap, or durable selected-reference
-  provenance. Full manual VoiceOver reading-order traversal remains open under
-  WP-007.
+  provenance. Live reference-row AX proof now covers selectable, selected,
+  keyboard-search, `10/10`, and selection-limit states. Full manual VoiceOver
+  speech-output/reading-order traversal and running-disabled row state remain
+  open under WP-007.
 - Approved live provider/fallback E2E remains covered under the provider
   runtime follow-up below, not by this no-spend manual-reference evidence.
 
@@ -554,6 +562,7 @@ docs/integration/evidence/20260622-102900_261ad29fb0c4_WP-007-adaptive-layout-po
 docs/integration/evidence/20260622-103842_cf9531cfdd4e_WP-007-preflight-reference-accessibility.md
 docs/integration/evidence/20260622-104120_706e054453d5_WP-007-settings-inactive-window.md
 docs/integration/evidence/20260622-105100_fdcaad163836_WP-007-live-preflight-artifact-ax.md
+docs/integration/evidence/20260622-110059_e39343070296_WP-007-reference-row-ax.md
 Design/DesignBrief.md
 README.md
 ```
@@ -565,7 +574,7 @@ README.md
 | Native implementation existence | Implemented | Native source, tests, scripts, assets, and docs are present on `integration/native-first-rc-native`. |
 | Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. Final release-candidate rerun remains required. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings, Settings adaptive screenshots are covered by `EV-20260622-022`, and bounded Settings inactive-window screenshots are covered by `EV-20260622-032`. Increased Text Size and broader full-app adaptive states remain open. |
-| Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`, and live no-spend preflight plus non-image Artifact disabled-action AX proof is covered by `EV-20260622-033`. Full manual keyboard/VoiceOver traversal remains open. |
+| Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`, live no-spend preflight plus non-image Artifact disabled-action AX proof is covered by `EV-20260622-033`, and live reference-row selectable/selected/search/cap AX proof is covered by `EV-20260622-034`. Full manual keyboard/VoiceOver traversal remains open. |
 | Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, and real-data search/filter plus 10-reference cap persistence are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
 | Release readiness | Not complete | Provider E2E, rollback, final install provenance, quality benchmark, and upstream maintainer acceptance remain open. |
 
@@ -576,10 +585,10 @@ README.md
 - Run the full manual keyboard and VoiceOver traversal, including Run Details
   and Provider Run Ledger table focus beyond the AX summary proof in
   `EV-20260622-021`, plus Prompt Studio states beyond the focused
-  prompt/run-control escape path in `EV-20260622-027`, reference-example rows
-  beyond the source-level contracts in `EV-20260622-031`, and VoiceOver speech
-  output beyond the live preflight/Artifact disabled-action AX proof in
-  `EV-20260622-033`.
+  prompt/run-control escape path in `EV-20260622-027`, reference-example
+  running-disabled state beyond source contracts and the live selectable/cap
+  proof in `EV-20260622-034`, and VoiceOver speech output beyond the live
+  preflight/Artifact disabled-action AX proof in `EV-20260622-033`.
 - Capture adaptive visual evidence for Increased Text Size, hover/focus, and
   narrow widths; broader full-app inactive-window evidence also remains open.
   `EV-20260622-022` covers Settings Increased Contrast, Reduce Transparency,
