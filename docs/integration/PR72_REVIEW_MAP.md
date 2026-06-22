@@ -505,7 +505,7 @@ README.md
 | Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. Final release-candidate rerun remains required. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings. Adaptive states remain open. |
 | Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Full keyboard/VoiceOver traversal and live table AX re-probe remain open. |
-| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, and a native Prompt Studio no-spend dry-run control are covered. Live provider, secret/artifact scan, real-data dry-run artifact inspection, and hosted session proof remain open. |
+| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, and one real-data no-spend artifact-provenance run are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
 | Release readiness | Not complete | Provider E2E, rollback, final install provenance, quality benchmark, and upstream maintainer acceptance remain open. |
 
 ## Required Follow-Up Before Full Signoff
@@ -520,7 +520,7 @@ README.md
 - Validate Artifact Library keyboard, VoiceOver, context-menu, disabled-state,
   and adaptive-mode behavior now that lower inspector scroll reachability has
   top/bottom Light/Dark screenshot evidence.
-- Finish real-data manual reference UI validation for PaperBananaBench, including search/filter, 10-of-10 cap, and selected-reference artifact provenance through the native no-spend dry-run control.
+- Finish real-data manual reference UI validation for PaperBananaBench search/filter and the 10-of-10 cap. One-reference selected-reference artifact provenance through the native no-spend dry-run control is covered by `EV-20260622-025`.
 - Run at least one approved live provider/fallback native E2E and inspect
   durable request/metadata/provider artifacts.
 - Complete hosted two-session/negative-path validation before any public hosted
