@@ -25,3 +25,10 @@ api_keys:
   openai_api_key: ""
   anthropic_api_key: ""
   openrouter_api_key: "" # e.g. "sk-or-v1-xxxxx". Set model_name to "openrouter/<model>" to use.
+
+# OpenAI-compatible local text endpoint. Use model prefixes local/<model> or
+# ollama/<model> for text-route support. This is not a full image-generation
+# backend; keep defaults.image_gen_model_name on a supported image model.
+local_openai:
+  base_url: "" # e.g. "http://localhost:11434/v1" for Ollama
+  api_key: "" # e.g. "ollama" for Ollama, or your relay/local endpoint key
