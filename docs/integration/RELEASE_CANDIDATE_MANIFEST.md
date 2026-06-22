@@ -19,6 +19,7 @@ been validated and leaves every unvalidated release claim open.
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
 | Upstream base | `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b` |
 | Latest product-source change | `cf9531cfdd4e` |
+| Latest native artifact-secret test head | `59e40f7b7c33b5e449a44224edc1d8dfb1508a6c` |
 | Manifest status | Draft; not a frozen release tag |
 
 Commits after `cf9531cfdd4e` through `7af73793f0d3` are evidence,
@@ -26,7 +27,10 @@ documentation, runbook, and screenshot commits. `EV-20260622-035` validates
 `f360dc6d5ccd` through the local aggregate native/Python/Xcode 27 gate plus
 Release build/install proof. `EV-20260622-042` records that current pushed
 evidence head at capture time `7af73793f0d3` passed the remote `Native
-Structural Checks` and `Python Tests` workflows.
+Structural Checks` and `Python Tests` workflows. `EV-20260622-044` validates
+the later `59e40f7b7c33` native artifact-secret sentinel test slice, but it is
+not a replacement for a final full local Xcode gate or remote-check evidence on
+a frozen release SHA.
 
 ## Installed App Artifact
 
@@ -57,12 +61,13 @@ channel approval, upgrade proof, or rollback proof.
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034` | Partial; not full manual VoiceOver traversal |
 | Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041` | Partial; broader full-app adaptive signoff remains open |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
+| Native artifact secret-sentinel scan | `EV-20260622-044` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; live-provider and hosted scans remain open |
 
 ## Provider Support Matrix
 
 | Route | Current release-candidate status | Evidence | Limitation |
 |---|---|---|---|
-| Native no-spend dry run | Validated for local provenance, manual-reference persistence, and generation/refinement store artifact behavior | `EV-20260622-024`, `EV-20260622-025`, `EV-20260622-026`, `EV-20260622-038` | Not a live provider generation result |
+| Native no-spend dry run | Validated for local provenance, manual-reference persistence, generation/refinement store artifact behavior, and dry-run artifact secret-sentinel scanning | `EV-20260622-024`, `EV-20260622-025`, `EV-20260622-026`, `EV-20260622-038`, `EV-20260622-044` | Not a live provider generation result |
 | Codex fallback | Implemented and covered by unit/component tests as a no-paid-provider path | Swift/Python test suites in `EV-20260622-035`; focused refinement fallback evidence in `EV-20260622-038` | Approved live fallback E2E remains open |
 | Google Gemini / Nano Banana | Implemented and covered by mocked/error-path tests | Swift/Python test suites in `EV-20260622-035`; focused cancellation/timeout recovery evidence in `EV-20260622-039` | Approved live provider E2E remains open |
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
@@ -104,7 +109,8 @@ state is verified.
   adaptive visual review remain open.
 - Approved live provider/fallback native E2E with non-private fixtures, spend
   limit, redacted request/metadata/provider-artifact review, and
-  failure/recovery proof.
+  failure/recovery proof. `EV-20260622-044` covers dry-run artifact secret-sentinel scanning only; it does not cover live provider responses,
+  runtime logs, or hosted artifacts.
 - Hosted two-session proof on the real hosted surface, hosted negative-path
   validation, deployed SHA, runtime-log review, and hosted rollback before any
   public hosted-generation claim. `EV-20260622-040` is localhost-only

@@ -334,12 +334,17 @@ Current evidence:
   for native Google generation/refinement cancellation, timeout, cancelled and
   timed-out provider-call SQLite persistence, and stale running provider-call
   recovery after relaunch.
+- `EV-20260622-044`: no-spend native artifact secret-sentinel scan passed
+  focused Swift tests for dry-run generation/refinement artifacts, confirming
+  configured provider-key sentinels, provider environment variable names, and
+  auth header markers were not persisted in the tested temporary `results/`
+  trees.
 
 Open gaps:
 
 - Native secret-store threat-model signoff remains required.
-- Approved live paid provider smoke and live-run sentinel secret/artifact scan
-  remain required before release claims.
+- Approved live paid provider smoke and live-run sentinel secret/artifact/log
+  scan remain required before release claims.
 
 ### 5. Artifact Library, Image Preview, And Refinement
 
@@ -616,7 +621,7 @@ README.md
 | Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. `EV-20260622-035` covers the last full local product-code/evidence gate `f360dc6d5ccd`; `EV-20260622-042` covers remote structural/Python checks for recorded evidence head `7af73793f0d3`. A final release-candidate rerun remains required if product code changes land or if the release decision requires a full Xcode gate on the final frozen SHA. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings, Settings adaptive screenshots are covered by `EV-20260622-022`, bounded Settings inactive-window screenshots are covered by `EV-20260622-032`, and Dark Settings Increased Text Size visible-content screenshots are covered by `EV-20260622-041`. Lower Workspace content, Light Mode Settings Increased Text Size plus broader full-app Increased Text Size and adaptive states remain open. |
 | Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`, live no-spend preflight plus non-image Artifact disabled-action AX proof is covered by `EV-20260622-033`, and live reference-row selectable/selected/search/cap AX proof is covered by `EV-20260622-034`. Full manual keyboard/VoiceOver traversal remains open. |
-| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, real-data search/filter plus 10-reference cap persistence, focused no-spend generation/refinement store provenance tests, focused no-live cancellation/timeout/stale-run recovery tests, and sanitized localhost served credential smoke are covered. Live provider, broader secret/artifact scan, and real hosted session proof remain open. |
+| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, real-data search/filter plus 10-reference cap persistence, focused no-spend generation/refinement store provenance tests, focused no-live cancellation/timeout/stale-run recovery tests, dry-run artifact secret-sentinel scanning in `EV-20260622-044`, and sanitized localhost served credential smoke are covered. Live provider artifact/log scanning and real hosted session proof remain open. |
 | Quality benchmark | Not complete | `EV-20260622-043` found evaluation-adjacent code and a referenced-evaluation viewer, but no runnable no-live WP-108 benchmark command, frozen manifest, threshold, report schema, reviewer rubric, or CI gate. |
 | Release readiness | Not complete | Current-head install provenance is covered by `EV-20260622-035`, draft release-manifest consistency is covered by `EV-20260622-036`, and local app-bundle rollback preflight is covered by `EV-20260622-037`; provider E2E, distinct prior-version upgrade proof, full user-data migration, hosted rollback, final frozen-SHA manifest consistency, quality benchmark, notarization/distribution decision, and upstream maintainer acceptance remain open. |
 
@@ -647,7 +652,8 @@ README.md
   durable request/metadata/provider artifacts. `EV-20260622-038` covers
   no-spend generation/refinement store artifact and provenance behavior only;
   `EV-20260622-039` covers mocked/no-live cancellation, timeout, and stale-run
-  recovery only.
+  recovery only; `EV-20260622-044` covers dry-run artifact secret-sentinel
+  scanning only.
 - Complete real hosted two-session/negative-path validation before any public
   hosted claim. `EV-20260622-040` is localhost-only served credential smoke,
   not public hosted deployment evidence.
