@@ -58,6 +58,8 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
     required_phrases = [
         "Candidate Source Snapshot",
         "f360dc6d5ccd59ca3760f5f2ddd168dc407656ae",
+        "7af73793f0d3d02843ab115266f9c0560f6ea7c8",
+        "Current pushed evidence head",
         "Installed App Artifact",
         "/Applications/PaperBanana.app",
         "local.paperbanana.gui",

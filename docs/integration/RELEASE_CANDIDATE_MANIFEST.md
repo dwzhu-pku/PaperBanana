@@ -13,17 +13,20 @@ been validated and leaves every unvalidated release claim open.
 
 | Item | Value |
 |---|---|
-| Candidate source snapshot under test | `f360dc6d5ccd59ca3760f5f2ddd168dc407656ae` |
+| Last full local product-code gate | `f360dc6d5ccd59ca3760f5f2ddd168dc407656ae` |
+| Current pushed evidence head | `7af73793f0d3d02843ab115266f9c0560f6ea7c8` |
 | Branch | `integration/native-first-rc-native` |
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
 | Upstream base | `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b` |
 | Latest product-source change | `cf9531cfdd4e` |
 | Manifest status | Draft; not a frozen release tag |
 
-Commits after `cf9531cfdd4e` through `f360dc6d5ccd` are evidence,
-documentation, and screenshot commits. `EV-20260622-035` validates the exact
-branch head `f360dc6d5ccd` through the local aggregate native/Python/Xcode 27
-gate plus Release build/install proof.
+Commits after `cf9531cfdd4e` through `7af73793f0d3` are evidence,
+documentation, runbook, and screenshot commits. `EV-20260622-035` validates
+`f360dc6d5ccd` through the local aggregate native/Python/Xcode 27 gate plus
+Release build/install proof. `EV-20260622-042` records that current pushed
+evidence head `7af73793f0d3` passed the remote `Native Structural Checks` and
+`Python Tests` workflows.
 
 ## Installed App Artifact
 
@@ -46,10 +49,10 @@ channel approval, upgrade proof, or rollback proof.
 
 | Area | Evidence | Status |
 |---|---|---|
-| Source/project structure | `EV-20260622-035`, remote Native Structural Checks for `b9f04b7` | Passed with limitation |
+| Source/project structure | `EV-20260622-035`, `EV-20260622-042` | Passed with limitation |
 | Local aggregate native gate | `EV-20260622-035` | 157 Swift tests, 88 Python tests, and `codex-xcode27 proof` passed |
 | Release build/install | `EV-20260622-035` | Release build/install and post-install sanity checks passed |
-| Remote Python 3.12 workflow | `EV-20260622-028`, remote Python Tests for `b9f04b7` | Passed with limitation |
+| Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042` | Passed with limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034` | Real local data, search/filter, 10-example cap, and no-spend persistence validated |
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034` | Partial; not full manual VoiceOver traversal |
 | Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041` | Partial; broader full-app adaptive signoff remains open |
@@ -106,7 +109,8 @@ state is verified.
   public hosted-generation claim. `EV-20260622-040` is localhost-only
   credential/session smoke evidence.
 - True install/upgrade/rollback proof and release manifest consistency on the
-  final frozen release SHA.
+  final frozen release SHA. Current pushed evidence-head consistency is covered
+  by `EV-20260622-042`, but this is not a frozen release approval.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
 - Upstream maintainer review, merge, and issue closure before claiming upstream
   closeout.

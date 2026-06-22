@@ -120,9 +120,12 @@ Current evidence:
   `5628b3050aa6`; workflow `Python Tests` / check-run `Python 3.12 Tests`
   succeeded, and workflow `Native Structural Checks` / check-run
   `Native Source And Project Contracts` succeeded.
-- `EV-20260622-035`: current branch head `f360dc6d5ccd` passed the local
+- `EV-20260622-035`: then-current branch head `f360dc6d5ccd` passed the local
   aggregate native/Python/Xcode 27 gate plus Release build/install and
   post-install sanity checks.
+- `EV-20260622-042`: current pushed evidence head `7af73793f0d3` matched the
+  clean local branch and passed remote `Native Structural Checks` plus `Python
+  Tests`.
 - `EV-20260622-036`: draft current-candidate release manifest and contract test
   were added for source snapshot, installed app identity, provider matrix,
   rollback/upgrade status, open gates, and release-claim boundary.
@@ -610,7 +613,7 @@ README.md
 | Area | Current status | Why |
 |---|---|---|
 | Native implementation existence | Implemented | Native source, tests, scripts, assets, and docs are present on `integration/native-first-rc-native`. |
-| Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. `EV-20260622-035` covers the exact current branch head `f360dc6d5ccd`; a final release-candidate rerun remains required only if the frozen release-candidate SHA differs or later product code changes land. |
+| Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. `EV-20260622-035` covers the last full local product-code/evidence gate `f360dc6d5ccd`; `EV-20260622-042` covers remote structural/Python checks for current pushed evidence head `7af73793f0d3`. A final release-candidate rerun remains required if product code changes land or if the release decision requires a full Xcode gate on the final frozen SHA. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings, Settings adaptive screenshots are covered by `EV-20260622-022`, bounded Settings inactive-window screenshots are covered by `EV-20260622-032`, and Dark Settings Increased Text Size visible-content screenshots are covered by `EV-20260622-041`. Lower Workspace content, Light Mode Settings Increased Text Size plus broader full-app Increased Text Size and adaptive states remain open. |
 | Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`, live no-spend preflight plus non-image Artifact disabled-action AX proof is covered by `EV-20260622-033`, and live reference-row selectable/selected/search/cap AX proof is covered by `EV-20260622-034`. Full manual keyboard/VoiceOver traversal remains open. |
 | Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, real-data search/filter plus 10-reference cap persistence, focused no-spend generation/refinement store provenance tests, focused no-live cancellation/timeout/stale-run recovery tests, and sanitized localhost served credential smoke are covered. Live provider, broader secret/artifact scan, and real hosted session proof remain open. |
