@@ -87,6 +87,41 @@ struct PaperBananaArtifact: Identifiable, Hashable {
     let runID: String
     let runDirectoryURL: URL?
     let runStatus: ArtifactRunStatus?
+    let referenceProvenance: ReferenceExampleProvenance
+
+    init(
+        id: String,
+        url: URL,
+        kind: ArtifactKind,
+        title: String,
+        workflow: String,
+        relativePath: String,
+        modifiedAt: Date,
+        byteCount: Int64,
+        promptURL: URL?,
+        logURL: URL?,
+        metadataURL: URL?,
+        runID: String,
+        runDirectoryURL: URL?,
+        runStatus: ArtifactRunStatus?,
+        referenceProvenance: ReferenceExampleProvenance = .empty
+    ) {
+        self.id = id
+        self.url = url
+        self.kind = kind
+        self.title = title
+        self.workflow = workflow
+        self.relativePath = relativePath
+        self.modifiedAt = modifiedAt
+        self.byteCount = byteCount
+        self.promptURL = promptURL
+        self.logURL = logURL
+        self.metadataURL = metadataURL
+        self.runID = runID
+        self.runDirectoryURL = runDirectoryURL
+        self.runStatus = runStatus
+        self.referenceProvenance = referenceProvenance
+    }
 
     var formattedSize: String {
         ByteCountFormatter.string(fromByteCount: byteCount, countStyle: .file)

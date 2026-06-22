@@ -61,8 +61,63 @@ struct ProviderRunLedgerCall: Identifiable, Hashable {
     let nativeProviderRequestURL: URL?
     let nativeEventLogURL: URL?
     let auditLogURL: URL?
+    let referenceProvenance: ReferenceExampleProvenance
 
     var id: String { callID }
+
+    init(
+        callID: String,
+        runID: String,
+        provider: String,
+        model: String,
+        modality: String,
+        context: String,
+        status: ProviderRunStatus,
+        startedAt: Date?,
+        updatedAt: Date?,
+        attempt: Int?,
+        maxAttempts: Int?,
+        responseCount: Int,
+        message: String,
+        error: String,
+        usageMetadata: [String: String],
+        artifactURLs: [URL],
+        rawArtifactURLs: [URL],
+        runDirectoryURL: URL?,
+        nativeArtifactURLs: [URL],
+        nativePromptURL: URL?,
+        nativeRequestURL: URL?,
+        nativeProviderRequestURL: URL?,
+        nativeEventLogURL: URL?,
+        auditLogURL: URL?,
+        referenceProvenance: ReferenceExampleProvenance = .empty
+    ) {
+        self.callID = callID
+        self.runID = runID
+        self.provider = provider
+        self.model = model
+        self.modality = modality
+        self.context = context
+        self.status = status
+        self.startedAt = startedAt
+        self.updatedAt = updatedAt
+        self.attempt = attempt
+        self.maxAttempts = maxAttempts
+        self.responseCount = responseCount
+        self.message = message
+        self.error = error
+        self.usageMetadata = usageMetadata
+        self.artifactURLs = artifactURLs
+        self.rawArtifactURLs = rawArtifactURLs
+        self.runDirectoryURL = runDirectoryURL
+        self.nativeArtifactURLs = nativeArtifactURLs
+        self.nativePromptURL = nativePromptURL
+        self.nativeRequestURL = nativeRequestURL
+        self.nativeProviderRequestURL = nativeProviderRequestURL
+        self.nativeEventLogURL = nativeEventLogURL
+        self.auditLogURL = auditLogURL
+        self.referenceProvenance = referenceProvenance
+    }
 
     var needsAttention: Bool {
         status == .failed
@@ -116,6 +171,10 @@ struct ProviderRunLedgerCall: Identifiable, Hashable {
         return urls
             .map(\.standardizedFileURL.path)
             .joined(separator: "\n")
+    }
+
+    var searchableReferenceText: String {
+        referenceProvenance.searchableText
     }
 
     static func shortModelLabel(for model: String) -> String {
@@ -269,6 +328,10 @@ struct NativeRunCockpitItem: Identifiable, Hashable {
 
     var hasDurableSpendTrace: Bool {
         run.promptURL != nil && run.requestURL != nil && run.providerRequestURL != nil && run.eventLogURL != nil
+    }
+
+    var referenceProvenance: ReferenceExampleProvenance {
+        run.referenceProvenance
     }
 
     var providerSummary: String {

@@ -70,6 +70,7 @@ struct ArtifactLibraryView: View {
             return artifact.title.localizedCaseInsensitiveContains(trimmedSearch)
                 || artifact.workflow.localizedCaseInsensitiveContains(trimmedSearch)
                 || artifact.relativePath.localizedCaseInsensitiveContains(trimmedSearch)
+                || artifact.referenceProvenance.searchableText.localizedCaseInsensitiveContains(trimmedSearch)
         }
     }
 

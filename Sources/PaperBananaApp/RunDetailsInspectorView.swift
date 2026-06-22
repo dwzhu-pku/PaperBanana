@@ -62,6 +62,8 @@ struct RunDetailsInspectorView: View {
 
             metadataGrid(for: item)
 
+            ReferenceExampleProvenanceSection(provenance: item.referenceProvenance)
+
             PaperBananaAssistantPanel(
                 title: "Run Assistant",
                 tasks: [.summarizeRun, .explainRecovery, .generateMetadata],
@@ -126,7 +128,8 @@ struct RunDetailsInspectorView: View {
             "Raw payloads: \(item.rawPayloadURLs.count)",
             "Recoverable artifacts: \(item.recoverableURLs.count)",
             "Provider calls: \(item.providerCallSummary)",
-            "Durable spend trace: \(item.hasDurableSpendTrace ? "present" : "missing")"
+            "Durable spend trace: \(item.hasDurableSpendTrace ? "present" : "missing")",
+            "Reference examples: \(item.referenceProvenance.summaryText.isEmpty ? "None" : item.referenceProvenance.summaryText)"
         ]
         if let promptPreview = previewText(from: item.promptURL, limit: 700) {
             lines.append("Prompt preview: \(promptPreview)")
@@ -143,6 +146,9 @@ struct RunDetailsInspectorView: View {
             "Event log path: \(item.eventLogURL?.path ?? "None")",
             "Metadata path: \(item.metadataURL?.path ?? "None")"
         ]
+        if item.referenceProvenance.isManual {
+            lines.append("Reference provenance: \(item.referenceProvenance.searchableText)")
+        }
         lines.append(contentsOf: item.outputURLs.map { "Output path: \($0.path)" })
         lines.append(contentsOf: item.rawResponseURLs.map { "Raw response path: \($0.path)" })
         lines.append(contentsOf: item.rawPayloadURLs.map { "Raw payload path: \($0.path)" })

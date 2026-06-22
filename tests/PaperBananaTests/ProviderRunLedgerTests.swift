@@ -50,6 +50,18 @@ final class ProviderRunLedgerTests: XCTestCase {
               "resolution": "4K",
               "aspect_ratio": "16:9",
               "workflow": "native_generate",
+              "source_prompt": "Create a queued figure.",
+              "reference_mode": "manual_native_prompt_enrichment",
+              "reference_example_count": 1,
+              "reference_examples": [
+                {
+                  "id": "ref_1",
+                  "visual_intent": "Pipeline diagram guidance.",
+                  "content_summary": "A compact scientific workflow with labeled modules.",
+                  "image_path": "images/ref_1.jpg",
+                  "reference_source": "PaperBananaBench/diagram"
+                }
+              ],
               "status": "queued"
             }
             """.utf8
@@ -74,6 +86,10 @@ final class ProviderRunLedgerTests: XCTestCase {
         XCTAssertEqual(item.providerRequestURL?.path, providerRequest.path)
         XCTAssertEqual(item.eventLogURL?.path, events.path)
         XCTAssertTrue(item.providerCalls.isEmpty)
+        XCTAssertTrue(item.referenceProvenance.isManual)
+        XCTAssertEqual(item.referenceProvenance.count, 1)
+        XCTAssertEqual(item.referenceProvenance.examples.first?.id, "ref_1")
+        XCTAssertTrue(item.referenceProvenance.searchableText.contains("Pipeline diagram guidance."))
     }
 
     func testRunCockpitComputesElapsedTimeFromNativeTimeline() throws {
@@ -595,6 +611,18 @@ final class ProviderRunLedgerTests: XCTestCase {
               "prompt_path": "\(prompt.path)",
               "provider_request_path": "\(providerRequest.path)",
               "log_path": "\(eventLog.path)",
+              "source_prompt": "Improve labels.",
+              "reference_mode": "manual_native_prompt_enrichment",
+              "reference_example_count": 1,
+              "reference_examples": [
+                {
+                  "id": "ref_ledger",
+                  "visual_intent": "Improve comparative label hierarchy.",
+                  "content_summary": "Reference with clear arrows and labels.",
+                  "image_path": "images/ref_ledger.jpg",
+                  "reference_source": "PaperBananaBench/diagram"
+                }
+              ],
               "workflow": "native_refine"
             }
             """.utf8
@@ -685,6 +713,18 @@ final class ProviderRunLedgerTests: XCTestCase {
               "prompt_path": "\(prompt.path)",
               "provider_request_path": "\(providerRequest.path)",
               "log_path": "\(eventLog.path)",
+              "source_prompt": "Improve labels.",
+              "reference_mode": "manual_native_prompt_enrichment",
+              "reference_example_count": 1,
+              "reference_examples": [
+                {
+                  "id": "ref_ledger",
+                  "visual_intent": "Improve comparative label hierarchy.",
+                  "content_summary": "Reference with clear arrows and labels.",
+                  "image_path": "images/ref_ledger.jpg",
+                  "reference_source": "PaperBananaBench/diagram"
+                }
+              ],
               "workflow": "native_refine"
             }
             """.utf8
@@ -705,6 +745,9 @@ final class ProviderRunLedgerTests: XCTestCase {
         XCTAssertEqual(call.nativePromptURL?.standardizedFileURL, prompt.standardizedFileURL)
         XCTAssertEqual(call.nativeProviderRequestURL?.standardizedFileURL, providerRequest.standardizedFileURL)
         XCTAssertEqual(call.nativeEventLogURL?.standardizedFileURL, eventLog.standardizedFileURL)
+        XCTAssertTrue(call.referenceProvenance.isManual)
+        XCTAssertEqual(call.referenceProvenance.examples.first?.id, "ref_ledger")
+        XCTAssertTrue(call.searchableReferenceText.contains("clear arrows"))
     }
 
     func testRecoverySurfacerCopiesAuditArtifactIntoRecoveredFolderWithCompanionMetadata() throws {

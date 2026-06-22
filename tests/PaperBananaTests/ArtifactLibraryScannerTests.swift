@@ -106,6 +106,18 @@ final class ArtifactLibraryScannerTests: XCTestCase {
               "model": "gemini-3-pro-image-preview",
               "resolution": "4K",
               "aspect_ratio": "16:9",
+              "source_prompt": "Improve labels.",
+              "reference_mode": "manual_native_prompt_enrichment",
+              "reference_example_count": 1,
+              "reference_examples": [
+                {
+                  "id": "ref_artifact",
+                  "visual_intent": "Show a native generation workflow.",
+                  "content_summary": "A concise panel layout with labeled data flow.",
+                  "image_path": "images/ref_artifact.jpg",
+                  "reference_source": "PaperBananaBench/diagram"
+                }
+              ],
               "provider_message": "Timed out",
               "workflow": "native_refine"
             }
@@ -120,6 +132,9 @@ final class ArtifactLibraryScannerTests: XCTestCase {
         XCTAssertEqual(artifact.promptURL?.standardizedFileURL, prompt.standardizedFileURL)
         XCTAssertEqual(artifact.logURL?.standardizedFileURL, eventLog.standardizedFileURL)
         XCTAssertEqual(artifact.metadataURL?.standardizedFileURL, metadata.standardizedFileURL)
+        XCTAssertTrue(artifact.referenceProvenance.isManual)
+        XCTAssertEqual(artifact.referenceProvenance.examples.first?.id, "ref_artifact")
+        XCTAssertTrue(artifact.referenceProvenance.searchableText.contains("labeled data flow"))
     }
 
     func testNativeRunIndexSurfacesFailedRunWithRawPayloadAndTimeline() throws {
