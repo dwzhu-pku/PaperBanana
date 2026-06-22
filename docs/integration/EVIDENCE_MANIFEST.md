@@ -86,6 +86,7 @@ content, or raw provider payloads in shared evidence.
 | EV-20260622-015 | WP-007/T-020/T-021 | `3d7ad20f3994` | Passed with limitation | Native Settings forms were tightened with bounded tabbed Preferences layout, Settings-native readiness rows, responsive actions, path help/accessibility values, and refreshed Light/Dark screenshots from the installed Release app; evidence recorded in `docs/integration/evidence/20260622-101600_3d7ad20f3994_WP-007-settings-polish.md`. |
 | EV-20260622-016 | WP-007/T-021 | `632ed269b3dd` | Passed with limitation | Native Run Details and Provider Run Ledger tables now expose virtual row descriptions and named selected-row summaries while preserving SwiftUI `Table`; 154 Swift tests passed and Release build/install succeeded; evidence recorded in `docs/integration/evidence/20260622-102857_632ed269b3dd_WP-007-native-table-accessibility.md`. |
 | EV-20260622-017 | WP-007/T-020/T-021 | `dc155867a3c4` | Passed with limitation | PR #72 now has a tracked component/commit review map, and Artifact Library inspector scroll content has bottom breathing room plus descriptive export accessibility labels; 154 Swift tests and Release build/install passed; evidence recorded in `docs/integration/evidence/20260622-103653_dc155867a3c4_WP-007-pr72-review-map-artifact-inspector.md`. |
+| EV-20260622-018 | WP-007/T-020 | `698286ef9601` | Passed with limitation | Artifact Library now has a deterministic native intent route and fresh Light/Dark top/bottom inspector screenshots showing lower content reachable above the fixed two-row action footer; evidence recorded in `docs/integration/evidence/20260622-104603_698286ef9601_WP-007-artifact-library-scroll.md`. |
 
 ## Required Next Evidence
 
@@ -101,5 +102,4 @@ content, or raw provider payloads in shared evidence.
 | WP-007 | Full manual keyboard navigation and VoiceOver traversal, including live AX re-probe of Run Details and Provider Run Ledger selection-summary exposure, Settings, reference rows, artifact grid context menus, disabled states, and preflight sheets. |
 | WP-007 | Reduce Motion, Reduce Transparency, Increased Contrast, Increased Text Size, hover/focus, and inactive-window visual review. |
 | WP-007 | Remaining Settings narrow-width, focused, inactive-window, increased-contrast, increased-text-size, reduced-transparency, and reduced-motion review before full visual signoff. |
-| WP-007 | Artifact Library lower inspector top/bottom scroll screenshots, including Light/Dark and narrow/two-row action-bar states, to prove content is reachable above the fixed action footer. |
 | WP-007 | Repeat Release build/install proof on the final release-candidate SHA if that distribution path remains in scope. |
