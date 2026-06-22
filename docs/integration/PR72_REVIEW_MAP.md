@@ -199,11 +199,16 @@ Current evidence:
   by `EV-20260622-013`, `EV-20260622-015`, and `EV-20260622-016`.
 - `EV-20260622-012` and `EV-20260622-016` record full Swift suite passes after
   integration/polish.
+- `EV-20260622-023`: real local PaperBananaBench diagram data loaded in native
+  Prompt Studio from `/Users/jeff/Codex_projects/PaperBanana`; screenshots show
+  298 available examples, thumbnail rendering, a 3-missing-image warning, and a
+  one-selected `1/10` state.
 
 Open gaps:
 
-- Real local `data/PaperBananaBench/diagram/ref.json` UI run remains required.
-- Real image thumbnail/provenance inspection remains required for WP-106.
+- Real-data search/filter and manual 10-of-10 cap validation remain required.
+- Durable selected-reference provenance for real data remains required through
+  a no-spend dry-run harness or approved Codex/provider run.
 
 ### 4. Provider Runtime, Secrets, And Native Generation
 
