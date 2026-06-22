@@ -27,13 +27,7 @@ enum PaperBananaSecretStore {
     private static let fileName = "secrets.json"
 
     static var defaultURL: URL {
-        let applicationSupport = FileManager.default.urls(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask
-        ).first ?? FileManager.default.homeDirectoryForCurrentUser
-            .appendingPathComponent("Library/Application Support", isDirectory: true)
-
-        return applicationSupport
+        PaperBananaRuntimeEnvironment.applicationSupportDirectory
             .appendingPathComponent(directoryName, isDirectory: true)
             .appendingPathComponent(fileName, isDirectory: false)
     }
