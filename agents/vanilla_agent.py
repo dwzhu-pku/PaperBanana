@@ -24,6 +24,7 @@ import asyncio
 import json
 
 from utils import generation_utils, image_utils
+from utils.legacy_generation_options import image_size_from_data
 from utils.plot_execution import execute_plot_code_worker
 from .base_agent import BaseAgent
 
@@ -89,6 +90,7 @@ class VanillaAgent(BaseAgent):
         }
         
         aspect_ratio = data["additional_info"]["rounded_ratio"]
+        image_size = image_size_from_data(data)
 
         if cfg["use_image_generation"]:
             if "gpt-image" in self.model_name:
@@ -110,7 +112,7 @@ class VanillaAgent(BaseAgent):
                     "system_prompt": self.system_prompt,
                     "temperature": self.exp_config.temperature,
                     "aspect_ratio": aspect_ratio,
-                    "image_size": "1k",
+                    "image_size": image_size,
                 }
                 response_list = await generation_utils.call_openrouter_image_generation_with_retry_async(
                     model_name=self.model_name,
@@ -123,7 +125,7 @@ class VanillaAgent(BaseAgent):
                 gen_config_args["response_modalities"] = ["IMAGE"]
                 gen_config_args["image_config"] = types.ImageConfig(
                     aspect_ratio=aspect_ratio,
-                    image_size="1k",
+                    image_size=image_size,
                 )
                 response_list = await generation_utils.call_gemini_with_retry_async(
                     model_name=self.model_name,

@@ -24,6 +24,7 @@ from google.genai import types
 from PIL import Image
 
 from utils import generation_utils, image_utils
+from utils.legacy_generation_options import image_size_from_data
 from .base_agent import BaseAgent
 
 
@@ -163,13 +164,14 @@ class PolishAgent(BaseAgent):
         
         # Generate polished image
         aspect_ratio = data.get("additional_info", {}).get("rounded_ratio", "16:9")
+        image_size = image_size_from_data(data)
         try:
             if generation_utils.openrouter_client is not None:
                 image_config = {
                     "system_prompt": self.system_prompt,
                     "temperature": self.exp_config.temperature,
                     "aspect_ratio": aspect_ratio,
-                    "image_size": "1k",
+                    "image_size": image_size,
                 }
                 response_list = await generation_utils.call_openrouter_image_generation_with_retry_async(
                     model_name=self.image_gen_model_name,
@@ -190,7 +192,7 @@ class PolishAgent(BaseAgent):
                         response_modalities=["IMAGE"],
                         image_config=types.ImageConfig(
                             aspect_ratio=aspect_ratio,
-                            image_size="1k",
+                            image_size=image_size,
                         ),
                     ),
                     max_attempts=5,

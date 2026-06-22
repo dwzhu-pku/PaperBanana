@@ -61,6 +61,11 @@ from agents.retriever_agent import RetrieverAgent
 from agents.vanilla_agent import VanillaAgent
 from agents.polish_agent import PolishAgent
 from utils import config
+from utils.legacy_generation_options import (
+    generation_additional_info,
+    normalize_legacy_input_content,
+)
+from utils.legacy_ui_results import build_evolution_stages, resolve_final_output
 from utils.paperviz_processor import PaperVizProcessor
 
 model_config_data = {}
@@ -99,14 +104,24 @@ def base64_to_image(b64_str):
         return None
 
 
-def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copies=10, max_critic_rounds=3):
+def create_sample_inputs(
+    method_content,
+    caption,
+    aspect_ratio="16:9",
+    figure_size=None,
+    num_copies=10,
+    max_critic_rounds=3,
+    task_name="diagram",
+):
+    task_name = "plot" if "plot" in (task_name or "").lower() else "diagram"
     base_input = {
         "filename": "demo_input",
         "caption": caption,
-        "content": method_content,
+        "content": normalize_legacy_input_content(method_content, task_name),
         "visual_intent": caption,
-        "additional_info": {"rounded_ratio": aspect_ratio},
+        "additional_info": generation_additional_info(aspect_ratio, figure_size),
         "max_critic_rounds": max_critic_rounds,
+        "task_name": task_name,
     }
     inputs = []
     for i in range(num_copies):
@@ -119,10 +134,12 @@ def create_sample_inputs(method_content, caption, aspect_ratio="16:9", num_copie
 
 async def process_parallel_candidates(
     data_list, exp_mode="dev_planner_critic", retrieval_setting="auto",
-    main_model_name="", image_gen_model_name="",
+    main_model_name="", image_gen_model_name="", task_name="diagram",
 ):
+    task_name = "plot" if "plot" in (task_name or "").lower() else "diagram"
     exp_config = config.ExpConfig(
-        dataset_name="Demo",
+        dataset_name="PaperBananaBench",
+        task_name=task_name,
         split_name="demo",
         exp_mode=exp_mode,
         retrieval_setting=retrieval_setting,
@@ -142,6 +159,7 @@ async def process_parallel_candidates(
     )
     results = []
     async for result_data in processor.process_queries_batch(data_list, max_concurrent=10, do_eval=False):
+        result_data["task_name"] = task_name
         results.append(result_data)
     return results
 
@@ -218,51 +236,14 @@ async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9
 
 
 def get_evolution_stages(result, exp_mode):
-    task_name = "diagram"
-    stages = []
-    # Planner
-    k = f"target_{task_name}_desc0_base64_jpg"
-    if k in result and result[k]:
-        stages.append({"name": "Planner", "image_key": k, "desc_key": f"target_{task_name}_desc0", "description": "Initial diagram plan"})
-    # Stylist (demo_full only)
-    if exp_mode == "demo_full":
-        k = f"target_{task_name}_stylist_desc0_base64_jpg"
-        if k in result and result[k]:
-            stages.append({"name": "Stylist", "image_key": k, "desc_key": f"target_{task_name}_stylist_desc0", "description": "Stylistically refined"})
-    # Critic rounds
-    for r in range(4):
-        k = f"target_{task_name}_critic_desc{r}_base64_jpg"
-        if k in result and result[k]:
-            stages.append({
-                "name": f"Critic Round {r}",
-                "image_key": k,
-                "desc_key": f"target_{task_name}_critic_desc{r}",
-                "suggestions_key": f"target_{task_name}_critic_suggestions{r}",
-                "description": f"Refined after critic iteration {r}",
-            })
-    return stages
+    return build_evolution_stages(result, exp_mode=exp_mode)
 
 
 def get_final_image(result, exp_mode):
     """Return (PIL.Image, desc_text) for the best available stage."""
-    task_name = "diagram"
-    final_key = None
-    final_desc_key = None
-    for r in range(3, -1, -1):
-        k = f"target_{task_name}_critic_desc{r}_base64_jpg"
-        if k in result and result[k]:
-            final_key = k
-            final_desc_key = f"target_{task_name}_critic_desc{r}"
-            break
-    if not final_key:
-        if exp_mode == "demo_full":
-            final_key = f"target_{task_name}_stylist_desc0_base64_jpg"
-            final_desc_key = f"target_{task_name}_stylist_desc0"
-        else:
-            final_key = f"target_{task_name}_desc0_base64_jpg"
-            final_desc_key = f"target_{task_name}_desc0"
-    img = base64_to_image(result.get(final_key)) if final_key else None
-    desc = clean_text(result.get(final_desc_key, "")) if final_desc_key else ""
+    selection = resolve_final_output(result, exp_mode=exp_mode)
+    img = base64_to_image(result.get(selection.image_key)) if selection.image_key else None
+    desc = clean_text(result.get(selection.text_key, "")) if selection.text_key else ""
     return img, desc
 
 
@@ -522,6 +503,12 @@ def build_app():
                             label="Pipeline Mode",
                             info="Select which agent pipeline to use",
                         )
+                        task_name = gr.Dropdown(
+                            choices=["diagram", "plot"],
+                            value="diagram",
+                            label="Output Type",
+                            info="Generate a scientific diagram or a statistical plot",
+                        )
                         pipeline_desc = gr.Textbox(
                             label="Pipeline Description",
                             value=PIPELINE_DESCRIPTIONS["demo_full"],
@@ -537,7 +524,7 @@ def build_app():
                             choices=["auto", "manual", "random", "none"],
                             value="auto",
                             label="Retrieval Setting",
-                            info="How to retrieve reference diagrams",
+                            info="How to retrieve reference examples",
                         )
                         num_candidates = gr.Number(
                             value=10, minimum=1, maximum=20, step=1,
@@ -591,12 +578,12 @@ def build_app():
 
                         with gr.Row():
                             method_content = gr.Textbox(
-                                label="Method Content",
+                                label="Method Content / Plot Data",
                                 value=EXAMPLE_METHOD,
                                 lines=12, max_lines=30,
                             )
                             caption_input = gr.Textbox(
-                                label="Figure Caption",
+                                label="Figure Caption / Visual Intent",
                                 value=EXAMPLE_CAPTION,
                                 lines=12, max_lines=30,
                             )
@@ -631,7 +618,7 @@ def build_app():
 
                 # ---- Generate handler ----
                 def run_generate(
-                    method_text, caption_text, pipe_mode, ret_setting,
+                    method_text, caption_text, pipe_mode, task_name, ret_setting,
                     n_cands, ar, max_rounds, m_model, img_model,
                     figure_size, save_results,
                     progress=gr.Progress(track_tqdm=True),
@@ -646,9 +633,10 @@ def build_app():
                     progress(0, desc="Preparing inputs...")
                     input_data = create_sample_inputs(
                         method_content=method_text, caption=caption_text,
-                        aspect_ratio=ar, num_copies=n_cands, max_critic_rounds=max_rounds,
+                        aspect_ratio=ar, figure_size=figure_size,
+                        num_copies=n_cands, max_critic_rounds=max_rounds,
+                        task_name=task_name,
                     )
-                    params = {"figure_size": figure_size}
 
                     progress(0.1, desc=f"Generating {n_cands} candidates in parallel...")
                     try:
@@ -657,6 +645,7 @@ def build_app():
                             process_parallel_candidates(
                                 input_data, exp_mode=pipe_mode, retrieval_setting=ret_setting,
                                 main_model_name=m_model, image_gen_model_name=img_model,
+                                task_name=task_name,
                             )
                         )
                         loop.close()
@@ -732,7 +721,7 @@ def build_app():
                 generate_btn.click(
                     fn=run_generate,
                     inputs=[
-                        method_content, caption_input, pipeline_mode, retrieval_setting,
+                        method_content, caption_input, pipeline_mode, task_name, retrieval_setting,
                         num_candidates, aspect_ratio, max_critic_rounds,
                         main_model_name, image_model_name,
                         figure_size, save_results,

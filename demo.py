@@ -53,6 +53,11 @@ try:
     from agents.polish_agent import PolishAgent
     print("DEBUG: Imported all agents")
     from utils import config
+    from utils.legacy_generation_options import (
+        generation_additional_info,
+        normalize_legacy_input_content,
+    )
+    from utils.legacy_ui_results import build_evolution_stages, resolve_final_output
     from utils.paperviz_processor import PaperVizProcessor
     print("DEBUG: Imported utils")
 
@@ -105,17 +110,26 @@ def base64_to_image(b64_str):
     except Exception:
         return None
 
-def create_sample_inputs(method_content, caption, diagram_type="Pipeline", aspect_ratio="16:9", num_copies=10, max_critic_rounds=3):
+def create_sample_inputs(
+    method_content,
+    caption,
+    diagram_type="Pipeline",
+    aspect_ratio="16:9",
+    figure_size=None,
+    num_copies=10,
+    max_critic_rounds=3,
+    task_name="diagram",
+):
     """Create multiple copies of the input data for parallel processing."""
+    task_name = "plot" if "plot" in (task_name or "").lower() else "diagram"
     base_input = {
         "filename": "demo_input",
         "caption": caption,
-        "content": method_content,
+        "content": normalize_legacy_input_content(method_content, task_name),
         "visual_intent": caption,
-        "additional_info": {
-            "rounded_ratio": aspect_ratio
-        },
-        "max_critic_rounds": max_critic_rounds  # Add critic rounds control
+        "additional_info": generation_additional_info(aspect_ratio, figure_size),
+        "max_critic_rounds": max_critic_rounds,  # Add critic rounds control
+        "task_name": task_name,
     }
     
     # Create num_copies identical inputs, each with a unique identifier
@@ -128,11 +142,20 @@ def create_sample_inputs(method_content, caption, diagram_type="Pipeline", aspec
     
     return inputs
 
-async def process_parallel_candidates(data_list, exp_mode="dev_planner_critic", retrieval_setting="auto", main_model_name="", image_gen_model_name=""):
+async def process_parallel_candidates(
+    data_list,
+    exp_mode="dev_planner_critic",
+    retrieval_setting="auto",
+    main_model_name="",
+    image_gen_model_name="",
+    task_name="diagram",
+):
     """Process multiple candidates in parallel using PaperVizProcessor."""
+    task_name = "plot" if "plot" in (task_name or "").lower() else "diagram"
     # Create experiment config
     exp_config = config.ExpConfig(
-        dataset_name="Demo",
+        dataset_name="PaperBananaBench",
+        task_name=task_name,
         split_name="demo",
         exp_mode=exp_mode,
         retrieval_setting=retrieval_setting,
@@ -160,6 +183,7 @@ async def process_parallel_candidates(data_list, exp_mode="dev_planner_critic", 
     async for result_data in processor.process_queries_batch(
         data_list, max_concurrent=concurrent_num, do_eval=False
     ):
+        result_data["task_name"] = task_name
         results.append(result_data)
     
     return results
@@ -271,76 +295,13 @@ async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9
 
 def get_evolution_stages(result, exp_mode):
     """Extract all evolution stages (images and descriptions) from the result."""
-    task_name = "diagram"
-    stages = []
-    
-    # Stage 1: Planner output
-    planner_img_key = f"target_{task_name}_desc0_base64_jpg"
-    planner_desc_key = f"target_{task_name}_desc0"
-    if planner_img_key in result and result[planner_img_key]:
-        stages.append({
-            "name": "📋 Planner",
-            "image_key": planner_img_key,
-            "desc_key": planner_desc_key,
-            "description": "Initial diagram plan based on method content"
-        })
-    
-    # Stage 2: Stylist output (only for demo_full)
-    if exp_mode == "demo_full":
-        stylist_img_key = f"target_{task_name}_stylist_desc0_base64_jpg"
-        stylist_desc_key = f"target_{task_name}_stylist_desc0"
-        if stylist_img_key in result and result[stylist_img_key]:
-            stages.append({
-                "name": "✨ Stylist",
-                "image_key": stylist_img_key,
-                "desc_key": stylist_desc_key,
-                "description": "Stylistically refined description"
-            })
-    
-    # Stage 3+: Critic iterations
-    for round_idx in range(4):  # Check up to 4 rounds
-        critic_img_key = f"target_{task_name}_critic_desc{round_idx}_base64_jpg"
-        critic_desc_key = f"target_{task_name}_critic_desc{round_idx}"
-        critic_sugg_key = f"target_{task_name}_critic_suggestions{round_idx}"
-        
-        if critic_img_key in result and result[critic_img_key]:
-            stages.append({
-                "name": f"🔍 Critic Round {round_idx}",
-                "image_key": critic_img_key,
-                "desc_key": critic_desc_key,
-                "suggestions_key": critic_sugg_key,
-                "description": f"Refined after critic feedback (iteration {round_idx})"
-            })
-    
-    return stages
+    return build_evolution_stages(result, exp_mode=exp_mode)
 
 def display_candidate_result(result, candidate_id, exp_mode):
     """Display a single candidate result."""
-    task_name = "diagram"
-    
-    # Determine which image to show based on exp_mode
-    # For demo modes, always try to find the last critic round
-    final_image_key = None
-    final_desc_key = None
-    
-    # Try to find the last critic round
-    for round_idx in range(3, -1, -1):  # Check rounds 3, 2, 1, 0
-        image_key = f"target_{task_name}_critic_desc{round_idx}_base64_jpg"
-        if image_key in result and result[image_key]:
-            final_image_key = image_key
-            final_desc_key = f"target_{task_name}_critic_desc{round_idx}"
-            break
-    
-    # Fallback if no critic rounds completed
-    if not final_image_key:
-        if exp_mode == "demo_full":
-            # demo_full uses stylist before visualizer
-            final_image_key = f"target_{task_name}_stylist_desc0_base64_jpg"
-            final_desc_key = f"target_{task_name}_stylist_desc0"
-        else:
-            # demo_planner_critic uses planner output
-            final_image_key = f"target_{task_name}_desc0_base64_jpg"
-            final_desc_key = f"target_{task_name}_desc0"
+    selection = resolve_final_output(result, exp_mode=exp_mode)
+    final_image_key = selection.image_key
+    final_desc_key = selection.text_key
     
     # Display the final image
     if final_image_key and final_image_key in result:
@@ -442,7 +403,15 @@ def main():
                 ["auto", "manual", "random", "none"],
                 index=0,
                 key="tab1_retrieval_setting",
-                help="How to retrieve reference diagrams: auto (automatic selection), manual (use specified references), random (random selection), none (no retrieval)"
+                help="How to retrieve reference examples: auto (automatic selection), manual (use specified references), random (random selection), none (no retrieval)"
+            )
+
+            task_name = st.selectbox(
+                "Output Type",
+                ["diagram", "plot"],
+                index=0,
+                key="tab1_task_name",
+                help="Generate a scientific diagram or a statistical plot",
             )
             
             num_candidates = st.number_input(
@@ -459,6 +428,14 @@ def main():
                 ["21:9", "16:9", "3:2"],
                 key="tab1_aspect_ratio",
                 help="Aspect ratio for the generated diagrams"
+            )
+
+            figure_size = st.selectbox(
+                "Figure Size",
+                ["1-3cm", "4-6cm", "7-9cm", "10-13cm", "14-17cm"],
+                index=2,
+                key="tab1_figure_size",
+                help="Target figure size; providers that support image_size map this to 1k, 2k, or 4k",
             )
             
             max_critic_rounds = st.number_input(
@@ -593,11 +570,11 @@ The framework extends to statistical plots by adjusting the Visualizer and Criti
                 method_value = st.session_state.get("method_content", "")
             
             method_content = st.text_area(
-                "Method Section Content (Markdown recommended)",
+                "Method Section Content / Plot Data (Markdown or JSON recommended)",
                 value=method_value,
                 height=250,
                 placeholder="Paste the method section content here...",
-                help="The method section from the paper that describes the approach. Markdown format is recommended."
+                help="The method section or plot data that describes the figure. Markdown and JSON are supported."
             )
         
         with col_input2:
@@ -615,7 +592,7 @@ The framework extends to statistical plots by adjusting the Visualizer and Criti
                 caption_value = st.session_state.get("caption", "")
             
             caption = st.text_area(
-                "Figure Caption (Markdown recommended)",
+                "Figure Caption / Visual Intent (Markdown recommended)",
                 value=caption_value,
                 height=250,
                 placeholder="Enter the figure caption...",
@@ -637,8 +614,10 @@ The framework extends to statistical plots by adjusting the Visualizer and Criti
                         method_content=method_content,
                         caption=caption,
                         aspect_ratio=aspect_ratio,
+                        figure_size=figure_size,
                         num_copies=num_candidates,
-                        max_critic_rounds=max_critic_rounds
+                        max_critic_rounds=max_critic_rounds,
+                        task_name=task_name,
                     )
                     
                     # Process in parallel
@@ -648,7 +627,8 @@ The framework extends to statistical plots by adjusting the Visualizer and Criti
                             exp_mode=exp_mode,
                             retrieval_setting=retrieval_setting,
                             main_model_name=main_model_name,
-                            image_gen_model_name=image_gen_model_name
+                            image_gen_model_name=image_gen_model_name,
+                            task_name=task_name,
                         ))
                         st.session_state["results"] = results
                         st.session_state["exp_mode"] = exp_mode
@@ -730,26 +710,11 @@ The framework extends to statistical plots by adjusting the Visualizer and Criti
                 
                 zip_buffer = BytesIO()
                 with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
-                    task_name = "diagram"
-                    
                     for candidate_id, result in enumerate(results):
-                        
-                        # Find the final image key (same logic as display)
-                        final_image_key = None
-                        
-                        # Try to find the last critic round
-                        for round_idx in range(3, -1, -1):
-                            image_key = f"target_{task_name}_critic_desc{round_idx}_base64_jpg"
-                            if image_key in result and result[image_key]:
-                                final_image_key = image_key
-                                break
-                        
-                        # Fallback if no critic rounds completed
-                        if not final_image_key:
-                            if current_mode == "demo_full":
-                                final_image_key = f"target_{task_name}_stylist_desc0_base64_jpg"
-                            else:
-                                final_image_key = f"target_{task_name}_desc0_base64_jpg"
+                        final_image_key = resolve_final_output(
+                            result,
+                            exp_mode=current_mode,
+                        ).image_key
                         
                         if final_image_key and final_image_key in result:
                             img = base64_to_image(result[final_image_key])
