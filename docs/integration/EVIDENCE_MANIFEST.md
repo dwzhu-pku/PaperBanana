@@ -77,6 +77,7 @@ content, or raw provider payloads in shared evidence.
 | EV-20260622-006 | WP-007/T-007 | `e0cea781ca07` | Passed with limitation | Native PR #72 aggregate gate passed on the native branch; evidence recorded in `docs/integration/evidence/20260622-022316_e0cea781ca07_WP-007-native-aggregate-gate.md`. |
 | EV-20260622-007 | WP-102/T-102 | `50c0f49798d4` | Passed with limitation | PR #74 provider/local route support and durable support docs integrated with credential/plot-policy wording preserved; evidence recorded in `docs/integration/evidence/20260622-022925_50c0f49798d4_WP-102-provider-support.md`. |
 | EV-20260622-008 | WP-103/T-103 | `48039406aae0` | Passed with limitation | PR #71 opt-in Planner metaphor mode integrated as default-off and diagram-only; evidence recorded in `docs/integration/evidence/20260622-023000_48039406aae0_WP-103-planner-metaphor.md`. |
+| EV-20260622-009 | WP-104/T-104 | `1e67cb5164c7` | Passed with limitation | PR #73 critic controls and opt-in Gemini agentic Critic integrated with default path unchanged; evidence recorded in `docs/integration/evidence/20260622-023145_1e67cb5164c7_WP-104-critic-agentic.md`. |
 
 ## Required Next Evidence
 
@@ -88,5 +89,6 @@ content, or raw provider payloads in shared evidence.
 | WP-105 | Rebase native PR #72 after credential isolation, hosted plot containment, and provider support are integrated. |
 | WP-102 | Optional real local/Ollama endpoint smoke if local-route support is promoted beyond mocked route coverage. |
 | WP-103 | Output-value comparison before claiming metaphor mode improves quality. |
+| WP-104 | Bounded live Gemini code-execution fixture and privacy/retention review before promoting agentic Critic beyond experimental opt-in. |
 | WP-007 | Light/Dark screenshots, keyboard navigation, VoiceOver, Reduce Motion, and Reduce Transparency review. |
 | WP-007 | Release build/install proof through `./script/build_and_run.sh --release --install --no-open` if that distribution path remains in scope. |
