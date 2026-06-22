@@ -21,6 +21,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest product-source change | `cf9531cfdd4e` |
 | Latest native artifact-secret test head | `59e40f7b7c33b5e449a44224edc1d8dfb1508a6c` |
 | Latest temporary rollback preflight head | `c976aca0ee70f26a8473f7024deb0b11ae2fe884` |
+| Latest WP-108 no-live contract head | `37b44c04dcbdb680a043553684e1d15b3a568f52` |
 | Manifest status | Draft; not a frozen release tag |
 
 Commits after `cf9531cfdd4e` through `7af73793f0d3` are evidence,
@@ -34,7 +35,9 @@ not a replacement for a final full local Xcode gate or remote-check evidence on
 a frozen release SHA. `EV-20260622-045` validates the later `c976aca0ee70`
 safe temporary distinct-bundle upgrade/rollback harness and preflight, but it
 does not replace final release upgrade, runtime user-data migration, or hosted
-rollback proof.
+rollback proof. `EV-20260622-046` validates the later `37b44c04dcbd` no-live
+benchmark contract scaffold, but it does not replace a real quality benchmark
+run or publication-quality decision.
 
 ## Installed App Artifact
 
@@ -65,6 +68,7 @@ channel approval, upgrade proof, or rollback proof.
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034` | Partial; not full manual VoiceOver traversal |
 | Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041` | Partial; broader full-app adaptive signoff remains open |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
+| WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
 | Native artifact secret-sentinel scan | `EV-20260622-044` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; live-provider and hosted scans remain open |
 | Temporary distinct-bundle rollback preflight | `EV-20260622-045` | Prior app from `261ad29fb0c4` upgraded to the current candidate in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
 
@@ -131,7 +135,9 @@ state is verified.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
   `EV-20260622-043` confirms the current branch has evaluation-adjacent code but
   no safe no-live release-quality benchmark runner, frozen manifest, threshold,
-  or report schema.
+  or report schema. `EV-20260622-046` adds a no-live contract scaffold and
+  validator, but actual outputs, reviewer/provider scoring, repeated subset,
+  and go/no-go quality evidence remain open.
 - Upstream maintainer review, merge, and issue closure before claiming upstream
   closeout.
 
