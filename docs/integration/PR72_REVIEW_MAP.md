@@ -203,12 +203,20 @@ Current evidence:
   Prompt Studio from `/Users/jeff/Codex_projects/PaperBanana`; screenshots show
   298 available examples, thumbnail rendering, a 3-missing-image warning, and a
   one-selected `1/10` state.
+- `EV-20260622-025`: one real-data no-spend run persisted selected reference
+  provenance into `request.json`, generated metadata, and provider artifacts.
+- `EV-20260622-026`: real-data search/filter returned the expected content,
+  missing-image, and cleared-search counts; native UI blocked an eleventh
+  selection at `10/10`; a no-spend run persisted exactly `ref_1` through
+  `ref_10` and excluded `ref_11` from the provider prompt.
 
 Open gaps:
 
-- Real-data search/filter and manual 10-of-10 cap validation remain required.
-- Durable selected-reference provenance for real data remains required through
-  a no-spend dry-run harness or approved Codex/provider run.
+- No open manual-reference gap remains for no-spend real-data search/filter,
+  missing-image filtering, 10-of-10 selection cap, or durable selected-reference
+  provenance.
+- Approved live provider/fallback E2E remains covered under the provider
+  runtime follow-up below, not by this no-spend manual-reference evidence.
 
 ### 4. Provider Runtime, Secrets, And Native Generation
 
@@ -493,6 +501,7 @@ docs/integration/evidence/20260622-093954_1c7452754839_WP-007-native-visual-poli
 docs/integration/evidence/20260622-095249_14cc59e7ee57_WP-007-native-accessibility-landmarks.md
 docs/integration/evidence/20260622-101600_3d7ad20f3994_WP-007-settings-polish.md
 docs/integration/evidence/20260622-102857_632ed269b3dd_WP-007-native-table-accessibility.md
+docs/integration/evidence/20260622-072829_1963b57b42a3_WP-106-real-data-search-cap.md
 Design/DesignBrief.md
 README.md
 ```
@@ -505,7 +514,7 @@ README.md
 | Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. Final release-candidate rerun remains required. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings. Adaptive states remain open. |
 | Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Full keyboard/VoiceOver traversal and live table AX re-probe remain open. |
-| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, and one real-data no-spend artifact-provenance run are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
+| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, and real-data search/filter plus 10-reference cap persistence are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
 | Release readiness | Not complete | Provider E2E, rollback, final install provenance, quality benchmark, and upstream maintainer acceptance remain open. |
 
 ## Required Follow-Up Before Full Signoff
@@ -520,7 +529,6 @@ README.md
 - Validate Artifact Library keyboard, VoiceOver, context-menu, disabled-state,
   and adaptive-mode behavior now that lower inspector scroll reachability has
   top/bottom Light/Dark screenshot evidence.
-- Finish real-data manual reference UI validation for PaperBananaBench search/filter and the 10-of-10 cap. One-reference selected-reference artifact provenance through the native no-spend dry-run control is covered by `EV-20260622-025`.
 - Run at least one approved live provider/fallback native E2E and inspect
   durable request/metadata/provider artifacts.
 - Complete hosted two-session/negative-path validation before any public hosted
