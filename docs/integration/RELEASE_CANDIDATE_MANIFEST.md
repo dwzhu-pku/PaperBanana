@@ -52,7 +52,7 @@ channel approval, upgrade proof, or rollback proof.
 | Remote Python 3.12 workflow | `EV-20260622-028`, remote Python Tests for `b9f04b7` | Passed with limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034` | Real local data, search/filter, 10-example cap, and no-spend persistence validated |
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034` | Partial; not full manual VoiceOver traversal |
-| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032` | Partial; broader adaptive signoff remains open |
+| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041` | Partial; broader full-app adaptive signoff remains open |
 
 ## Provider Support Matrix
 
@@ -94,8 +94,10 @@ state is verified.
 - Full manual keyboard navigation and VoiceOver traversal across Settings,
   reference rows, Artifact Library disabled states, preflight sheets, and table
   workflows.
-- Increased Text Size, hover/focus, narrow-width, and full-app adaptive visual
-  review.
+- Dark Settings Increased Text Size visible content is covered by
+  `EV-20260622-041`; lower Workspace content, Light Mode Settings Increased Text
+  Size, full-app Increased Text Size, hover/focus, narrow-width, and full-app
+  adaptive visual review remain open.
 - Approved live provider/fallback native E2E with non-private fixtures, spend
   limit, redacted request/metadata/provider-artifact review, and
   failure/recovery proof.

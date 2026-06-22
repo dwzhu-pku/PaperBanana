@@ -197,16 +197,21 @@ Current evidence:
 - `EV-20260622-034`: installed-app live AX probe confirms manual reference rows
   expose selectable, selected, keyboard-search, `10/10`, and selection-limit
   disabled states at runtime without starting generation.
+- `EV-20260622-041`: installed-app Settings screenshots cover visible content
+  in Workspace, Providers, and Legacy in Dark appearance under a temporary
+  app-scoped non-default Text Size category, with preference restoration
+  verified afterward.
 
 Open gaps:
 
 - Full manual VoiceOver and keyboard traversal remain required.
 - Prompt Studio prompt-to-run-control keyboard escape is covered by
   `EV-20260622-027`.
-- Increased Text Size Settings review remains open. `EV-20260622-032` covers a
-  bounded Settings inactive-window screenshot slice, but broader full-app
-  inactive-window, hover/focus, and adaptive-state screenshot review remains
-  required outside the Settings and source-policy increments.
+- Dark Settings Increased Text Size visible-content review is covered by
+  `EV-20260622-041` for the three native Settings tabs. Lower Workspace content,
+  Light Mode Settings Increased Text Size plus broader full-app Increased Text
+  Size, inactive-window, hover/focus, and adaptive-state screenshot review
+  remains required outside the Settings and source-policy increments.
 
 ### 3. Prompt Studio And Manual Reference Examples
 
@@ -593,6 +598,7 @@ docs/integration/evidence/20260622-072829_1963b57b42a3_WP-106-real-data-search-c
 docs/integration/evidence/20260622-102900_261ad29fb0c4_WP-007-adaptive-layout-policy.md
 docs/integration/evidence/20260622-103842_cf9531cfdd4e_WP-007-preflight-reference-accessibility.md
 docs/integration/evidence/20260622-104120_706e054453d5_WP-007-settings-inactive-window.md
+docs/integration/evidence/20260622-114551_9791008e65bf_WP-007-settings-increased-text-size.md
 docs/integration/evidence/20260622-105100_fdcaad163836_WP-007-live-preflight-artifact-ax.md
 docs/integration/evidence/20260622-110059_e39343070296_WP-007-reference-row-ax.md
 Design/DesignBrief.md
@@ -605,7 +611,7 @@ README.md
 |---|---|---|
 | Native implementation existence | Implemented | Native source, tests, scripts, assets, and docs are present on `integration/native-first-rc-native`. |
 | Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. `EV-20260622-035` covers the exact current branch head `f360dc6d5ccd`; a final release-candidate rerun remains required only if the frozen release-candidate SHA differs or later product code changes land. |
-| Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings, Settings adaptive screenshots are covered by `EV-20260622-022`, and bounded Settings inactive-window screenshots are covered by `EV-20260622-032`. Increased Text Size and broader full-app adaptive states remain open. |
+| Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings, Settings adaptive screenshots are covered by `EV-20260622-022`, bounded Settings inactive-window screenshots are covered by `EV-20260622-032`, and Dark Settings Increased Text Size visible-content screenshots are covered by `EV-20260622-041`. Lower Workspace content, Light Mode Settings Increased Text Size plus broader full-app Increased Text Size and adaptive states remain open. |
 | Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`, live no-spend preflight plus non-image Artifact disabled-action AX proof is covered by `EV-20260622-033`, and live reference-row selectable/selected/search/cap AX proof is covered by `EV-20260622-034`. Full manual keyboard/VoiceOver traversal remains open. |
 | Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, real-data search/filter plus 10-reference cap persistence, focused no-spend generation/refinement store provenance tests, focused no-live cancellation/timeout/stale-run recovery tests, and sanitized localhost served credential smoke are covered. Live provider, broader secret/artifact scan, and real hosted session proof remain open. |
 | Release readiness | Not complete | Current-head install provenance is covered by `EV-20260622-035`, draft release-manifest consistency is covered by `EV-20260622-036`, and local app-bundle rollback preflight is covered by `EV-20260622-037`; provider E2E, distinct prior-version upgrade proof, full user-data migration, hosted rollback, final frozen-SHA manifest consistency, quality benchmark, notarization/distribution decision, and upstream maintainer acceptance remain open. |
@@ -621,11 +627,12 @@ README.md
   running-disabled state beyond source contracts and the live selectable/cap
   proof in `EV-20260622-034`, and VoiceOver speech output beyond the live
   preflight/Artifact disabled-action AX proof in `EV-20260622-033`.
-- Capture adaptive visual evidence for Increased Text Size, hover/focus, and
-  narrow widths; broader full-app inactive-window evidence also remains open.
-  `EV-20260622-022` covers Settings Increased Contrast, Reduce Transparency,
-  and Reduce Motion, and `EV-20260622-032` covers a bounded Settings
-  inactive-window slice.
+- Capture adaptive visual evidence for full-app Increased Text Size,
+  hover/focus, and narrow widths; broader full-app inactive-window evidence also
+  remains open. `EV-20260622-022` covers Settings Increased Contrast, Reduce
+  Transparency, and Reduce Motion, `EV-20260622-032` covers a bounded Settings
+  inactive-window slice, and `EV-20260622-041` covers Dark Settings Increased
+  Text Size visible content across Workspace, Providers, and Legacy tabs.
 - Validate Artifact Library broader keyboard, VoiceOver, disabled-state, and
   adaptive-mode behavior now that lower inspector scroll reachability has
   top/bottom Light/Dark screenshot evidence and card action-menu reachability
