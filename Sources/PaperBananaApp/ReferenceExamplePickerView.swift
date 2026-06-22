@@ -97,6 +97,7 @@ struct ReferenceExamplePickerView: View {
     private var availableState: some View {
         VStack(alignment: .leading, spacing: AppDesignSystem.Spacing.md) {
             selectionSummary
+            missingImageWarning
 
             WorkspaceScopeStrip(
                 selection: $scope,
@@ -168,6 +169,18 @@ struct ReferenceExamplePickerView: View {
         }
     }
 
+    @ViewBuilder
+    private var missingImageWarning: some View {
+        let count = store.state.missingImageCount
+        if count > 0 {
+            Label(missingImageWarningText(count), systemImage: "exclamationmark.triangle.fill")
+                .font(AppDesignSystem.Typography.caption)
+                .foregroundStyle(AppDesignSystem.SemanticColors.statusStarting)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityLabel(missingImageWarningText(count))
+        }
+    }
+
     private var unsupportedPlotState: some View {
         statusState(
             title: "Manual Plot Examples Unavailable",
@@ -216,11 +229,20 @@ struct ReferenceExamplePickerView: View {
             return example.id.localizedCaseInsensitiveContains(search)
                 || example.visualIntent.localizedCaseInsensitiveContains(search)
                 || example.contentSummary.localizedCaseInsensitiveContains(search)
+                || example.imageRelativePath.localizedCaseInsensitiveContains(search)
+                || (!example.imageAvailable && "missing image".localizedCaseInsensitiveContains(search))
         }
     }
 
     private func canSelect(_ example: ReferenceExample) -> Bool {
         selectedIDs.contains(example.id) || store.selectedExamples(for: selectedIDs).count < ReferenceExampleSelection.maximumSelectionCount
+    }
+
+    private func missingImageWarningText(_ count: Int) -> String {
+        if count == 1 {
+            return "1 example is missing its local image. It can still be selected, but prompt guidance will use metadata only."
+        }
+        return "\(count) examples are missing local images. They can still be selected, but prompt guidance will use metadata only."
     }
 
     private func openDatasetPage() {
@@ -233,7 +255,10 @@ struct ReferenceExamplePickerView: View {
         }
         switch store.state {
         case .available:
-            return "\(store.selectedExamples(for: selectedIDs).count) selected."
+            let selectedCount = store.selectedExamples(for: selectedIDs).count
+            let missingCount = store.state.missingImageCount
+            guard missingCount > 0 else { return "\(selectedCount) selected." }
+            return "\(selectedCount) selected. \(missingCount) examples missing local images."
         case .idle, .missing, .malformed, .empty:
             return store.state.statusTitle
         }
@@ -250,7 +275,7 @@ private struct ReferenceExampleRow: View {
     var body: some View {
         Button(action: action) {
             HStack(alignment: .top, spacing: AppDesignSystem.Spacing.sm) {
-                ReferenceExampleThumbnail(url: example.imageURL)
+                ReferenceExampleThumbnail(url: example.imageURL, imageAvailable: example.imageAvailable)
 
                 VStack(alignment: .leading, spacing: 3) {
                     HStack(spacing: AppDesignSystem.Spacing.xs) {
@@ -259,6 +284,14 @@ private struct ReferenceExampleRow: View {
                             .lineLimit(1)
 
                         Spacer(minLength: AppDesignSystem.Spacing.xs)
+
+                        if !example.imageAvailable {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(AppDesignSystem.SemanticColors.statusStarting)
+                                .help("Local reference image is missing")
+                                .accessibilityHidden(true)
+                        }
 
                         Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                             .foregroundStyle(isSelected ? AppDesignSystem.SemanticColors.statusReady : .secondary)
@@ -298,18 +331,20 @@ private struct ReferenceExampleRow: View {
     }
 
     private var accessibilityValue: String {
+        let imageState = example.imageAvailable ? "Image available." : "Image missing."
         if isSelected {
-            return "Selected. \(example.visualIntent)"
+            return "Selected. \(imageState) \(example.visualIntent)"
         }
         if canSelect {
-            return "Not selected. \(example.visualIntent)"
+            return "Not selected. \(imageState) \(example.visualIntent)"
         }
-        return "Selection limit reached. \(example.visualIntent)"
+        return "Selection limit reached. \(imageState) \(example.visualIntent)"
     }
 }
 
 private struct ReferenceExampleThumbnail: View {
     let url: URL
+    let imageAvailable: Bool
 
     @State private var image: NSImage?
 
@@ -319,6 +354,11 @@ private struct ReferenceExampleThumbnail: View {
                 Image(nsImage: image)
                     .resizable()
                     .scaledToFill()
+            } else if !imageAvailable {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundStyle(AppDesignSystem.SemanticColors.statusStarting)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 Image(systemName: "photo")
                     .font(.system(size: 15, weight: .medium))
@@ -335,7 +375,7 @@ private struct ReferenceExampleThumbnail: View {
         }
         .accessibilityHidden(true)
         .onAppear {
-            guard image == nil else { return }
+            guard image == nil, imageAvailable else { return }
             image = NSImage(contentsOf: url)
         }
     }

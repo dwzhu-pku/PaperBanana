@@ -7,6 +7,25 @@ struct ReferenceExample: Identifiable, Hashable {
     let contentSummary: String
     let imageRelativePath: String
     let imageURL: URL
+    let imageAvailable: Bool
+
+    init(
+        id: String,
+        visualIntent: String,
+        contentText: String,
+        contentSummary: String,
+        imageRelativePath: String,
+        imageURL: URL,
+        imageAvailable: Bool = true
+    ) {
+        self.id = id
+        self.visualIntent = visualIntent
+        self.contentText = contentText
+        self.contentSummary = contentSummary
+        self.imageRelativePath = imageRelativePath
+        self.imageURL = imageURL
+        self.imageAvailable = imageAvailable
+    }
 
     var selection: ReferenceExampleSelection {
         ReferenceExampleSelection(
@@ -25,6 +44,18 @@ struct ReferenceExampleSelection: Codable, Hashable, Identifiable, Sendable {
     let visualIntent: String
     let contentSummary: String
     let imagePath: String
+
+    init(
+        id: String,
+        visualIntent: String,
+        contentSummary: String,
+        imagePath: String
+    ) {
+        self.id = id
+        self.visualIntent = visualIntent
+        self.contentSummary = contentSummary
+        self.imagePath = imagePath
+    }
 
     var durablePayload: [String: String] {
         [
