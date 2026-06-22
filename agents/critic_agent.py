@@ -24,6 +24,7 @@ from PIL import Image
 import json_repair
 
 from utils import generation_utils
+from utils.config import load_style_guide_for_task
 from .base_agent import BaseAgent
 
 
@@ -49,6 +50,64 @@ class CriticAgent(BaseAgent):
                 "critique_target": "Target Diagram for Critique:",
                 "context_labels": ["Methodology Section", "Figure Caption"],
             }
+
+    @staticmethod
+    def _extract_agentic_evidence(response: Any) -> Dict[str, Any]:
+        evidence = {
+            "response_text": "",
+            "executable_code": [],
+            "code_execution_result": [],
+        }
+        text_parts = []
+        for candidate in getattr(response, "candidates", []) or []:
+            content = getattr(candidate, "content", None)
+            for part in getattr(content, "parts", []) or []:
+                text = getattr(part, "text", None)
+                if text:
+                    text_parts.append(text)
+
+                executable_code = getattr(part, "executable_code", None)
+                if executable_code is not None:
+                    evidence["executable_code"].append({
+                        "language": str(getattr(executable_code, "language", "") or ""),
+                        "code": getattr(executable_code, "code", "") or "",
+                    })
+
+                code_result = getattr(part, "code_execution_result", None)
+                if code_result is not None:
+                    evidence["code_execution_result"].append({
+                        "outcome": str(getattr(code_result, "outcome", "") or ""),
+                        "output": getattr(code_result, "output", "") or "",
+                    })
+
+        evidence["response_text"] = "\n".join(text_parts).strip()
+        return evidence
+
+    async def _call_agentic_critic(self, content_list, round_idx: int, task_name: str) -> tuple[str, Dict[str, Any]]:
+        if generation_utils.gemini_client is None:
+            raise RuntimeError(
+                "agentic_critic requires an initialized Gemini client. "
+                "Set GOOGLE_API_KEY or api_keys.google_api_key."
+            )
+
+        response = await generation_utils.gemini_client.aio.models.generate_content(
+            model=self.model_name,
+            contents=generation_utils._convert_to_gemini_parts(content_list),
+            config=types.GenerateContentConfig(
+                system_instruction=self.system_prompt,
+                temperature=self.exp_config.temperature,
+                candidate_count=1,
+                max_output_tokens=50000,
+                tools=[types.Tool(code_execution=types.ToolCodeExecution())],
+            ),
+        )
+        evidence = self._extract_agentic_evidence(response)
+        return evidence["response_text"], {
+            "round": round_idx,
+            "task_name": task_name,
+            "model_name": self.model_name,
+            **evidence,
+        }
 
     async def process(self, data: Dict[str, Any], source: str = "stylist") -> Dict[str, Any]:
         """
@@ -90,6 +149,7 @@ class CriticAgent(BaseAgent):
         if isinstance(content, (dict, list)):
             content = json.dumps(content)
         visual_intent = data["visual_intent"]
+        style_guide = load_style_guide_for_task(self.exp_config.work_dir, task_name)
         content_list = [{"type": "text", "text": cfg["critique_target"]}]
         
         if image_base64 and len(image_base64) > 100:
@@ -110,24 +170,37 @@ class CriticAgent(BaseAgent):
 
         content_list.append({
             "type": "text",
-            "text": f"Detailed Description: {detailed_description}\n{cfg['context_labels'][0]}: {content}\n{cfg['context_labels'][1]}: {visual_intent}\nYour Output:",
+            "text": (
+                f"Detailed Description: {detailed_description}\n"
+                f"Style Guidelines: {style_guide}\n"
+                f"{cfg['context_labels'][0]}: {content}\n"
+                f"{cfg['context_labels'][1]}: {visual_intent}\n"
+                "Your Output:"
+            ),
         })
 
-        response_list = await generation_utils.call_model_with_retry_async(
-            model_name=self.model_name,
-            contents=content_list,
-            config=types.GenerateContentConfig(
-                system_instruction=self.system_prompt,
-                temperature=self.exp_config.temperature,
-                candidate_count=1,
-                max_output_tokens=50000,
-            ),
-            max_attempts=5,
-            retry_delay=5,
-        )
+        if self.exp_config.agentic_critic:
+            cleaned_response, evidence = await self._call_agentic_critic(
+                content_list, round_idx=round_idx, task_name=task_name
+            )
+            data[f"target_{task_name}_critic_agentic_evidence{round_idx}"] = evidence
+        else:
+            response_list = await generation_utils.call_model_with_retry_async(
+                model_name=self.model_name,
+                contents=content_list,
+                config=types.GenerateContentConfig(
+                    system_instruction=self.system_prompt,
+                    temperature=self.exp_config.temperature,
+                    candidate_count=1,
+                    max_output_tokens=50000,
+                ),
+                max_attempts=5,
+                retry_delay=5,
+            )
+            cleaned_response = response_list[0]
         
         cleaned_response = (
-            response_list[0].replace("```json", "").replace("```", "").strip()
+            cleaned_response.replace("```json", "").replace("```", "").strip()
         )
         try:
             eval_result = json_repair.loads(cleaned_response)
@@ -176,6 +249,7 @@ Your Description should primarily be modifications based on the original descrip
 ## INPUT DATA
 -   **Target Diagram**: [The generated figure]
 -   **Detailed Description**: [The detailed description of the figure]
+-   **Style Guidelines**: [Task-specific NeurIPS 2025 style guidelines]
 -   **Methodology Section**: [Contextual content from the methodology section]
 -   **Figure Caption**: [Target figure caption]
 
@@ -220,6 +294,7 @@ You are also provided with the 'Detailed Description' corresponding to the curre
 ## INPUT DATA
 -   **Target Plot**: [The generated plot]
 -   **Detailed Description**: [The detailed description of the plot]
+-   **Style Guidelines**: [Task-specific NeurIPS 2025 style guidelines]
 -   **Raw Data**: [The raw data to be visualized]
 -   **Visual Intent**: [Visual intent of the desired plot]
 

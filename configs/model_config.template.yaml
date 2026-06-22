@@ -18,6 +18,7 @@
 defaults:
   main_model_name: "gemini-3.1-pro-preview"
   image_gen_model_name: "gemini-3.1-flash-image-preview"
+  agentic_critic: false
   
 # API Keys. If you are using all gemini models, you can leave the other keys empty.
 api_keys:

@@ -77,6 +77,11 @@ async def main():
         help="maximum number of critic rounds (default: 3)",
     )
     parser.add_argument(
+        "--agentic-critic",
+        action="store_true",
+        help="enable Gemini code_execution Critic path (default: disabled)",
+    )
+    parser.add_argument(
         "--main_model_name",
         type=str,
         default="",
@@ -97,6 +102,7 @@ async def main():
         exp_mode=args.exp_mode,
         retrieval_setting=args.retrieval_setting,
         max_critic_rounds=args.max_critic_rounds,
+        agentic_critic=args.agentic_critic,
         main_model_name=args.main_model_name,
         image_gen_model_name=args.image_gen_model_name,
         work_dir=Path(__file__).parent,
