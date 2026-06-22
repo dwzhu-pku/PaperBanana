@@ -123,6 +123,10 @@ class VisualizerAgent(BaseAgent):
             image_size = image_size_from_data(data)
 
             if cfg["use_image_generation"]:
+                generation_utils.assert_not_local_openai_image_model(
+                    self.model_name,
+                    route_name="visualizer image generation",
+                )
                 if "gpt-image" in self.model_name:
                     image_config = {
                         "size": "1536x1024",

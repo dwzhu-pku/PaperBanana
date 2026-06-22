@@ -1,5 +1,12 @@
 import asyncio
 
+import pytest
+from PIL import Image
+
+from agents.polish_agent import PolishAgent
+from agents.vanilla_agent import VanillaAgent
+from agents.visualizer_agent import VisualizerAgent
+from utils.config import ExpConfig
 from utils import generation_utils
 
 
@@ -96,3 +103,105 @@ def test_reinitialize_clients_reads_local_openai_config(monkeypatch):
 
     assert "Local OpenAI-compatible" in initialized
     assert generation_utils.local_openai_client is not None
+
+
+def _diagram_config(tmp_path, image_model_name):
+    return ExpConfig(
+        dataset_name="PaperBananaBench",
+        task_name="diagram",
+        exp_mode="vanilla",
+        retrieval_setting="none",
+        main_model_name="local/text-model",
+        image_gen_model_name=image_model_name,
+        work_dir=tmp_path,
+    )
+
+
+def test_local_model_prefix_is_rejected_for_image_generation():
+    assert generation_utils.is_local_openai_model_name("local/qwen2.5:14b")
+    assert generation_utils.is_local_openai_model_name("ollama/llama3.1:8b")
+
+    with pytest.raises(ValueError, match="text-only"):
+        generation_utils.assert_not_local_openai_image_model(
+            "local/qwen2.5:14b",
+            route_name="image generation",
+        )
+
+
+def test_vanilla_rejects_local_image_model_before_hosted_provider(monkeypatch, tmp_path):
+    async def fail_if_called(**kwargs):
+        raise AssertionError("hosted image provider should not be called")
+
+    monkeypatch.setattr(generation_utils, "openrouter_client", object())
+    monkeypatch.setattr(
+        generation_utils,
+        "call_openrouter_image_generation_with_retry_async",
+        fail_if_called,
+    )
+
+    agent = VanillaAgent(exp_config=_diagram_config(tmp_path, "local/image-model"))
+    data = {
+        "content": "Method text",
+        "visual_intent": "Draw the method",
+        "additional_info": {"rounded_ratio": "16:9"},
+    }
+
+    with pytest.raises(ValueError, match="text-only"):
+        asyncio.run(agent.process(data))
+
+
+def test_visualizer_rejects_ollama_image_model_before_hosted_provider(monkeypatch, tmp_path):
+    async def fail_if_called(**kwargs):
+        raise AssertionError("hosted image provider should not be called")
+
+    monkeypatch.setattr(generation_utils, "openrouter_client", object())
+    monkeypatch.setattr(
+        generation_utils,
+        "call_openrouter_image_generation_with_retry_async",
+        fail_if_called,
+    )
+
+    agent = VisualizerAgent(exp_config=_diagram_config(tmp_path, "ollama/image-model"))
+    data = {
+        "target_diagram_desc0": "Render a compact architecture diagram.",
+        "additional_info": {"rounded_ratio": "4:3"},
+    }
+
+    with pytest.raises(ValueError, match="text-only"):
+        asyncio.run(agent.process(data))
+
+
+def test_polish_rejects_local_image_model_before_hosted_provider(monkeypatch, tmp_path):
+    async def fake_suggestions(self, gt_image_b64, style_guide):
+        return "Improve spacing."
+
+    async def fail_if_called(**kwargs):
+        raise AssertionError("hosted image provider should not be called")
+
+    style_dir = tmp_path / "style_guides"
+    style_dir.mkdir(parents=True)
+    (style_dir / "neurips2025_diagram_style_guide.md").write_text(
+        "Use clear labels and restrained colors.",
+        encoding="utf-8",
+    )
+
+    image_dir = tmp_path / "data" / "PaperBananaBench" / "diagram" / "images"
+    image_dir.mkdir(parents=True)
+    Image.new("RGB", (16, 16), color="white").save(image_dir / "input.jpg")
+
+    monkeypatch.setattr(PolishAgent, "_generate_suggestions", fake_suggestions)
+    monkeypatch.setattr(generation_utils, "openrouter_client", object())
+    monkeypatch.setattr(
+        generation_utils,
+        "call_openrouter_image_generation_with_retry_async",
+        fail_if_called,
+    )
+
+    agent = PolishAgent(exp_config=_diagram_config(tmp_path, "local/image-model"))
+    data = {
+        "path_to_gt_image": "images/input.jpg",
+        "additional_info": {"rounded_ratio": "1:1"},
+    }
+
+    with pytest.raises(ValueError, match="text-only"):
+        asyncio.run(agent.process(data))
