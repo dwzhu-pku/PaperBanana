@@ -71,13 +71,11 @@ content, or raw provider payloads in shared evidence.
 |---|---|---|---|---|
 | EV-20260622-001 | WP-001 | `ddeb2a9a8cf6` | Created | Provisional release contract added in `docs/RELEASE_CONTRACT.md`. |
 | EV-20260622-002 | WP-002 | `ddeb2a9a8cf6` | Created | Branch map and initial evidence manifest added. |
+| EV-20260622-003 | WP-003/T-003 | `b32617490290` | Passed with limitation | Baseline red test and integration green credential-isolation evidence recorded in `docs/integration/evidence/20260622-015757_b32617490290_WP-003-credential-isolation.md`. |
 
 ## Required Next Evidence
 
 | WP/Test | Required artifact |
 |---|---|
-| T-003 | Red credential-isolation test on detached upstream baseline. |
-| WP-003 | #70 integration commit SHA and passing focused/full tests. |
-| WP-003 | Classified static search for key fields/callback/env mutation. |
-| WP-003 | Dynamic/session validation or explicit harness limitation. |
-| WP-003 | Sentinel-secret scan over captured outputs/artifacts. |
+| WP-003 | Full two-client hosted/session proof before public hosted release. |
+| WP-003 | Clean environment Python 3.12 validation once WP-005/WP-201 defines the environment. |
