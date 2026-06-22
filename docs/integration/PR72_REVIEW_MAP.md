@@ -52,7 +52,7 @@ native PR head.
 | Native prompt/provider integration | `7594d4d`, `fac7cc8`, `79425e8`, `7ce4f07` | Plot fallback prompt behavior, provider audit calls, clean-worktree native gate portability, local-route image rejection, and direct Gemini refinement audit preservation. |
 | CI and gate portability | `26adc46`, `75f6d99` | Portable CI workflows, native structural checks, Ruby pinning, and script portability away from a single local host path. |
 | Evidence records | `1524a00`, `d43a6c8`, `4a8df78`, `7271e07`, `1e1688f`, `949bd3c`, `4c9d779` | SHA-linked validation records and manifest updates. Review for accuracy and limitations, not product behavior. |
-| Visual/accessibility polish | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812`, `261ad29` | Sidebar/settings polish, search/card accessibility landmarks, Settings form layout, native table accessibility summaries, Prompt Studio keyboard focus escape, adaptive material fallback, minimum-window contract, and source-level regression contracts. |
+| Visual/accessibility polish | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812`, `261ad29`, `cf9531c` | Sidebar/settings polish, search/card accessibility landmarks, Settings form layout, native table accessibility summaries, Prompt Studio keyboard focus escape, adaptive material fallback, minimum-window contract, preflight/reference/disabled-action landmarks, and source-level regression contracts. |
 
 ## Original PR #72 Source Stack Mapping
 
@@ -74,7 +74,7 @@ original PR body with the integrated branch:
 | `e0cea78` | `79425e8` | Clean-worktree native gate support. |
 | n/a | `7ce4f07` | Post-integration fix: local image-route rejection and direct Gemini refinement provider-audit preservation. |
 | n/a | `26adc46`, `75f6d99` | CI portability and Ruby pinning added after native integration. |
-| n/a | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812` | Native visual/accessibility follow-up after evidence review. |
+| n/a | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812`, `cf9531c` | Native visual/accessibility follow-up after evidence review. |
 
 ## Component Lanes
 
@@ -172,6 +172,10 @@ Current evidence:
   minimum window contract to cover the widest existing split workspace, and
   passed focused tests, the aggregate native/Python/Xcode 27 gate, and Release
   build/install.
+- `EV-20260622-031`: preflight sheets, reference example rows, and Artifact
+  Library image-only disabled actions now expose stronger source-level
+  accessibility contracts; focused source test, aggregate native/Python/Xcode 27
+  gate, and Release build/install passed.
 
 Open gaps:
 
@@ -227,12 +231,15 @@ Current evidence:
 - `EV-20260622-027`: installed-app AX proof confirmed Prompt Studio can move
   keyboard focus from the multiline prompt editor to Run Controls with
   Command-Option-R and back with Command-Option-P.
+- `EV-20260622-031`: reference example rows now expose stable row identifiers,
+  selected traits, and explicit selected/running-disabled/selection-limit hints.
 
 Open gaps:
 
 - No open manual-reference gap remains for no-spend real-data search/filter,
   missing-image filtering, 10-of-10 selection cap, or durable selected-reference
-  provenance.
+  provenance. Full manual VoiceOver reading-order traversal remains open under
+  WP-007.
 - Approved live provider/fallback E2E remains covered under the provider
   runtime follow-up below, not by this no-spend manual-reference evidence.
 
@@ -336,6 +343,8 @@ Current evidence:
   `Artifact Actions` menu button; focused tests, Release build/install,
   installed-app AX proof, and the full native/Python/Xcode 27 aggregate gate
   passed.
+- `EV-20260622-031`: image-only Export Image and Refine actions now provide
+  disabled-state accessibility hints explaining the image-artifact requirement.
 - Read-only design review on 2026-06-22 found the lower inspector screenshot
   risk most likely reflected scroll position rather than true action-bar
   occlusion because `ScrollView`, `Divider`, and `ArtifactInspectorActionBar`
@@ -345,8 +354,9 @@ Open gaps:
 
 - Artifact Library lower inspector reachability now has normal Light/Dark
   top/bottom screenshot proof. Artifact card action-menu reachability is covered
-  by `EV-20260622-029`. Remaining Artifact Library work is broader keyboard,
-  VoiceOver, disabled-state, and adaptive-mode validation.
+  by `EV-20260622-029`, and image-only disabled-state source hints are covered
+  by `EV-20260622-031`. Remaining Artifact Library work is broader keyboard,
+  VoiceOver, live disabled-state traversal, and adaptive-mode validation.
 - Live refinement/provider E2E remains required before release claims.
 
 ### 6. Run Details, Provider Ledger, Recovery, And Workflow Evaluation
@@ -525,6 +535,8 @@ docs/integration/evidence/20260622-095249_14cc59e7ee57_WP-007-native-accessibili
 docs/integration/evidence/20260622-101600_3d7ad20f3994_WP-007-settings-polish.md
 docs/integration/evidence/20260622-102857_632ed269b3dd_WP-007-native-table-accessibility.md
 docs/integration/evidence/20260622-072829_1963b57b42a3_WP-106-real-data-search-cap.md
+docs/integration/evidence/20260622-102900_261ad29fb0c4_WP-007-adaptive-layout-policy.md
+docs/integration/evidence/20260622-103842_cf9531cfdd4e_WP-007-preflight-reference-accessibility.md
 Design/DesignBrief.md
 README.md
 ```
@@ -536,7 +548,7 @@ README.md
 | Native implementation existence | Implemented | Native source, tests, scripts, assets, and docs are present on `integration/native-first-rc-native`. |
 | Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. Final release-candidate rerun remains required. |
 | Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings. Adaptive states remain open. |
-| Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, and Artifact Library card action-menu reachability is covered by `EV-20260622-029`. Full manual keyboard/VoiceOver traversal remains open. |
+| Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, and preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`. Full manual keyboard/VoiceOver traversal remains open. |
 | Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, and real-data search/filter plus 10-reference cap persistence are covered. Live provider, broader secret/artifact scan, and hosted session proof remain open. |
 | Release readiness | Not complete | Provider E2E, rollback, final install provenance, quality benchmark, and upstream maintainer acceptance remain open. |
 
@@ -547,14 +559,17 @@ README.md
 - Run the full manual keyboard and VoiceOver traversal, including Run Details
   and Provider Run Ledger table focus beyond the AX summary proof in
   `EV-20260622-021`, plus Prompt Studio states beyond the focused
-  prompt/run-control escape path in `EV-20260622-027`.
+  prompt/run-control escape path in `EV-20260622-027`, and live traversal proof
+  for the preflight/reference/disabled-action contracts added in
+  `EV-20260622-031`.
 - Capture adaptive visual evidence for Increased Contrast, Increased Text Size,
   Reduce Transparency, Reduce Motion, hover/focus, inactive-window, and narrow
   widths.
 - Validate Artifact Library broader keyboard, VoiceOver, disabled-state, and
   adaptive-mode behavior now that lower inspector scroll reachability has
   top/bottom Light/Dark screenshot evidence and card action-menu reachability
-  is covered by `EV-20260622-029`.
+  is covered by `EV-20260622-029`, with disabled-action source hints covered by
+  `EV-20260622-031`.
 - Run at least one approved live provider/fallback native E2E and inspect
   durable request/metadata/provider artifacts.
 - Complete hosted two-session/negative-path validation before any public hosted
