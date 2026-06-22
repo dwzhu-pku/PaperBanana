@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paperbanana.local/schemas/wp108_no_live_report.schema.json",
+  "title": "PaperBanana WP-108 No-Live Benchmark Report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "evaluation_mode",
+    "provider_scoring_used",
+    "publication_quality_claimed",
+    "case_results",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": { "const": "wp108.no_live_report.v1" },
+    "manifest_id": { "type": "string", "minLength": 1 },
+    "evaluation_mode": { "enum": ["fixture", "human_review", "provider_scored"] },
+    "provider_scoring_used": { "type": "boolean" },
+    "publication_quality_claimed": { "type": "boolean" },
+    "case_results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["case_id", "status", "scores", "critical_failures"],
+        "properties": {
+          "case_id": { "type": "string", "minLength": 1 },
+          "status": {
+            "enum": ["not_scored", "fixture_passed", "fixture_failed", "passed", "failed"]
+          },
+          "scores": { "type": "object" },
+          "critical_failures": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["cases_total", "mean_score", "threshold_passed", "claim_boundary"],
+      "properties": {
+        "cases_total": { "type": "integer", "minimum": 1 },
+        "mean_score": { "type": ["number", "null"] },
+        "threshold_passed": { "type": "boolean" },
+        "claim_boundary": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

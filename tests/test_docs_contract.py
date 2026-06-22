@@ -10,6 +10,9 @@ RELEASE_MANIFEST = (
 ROLLBACK_RUNBOOK = (
     REPO_ROOT / "docs" / "integration" / "LOCAL_INSTALL_ROLLBACK_RUNBOOK.md"
 ).read_text(encoding="utf-8")
+WP108_CONTRACT = (
+    REPO_ROOT / "docs" / "integration" / "WP108_NO_LIVE_BENCHMARK_CONTRACT.md"
+).read_text(encoding="utf-8")
 
 
 def test_support_doc_contains_public_artifact_contract():
@@ -124,3 +127,16 @@ def test_local_install_rollback_runbook_keeps_preflight_scope_and_secret_boundar
 
     for phrase in required_phrases:
         assert phrase in ROLLBACK_RUNBOOK
+
+
+def test_wp108_no_live_contract_preserves_quality_claim_boundary():
+    required_phrases = [
+        "Status: contract scaffold, not quality evidence",
+        "utils/wp108_benchmark_contract.py",
+        "provider_scoring_used: false",
+        "publication_quality_claimed: false",
+        "This scaffold alone is not that evidence",
+    ]
+
+    for phrase in required_phrases:
+        assert phrase in WP108_CONTRACT

@@ -1,0 +1,49 @@
+{
+  "schema_version": "wp108.no_live_manifest.v1",
+  "benchmark_id": "paperbanana-m1-no-live-contract",
+  "claim_boundary": "Contract-only fixture; no publication-quality claim.",
+  "cases": [
+    {
+      "case_id": "diagram-ref-1-contract",
+      "task_type": "diagram",
+      "split": "contract_fixture",
+      "content_ref": "data/PaperBananaBench/diagram/ref.json#ref_1.content",
+      "visual_intent_ref": "data/PaperBananaBench/diagram/ref.json#ref_1.visual_intent",
+      "path_to_gt_image": "data/PaperBananaBench/diagram/gt/ref_1.png",
+      "expected_outputs": [
+        "image",
+        "request_json",
+        "metadata_json",
+        "provider_request_json",
+        "provider_audit",
+        "run_store"
+      ],
+      "non_private_fixture": true
+    }
+  ],
+  "rubric": [
+    {
+      "id": "semantic_faithfulness",
+      "name": "Semantic faithfulness",
+      "scale": "0-4 integer or decimal score",
+      "pass_threshold": 3.0
+    },
+    {
+      "id": "visual_legibility",
+      "name": "Visual legibility",
+      "scale": "0-4 integer or decimal score",
+      "pass_threshold": 3.0
+    },
+    {
+      "id": "artifact_completeness",
+      "name": "Artifact completeness",
+      "scale": "0-4 integer or decimal score",
+      "pass_threshold": 3.0
+    }
+  ],
+  "thresholds": {
+    "minimum_cases": 1,
+    "minimum_mean_score": 3.0,
+    "max_critical_failures": 0
+  }
+}
