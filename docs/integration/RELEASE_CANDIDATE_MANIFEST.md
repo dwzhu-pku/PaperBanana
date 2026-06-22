@@ -13,7 +13,7 @@ been validated and leaves every unvalidated release claim open.
 
 | Item | Value |
 |---|---|
-| Last full local product-code gate | `f360dc6d5ccd59ca3760f5f2ddd168dc407656ae` |
+| Latest full local native/Python/Xcode gate | `eebe3928f63a48b8fe56ba23c8c637ddf129d299` |
 | Latest recorded remote-check evidence head | `7af73793f0d3d02843ab115266f9c0560f6ea7c8` |
 | Branch | `integration/native-first-rc-native` |
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
@@ -24,20 +24,20 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-108 no-live contract head | `37b44c04dcbdb680a043553684e1d15b3a568f52` |
 | Manifest status | Draft; not a frozen release tag |
 
-Commits after `cf9531cfdd4e` through `7af73793f0d3` are evidence,
-documentation, runbook, and screenshot commits. `EV-20260622-035` validates
-`f360dc6d5ccd` through the local aggregate native/Python/Xcode 27 gate plus
-Release build/install proof. `EV-20260622-042` records that current pushed
+Commits after `cf9531cfdd4e` are evidence, documentation, runbook, screenshot,
+rollback-preflight, and no-live benchmark-contract commits. `EV-20260622-047`
+validates current branch head `eebe3928f63a` through the local aggregate
+native/Python/Xcode 27 gate with 159 Swift tests, 98 Python tests, and
+`codex-xcode27 proof`. `EV-20260622-035` separately validates
+`f360dc6d5ccd59ca3760f5f2ddd168dc407656ae` through the local aggregate gate
+plus Release build/install proof. `EV-20260622-042` records that pushed
 evidence head at capture time `7af73793f0d3` passed the remote `Native
 Structural Checks` and `Python Tests` workflows. `EV-20260622-044` validates
-the later `59e40f7b7c33` native artifact-secret sentinel test slice, but it is
-not a replacement for a final full local Xcode gate or remote-check evidence on
-a frozen release SHA. `EV-20260622-045` validates the later `c976aca0ee70`
-safe temporary distinct-bundle upgrade/rollback harness and preflight, but it
-does not replace final release upgrade, runtime user-data migration, or hosted
-rollback proof. `EV-20260622-046` validates the later `37b44c04dcbd` no-live
-benchmark contract scaffold, but it does not replace a real quality benchmark
-run or publication-quality decision.
+the later `59e40f7b7c33` native artifact-secret sentinel test slice.
+`EV-20260622-045` validates the later `c976aca0ee70` safe temporary
+distinct-bundle upgrade/rollback harness and preflight. `EV-20260622-046`
+validates the later `37b44c04dcbd` no-live benchmark contract scaffold, but it
+does not replace a real quality benchmark run or publication-quality decision.
 
 ## Installed App Artifact
 
@@ -60,8 +60,8 @@ channel approval, upgrade proof, or rollback proof.
 
 | Area | Evidence | Status |
 |---|---|---|
-| Source/project structure | `EV-20260622-035`, `EV-20260622-042` | Passed with limitation |
-| Local aggregate native gate | `EV-20260622-035` | 157 Swift tests, 88 Python tests, and `codex-xcode27 proof` passed |
+| Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047` | Passed with limitation |
+| Local aggregate native gate | `EV-20260622-047` | 159 Swift tests, 98 Python tests, and `codex-xcode27 proof` passed on current branch head |
 | Release build/install | `EV-20260622-035` | Release build/install and post-install sanity checks passed |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042` | Passed with limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034` | Real local data, search/filter, 10-example cap, and no-spend persistence validated |
@@ -127,8 +127,9 @@ state is verified.
   public hosted-generation claim. `EV-20260622-040` is localhost-only
   credential/session smoke evidence.
 - True install/upgrade/rollback proof and release manifest consistency on the
-  final frozen release SHA. Current pushed evidence-head consistency is covered
-  by `EV-20260622-042`, and temporary distinct-bundle replacement/restore is
+  final frozen release SHA. Current full local gate evidence is covered by
+  `EV-20260622-047`, pushed evidence-head consistency is covered by
+  `EV-20260622-042`, and temporary distinct-bundle replacement/restore is
   covered by `EV-20260622-045`, but these are not frozen release approval,
   public prior-release upgrade proof, runtime user-data migration proof, or
   hosted rollback proof.
