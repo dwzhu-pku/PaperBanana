@@ -21,6 +21,14 @@ enum ReferenceExampleLoadState: Equatable {
         return false
     }
 
+    var missingImageCount: Int {
+        examples.filter { !$0.imageAvailable }.count
+    }
+
+    var missingImageExamples: [ReferenceExample] {
+        examples.filter { !$0.imageAvailable }
+    }
+
     var statusTitle: String {
         switch self {
         case .idle:
@@ -41,7 +49,11 @@ enum ReferenceExampleLoadState: Equatable {
         case .idle:
             "PaperBanana has not scanned the local benchmark yet."
         case .available:
-            "Manual diagram examples can enrich the next native generation prompt."
+            if missingImageCount == 0 {
+                "Manual diagram examples can enrich the next native generation prompt."
+            } else {
+                "\(missingImageCount) referenced image path\(missingImageCount == 1 ? " is" : "s are") missing locally."
+            }
         case .missing(let url):
             "Expected local benchmark data at \(url.path)."
         case .malformed(_, let reason):
@@ -81,7 +93,11 @@ final class ReferenceExampleStore: ObservableObject {
         }
 
         do {
-            let examples = try loadExamples(refURL: refURL, benchmarkRoot: benchmarkRoot)
+            let examples = try loadExamples(
+                refURL: refURL,
+                benchmarkRoot: benchmarkRoot,
+                fileManager: fileManager
+            )
             guard !examples.isEmpty else { return .empty(refURL) }
             return .available(examples)
         } catch {
@@ -89,7 +105,11 @@ final class ReferenceExampleStore: ObservableObject {
         }
     }
 
-    private static func loadExamples(refURL: URL, benchmarkRoot: URL) throws -> [ReferenceExample] {
+    private static func loadExamples(
+        refURL: URL,
+        benchmarkRoot: URL,
+        fileManager: FileManager
+    ) throws -> [ReferenceExample] {
         let data = try Data(contentsOf: refURL)
         guard let payload = try JSONSerialization.jsonObject(with: data) as? [[String: Any]] else {
             throw ReferenceExampleStoreError.expectedArray
@@ -103,13 +123,15 @@ final class ReferenceExampleStore: ObservableObject {
             }
 
             let contentText = normalizedString(from: item["content"] ?? "")
+            let imageURL = benchmarkRoot.appendingPathComponent(imagePath, isDirectory: false)
             return ReferenceExample(
                 id: id,
                 visualIntent: visualIntent,
                 contentText: contentText,
                 contentSummary: summary(contentText, limit: 360),
                 imageRelativePath: imagePath,
-                imageURL: benchmarkRoot.appendingPathComponent(imagePath, isDirectory: false)
+                imageURL: imageURL,
+                imageAvailable: fileManager.fileExists(atPath: imageURL.path)
             )
         }
         .sorted { lhs, rhs in

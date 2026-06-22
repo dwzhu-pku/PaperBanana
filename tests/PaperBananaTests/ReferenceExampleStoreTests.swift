@@ -26,6 +26,8 @@ final class ReferenceExampleStoreTests: XCTestCase {
             """,
             repoRoot: repoRoot
         )
+        try Self.writeBenchmarkImage("images/diagram_001.png", repoRoot: repoRoot)
+        try Self.writeBenchmarkImage("images/diagram_002.png", repoRoot: repoRoot)
 
         let state = ReferenceExampleStore.loadState(repoRootPath: repoRoot.path)
         guard case .available(let examples) = state else {
@@ -33,13 +35,60 @@ final class ReferenceExampleStoreTests: XCTestCase {
         }
 
         XCTAssertEqual(examples.map(\.id), ["diagram_001", "diagram_002"])
+        XCTAssertEqual(state.missingImageCount, 0)
         XCTAssertEqual(examples[0].visualIntent, "Show an encoder-decoder model.")
         XCTAssertEqual(examples[0].imageRelativePath, "images/diagram_001.png")
+        XCTAssertTrue(examples[0].imageAvailable)
         XCTAssertEqual(
             examples[0].imageURL.path,
             repoRoot.appendingPathComponent("data/PaperBananaBench/diagram/images/diagram_001.png").path
         )
         XCTAssertTrue(examples[1].contentSummary.contains(#""method":"Retrieve, plan, render, critique.""#))
+        XCTAssertTrue(examples[1].imageAvailable)
+    }
+
+    func testLoadDiagramReferenceExamplesSurfacesMissingImagesWithoutDisablingSelection() throws {
+        let repoRoot = try Self.makeRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        try Self.writeReferenceJSON(
+            """
+            [
+              {
+                "id": "diagram_present",
+                "visual_intent": "Show a complete local image reference.",
+                "content": "Use the available local thumbnail.",
+                "path_to_gt_image": "images/present.png"
+              },
+              {
+                "id": "diagram_missing",
+                "visual_intent": "Show a reference whose image path is absent.",
+                "content": "The metadata remains useful even when the local image is missing.",
+                "path_to_gt_image": "images/missing.png"
+              }
+            ]
+            """,
+            repoRoot: repoRoot
+        )
+        try Self.writeBenchmarkImage("images/present.png", repoRoot: repoRoot)
+
+        let state = ReferenceExampleStore.loadState(repoRootPath: repoRoot.path)
+        guard case .available(let examples) = state else {
+            return XCTFail("Expected available examples, got \(state)")
+        }
+
+        XCTAssertEqual(examples.map(\.id), ["diagram_missing", "diagram_present"])
+        XCTAssertEqual(state.missingImageCount, 1)
+        XCTAssertEqual(state.missingImageExamples.map(\.id), ["diagram_missing"])
+        XCTAssertEqual(state.statusDetail, "1 referenced image path is missing locally.")
+        XCTAssertFalse(try XCTUnwrap(examples.first { $0.id == "diagram_missing" }).imageAvailable)
+        XCTAssertTrue(try XCTUnwrap(examples.first { $0.id == "diagram_present" }).imageAvailable)
+
+        let selected = ReferenceExampleStore()
+        selected.load(repoRootPath: repoRoot.path)
+        XCTAssertEqual(
+            selected.selectedExamples(for: ["diagram_missing"]).map(\.id),
+            ["diagram_missing"]
+        )
     }
 
     func testMissingDatasetReportsDisabledState() throws {
@@ -141,6 +190,14 @@ final class ReferenceExampleStoreTests: XCTestCase {
         let directory = repoRoot.appendingPathComponent("data/PaperBananaBench/diagram", isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         try Data(json.utf8).write(to: directory.appendingPathComponent("ref.json"), options: .atomic)
+    }
+
+    private static func writeBenchmarkImage(_ relativePath: String, repoRoot: URL) throws {
+        let url = repoRoot
+            .appendingPathComponent("data/PaperBananaBench/diagram", isDirectory: true)
+            .appendingPathComponent(relativePath, isDirectory: false)
+        try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try Data([0x89, 0x50, 0x4E, 0x47]).write(to: url, options: .atomic)
     }
 
     private static func settings(repoPath: String) -> PaperBananaSettingsSnapshot {
