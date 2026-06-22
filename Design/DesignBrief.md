@@ -52,6 +52,9 @@ as the target design.
   fallback path, not as an ambiguous silent failure.
 - Backend validity must distinguish the optional legacy compatibility runtime
   from native generation/refinement readiness.
+- Artifact inspector content must remain visibly and scrollably clear of the
+  fixed action footer, and compact export buttons must expose descriptive
+  accessibility labels.
 
 ## Accessibility And Appearance
 

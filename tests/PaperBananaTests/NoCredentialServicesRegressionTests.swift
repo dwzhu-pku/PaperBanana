@@ -265,6 +265,10 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ArtifactLibraryView.swift"),
             encoding: .utf8
         )
+        let artifactInspector = try String(
+            contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ArtifactInspectorComponents.swift"),
+            encoding: .utf8
+        )
         let artifactCard = try String(
             contentsOf: repoRoot.appendingPathComponent("Sources/PaperBananaApp/ArtifactLibraryPreviewComponents.swift"),
             encoding: .utf8
@@ -301,6 +305,15 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
         )
         XCTAssertTrue(artifactCard.contains(#".accessibilityHint("Selects this artifact for preview and actions.")"#))
         XCTAssertTrue(artifactCard.contains(".accessibilityAddTraits(isSelected ? [.isSelected] : [])"))
+        XCTAssertTrue(
+            artifactInspector.contains(#".padding(.bottom, AppDesignSystem.Spacing.lg)"#),
+            "Artifact inspector scroll content should keep breathing room above the fixed action footer."
+        )
+        XCTAssertTrue(
+            artifactInspector.contains(#".accessibilityLabel("Export Image")"#) &&
+                artifactInspector.contains(#".accessibilityLabel("Export Bundle With Metadata")"#),
+            "Compact artifact export buttons should expose descriptive accessibility labels."
+        )
     }
 
     func testPromptStudioUsesNativeWorkbenchSectionsInsteadOfLegacyPanelStack() throws {

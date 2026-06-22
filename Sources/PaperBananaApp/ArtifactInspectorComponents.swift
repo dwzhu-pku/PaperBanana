@@ -18,6 +18,7 @@ struct ArtifactInspectorView: View {
                 ScrollView {
                     inspectorContent(for: artifact)
                         .padding(AppDesignSystem.Spacing.lg)
+                        .padding(.bottom, AppDesignSystem.Spacing.lg)
                 }
 
                 Divider()
@@ -281,6 +282,7 @@ private struct ArtifactInspectorActionBar: View {
                 Label("Image", systemImage: "square.and.arrow.down")
             }
             .disabled(artifact.kind != .image)
+            .accessibilityLabel("Export Image")
             .help("Export image")
 
             Button {
@@ -288,6 +290,7 @@ private struct ArtifactInspectorActionBar: View {
             } label: {
                 Label("Bundle", systemImage: "shippingbox")
             }
+            .accessibilityLabel("Export Bundle With Metadata")
             .help("Export with metadata")
 
             Button {
