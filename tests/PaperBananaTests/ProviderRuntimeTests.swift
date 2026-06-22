@@ -21,6 +21,75 @@ final class ProviderRuntimeTests: XCTestCase {
         XCTAssertTrue(client is CodexFallbackProviderClient)
     }
 
+    func testCodexFallbackHandoffEnvironmentOmitsProviderSecrets() {
+        let repoRoot = URL(fileURLWithPath: "/tmp/PaperBananaProviderRuntimeTests", isDirectory: true)
+        let request = ProviderClientRequest(
+            runID: "codex-env-test",
+            callID: "codex-env-call",
+            workflow: .generation,
+            prompt: "Create a test figure.",
+            sourceImageURL: nil,
+            model: .codexFallback,
+            effectiveModel: ImageModelChoice.codexFallback.backendValue,
+            resolution: "2K",
+            aspectRatio: "16:9",
+            task: "scientific diagram",
+            settings: Self.settings(repoRoot: repoRoot),
+            outputURL: repoRoot.appendingPathComponent("generated.png")
+        )
+
+        let environment = CodexFallbackProviderClient.handoffEnvironment(
+            baseEnvironment: [
+                "PATH": "/usr/bin:/bin",
+                "HOME": "/Users/tester",
+                "CODEX_HOME": "/tmp/codex-home",
+                "CODEX_CONFIG_DIR": "/tmp/codex-config",
+                "GOOGLE_API_KEY": "base-google-secret",
+                "OPENROUTER_API_KEY": "base-openrouter-secret",
+                "OPENAI_API_KEY": "base-openai-secret",
+                "AUTHORIZATION": "Bearer base-secret",
+                "PAPERBANANA_PROVIDER_TOKEN": "base-paperbanana-token"
+            ],
+            request: request,
+            codexModel: "gpt-5.5",
+            reasoningEffort: "xhigh",
+            extraEnvironment: [
+                "PAPERBANANA_FAKE_CODEX_IMAGE_BASE64": Self.tinyPNGBase64,
+                "GOOGLE_API_KEY": "extra-google-secret",
+                "OPENROUTER_API_KEY": "extra-openrouter-secret",
+                "CODEX_SESSION_TOKEN": "extra-codex-token"
+            ]
+        )
+
+        XCTAssertEqual(environment["PATH"], "/usr/bin:/bin")
+        XCTAssertEqual(environment["HOME"], "/Users/tester")
+        XCTAssertEqual(environment["CODEX_HOME"], "/tmp/codex-home")
+        XCTAssertEqual(environment["CODEX_CONFIG_DIR"], "/tmp/codex-config")
+        XCTAssertEqual(environment["PAPERBANANA_FAKE_CODEX_IMAGE_BASE64"], Self.tinyPNGBase64)
+        XCTAssertEqual(environment["PAPERBANANA_CODEX_MODEL"], "gpt-5.5")
+        XCTAssertEqual(environment["PAPERBANANA_CODEX_REASONING_EFFORT"], "xhigh")
+        XCTAssertEqual(environment["PAPERBANANA_CODEX_IMAGE_HANDOFF"], "1")
+        XCTAssertEqual(environment["PAPERBANANA_RUN_ID"], "codex-env-test")
+        XCTAssertEqual(environment["PAPERBANANA_PROVIDER_CALL_ID"], "codex-env-call")
+
+        XCTAssertNil(environment["GOOGLE_API_KEY"])
+        XCTAssertNil(environment["OPENROUTER_API_KEY"])
+        XCTAssertNil(environment["OPENAI_API_KEY"])
+        XCTAssertNil(environment["AUTHORIZATION"])
+        XCTAssertNil(environment["PAPERBANANA_PROVIDER_TOKEN"])
+        XCTAssertNil(environment["CODEX_SESSION_TOKEN"])
+        let serialized = environment
+            .sorted { $0.key < $1.key }
+            .map { "\($0.key)=\($0.value)" }
+            .joined(separator: "\n")
+        XCTAssertFalse(serialized.contains("base-google-secret"))
+        XCTAssertFalse(serialized.contains("base-openrouter-secret"))
+        XCTAssertFalse(serialized.contains("base-openai-secret"))
+        XCTAssertFalse(serialized.contains("extra-google-secret"))
+        XCTAssertFalse(serialized.contains("extra-openrouter-secret"))
+        XCTAssertFalse(serialized.contains("extra-codex-token"))
+    }
+
     func testProviderClientFactoryRoutesOpenRouterToNativeClient() {
         let settings = Self.settings(openRouterAPIKey: "test-openrouter-key")
         let plan = ImageProviderExecutionPlan(requestedModel: .nanoBananaPro, settings: settings)
@@ -547,13 +616,18 @@ final class ProviderRuntimeTests: XCTestCase {
         let providerRequestURL = outputURL
             .deletingLastPathComponent()
             .appendingPathComponent("provider_request.json")
+        let environmentSnapshotURL = repoRoot.appendingPathComponent("codex-environment.snapshot.txt")
         let settings = Self.settings(repoRoot: repoRoot)
         let client: any ProviderClient = CodexFallbackProviderClient(
             codexExecutableURL: codexExecutableURL,
             timeoutSeconds: 5,
             pollInterval: 0.05,
             extraEnvironment: [
-                "PAPERBANANA_FAKE_CODEX_IMAGE_BASE64": Self.tinyPNGBase64
+                "PAPERBANANA_FAKE_CODEX_IMAGE_BASE64": Self.tinyPNGBase64,
+                "PAPERBANANA_FAKE_CODEX_ENV_SNAPSHOT_PATH": environmentSnapshotURL.path,
+                "GOOGLE_API_KEY": "extra-google-secret",
+                "OPENROUTER_API_KEY": "extra-openrouter-secret",
+                "OPENAI_API_KEY": "extra-openai-secret"
             ]
         )
         let progressEvents = ProviderProgressEventCollector()
@@ -595,6 +669,17 @@ final class ProviderRuntimeTests: XCTestCase {
         XCTAssertEqual(providerRequestPayload["adapter"] as? String, "swift_codex")
         XCTAssertEqual(providerRequestPayload["output_path"] as? String, outputURL.path)
         XCTAssertEqual(providerRequestPayload["call_id"] as? String, "swift-codex-test-call")
+        let snapshotText = try String(contentsOf: environmentSnapshotURL, encoding: .utf8)
+        XCTAssertTrue(snapshotText.contains("PAPERBANANA_CODEX_MODEL=gpt-5.5"))
+        XCTAssertTrue(snapshotText.contains("PAPERBANANA_CODEX_REASONING_EFFORT=xhigh"))
+        XCTAssertTrue(snapshotText.contains("PAPERBANANA_CODEX_IMAGE_HANDOFF=1"))
+        XCTAssertTrue(snapshotText.contains("PAPERBANANA_RUN_ID=native_generate_provider_runtime_test"))
+        XCTAssertFalse(snapshotText.contains("GOOGLE_API_KEY"))
+        XCTAssertFalse(snapshotText.contains("OPENROUTER_API_KEY"))
+        XCTAssertFalse(snapshotText.contains("OPENAI_API_KEY"))
+        XCTAssertFalse(snapshotText.contains("extra-google-secret"))
+        XCTAssertFalse(snapshotText.contains("extra-openrouter-secret"))
+        XCTAssertFalse(snapshotText.contains("extra-openai-secret"))
         XCTAssertEqual(capturedEvents.first?.stage, "provider_request_saved")
         XCTAssertTrue(capturedEvents.map(\.stage).contains("prepared"))
         XCTAssertTrue(capturedEvents.map(\.stage).contains("started"))
@@ -742,6 +827,12 @@ final class ProviderRuntimeTests: XCTestCase {
         output = pathlib.Path(match.group(1).strip())
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_bytes(base64.b64decode(os.environ["PAPERBANANA_FAKE_CODEX_IMAGE_BASE64"]))
+        snapshot_path = os.environ.get("PAPERBANANA_FAKE_CODEX_ENV_SNAPSHOT_PATH", "")
+        if snapshot_path:
+            pathlib.Path(snapshot_path).write_text(
+                "\\n".join(f"{key}={value}" for key, value in sorted(os.environ.items())),
+                encoding="utf-8"
+            )
         print(f"fake codex wrote {output}")
         """
         try script.write(to: executableURL, atomically: true, encoding: .utf8)

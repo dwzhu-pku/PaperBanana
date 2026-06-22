@@ -86,15 +86,77 @@ struct CodexFallbackProviderClient: ProviderClient {
             process.arguments = [codexExecutableName] + handoff.commandArguments
         }
         process.currentDirectoryURL = repoRoot
-        var environment = ProcessInfo.processInfo.environment
-        environment["PAPERBANANA_CODEX_MODEL"] = codexModel(from: request.settings)
-        environment["PAPERBANANA_CODEX_REASONING_EFFORT"] = reasoningEffort(from: request.settings)
-        environment["PAPERBANANA_CODEX_IMAGE_HANDOFF"] = "1"
-        for (key, value) in extraEnvironment {
+        process.environment = Self.handoffEnvironment(
+            baseEnvironment: ProcessInfo.processInfo.environment,
+            request: request,
+            codexModel: codexModel(from: request.settings),
+            reasoningEffort: reasoningEffort(from: request.settings),
+            extraEnvironment: extraEnvironment
+        )
+        return process
+    }
+
+    static func handoffEnvironment(
+        baseEnvironment: [String: String],
+        request: ProviderClientRequest,
+        codexModel: String,
+        reasoningEffort: String,
+        extraEnvironment: [String: String]
+    ) -> [String: String] {
+        var environment: [String: String] = [:]
+        for key in inheritedEnvironmentKeys {
+            if let value = baseEnvironment[key], !isSecretLikeEnvironmentKey(key) {
+                environment[key] = value
+            }
+        }
+        for (key, value) in baseEnvironment where key.hasPrefix("CODEX_") && !isSecretLikeEnvironmentKey(key) {
             environment[key] = value
         }
-        process.environment = environment
-        return process
+        for (key, value) in extraEnvironment where !isSecretLikeEnvironmentKey(key) {
+            environment[key] = value
+        }
+        environment["PAPERBANANA_CODEX_MODEL"] = codexModel
+        environment["PAPERBANANA_CODEX_REASONING_EFFORT"] = reasoningEffort
+        environment["PAPERBANANA_CODEX_IMAGE_HANDOFF"] = "1"
+        environment["PAPERBANANA_RUN_ID"] = request.runID
+        environment["PAPERBANANA_PROVIDER_CALL_ID"] = request.callID
+        return environment
+    }
+
+    private static let inheritedEnvironmentKeys: Set<String> = [
+        "PATH",
+        "HOME",
+        "TMPDIR",
+        "TEMP",
+        "TMP",
+        "USER",
+        "LOGNAME",
+        "SHELL",
+        "LANG",
+        "LC_ALL",
+        "LC_CTYPE",
+        "TERM",
+        "__CF_USER_TEXT_ENCODING",
+        "XDG_CONFIG_HOME",
+        "XDG_CACHE_HOME",
+        "XDG_DATA_HOME",
+        "XDG_STATE_HOME",
+        "CODEX_HOME"
+    ]
+
+    private static func isSecretLikeEnvironmentKey(_ key: String) -> Bool {
+        let normalized = key.uppercased()
+        let markers = [
+            "API_KEY",
+            "AUTHORIZATION",
+            "BEARER",
+            "CREDENTIAL",
+            "PASSWORD",
+            "PRIVATE_KEY",
+            "SECRET",
+            "TOKEN"
+        ]
+        return markers.contains { normalized.contains($0) }
     }
 
     private func run(
