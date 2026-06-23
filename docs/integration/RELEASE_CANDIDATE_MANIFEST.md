@@ -27,7 +27,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest product-source change | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
 | Latest native artifact-secret test head | `59e40f7b7c33b5e449a44224edc1d8dfb1508a6c` |
 | Latest temporary rollback preflight head | `c976aca0ee70f26a8473f7024deb0b11ae2fe884` |
-| Latest current-head rollback preflight head | `6314142bab27c2591d57149ca18d5979d623ecc0` |
+| Latest current-head rollback preflight head | `65c4d0b427238372d1b8180014653c477cdd7706` |
 | Latest provider-free native validation head | `6314142bab27c2591d57149ca18d5979d623ecc0` |
 | Latest full-gate portability fix head | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
 | Latest WP-108 no-live contract head | `37b44c04dcbdb680a043553684e1d15b3a568f52` |
@@ -177,6 +177,20 @@ No generation request, provider call, credentials, browser automation, restart,
 deployment mutation, log access, or rollback was performed. This is current
 hosted-state evidence and an external blocker diagnosis, not hosted functional
 generation proof.
+`EV-20260623-086` records a no-live temporary distinct-bundle rollback preflight
+on current PR #75 head `65c4d0b42723`: the locally installed
+`/Applications/PaperBanana.app` was used only as a read-only prior-app artifact,
+the current Release candidate installed into
+`/tmp/paperbanana-wp109-rollback-65c4d0b/install`, prior/candidate/restored
+code-signing verification passed, the candidate binary SHA-256
+`42f3013fc276ecda199621576f33644553a46a21e7d8f581324433872ab5c374`
+differed from the prior, the restored binary SHA-256 returned exactly to
+`080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`, and
+synthetic Application Support plus `results/` fixture hashes were preserved.
+The harness did not touch `/Applications`, inspect real user secrets, launch the
+app, start the legacy backend, call live providers, or perform hosted rollback.
+It is current-head temporary rollback evidence, not final frozen-SHA release
+approval or public prior-release upgrade proof.
 `EV-20260622-065` remains historical
 Release install provenance for the earlier
 `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` branch head and binary SHA-256
@@ -472,7 +486,7 @@ channel approval, upgrade proof, or rollback proof.
 | WP-107 no-live hosted-readiness smoke | `EV-20260623-083` | Current branch head refreshed the localhost share=False hosted-readiness smoke: fake startup key sentinels were absent, no key-entry UI returned, two clients called a non-provider endpoint, no live provider was used, and cleanup closed the port; not a Hugging Face Space deployment proof |
 | WP-107 live HF hosted-state check | `EV-20260623-085` | Public HF artifact pages and Space metadata are reachable, but the Space runtime is paused and the app subdomain plus `/config` return HTTP 503; hosted functional generation, logs, rollback, and two-session proof remain blocked by external hosted state |
 | Native artifact secret-sentinel scan | `EV-20260622-044`, `EV-20260622-068`, `EV-20260623-078` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; current-head provider-free secret-sentinel checks passed again in the 71-test `EV-20260623-078` slice; live-provider and hosted scans remain open |
-| Temporary distinct-bundle rollback preflight | `EV-20260622-045`, `EV-20260622-058`, `EV-20260622-067`, `EV-20260623-078` | The latest run used a prior app from `1fa6cbe90e6f` and the current evidence head `6314142bab27`; it upgraded in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
+| Temporary distinct-bundle rollback preflight | `EV-20260622-045`, `EV-20260622-058`, `EV-20260622-067`, `EV-20260623-078`, `EV-20260623-086` | The latest run used the locally installed `/Applications/PaperBanana.app` as a read-only prior-app artifact and current PR #75 head `65c4d0b42723`; it upgraded in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
 | Runtime user-data migration slice | `EV-20260622-048`, `EV-20260622-058`, `EV-20260622-067`, `EV-20260623-078` | Isolated Application Support override, fake sentinel secret-store permissions, legacy run-store schema migration, stale-run recovery, Run Details / Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte preservation passed without live providers; the selected runtime migration/secret-store/RunStore migration slice was rerun on current evidence head `6314142bab27`, providing bounded runtime user-data migration proof for synthetic fixtures only |
 | Fake-Codex fallback store handoff | `EV-20260622-049` | Native generation and refinement stores now execute the real Swift Codex fallback adapter with a deterministic fake executable and persist `swift_codex`/`provider_spend=none` provenance without live provider keys |
 | Current-head provider-free native validation | `EV-20260622-068`, `EV-20260623-078` | Docs/CI contracts, full ReferenceExampleStore coverage, selected no-live generation/recovery store coverage, source-level AX landmarks, dry-run artifacts, secret-sentinel checks, cancellation/timeout/stale-run recovery, recovered-audit metadata, and the later 71 selected Swift tests for generation/refinement stores, provider ledger, secret store, runtime migration, and RunStore migration/recovery cases passed without live providers |
@@ -589,8 +603,10 @@ state is verified.
   `EV-20260622-058`, and refreshed for `ad07fcc594dc` in `EV-20260622-067`, and
   isolated runtime user-data migration is covered by `EV-20260622-048` and
   rerun on the current candidate in `EV-20260622-058`, `EV-20260622-067`, and
-  `EV-20260623-078`; the latest refresh used current evidence head
-  `6314142bab27`, restored the prior binary hash exactly, and preserved
+  `EV-20260623-078`; `EV-20260623-086` refreshes the temporary rollback
+  preflight on current PR #75 head `65c4d0b42723`, restored the prior binary
+  hash exactly, and preserves synthetic Application Support/results fixture
+  hashes. The latest run restored the prior binary hash exactly and preserved
   synthetic Application Support/results fixture hashes. These are not frozen
   release approval, public prior-release upgrade proof, full runtime user-data
   migration proof, or hosted rollback proof.
