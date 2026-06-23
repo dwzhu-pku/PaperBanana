@@ -1,0 +1,1 @@
+ec40c323c34d63198a4908ac82c3ccedab58b29aba7738f10c449b63181e65b2  /Users/jeff/Codex_projects/PaperBanana-native-integrated/docs/integration/evidence/screenshots/20260623-reference-dataset-edge-states/reference-dataset-malformed-light-detail-textsize.png

@@ -1,0 +1,9 @@
+state=missing
+mode=dark
+fixture_root=/tmp/paperbanana-wp007-reference-dataset-edge-states/fixture-missing
+support_root=/tmp/paperbanana-wp007-reference-dataset-edge-states/support-missing-dark
+dark_mode=true
+repo_path=/tmp/paperbanana-wp007-reference-dataset-edge-states/fixture-missing
+default_image_model=__codex_gpt55_xhigh__
+text_size=    "local.paperbanana.gui" = L;
+pid=24706

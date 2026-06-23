@@ -1,0 +1,6 @@
+timestamp=2026-06-23 09:49:59 EDT
+dark_mode=true
+repo_path=/Users/jeff/Codex_projects/PaperBanana-native-integrated
+default_image_model=gemini-3.1-flash-image-preview
+text_size=<absent>
+paperbanana_processes=<none>

@@ -1,0 +1,7 @@
+timestamp=2026-06-23 09:45:42 EDT
+dark_mode=true
+repo_path=/Users/jeff/Codex_projects/PaperBanana-native-integrated
+default_image_model=gemini-3.1-flash-image-preview
+text_size=<absent>
+installed_binary_sha256=080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5
+fixture_base=/tmp/paperbanana-wp007-reference-dataset-edge-states

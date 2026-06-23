@@ -1,0 +1,9 @@
+state=malformed
+mode=light
+fixture_root=/tmp/paperbanana-wp007-reference-dataset-edge-states/fixture-malformed
+support_root=/tmp/paperbanana-wp007-reference-dataset-edge-states/support-malformed-light
+dark_mode=false
+repo_path=/tmp/paperbanana-wp007-reference-dataset-edge-states/fixture-malformed
+default_image_model=__codex_gpt55_xhigh__
+text_size=    "local.paperbanana.gui" = L;
+pid=24837

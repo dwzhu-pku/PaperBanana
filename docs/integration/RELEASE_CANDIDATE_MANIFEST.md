@@ -35,6 +35,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-007 Main Window Light text-size screenshot head | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
 | Latest WP-007 Main Window Dark text-size screenshot head | `af97d6bb631862f80999adef796d4faff4b465b5` |
 | Latest WP-007 Prompt Studio preflight sheet text-size screenshot head | `8b0cf6d8d89ed0ecfcf2686ffd1fa57e2967529c` |
+| Latest WP-007 Reference dataset edge-state screenshot head | `e5f4636c0a225f240b8e71eaa90421000f8d0b5a` |
 | Latest WP-108 no-live artifact runner head | `dc8d8e5f5149eb8099a9ecb45628a74dcd610599` |
 | Latest WP-108 human-review packet head | `86f9bb16fa524cc638a39d5c6c7e6d64a5b279c4` |
 | Latest WP-108 quality decision head | `b6a8a2a51d7ffd7ec8f348ecf892467d7cf7abcd` |
@@ -179,6 +180,35 @@ run folder, run-store row, provider-call row, or provider-audit artifact was
 created for either preflight run ID. The temporary app-scoped Text Size,
 appearance, repo-path, default-image-model, and temporary Application Support
 overrides were restored. The no-run artifact check was recorded as `no run folder, run-store row, provider-call row, or provider-audit artifact`. This is a bounded sheet visual/accessibility slice, not full manual VoiceOver traversal or remaining sheet/error/recovery/loading state signoff.
+`EV-20260623-075` records a later screenshot-only Prompt Studio Reference
+Examples dataset edge-state slice captured from the installed EV-072 app
+artifact while the worktree was at `e5f4636c0a2`: missing PaperBananaBench data,
+malformed `ref.json`, and empty `ref.json` were captured in Light/Dark Mode
+with app-scoped Increased Text Size. The primary scrolled-detail screenshots
+live under
+`docs/integration/evidence/screenshots/20260623-reference-dataset-edge-states/`;
+`reference-dataset-missing-light-detail-textsize.png` has SHA-256
+`d15142cdf6fa65ea4b9be6ed7f35c6baecb8eaac9da3e683a359ccbe2ac71249`,
+`reference-dataset-missing-dark-detail-textsize.png` has SHA-256
+`8fc49819f276e1ca7f643765f47989e914d9bf9baf09d4c23bf8f876aed51fb0`,
+`reference-dataset-malformed-light-detail-textsize.png` has SHA-256
+`ec40c323c34d63198a4908ac82c3ccedab58b29aba7738f10c449b63181e65b2`,
+`reference-dataset-malformed-dark-detail-textsize.png` has SHA-256
+`82576eccceaee7194385aebf2408013e36e20a50a3b8a061e608abc253e79e1a`,
+`reference-dataset-empty-light-detail-textsize.png` has SHA-256
+`7cd339e1b8a1ad5beeb36a1047d9e7b1deb51a8c9aeed93909f0c4ac04d127b6`,
+and `reference-dataset-empty-dark-detail-textsize.png` has SHA-256
+`edc1f85c3166b30c68aff1b4afa0db62d6767573c17f533cff3ee8768ddf6d21`.
+Each primary screenshot is `2952 x 1944`. AX sidecars confirmed
+`reference-examples-panel` exposure and state text for `Download
+PaperBananaBench`, `Reference File Needs Review`, and
+`No Diagram Examples Found`; no live providers were used, no generation was
+started, only run-store SQLite files were initialized, and
+no native generation directory or provider-audit artifact was created. The temporary app-scoped Text Size,
+appearance, repo-path, default-image-model, and temporary Application Support
+overrides were restored. This is a bounded Reference Examples error/empty-state
+visual/AX slice, not full manual VoiceOver traversal or recovery/loading-state
+signoff.
 `EV-20260622-061` records the no-live WP-107 hosted-readiness smoke harness
 added on `2312eae6cc7b`: a sanitized localhost `share=False` Gradio copy
 launched with hosted safety flags, fake startup credential sentinels were absent
@@ -293,8 +323,8 @@ channel approval, upgrade proof, or rollback proof.
 | Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070`, `EV-20260623-072` | Latest product-source Release build/install and installed-app artifact provenance passed with binary SHA-256 `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`; this does not replace full-gate evidence or rollback proof |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070` | Passed with limitation; latest recorded remote quick checks are for `213fc941`, while `EV-20260623-069` records the latest local full gate and the self-hosted workflow dispatch limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
-| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068` | Partial; includes current-head source-level accessibility/keyboard contracts and source-level Settings accessibility/adaptive regression coverage, but not full manual VoiceOver traversal |
-| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072`, `EV-20260623-073`, `EV-20260623-074` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is recorded for Settings, Light/Dark Mode Increased Text Size at the minimum main-window size is recorded for Prompt Studio, Artifact Library, Run Details, and Run Ledger after sidebar selection polish, and the Prompt Studio no-spend preflight sheet Light/Dark Increased Text Size slice is recorded; broader screenshot-based full-app adaptive signoff remains open |
+| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075` | Partial; includes current-head source-level accessibility/keyboard contracts, source-level Settings accessibility/adaptive regression coverage, and Reference Examples missing/malformed/empty state AX text, but not full manual VoiceOver traversal |
+| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072`, `EV-20260623-073`, `EV-20260623-074`, `EV-20260623-075` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is recorded for Settings, Light/Dark Mode Increased Text Size at the minimum main-window size is recorded for Prompt Studio, Artifact Library, Run Details, and Run Ledger after sidebar selection polish, the Prompt Studio no-spend preflight sheet Light/Dark Increased Text Size slice is recorded, and Reference Examples missing/malformed/empty Light/Dark Increased Text Size edge states are recorded; broader screenshot-based full-app adaptive signoff remains open |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
 | WP-108 no-live artifact-completeness runner | `EV-20260622-051`, `EV-20260622-059` | Synthetic native output/request/metadata/provider-request/provider-response/provider-audit/run-store artifacts produce a fixture-mode report, and a no-live generator now maps explicit native run-store rows to the checker; no image scoring or quality claim |
@@ -367,7 +397,11 @@ state is verified.
   `EV-20260623-072`, including the sidebar selection polish, and the matching
   Dark Mode main-window Increased Text Size slice is covered by
   `EV-20260623-073`. Prompt Studio no-spend preflight sheet Light/Dark Mode with
-  app-scoped Increased Text Size is covered by `EV-20260623-074`. Full-app Increased Text Size for remaining states, hover/focus, inactive-window, remaining sheet/error/recovery/loading states, and full-app adaptive visual review remain open.
+  app-scoped Increased Text Size is covered by `EV-20260623-074`, and Reference
+  Examples missing/malformed/empty Light/Dark Mode with app-scoped Increased
+  Text Size is covered by `EV-20260623-075`. Full-app Increased Text Size for
+  hover/focus, inactive-window outside Settings, recovery/loading states, other
+  sheets, and any states not explicitly captured remains open.
 - Approved live provider/fallback native E2E with non-private fixtures, spend
   limit, redacted request/metadata/provider-artifact review, and
   failure/recovery proof. `EV-20260622-044` covers dry-run artifact
