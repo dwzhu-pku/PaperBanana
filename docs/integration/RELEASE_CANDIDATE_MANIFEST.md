@@ -15,8 +15,9 @@ been validated and leaves every unvalidated release claim open.
 |---|---|
 | Latest full local native/Python/Xcode gate | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
 | Previous sanitized full local native/Python/Xcode gate | `da8329597d196608a40bcf6be823c9ef684a9e16` |
-| Latest recorded remote-check evidence head | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
-| Previous recorded remote-check evidence head | `de4c8170952ad8f0efa2aa8e901f248f3c878605` |
+| Latest recorded remote-check evidence head | `772ac7df7b24cdca56173560299663cfe6f321a7` |
+| Previous recorded remote-check evidence head | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
+| Earlier recorded remote-check evidence head | `de4c8170952ad8f0efa2aa8e901f248f3c878605` |
 | Latest current-head Release install evidence | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
 | Branch | `integration/native-first-rc-native` |
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
@@ -118,6 +119,11 @@ Release build/install and quick remote-check evidence, not a live provider,
 hosted, quality, manual AX, rollback/upgrade, notarization, distribution, final
 release, or upstream-acceptance proof. It remains historical current-head Release build/install evidence for that pushed branch head, while
 `EV-20260623-072` is the later local product-source install/screenshot slice.
+`EV-20260623-080` records the latest pushed-branch remote check evidence on
+`772ac7df7b24`: the branch head passed remote `Native Structural Checks` run
+`28035948312` and remote `Python Tests` run `28035945891`. This updates remote
+provenance after the installed-app keyboard/AX fallback evidence slice and does
+not replace the latest full local Xcode 27 gate.
 `EV-20260622-065` remains historical
 Release install provenance for the earlier
 `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` branch head and binary SHA-256
