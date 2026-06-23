@@ -13,8 +13,9 @@ been validated and leaves every unvalidated release claim open.
 
 | Item | Value |
 |---|---|
-| Latest full local native/Python/Xcode gate | `a251dda11fa29aa4ed430d25fa6dbc8cdd8834bb` |
-| Previous full local native/Python/Xcode gate | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
+| Latest full local native/Python/Xcode gate | `19456ee01cf51828c36b92558042300e7394b2d9` |
+| Previous full local native/Python/Xcode gate | `a251dda11fa29aa4ed430d25fa6dbc8cdd8834bb` |
+| Earlier full local native/Python/Xcode gate | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
 | Previous sanitized full local native/Python/Xcode gate | `da8329597d196608a40bcf6be823c9ef684a9e16` |
 | Latest recorded remote-check evidence head | `3beb7f0355f0fb0680f962df96d0240380b11c47` |
 | Previous recorded remote-check evidence head | `533857f046462ae71e843b7332f70f580916c015` |
@@ -60,6 +61,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-108 quality decision head | `b6a8a2a51d7ffd7ec8f348ecf892467d7cf7abcd` |
 | Latest WP-108 offline evidence-chain head | `64ac83f9de9112804857a53aa595ae2c6b8b4d8c` |
 | Latest WP-108 checked-in example contract head | `9127c20bb5c8dd50f5c2028ab12ccac50d3c65e5` |
+| Latest WP-108 release-candidate template source head | `19456ee01cf51828c36b92558042300e7394b2d9` |
 | Latest WP-107 no-live hosted-readiness smoke head | `4f5d7edfe1e7d937ae8cce3017c649f481883f91` |
 | Latest WP-107 live HF Space state check head | `0edd97b7da2b25c439690ddb124ae8d11d0eafea` |
 | Latest WP-208 Foundation Models disposition head | `69e9159ca9078952fc24609ded25995e73fe7c1a` |
@@ -291,6 +293,18 @@ omitted `PAPERBANANA_REAL_CODEX_E2E=1`, wrote
 reported `result=Skipped`, `totalTestCount=1`, `skippedTests=1`, and
 `failedTests=0`. This is current-head compile/skip readiness only; it still
 does not run `codex exec`, spend quota, or prove real Codex CLI image generation.
+`EV-20260623-098` records a no-live WP-108 release-candidate template/full-gate
+slice on `19456ee01cf51828c36b92558042300e7394b2d9`: an eight-case
+diagram/plot template and matching fixture report now validate without provider
+calls or quality claims, the WP-007 manual VoiceOver packet's inline TSV example
+matches the canonical `route_id`-first shape, and the full local
+`script/test_all.sh` gate passed with explicit current-Xcode override evidence:
+native source/project contracts, host audit `overall=true`, Xcode 27 baseline
+guard, 167 Swift tests, 149 Python tests with 8 known provider-audit warnings,
+and `codex-xcode27 proof status=passed halted=False`. This is no-live template
+and current-beta override gate evidence, not final-candidate scoring,
+live-provider/Codex E2E, hosted validation, completed manual VoiceOver
+traversal, final release approval, frozen-SHA rollback, or upstream acceptance.
 `EV-20260623-091` records a WP-007 manual VoiceOver artifact contract and
 template bundle added from source head `9a64b88566501bc2bfa07b5fd1f49aa9feeedcaf`.
 It defines the required completed packet files, exact TSV columns, `VO-01`
@@ -590,8 +604,8 @@ channel approval, upgrade proof, or rollback proof.
 
 | Area | Evidence | Status |
 |---|---|---|
-| Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-057`, `EV-20260622-064`, `EV-20260623-069` | Passed with limitation |
-| Local aggregate native gate | `EV-20260623-069` | Latest full local gate passed through the documented `script/test_all.sh` command after the isolated Python 3.12 fallback fix: 167 Swift tests, 126 Python tests, and `codex-xcode27 proof` passed |
+| Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-057`, `EV-20260622-064`, `EV-20260623-069`, `EV-20260623-098` | Passed with limitation |
+| Local aggregate native gate | `EV-20260623-098` | Latest full local gate passed through the documented `script/test_all.sh` command with explicit `PAPERBANANA_EXPECTED_XCODE_BUILD='Build version 27A5209h'`: 167 Swift tests, 149 Python tests, and `codex-xcode27 proof` passed; this is current-beta override evidence, not strict `27A5194q` release-baseline acceptance |
 | Current-Xcode override aggregate gate | `EV-20260623-096` | Passed with limitation; current head `3beb7f0355f0` passed `script/test_all.sh` with explicit `PAPERBANANA_EXPECTED_XCODE_BUILD='Build version 27A5209h'` after local global helper override support; this is current-beta override evidence, not strict `27A5194q` release-baseline acceptance |
 | Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070`, `EV-20260623-072` | Latest product-source Release build/install and installed-app artifact provenance passed with binary SHA-256 `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`; this does not replace full-gate evidence or rollback proof |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070`, `EV-20260623-082`, `EV-20260623-093`, `EV-20260623-094`, `EV-20260623-095`, `EV-20260623-096` | Passed with limitation; latest recorded fork quick checks are for `3beb7f0355f0` with Native Structural Checks run `28061500458` and Python Tests run `28061500468`; the upstream PR check rollup remained empty, `EV-20260623-094` records the current host Xcode beta drift (`27A5209h` installed versus `27A5194q` pinned), `EV-20260623-095` records repo-level current-Xcode compatibility with 167 Swift tests and 147 Python tests while the aggregate gate is blocked at the global proof-tool layer, `EV-20260623-096` records current-Xcode override aggregate-gate success after default-preserving global helper override support, `EV-20260623-069` records the self-hosted workflow dispatch limitation, and `EV-20260623-081` remains the latest strict-baseline full local native/Python/Xcode gate |
@@ -605,6 +619,7 @@ channel approval, upgrade proof, or rollback proof.
 | WP-108 quality decision utility | `EV-20260622-062` | Completed human-review reports can now be reduced to an auditable go/no-go decision with manifest thresholds, dimension thresholds, adjudicated score-source policy, and critical-failure blockers; the recorded proof uses synthetic scores and makes no publication-quality claim |
 | WP-108 offline evidence chain | `EV-20260622-063` | Synthetic native artifacts now flow through run-map generation, artifact-completeness reporting, packet binding, completed synthetic human-review validation, and quality decision validation while preserving claim boundaries and excluding provider payload sentinel text; no real reviewer scores or quality claim |
 | WP-108 checked-in example bundle | `EV-20260623-084` | Checked-in fixture, packet, completed human-review report, and decision examples are mutually validator-clean without provider calls, and the release manifest now has an evidence-drift guard for product/runtime changes after the latest full local gate; no real reviewer scores or quality claim |
+| WP-108 release-candidate template | `EV-20260623-098` | Eight no-live release-candidate template cases now cover diagram/plot, reference/no-reference, zero-critic, planner-metaphor, structured plot, and manual plot-example disabled-boundary slices; the matching fixture report remains unscored and makes no publication-quality claim |
 | WP-107 no-live hosted-readiness smoke | `EV-20260623-083` | Current branch head refreshed the localhost share=False hosted-readiness smoke: fake startup key sentinels were absent, no key-entry UI returned, two clients called a non-provider endpoint, no live provider was used, and cleanup closed the port; not a Hugging Face Space deployment proof |
 | WP-107 live HF hosted-state check | `EV-20260623-085` | Public HF artifact pages and Space metadata are reachable, but the Space runtime is paused and the app subdomain plus `/config` return HTTP 503; hosted functional generation, logs, rollback, and two-session proof remain blocked by external hosted state |
 | Native artifact secret-sentinel scan | `EV-20260622-044`, `EV-20260622-068`, `EV-20260623-078` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; current-head provider-free secret-sentinel checks passed again in the 71-test `EV-20260623-078` slice; live-provider and hosted scans remain open |
@@ -784,7 +799,9 @@ state is verified.
   binding, completed synthetic human-review validation, and quality decision
   validation. `EV-20260623-084` keeps the checked-in WP-108 fixture, packet,
   completed human-review report, and decision examples mutually
-  validator-clean and adds a release evidence-drift guard. Actual
+  validator-clean and adds a release evidence-drift guard. `EV-20260623-098`
+  adds an eight-case release-candidate template and fixture report, then
+  refreshes the full local native/Python/Xcode gate on its source head. Actual
   final-candidate outputs, completed real reviewer/provider
   scoring, repeated subset, stakeholder approval, and publication-quality
   evidence remain open.
