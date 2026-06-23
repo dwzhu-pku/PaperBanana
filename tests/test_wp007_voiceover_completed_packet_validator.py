@@ -27,6 +27,42 @@ VALIDATOR = _load_validator()
 EXPECTED_ROUTE_IDS = [f"VO-{index:02d}" for index in range(1, 17)]
 
 
+def _route_expected(route_id: str) -> str:
+    if route_id == "VO-04":
+        return (
+            "Reference rows include search filter behavior, selected and unselected states, "
+            "missing image warnings, the 10/10 selection cap, and selection limit disabled state"
+        )
+    if route_id == "VO-05":
+        return (
+            "Reference setup states include missing dataset, malformed ref.json, empty ref.json, "
+            "and plot manual disabled behavior"
+        )
+    return "Expected semantic label and current state"
+
+
+def _route_voiceover_output(route_id: str) -> str:
+    if route_id == "VO-04":
+        return (
+            "Reference examples search filter result, selected row, unselected row, "
+            "missing image, 10/10 cap, selection limit disabled"
+        )
+    if route_id == "VO-05":
+        return (
+            "Reference examples missing dataset, malformed ref.json, empty ref.json, "
+            "plot manual disabled"
+        )
+    return f"Observed VoiceOver output for {route_id}"
+
+
+def _route_notes(route_id: str) -> str:
+    if route_id == "VO-04":
+        return "search filter selected unselected missing image 10/10 selection limit disabled"
+    if route_id == "VO-05":
+        return "missing dataset malformed ref.json empty plot manual disabled"
+    return "none"
+
+
 def _write_valid_packet(packet_dir: Path, *, status: str = "pass") -> None:
     packet_dir.mkdir()
     packet_dir.joinpath("voiceover-speech-output.tsv").write_text(
@@ -40,10 +76,10 @@ def _write_valid_packet(packet_dir: Path, *, status: str = "pass") -> None:
                             f"Surface {route_id}",
                             f"{route_id}.1",
                             f"Control {route_id}",
-                            "Expected semantic label and current state",
-                            f"Observed VoiceOver output for {route_id}",
+                            _route_expected(route_id),
+                            _route_voiceover_output(route_id),
                             status,
-                            "none",
+                            _route_notes(route_id),
                         ]
                     )
                     for route_id in EXPECTED_ROUTE_IDS
@@ -68,9 +104,9 @@ def _write_valid_packet(packet_dir: Path, *, status: str = "pass") -> None:
                             "Expected end focus",
                             f"Actual end focus for {route_id}",
                             "visible focus ring present",
-                            "VoiceOver focus followed visible focus",
+                            f"VoiceOver focus followed visible focus; {_route_notes(route_id)}",
                             status,
-                            "none",
+                            _route_notes(route_id),
                         ]
                     )
                     for route_id in EXPECTED_ROUTE_IDS
@@ -211,6 +247,110 @@ def test_completed_packet_validator_rejects_placeholders(tmp_path):
     result = VALIDATOR.validate_packet(packet_dir)
 
     assert any("placeholder actual_spoken_output for VO-01" in error for error in result.errors)
+
+
+def test_completed_packet_validator_rejects_unsafe_environment_values(tmp_path):
+    packet_dir = tmp_path / "unsafe-environment"
+    _write_valid_packet(packet_dir)
+    environment = packet_dir / "environment.md"
+    text = environment.read_text(encoding="utf-8")
+    environment.write_text(
+        text.replace("VoiceOver state: on, reviewer heard speech output", "VoiceOver state: off")
+        .replace("Provider credentials enabled: no", "Provider credentials enabled: yes"),
+        encoding="utf-8",
+    )
+
+    result = VALIDATOR.validate_packet(packet_dir)
+
+    assert any("VoiceOver state" in error and "unsafe value" in error for error in result.errors)
+    assert any("Provider credentials enabled" in error and "unsafe value" in error for error in result.errors)
+
+
+def test_completed_packet_validator_rejects_live_cleanup_contradictions(tmp_path):
+    packet_dir = tmp_path / "live-cleanup"
+    _write_valid_packet(packet_dir)
+    cleanup = packet_dir / "cleanup.md"
+    text = cleanup.read_text(encoding="utf-8")
+    cleanup.write_text(
+        text.replace("No live provider generation was started: confirmed", "No live provider generation was started: no")
+        .replace("No `codex exec` run was started: confirmed", "No `codex exec` run was started: no"),
+        encoding="utf-8",
+    )
+
+    result = VALIDATOR.validate_packet(packet_dir)
+
+    assert any("No live provider generation was started" in error for error in result.errors)
+    assert any("No `codex exec` run was started" in error for error in result.errors)
+
+
+def test_completed_packet_validator_rejects_pass_with_limitation_without_acceptance(tmp_path):
+    packet_dir = tmp_path / "limitation-without-acceptance"
+    _write_valid_packet(packet_dir)
+    for file_name in ["voiceover-speech-output.tsv", "keyboard-traversal.tsv"]:
+        path = packet_dir / file_name
+        path.write_text(
+            path.read_text(encoding="utf-8").replace("\tpass\t", "\tpass_with_limitation\t", 1),
+            encoding="utf-8",
+        )
+    defects = packet_dir / "defects.md"
+    defects.write_text(
+        defects.read_text(encoding="utf-8").replace("| VO-01 | pass | none | no |", "| VO-01 | pass_with_limitation | none | yes |"),
+        encoding="utf-8",
+    )
+
+    result = VALIDATOR.validate_packet(packet_dir)
+
+    assert "VO-01" in result.open_routes
+    assert any("requires a defect or limitation id" in error for error in result.errors)
+    assert any("cannot use empty acceptance text" in error for error in result.errors)
+
+
+def test_completed_packet_validator_rejects_route_disposition_mismatch(tmp_path):
+    packet_dir = tmp_path / "disposition-mismatch"
+    _write_valid_packet(packet_dir)
+    defects = packet_dir / "defects.md"
+    defects.write_text(
+        defects.read_text(encoding="utf-8").replace("| VO-02 | pass | none | no |", "| VO-02 | not_run | none | no |"),
+        encoding="utf-8",
+    )
+
+    result = VALIDATOR.validate_packet(packet_dir)
+
+    assert any("status for VO-02 is 'not_run'" in error for error in result.errors)
+
+
+def test_completed_packet_validator_rejects_missing_reference_route_coverage(tmp_path):
+    packet_dir = tmp_path / "missing-reference-coverage"
+    _write_valid_packet(packet_dir)
+    voiceover = packet_dir / "voiceover-speech-output.tsv"
+    voiceover.write_text(
+        voiceover.read_text(encoding="utf-8").replace("missing image", "omitted-state"),
+        encoding="utf-8",
+    )
+    keyboard = packet_dir / "keyboard-traversal.tsv"
+    keyboard.write_text(
+        keyboard.read_text(encoding="utf-8").replace("missing image", "omitted-state"),
+        encoding="utf-8",
+    )
+
+    result = VALIDATOR.validate_packet(packet_dir)
+
+    assert any("route VO-04" in error and "missing image" in error for error in result.errors)
+
+
+def test_completed_packet_validator_scans_nested_text_sidecars_for_secrets(tmp_path):
+    packet_dir = tmp_path / "nested-secret"
+    _write_valid_packet(packet_dir)
+    nested = packet_dir / "notes"
+    nested.mkdir()
+    nested.joinpath("review.md").write_text(
+        "Do not archive this token: Bearer abcdefghijklmnop",
+        encoding="utf-8",
+    )
+
+    result = VALIDATOR.validate_packet(packet_dir)
+
+    assert any("notes/review.md" in error for error in result.errors)
 
 
 def test_completed_packet_validator_cli_preserves_completion_boundary(tmp_path, capsys):

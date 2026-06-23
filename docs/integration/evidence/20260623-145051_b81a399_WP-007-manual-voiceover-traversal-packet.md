@@ -15,8 +15,9 @@ It is a reviewer execution packet, not completed traversal evidence. No app wind
 |---|---|
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
 | Branch | `integration/native-first-rc-native` |
-| Packet source commit | `b81a39909f4af9d9192b098c45357ac3667c9e34` |
-| Commit summary | `b81a399 Record real Codex opt-in harness evidence` |
+| Source head before packet edit | `b81a39909f4af9d9192b098c45357ac3667c9e34` |
+| Prior commit summary | `b81a399 Record real Codex opt-in harness evidence` |
+| Evidence packet commit | `9a64b88566501bc2bfa07b5fd1f49aa9feeedcaf` |
 | Packet status | Prepared; manual traversal not executed |
 
 Two read-only review lanes mapped the current evidence before this packet was

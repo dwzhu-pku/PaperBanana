@@ -16,9 +16,10 @@ been validated and leaves every unvalidated release claim open.
 | Latest full local native/Python/Xcode gate | `a251dda11fa29aa4ed430d25fa6dbc8cdd8834bb` |
 | Previous full local native/Python/Xcode gate | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
 | Previous sanitized full local native/Python/Xcode gate | `da8329597d196608a40bcf6be823c9ef684a9e16` |
-| Latest recorded remote-check evidence head | `0f500900f3b51050743aa86493a8274cee1663f8` |
-| Previous recorded remote-check evidence head | `772ac7df7b24cdca56173560299663cfe6f321a7` |
-| Earlier recorded remote-check evidence head | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
+| Latest recorded remote-check evidence head | `0888cbe4b3b8d2d14c782634af1ed2df1c087067` |
+| Previous recorded remote-check evidence head | `0f500900f3b51050743aa86493a8274cee1663f8` |
+| Earlier recorded remote-check evidence head | `772ac7df7b24cdca56173560299663cfe6f321a7` |
+| Older recorded remote-check evidence head | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
 | Oldest recorded remote-check evidence head | `de4c8170952ad8f0efa2aa8e901f248f3c878605` |
 | Latest current-head Release install evidence | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
 | Branch | `integration/native-first-rc-native` |
@@ -44,9 +45,11 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-007 Recovery ledger text-size screenshot head | `6d715e162dc290bb24576f73b9e9695911267f8f` |
 | Latest WP-007 Prompt Studio keyboard/preflight AX head | `74e28eb68020df7bad84076aae29f39a158334b5` |
 | Latest WP-007 installed-app keyboard/AX fallback head | `55e54e68b1d3d1f7d99d96d8e4d2d86f2b71e4c7` |
-| Latest WP-007 manual VoiceOver traversal packet head | `b81a39909f4af9d9192b098c45357ac3667c9e34` |
-| Latest WP-007 manual VoiceOver artifact contract head | `2e1ab557ba5a876f57b1dcd364931aa9eb4b540f` |
-| Latest WP-007 completed-packet validator head | `2e1ab557ba5a876f57b1dcd364931aa9eb4b540f` |
+| Latest WP-007 manual VoiceOver traversal packet source head before edit | `b81a39909f4af9d9192b098c45357ac3667c9e34` |
+| Latest WP-007 manual VoiceOver traversal packet evidence commit | `9a64b88566501bc2bfa07b5fd1f49aa9feeedcaf` |
+| Latest WP-007 manual VoiceOver artifact contract evidence commit | `dac44760c0ecec03e588b8984362f1e29a68520e` |
+| Latest WP-007 completed-packet validator evidence commit | `2e1ab557ba5a876f57b1dcd364931aa9eb4b540f` |
+| Latest WP-007 completed-packet validator hardening evidence head | `0888cbe4b3b8d2d14c782634af1ed2df1c087067` |
 | Latest WP-108 no-live artifact runner head | `dc8d8e5f5149eb8099a9ecb45628a74dcd610599` |
 | Latest WP-108 human-review packet head | `86f9bb16fa524cc638a39d5c6c7e6d64a5b279c4` |
 | Latest WP-108 quality decision head | `b6a8a2a51d7ffd7ec8f348ecf892467d7cf7abcd` |
@@ -172,6 +175,15 @@ product, native, workflow, or runtime paths change after the latest full local
 native/Python/Xcode gate without a new full-gate record. This is reviewer
 readiness and evidence-governance proof only, not real final-candidate scoring
 or a publication-quality claim.
+`EV-20260623-093` records the latest observed fork CI for pushed PR #75 head
+`0888cbe4b3b8`: Native Structural Checks run `28050753666` and Python Tests
+run `28050755344` passed, while the upstream PR check rollup remained empty.
+The same evidence item hardens the WP-007 completed-packet validator with
+no-live/same-display safety checks, route-disposition consistency,
+accepted-limitation requirements, Reference Examples `VO-04`/`VO-05` coverage,
+and recursive text-sidecar secret scanning. This is still not manual
+VoiceOver traversal evidence and does not replace the latest full local
+native/Python/Xcode gate at `a251dda11fa2`.
 `EV-20260623-085` records a live, non-mutating Hugging Face hosted-state check
 on `0edd97b7da2b`: the public HF paper page, PaperBananaBench dataset page,
 Space page, and Space API returned HTTP 200, but the `dwzhu/PaperBanana` Space
@@ -247,6 +259,11 @@ and obvious provider-secret patterns. It reports open `fail`, `not_run`, and
 `pass_with_limitation` routes without treating them as release approval. This is
 completed-evidence reviewability scaffolding only; it cannot verify spoken
 VoiceOver output or close WP-007.
+`EV-20260623-093` hardens that completed-packet validator with no-live and
+same-display field checks, route-disposition consistency, explicit accepted
+limitation records, Reference Examples `VO-04`/`VO-05` coverage checks, and
+recursive text-sidecar secret scanning. It is still validation scaffolding only,
+not completed manual traversal evidence.
 `EV-20260622-065` remains historical
 Release install provenance for the earlier
 `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` branch head and binary SHA-256
@@ -528,9 +545,9 @@ channel approval, upgrade proof, or rollback proof.
 | Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-057`, `EV-20260622-064`, `EV-20260623-069` | Passed with limitation |
 | Local aggregate native gate | `EV-20260623-069` | Latest full local gate passed through the documented `script/test_all.sh` command after the isolated Python 3.12 fallback fix: 167 Swift tests, 126 Python tests, and `codex-xcode27 proof` passed |
 | Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070`, `EV-20260623-072` | Latest product-source Release build/install and installed-app artifact provenance passed with binary SHA-256 `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`; this does not replace full-gate evidence or rollback proof |
-| Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070` | Passed with limitation; latest recorded remote quick checks are for `213fc941`, while `EV-20260623-069` records the latest local full gate and the self-hosted workflow dispatch limitation |
+| Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070`, `EV-20260623-082`, `EV-20260623-093` | Passed with limitation; latest recorded fork quick checks are for `0888cbe4b3b8` with Native Structural Checks run `28050753666` and Python Tests run `28050755344`; the upstream PR check rollup remained empty, `EV-20260623-069` records the self-hosted workflow dispatch limitation, and `EV-20260623-081` remains the latest local full native/Python/Xcode gate |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
-| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079`, `EV-20260623-090`, `EV-20260623-091`, `EV-20260623-092` | Partial; includes current-head source-level accessibility/keyboard contracts, source-level Settings accessibility/adaptive regression coverage, Reference Examples missing/malformed/empty state AX text, recovery-heavy Run Details / Run Ledger AX rows and controls, current-head Prompt Studio keyboard/preflight AX traversal, current-head Settings Workspace AX fallback proof, a manual VoiceOver traversal packet, checked completed-artifact templates, and a completed-packet structural validator, but not completed full manual VoiceOver traversal |
+| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079`, `EV-20260623-090`, `EV-20260623-091`, `EV-20260623-092`, `EV-20260623-093` | Partial; includes current-head source-level accessibility/keyboard contracts, source-level Settings accessibility/adaptive regression coverage, Reference Examples missing/malformed/empty state AX text, recovery-heavy Run Details / Run Ledger AX rows and controls, current-head Prompt Studio keyboard/preflight AX traversal, current-head Settings Workspace AX fallback proof, a manual VoiceOver traversal packet, checked completed-artifact templates, a completed-packet structural validator, and hardened no-live/reference-route validation for future completed packets, but not completed full manual VoiceOver traversal |
 | Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072`, `EV-20260623-073`, `EV-20260623-074`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is recorded for Settings, Light/Dark Mode Increased Text Size at the minimum main-window size is recorded for Prompt Studio, Artifact Library, Run Details, and Run Ledger after sidebar selection polish, the Prompt Studio no-spend preflight sheet Light/Dark Increased Text Size slice is recorded, Reference Examples missing/malformed/empty Light/Dark Increased Text Size edge states are recorded, Run Details / Run Ledger recovery/failure states are covered by EV-076, the Prompt Studio keyboard/AX preflight slice adds a current-head Dark Mode sheet screenshot, and EV-079 adds current-head provider-free installed-app screenshots for Prompt Studio, Artifact Library, Run Details, Run Ledger, and Settings Workspace; broader screenshot-based full-app adaptive signoff remains open |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
@@ -618,6 +635,10 @@ state is verified.
   can be rejected for missing routes, placeholders, invalid dispositions,
   missing environment/cleanup records, or obvious secret patterns before human
   release review.
+  `EV-20260623-093` hardens that validator so future manual evidence is also
+  rejected for contradictory no-live/same-display fields, mismatched route
+  dispositions, missing accepted-limitation records, missing Reference Examples
+  `VO-04`/`VO-05` coverage, or nested text-sidecar secret markers.
   These are still not completed manual VoiceOver speech-output traversal
   substitutes.
 - Dark Settings Increased Text Size visible content is covered by

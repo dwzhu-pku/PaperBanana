@@ -104,6 +104,10 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d",
         "a251dda11fa29aa4ed430d25fa6dbc8cdd8834bb",
         "0f500900f3b51050743aa86493a8274cee1663f8",
+        "0888cbe4b3b8d2d14c782634af1ed2df1c087067",
+        "9a64b88566501bc2bfa07b5fd1f49aa9feeedcaf",
+        "dac44760c0ecec03e588b8984362f1e29a68520e",
+        "2e1ab557ba5a876f57b1dcd364931aa9eb4b540f",
         "4f5d7edfe1e7d937ae8cce3017c649f481883f91",
         "9127c20bb5c8dd50f5c2028ab12ccac50d3c65e5",
         "213fc9411e3eb6a6289aaea4c22f48b631045615",
@@ -135,9 +139,11 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "Latest WP-007 Recovery ledger text-size screenshot head",
         "Latest WP-007 Prompt Studio keyboard/preflight AX head",
         "Latest WP-007 installed-app keyboard/AX fallback head",
-        "Latest WP-007 manual VoiceOver traversal packet head",
-        "Latest WP-007 manual VoiceOver artifact contract head",
-        "Latest WP-007 completed-packet validator head",
+        "Latest WP-007 manual VoiceOver traversal packet source head before edit",
+        "Latest WP-007 manual VoiceOver traversal packet evidence commit",
+        "Latest WP-007 manual VoiceOver artifact contract evidence commit",
+        "Latest WP-007 completed-packet validator evidence commit",
+        "Latest WP-007 completed-packet validator hardening evidence head",
         "Latest WP-108 no-live artifact runner head",
         "Latest WP-108 quality decision head",
         "Latest WP-108 offline evidence-chain head",
@@ -203,6 +209,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "EV-20260623-089",
         "EV-20260623-091",
         "EV-20260623-092",
+        "EV-20260623-093",
         "28025752242",
         "28025752249",
         "28035948312",
@@ -211,6 +218,8 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "28036135701",
         "28044099229",
         "28044101020",
+        "28050753666",
+        "28050755344",
         "WP-108 no-live artifact runner utility",
         "run-map generator",
         "human-review packet contract",
@@ -395,6 +404,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "manual VoiceOver traversal packet",
         "checked completed-artifact templates",
         "completed-packet structural validator",
+        "hardened no-live/reference-route validation",
         "not completed full manual VoiceOver traversal",
         "GUI AX/window capture was blocked",
         "no-live artifact-completeness runner",
@@ -549,6 +559,7 @@ def test_wp007_manual_voiceover_packet_preserves_open_gate_boundary():
     assert "EV-20260623-090" in RELEASE_MANIFEST
     assert "EV-20260623-091" in RELEASE_MANIFEST
     assert "EV-20260623-092" in RELEASE_MANIFEST
+    assert "EV-20260623-093" in RELEASE_MANIFEST
     assert "not completed full manual VoiceOver traversal" in RELEASE_MANIFEST
 
 

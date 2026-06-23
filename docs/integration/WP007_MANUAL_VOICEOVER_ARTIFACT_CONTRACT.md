@@ -143,7 +143,10 @@ python docs/integration/wp007_voiceover_manual_templates/validate_completed_pack
 
 The validator checks required files, exact TSV columns, required `VO-01`
 through `VO-16` routes, placeholder removal, route dispositions,
-environment fields, cleanup fields, and obvious provider-secret patterns.
+environment fields, cleanup fields, same-display/no-live safety fields,
+route-disposition consistency, explicit release-owner acceptance for
+`pass_with_limitation`, Reference Examples coverage in `VO-04`/`VO-05`, and
+obvious provider-secret patterns in text sidecars.
 
 A successful validation means only that the packet is structurally reviewable.
 It does not prove that VoiceOver spoke the recorded output, does not approve

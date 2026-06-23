@@ -138,8 +138,11 @@ def test_wp007_contract_documents_completed_packet_validator_boundary():
         "Completed Packet Validation",
         "validate_completed_packet.py",
         "structurally reviewable",
+        "same-display/no-live safety fields",
+        "Reference Examples coverage",
+        "explicit accepted-limitation",
         "does not close WP-007",
-        "cannot verify the spoken output",
+        "cannot validate that VoiceOver actually spoke",
         "must not be used to mark",
         "Human release review is still required",
     ]

@@ -1,8 +1,16 @@
 # PaperBanana Integration Branch Map
 
 Created: 2026-06-22
-Integration branch: `integration/native-first-rc`
-Integration worktree: `/Users/jeff/Codex_projects/PaperBanana-integration`
+Original integration branch: `integration/native-first-rc`
+Original integration worktree: `/Users/jeff/Codex_projects/PaperBanana-integration`
+
+Current PR #75 review branch: `integration/native-first-rc-native`
+Current PR #75 worktree: `/Users/jeff/Codex_projects/PaperBanana-native-integrated`
+
+This file preserves the original split-PR integration baseline and merge order.
+For current release-candidate evidence, use
+`docs/integration/RELEASE_CANDIDATE_MANIFEST.md` and
+`docs/integration/EVIDENCE_MANIFEST.md`.
 
 ## Remotes
 

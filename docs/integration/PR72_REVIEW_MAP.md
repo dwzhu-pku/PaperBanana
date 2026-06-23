@@ -111,6 +111,14 @@ Review questions:
 
 Current evidence:
 
+Latest current-candidate status is summarized in
+`docs/integration/RELEASE_CANDIDATE_MANIFEST.md` and
+`docs/integration/EVIDENCE_MANIFEST.md`. The list below preserves component
+review anchors; it is not the sole current gate record. Later evidence includes
+`EV-20260623-081` for the latest full local native/Python/Xcode gate at
+`a251dda11fa2`, `EV-20260623-092` for the completed-packet validator, and
+`EV-20260623-093` for fork CI at `0888cbe4b3b8` plus validator hardening.
+
 - `EV-20260622-006`: original native aggregate gate at `e0cea781ca07`.
 - `EV-20260622-011`: portable CI and native gate scripts at `26adc4670944`.
 - `EV-20260622-012`: exact-head native gate at `d43a6c8a9556`.

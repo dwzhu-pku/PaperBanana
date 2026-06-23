@@ -38,6 +38,8 @@ python docs/integration/wp007_voiceover_manual_templates/validate_completed_pack
   <completed-artifact-directory>
 ```
 
-The validator checks packet structure, placeholders, required routes, and
-obvious secret patterns. It cannot verify the spoken output and does not close
-WP-007.
+The validator checks packet structure, placeholders, required routes,
+same-display/no-live safety fields, route-disposition consistency,
+Reference Examples coverage in `VO-04`/`VO-05`, explicit accepted-limitation
+records, and obvious secret patterns in text sidecars. It cannot verify the
+spoken output and does not close WP-007.
