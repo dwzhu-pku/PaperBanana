@@ -208,6 +208,14 @@ returned HTTP 503. This is no-live fallback/hosted-state readiness evidence,
 not real Codex CLI fallback, live provider E2E, hosted functional validation,
 quality scoring, manual VoiceOver traversal, final release approval, or
 upstream acceptance.
+`EV-20260623-088` records current-head no-live Codex CLI flag compatibility on
+`c9b38cceeb33b61373f6b9aabe6c749fe5c33898`: `/opt/homebrew/bin/codex` reports
+`codex-cli 0.142.0`, its `codex exec --help` supports the flags emitted by the
+Swift fallback handoff, and the native fake-Codex regression test now asserts
+the persisted `codex exec` handoff arguments in `provider_request.json`. The targeted Xcode
+test passed 1 test with 0 failures and 0 skips. This is CLI flag compatibility
+and fake-executable handoff-contract evidence only; it does not run `codex exec`,
+spend model quota, or prove real Codex CLI image generation.
 `EV-20260622-065` remains historical
 Release install provenance for the earlier
 `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` branch head and binary SHA-256
@@ -598,8 +606,10 @@ state is verified.
   secret-sentinel, recovery, and migration coverage with 71 selected Swift
   tests; `EV-20260623-087` refreshes current PR #75 no-live fallback/secret and
   local-route readiness with 20 focused Python tests plus 6 selected Xcode
-  fallback tests. These do not cover live provider responses, real Codex CLI
-  behavior, runtime logs from a live run, or hosted artifacts.
+  fallback tests; `EV-20260623-088` verifies current-head Codex CLI flag
+  compatibility and persisted Swift `codex exec` handoff arguments. These do
+  not cover live provider responses, real Codex CLI image generation, runtime
+  logs from a live run, or hosted artifacts.
 - Hosted two-session proof on the real hosted surface, hosted negative-path
   validation, deployed SHA, runtime-log review, and hosted rollback before any
   public hosted-generation claim. `EV-20260622-040` is historical
