@@ -1,0 +1,93 @@
+# AX Dump for local.paperbanana.gui, pid 41997
+# Element lines: 85
+role=AXWindow | subrole=AXStandardWindow | id=SwiftUI.WindowGroup<SwiftUI._ConditionalContent<PaperBanana.(unknown context at $1046d3f1c).PaperBananaTestHostView, PaperBanana.AppRootContainer>>-1-AppWindow-1 | title=PaperBanana
+  role=AXGroup | subrole=AXHostingView
+    role=AXButton | id=text.bubble | desc=Prompt Studio | help=Prompt Studio
+    role=AXStaticText | value=PaperBanana
+    role=AXStaticText | value=Native figure cockpit
+    role=AXStaticText | value=Ready
+    role=AXStaticText | value=Prompt Studio
+    role=AXButton | desc=Prompt Editor | help=Moves keyboard focus to the prompt editor.
+    role=AXButton | desc=Run Controls | help=Moves keyboard focus to the main run control.
+    role=AXButton | desc=Reveal Runs | help=Reveal the native generation results folder
+    role=AXStaticText | value=/tmp/paperbanana-wp007-ax-fixture-20260623-105808
+    role=AXButton | id=checkmark.seal | desc=Recovered Images | help=Recovered Images
+    role=AXButton | id=waveform.path.ecg.rectangle | desc=Run Details | help=Run Details
+    role=AXButton | id=list.bullet.rectangle | desc=Run Ledger | help=Run Ledger
+    role=AXButton | id=stethoscope | desc=Diagnostics | help=Diagnostics
+    role=AXScrollArea
+      role=AXStaticText | value=Path: /tmp/paperbanana-wp007-ax-fixture-20260623-105808, Key: No generation key saved, Model: Codex fallback, Backend: Optional backend incomplete, Fallback: Codex fallback selecte... | desc=Native PaperBanana app is ready | help=Native workflows are available; the optional compatibility backend is incomplete.
+      role=AXStaticText | value=CREATE
+      role=AXButton | desc=Prompt Studio
+      role=AXButton | desc=Generate Candidates
+      role=AXButton | desc=Refine Image
+      role=AXStaticText | value=LIBRARY
+      role=AXButton | desc=Recovered Images
+      role=AXButton | desc=Artifact Library
+      role=AXStaticText | value=OPERATIONS
+      role=AXButton | desc=Run Details
+      role=AXButton | desc=Run Ledger
+      role=AXStaticText | value=DIAGNOSTICS
+      role=AXButton | desc=Diagnostics
+      role=AXStaticText | value=Path: /tmp/paperbanana-wp007-ax-fixture-20260623-105808, Key: No generation key saved, Model: Codex fallback, Backend: Optional backend incomplete, Fallback: Codex fallback selecte... | desc=Native PaperBanana app is ready | help=Native workflows are available; the optional compatibility backend is incomplete.
+      role=AXStaticText | value=CREATE
+      role=AXButton | desc=Prompt Studio
+      role=AXButton | desc=Generate Candidates
+      role=AXButton | desc=Refine Image
+      role=AXStaticText | value=LIBRARY
+      role=AXButton | desc=Recovered Images
+      role=AXButton | desc=Artifact Library
+      role=AXStaticText | value=OPERATIONS
+      role=AXButton | desc=Run Details
+      role=AXButton | desc=Run Ledger
+      role=AXStaticText | value=DIAGNOSTICS
+      role=AXButton | desc=Diagnostics
+      role=AXStaticText | value=Path: /tmp/paperbanana-wp007-ax-fixture-20260623-105808, Key: No generation key saved, Model: Codex fallback, Backend: Optional backend incomplete, Fallback: Codex fallback selecte... | desc=Native PaperBanana app is ready | help=Native workflows are available; the optional compatibility backend is incomplete.
+      role=AXStaticText | value=CREATE
+      role=AXButton | desc=Prompt Studio
+      role=AXButton | desc=Generate Candidates
+      role=AXButton | desc=Refine Image
+      role=AXStaticText | value=LIBRARY
+      role=AXButton | desc=Recovered Images
+      role=AXButton | desc=Artifact Library
+      role=AXStaticText | value=OPERATIONS
+      role=AXButton | desc=Run Details
+      role=AXButton | desc=Run Ledger
+      role=AXStaticText | value=DIAGNOSTICS
+      role=AXButton | desc=Diagnostics
+    role=AXButton | id=gearshape | desc=Settings | help=Settings
+    role=AXButton | desc=Settings
+    role=AXSplitGroup
+    role=AXButton | id=text.bubble | desc=Prompt Studio | help=Prompt Studio
+    role=AXStaticText | value=PaperBanana
+    role=AXStaticText | value=Native figure cockpit
+    role=AXStaticText | value=Ready
+    role=AXStaticText | value=Prompt Studio
+    role=AXButton | desc=Prompt Editor | help=Moves keyboard focus to the prompt editor.
+    role=AXButton | desc=Run Controls | help=Moves keyboard focus to the main run control.
+    role=AXButton | desc=Reveal Runs | help=Reveal the native generation results folder
+    role=AXStaticText | value=/tmp/paperbanana-wp007-ax-fixture-20260623-105808
+    role=AXButton | id=checkmark.seal | desc=Recovered Images | help=Recovered Images
+    role=AXButton | id=waveform.path.ecg.rectangle | desc=Run Details | help=Run Details
+    role=AXButton | id=list.bullet.rectangle | desc=Run Ledger | help=Run Ledger
+    role=AXButton | id=stethoscope | desc=Diagnostics | help=Diagnostics
+    role=AXScrollArea
+    role=AXButton | id=gearshape | desc=Settings | help=Settings
+    role=AXButton | desc=Settings
+    role=AXSplitGroup
+  role=AXButton | subrole=AXCloseButton
+  role=AXButton | subrole=AXFullScreenButton | help=this button also has an action to zoom the window
+  role=AXButton | subrole=AXMinimizeButton
+  role=AXStaticText | value=PaperBanana
+  role=AXButton | subrole=AXCloseButton
+  role=AXButton | subrole=AXMinimizeButton
+  role=AXButton | subrole=AXFullScreenButton | help=this button also has an action to zoom the window
+  role=AXStaticText | value=PaperBanana
+  role=AXGroup | subrole=AXHostingView
+role=AXApplication | title=PaperBanana
+# Required identifiers
+MISSING reference-example-ref_1
+MISSING reference-example-ref_10
+MISSING reference-example-ref_11
+MISSING reference-examples-panel
+MISSING reference-examples-selection-summary

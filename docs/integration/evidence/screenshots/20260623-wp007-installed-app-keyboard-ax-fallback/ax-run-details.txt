@@ -1,0 +1,126 @@
+# AX Dump for local.paperbanana.gui, pid 42470
+# Element lines: 118
+role=AXWindow | subrole=AXStandardWindow | id=SwiftUI.WindowGroup<SwiftUI._ConditionalContent<PaperBanana.(unknown context at $101213f1c).PaperBananaTestHostView, PaperBanana.AppRootContainer>>-1-AppWindow-1 | title=PaperBanana
+  role=AXGroup | subrole=AXHostingView
+    role=AXButton | id=text.bubble | desc=Prompt Studio | help=Prompt Studio
+    role=AXStaticText | value=PaperBanana
+    role=AXStaticText | value=Native Run Cockpit
+    role=AXStaticText | value=Native figure cockpit
+    role=AXButton | desc=Reveal Results | help=Reveal PaperBanana results
+    role=AXButton | id=arrow.clockwise | desc=Refresh | help=Refresh run details
+    role=AXStaticText | value=1 runs, 0 need attention, scanned from native generation, refinement, and provider audit folders.
+    role=AXButton | id=checkmark.seal | desc=Recovered Images | help=Recovered Images
+    role=AXButton | id=waveform.path.ecg.rectangle | desc=Run Details | help=Run Details
+    role=AXButton | id=list.bullet.rectangle | desc=Run Ledger | help=Run Ledger
+    role=AXButton | id=stethoscope | desc=Diagnostics | help=Diagnostics
+    role=AXScrollArea
+      role=AXStaticText | value=Path: /tmp/paperbanana-wp007-ax-fixture-20260623-105808, Key: No generation key saved, Model: Codex fallback, Backend: Optional backend incomplete, Fallback: Codex fallback selecte... | desc=Native PaperBanana app is ready | help=Native workflows are available; the optional compatibility backend is incomplete.
+      role=AXStaticText | value=CREATE
+      role=AXButton | desc=Prompt Studio
+      role=AXButton | desc=Generate Candidates
+      role=AXButton | desc=Refine Image
+      role=AXStaticText | value=LIBRARY
+      role=AXButton | desc=Recovered Images
+      role=AXButton | desc=Artifact Library
+      role=AXStaticText | value=OPERATIONS
+      role=AXButton | desc=Run Details
+      role=AXButton | desc=Run Ledger
+      role=AXStaticText | value=DIAGNOSTICS
+      role=AXButton | desc=Diagnostics
+      role=AXStaticText | value=Path: /tmp/paperbanana-wp007-ax-fixture-20260623-105808, Key: No generation key saved, Model: Codex fallback, Backend: Optional backend incomplete, Fallback: Codex fallback selecte... | desc=Native PaperBanana app is ready | help=Native workflows are available; the optional compatibility backend is incomplete.
+      role=AXStaticText | value=CREATE
+      role=AXButton | desc=Prompt Studio
+      role=AXButton | desc=Generate Candidates
+      role=AXButton | desc=Refine Image
+      role=AXStaticText | value=LIBRARY
+      role=AXButton | desc=Recovered Images
+      role=AXButton | desc=Artifact Library
+      role=AXStaticText | value=OPERATIONS
+      role=AXButton | desc=Run Details
+      role=AXButton | desc=Run Ledger
+      role=AXStaticText | value=DIAGNOSTICS
+      role=AXButton | desc=Diagnostics
+      role=AXStaticText | value=Path: /tmp/paperbanana-wp007-ax-fixture-20260623-105808, Key: No generation key saved, Model: Codex fallback, Backend: Optional backend incomplete, Fallback: Codex fallback selecte... | desc=Native PaperBanana app is ready | help=Native workflows are available; the optional compatibility backend is incomplete.
+      role=AXStaticText | value=CREATE
+      role=AXButton | desc=Prompt Studio
+      role=AXButton | desc=Generate Candidates
+      role=AXButton | desc=Refine Image
+      role=AXStaticText | value=LIBRARY
+      role=AXButton | desc=Recovered Images
+      role=AXButton | desc=Artifact Library
+      role=AXStaticText | value=OPERATIONS
+      role=AXButton | desc=Run Details
+      role=AXButton | desc=Run Ledger
+      role=AXStaticText | value=DIAGNOSTICS
+      role=AXButton | desc=Diagnostics
+    role=AXGroup | desc=PaperBanana readiness: Native Ready
+    role=AXRadioGroup | value=<AXUIElement 0x7a57a2a550> {pid=42470} | desc=Run scope, Run scope | help=Showing Needs Attention
+    role=AXGroup | desc=Search runs
+    role=AXStaticText | value=0 of 1 shown
+    role=AXButton | id=gearshape | desc=Settings | help=Settings
+    role=AXButton | desc=Settings
+    role=AXSplitGroup
+    role=AXButton | id=text.bubble | desc=Prompt Studio | help=Prompt Studio
+    role=AXStaticText | value=PaperBanana
+    role=AXStaticText | value=Native Run Cockpit
+    role=AXStaticText | value=Native figure cockpit
+    role=AXButton | desc=Reveal Results | help=Reveal PaperBanana results
+    role=AXButton | id=arrow.clockwise | desc=Refresh | help=Refresh run details
+    role=AXStaticText | value=1 runs, 0 need attention, scanned from native generation, refinement, and provider audit folders.
+    role=AXButton | id=checkmark.seal | desc=Recovered Images | help=Recovered Images
+    role=AXButton | id=waveform.path.ecg.rectangle | desc=Run Details | help=Run Details
+    role=AXButton | id=list.bullet.rectangle | desc=Run Ledger | help=Run Ledger
+    role=AXButton | id=stethoscope | desc=Diagnostics | help=Diagnostics
+    role=AXScrollArea
+    role=AXGroup | desc=PaperBanana readiness: Native Ready
+    role=AXRadioGroup | value=<AXUIElement 0x7a57a28a20> {pid=42470} | desc=Run scope, Run scope | help=Showing Needs Attention
+    role=AXGroup | desc=Search runs
+    role=AXStaticText | value=0 of 1 shown
+    role=AXButton | id=gearshape | desc=Settings | help=Settings
+    role=AXButton | desc=Settings
+    role=AXSplitGroup
+  role=AXButton | subrole=AXCloseButton
+  role=AXButton | subrole=AXFullScreenButton | help=this button also has an action to zoom the window
+  role=AXButton | subrole=AXMinimizeButton
+  role=AXStaticText | value=PaperBanana
+  role=AXButton | subrole=AXCloseButton
+  role=AXButton | subrole=AXMinimizeButton
+  role=AXButton | subrole=AXFullScreenButton | help=this button also has an action to zoom the window
+  role=AXStaticText | value=PaperBanana
+  role=AXGroup | subrole=AXHostingView
+role=AXApplication | title=PaperBanana
+  role=AXWindow | subrole=AXStandardWindow | id=SwiftUI.WindowGroup<SwiftUI._ConditionalContent<PaperBanana.(unknown context at $101213f1c).PaperBananaTestHostView, PaperBanana.AppRootContainer>>-1-AppWindow-1 | title=PaperBanana
+    role=AXGroup | subrole=AXHostingView
+      role=AXButton | id=text.bubble | desc=Prompt Studio | help=Prompt Studio
+      role=AXStaticText | value=PaperBanana
+      role=AXStaticText | value=Native Run Cockpit
+      role=AXStaticText | value=Native figure cockpit
+      role=AXButton | desc=Reveal Results | help=Reveal PaperBanana results
+      role=AXButton | id=arrow.clockwise | desc=Refresh | help=Refresh run details
+      role=AXStaticText | value=1 runs, 0 need attention, scanned from native generation, refinement, and provider audit folders.
+      role=AXButton | id=checkmark.seal | desc=Recovered Images | help=Recovered Images
+      role=AXButton | id=waveform.path.ecg.rectangle | desc=Run Details | help=Run Details
+      role=AXButton | id=list.bullet.rectangle | desc=Run Ledger | help=Run Ledger
+      role=AXButton | id=stethoscope | desc=Diagnostics | help=Diagnostics
+      role=AXGroup | desc=PaperBanana readiness: Native Ready
+      role=AXRadioGroup | value=<AXUIElement 0x7a57a29fb0> {pid=42470} | desc=Run scope, Run scope | help=Showing Needs Attention
+      role=AXGroup | desc=Search runs
+      role=AXStaticText | value=0 of 1 shown
+      role=AXButton | id=gearshape | desc=Settings | help=Settings
+      role=AXButton | desc=Settings
+    role=AXButton | subrole=AXCloseButton
+    role=AXButton | subrole=AXFullScreenButton | help=this button also has an action to zoom the window
+    role=AXButton | subrole=AXMinimizeButton
+    role=AXStaticText | value=PaperBanana
+    role=AXButton | subrole=AXCloseButton
+    role=AXButton | subrole=AXMinimizeButton
+    role=AXButton | subrole=AXFullScreenButton | help=this button also has an action to zoom the window
+    role=AXStaticText | value=PaperBanana
+    role=AXGroup | subrole=AXHostingView
+  role=AXMenuBar
+# Required identifiers
+MISSING artifact-grid
+MISSING provider-run-ledger-table
+MISSING provider-run-ledger-table-selection-summary
+MISSING run-details-table
+MISSING run-details-table-selection-summary

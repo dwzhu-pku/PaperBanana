@@ -1,0 +1,218 @@
+# AX Dump for local.paperbanana.gui, pid 42385
+# Element lines: 210
+role=AXWindow | subrole=AXStandardWindow | id=SwiftUI.WindowGroup<SwiftUI._ConditionalContent<PaperBanana.(unknown context at $100833f1c).PaperBananaTestHostView, PaperBanana.AppRootContainer>>-1-AppWindow-1 | title=PaperBanana
+  role=AXGroup | subrole=AXHostingView
+    role=AXButton | id=text.bubble | desc=Prompt Studio | help=Prompt Studio
+    role=AXStaticText | value=PaperBanana
+    role=AXStaticText | value=Artifact Library
+    role=AXStaticText | value=Native figure cockpit
+    role=AXButton | id=arrow.clockwise | desc=Refresh | help=Refresh the artifact library
+    role=AXStaticText | value=1 images, 4 total artifacts, 0 favorites
+    role=AXButton | id=checkmark.seal | desc=Recovered Images | help=Recovered Images
+    role=AXButton | id=waveform.path.ecg.rectangle | desc=Run Details | help=Run Details
+    role=AXButton | id=list.bullet.rectangle | desc=Run Ledger | help=Run Ledger
+    role=AXButton | id=stethoscope | desc=Diagnostics | help=Diagnostics
+    role=AXScrollArea
+      role=AXStaticText | value=Path: /tmp/paperbanana-wp007-ax-fixture-20260623-105808, Key: No generation key saved, Model: Codex fallback, Backend: Optional backend incomplete, Fallback: Codex fallback selecte... | desc=Native PaperBanana app is ready | help=Native workflows are available; the optional compatibility backend is incomplete.
+      role=AXStaticText | value=CREATE
+      role=AXButton | desc=Prompt Studio
+      role=AXButton | desc=Generate Candidates
+      role=AXButton | desc=Refine Image
+      role=AXStaticText | value=LIBRARY
+      role=AXButton | desc=Recovered Images
+      role=AXButton | desc=Artifact Library
+      role=AXStaticText | value=OPERATIONS
+      role=AXButton | desc=Run Details
+      role=AXButton | desc=Run Ledger
+      role=AXStaticText | value=DIAGNOSTICS
+      role=AXButton | desc=Diagnostics
+      role=AXStaticText | value=Path: /tmp/paperbanana-wp007-ax-fixture-20260623-105808, Key: No generation key saved, Model: Codex fallback, Backend: Optional backend incomplete, Fallback: Codex fallback selecte... | desc=Native PaperBanana app is ready | help=Native workflows are available; the optional compatibility backend is incomplete.
+      role=AXStaticText | value=CREATE
+      role=AXButton | desc=Prompt Studio
+      role=AXButton | desc=Generate Candidates
+      role=AXButton | desc=Refine Image
+      role=AXStaticText | value=LIBRARY
+      role=AXButton | desc=Recovered Images
+      role=AXButton | desc=Artifact Library
+      role=AXStaticText | value=OPERATIONS
+      role=AXButton | desc=Run Details
+      role=AXButton | desc=Run Ledger
+      role=AXStaticText | value=DIAGNOSTICS
+      role=AXButton | desc=Diagnostics
+      role=AXStaticText | value=Path: /tmp/paperbanana-wp007-ax-fixture-20260623-105808, Key: No generation key saved, Model: Codex fallback, Backend: Optional backend incomplete, Fallback: Codex fallback selecte... | desc=Native PaperBanana app is ready | help=Native workflows are available; the optional compatibility backend is incomplete.
+      role=AXStaticText | value=CREATE
+      role=AXButton | desc=Prompt Studio
+      role=AXButton | desc=Generate Candidates
+      role=AXButton | desc=Refine Image
+      role=AXStaticText | value=LIBRARY
+      role=AXButton | desc=Recovered Images
+      role=AXButton | desc=Artifact Library
+      role=AXStaticText | value=OPERATIONS
+      role=AXButton | desc=Run Details
+      role=AXButton | desc=Run Ledger
+      role=AXStaticText | value=DIAGNOSTICS
+      role=AXButton | desc=Diagnostics
+    role=AXRadioGroup | value=<AXUIElement 0x7a331ca670> {pid=42385} | desc=Artifact scope, Artifact scope | help=Showing Images
+    role=AXGroup | desc=Search artifacts
+    role=AXStaticText | value=1 of 4 shown
+    role=AXButton | id=gearshape | desc=Settings | help=Settings
+    role=AXButton | desc=Settings
+    role=AXSplitGroup
+      role=AXSplitter | value=520
+      role=AXSplitter | value=520
+          role=AXStaticText | value=Preview
+          role=AXButton | id=plus.magnifyingglass | desc=Zoom in | help=Zoom in
+          role=AXButton | id=minus.magnifyingglass | desc=Zoom out | help=Zoom out
+          role=AXButton | id=arrow.counterclockwise | desc=Reset preview | help=Reset preview
+          role=AXStaticText | value=Artifact
+          role=AXStaticText | value=generated_4K
+          role=AXStaticText | value=Completed
+          role=AXStaticText | value=Type
+          role=AXStaticText | value=Image
+          role=AXStaticText | value=Workflow
+          role=AXStaticText | value=native_generate
+          role=AXStaticText | value=Run ID
+          role=AXStaticText | value=native_generate_ax_001
+          role=AXStaticText | value=Size
+          role=AXStaticText | value=69 bytes
+          role=AXStaticText | value=Modified
+          role=AXStaticText | value=Jun 23, 2026 at 10:58 AM
+          role=AXStaticText | value=Pixels
+          role=AXStaticText | value=1x1
+          role=AXStaticText | value=Megapixels
+          role=AXStaticText | value=0.0 MP
+          role=AXStaticText | value=Metal Preview
+          role=AXStaticText | value=Available
+          role=AXStaticText | value=QA
+          role=AXStaticText | value=Shortest edge is under 1K. Image is below 4 megapixels.
+          role=AXStaticText | value=native_generate/native_generate_ax_001/generated_4K.png
+          role=AXStaticText | value=Linked Files
+          role=AXStaticText | value=Run Folder
+          role=AXLink | desc=native_generate_ax_001
+          role=AXStaticText | value=Prompt
+          role=AXLink | desc=prompt.txt
+          role=AXStaticText | value=Log
+          role=AXLink | desc=events.jsonl
+          role=AXStaticText | value=Metadata
+          role=AXLink | desc=generated_4K.json
+          role=AXGroup | desc=Reference examples
+            role=AXStaticText | value=Reference Examples
+            role=AXStaticText | value=2 manual reference examples: ref_1, ref_11
+            role=AXStaticText | value=Source prompt
+            role=AXStaticText | value=Create a provider-free installed-app AX evidence diagram.
+            role=AXStaticText | value=ref_1
+            role=AXStaticText | value=PaperBananaBench/diagram
+            role=AXStaticText | value=Native AX fixture reference 1: compact diagram with labeled modules and clear hierarchy.
+            role=AXStaticText | value=Controlled workflow with labeled input, analysis, and output.
+            role=AXStaticText | value=images/ref_1.png
+            role=AXStaticText | value=ref_11
+            role=AXStaticText | value=PaperBananaBench/diagram
+            role=AXStaticText | value=Native AX fixture reference 11 intentionally has a missing local image.
+            role=AXStaticText | value=Missing-image boundary row used for native installed-app evidence.
+            role=AXStaticText | value=images/ref_11.png
+            role=AXStaticText | value=Reference Examples
+            role=AXStaticText | value=2 manual reference examples: ref_1, ref_11
+            role=AXStaticText | value=Source prompt
+            role=AXStaticText | value=Create a provider-free installed-app AX evidence diagram.
+            role=AXStaticText | value=ref_1
+            role=AXStaticText | value=PaperBananaBench/diagram
+            role=AXStaticText | value=Native AX fixture reference 1: compact diagram with labeled modules and clear hierarchy.
+            role=AXStaticText | value=Controlled workflow with labeled input, analysis, and output.
+            role=AXStaticText | value=images/ref_1.png
+            role=AXStaticText | value=ref_11
+            role=AXStaticText | value=PaperBananaBench/diagram
+            role=AXStaticText | value=Native AX fixture reference 11 intentionally has a missing local image.
+            role=AXStaticText | value=Missing-image boundary row used for native installed-app evidence.
+            role=AXStaticText | value=images/ref_11.png
+          role=AXStaticText | value=Local Assistant
+          role=AXPopUpButton | value=Critique figure | desc=Assistant task
+          role=AXButton | desc=Run
+          role=AXScrollBar | value=0
+          role=AXStaticText | value=Log
+          role=AXLink | desc=events.jsonl
+          role=AXStaticText | value=Metadata
+          role=AXLink | desc=generated_4K.json
+          role=AXGroup | desc=Reference examples
+          role=AXStaticText | value=Local Assistant
+          role=AXPopUpButton | value=Critique figure | desc=Assistant task
+          role=AXButton | desc=Run
+          role=AXStaticText | value=Preview
+          role=AXButton | id=plus.magnifyingglass | desc=Zoom in | help=Zoom in
+          role=AXButton | id=minus.magnifyingglass | desc=Zoom out | help=Zoom out
+          role=AXButton | id=arrow.counterclockwise | desc=Reset preview | help=Reset preview
+          role=AXStaticText | value=Artifact
+          role=AXScrollBar | value=0
+          role=AXStaticText | value=generated_4K
+          role=AXStaticText | value=Completed
+          role=AXStaticText | value=Type
+          role=AXStaticText | value=Image
+          role=AXStaticText | value=Workflow
+          role=AXStaticText | value=native_generate
+          role=AXStaticText | value=Run ID
+          role=AXStaticText | value=native_generate_ax_001
+          role=AXStaticText | value=Size
+          role=AXStaticText | value=69 bytes
+          role=AXStaticText | value=Modified
+          role=AXStaticText | value=Jun 23, 2026 at 10:58 AM
+          role=AXStaticText | value=Pixels
+          role=AXStaticText | value=1x1
+          role=AXStaticText | value=Megapixels
+          role=AXStaticText | value=0.0 MP
+          role=AXStaticText | value=Metal Preview
+          role=AXStaticText | value=Available
+          role=AXStaticText | value=QA
+          role=AXStaticText | value=Shortest edge is under 1K. Image is below 4 megapixels.
+          role=AXStaticText | value=native_generate/native_generate_ax_001/generated_4K.png
+          role=AXStaticText | value=Linked Files
+          role=AXStaticText | value=Run Folder
+          role=AXLink | desc=native_generate_ax_001
+          role=AXStaticText | value=Prompt
+          role=AXLink | desc=prompt.txt
+          role=AXStaticText | value=Log
+          role=AXLink | desc=events.jsonl
+          role=AXStaticText | value=Metadata
+          role=AXLink | desc=generated_4K.json
+          role=AXGroup | desc=Reference examples
+          role=AXStaticText | value=Local Assistant
+          role=AXPopUpButton | value=Critique figure | desc=Assistant task
+          role=AXButton | desc=Run
+        role=AXButton | desc=Favorite | help=Add to favorites
+        role=AXButton | desc=Open | help=Open the selected artifact
+        role=AXButton | desc=Reveal | help=Reveal the selected artifact in Finder
+        role=AXButton | desc=Export Image | help=Export image
+        role=AXButton | desc=Export Bundle With Metadata | help=Export with metadata
+        role=AXButton | desc=Copy | help=Copy file path
+        role=AXButton | desc=Refine Image | help=Refine image
+    role=AXButton | id=text.bubble | desc=Prompt Studio | help=Prompt Studio
+    role=AXStaticText | value=PaperBanana
+    role=AXStaticText | value=Artifact Library
+    role=AXStaticText | value=Native figure cockpit
+    role=AXButton | id=arrow.clockwise | desc=Refresh | help=Refresh the artifact library
+    role=AXStaticText | value=1 images, 4 total artifacts, 0 favorites
+    role=AXButton | id=checkmark.seal | desc=Recovered Images | help=Recovered Images
+    role=AXButton | id=waveform.path.ecg.rectangle | desc=Run Details | help=Run Details
+    role=AXButton | id=list.bullet.rectangle | desc=Run Ledger | help=Run Ledger
+    role=AXButton | id=stethoscope | desc=Diagnostics | help=Diagnostics
+    role=AXScrollArea
+    role=AXRadioGroup | value=<AXUIElement 0x7a331ca9a0> {pid=42385} | desc=Artifact scope, Artifact scope | help=Showing Images
+    role=AXGroup | desc=Search artifacts
+    role=AXStaticText | value=1 of 4 shown
+    role=AXButton | id=gearshape | desc=Settings | help=Settings
+    role=AXButton | desc=Settings
+    role=AXSplitGroup
+  role=AXButton | subrole=AXCloseButton
+  role=AXButton | subrole=AXFullScreenButton | help=this button also has an action to zoom the window
+  role=AXButton | subrole=AXMinimizeButton
+  role=AXStaticText | value=PaperBanana
+  role=AXButton | subrole=AXCloseButton
+  role=AXButton | subrole=AXMinimizeButton
+  role=AXButton | subrole=AXFullScreenButton | help=this button also has an action to zoom the window
+  role=AXStaticText | value=PaperBanana
+  role=AXGroup | subrole=AXHostingView
+role=AXApplication | title=PaperBanana
+# Required identifiers
+MISSING artifact-grid
+MISSING provider-run-ledger-table
+MISSING provider-run-ledger-table-selection-summary
+MISSING run-details-table
+MISSING run-details-table-selection-summary
