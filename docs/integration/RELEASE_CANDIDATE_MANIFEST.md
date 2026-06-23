@@ -29,6 +29,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest temporary rollback preflight head | `c976aca0ee70f26a8473f7024deb0b11ae2fe884` |
 | Latest current-head rollback preflight head | `65c4d0b427238372d1b8180014653c477cdd7706` |
 | Latest provider-free native validation head | `6314142bab27c2591d57149ca18d5979d623ecc0` |
+| Latest WP-106/WP-107 no-live readiness refresh head | `8fd594721fc7514652f8a6e1e0ca1fd0866beecf` |
 | Latest full-gate portability fix head | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
 | Latest WP-108 no-live contract head | `37b44c04dcbdb680a043553684e1d15b3a568f52` |
 | Latest WP-109 runtime migration head | `6314142bab27c2591d57149ca18d5979d623ecc0` |
@@ -191,6 +192,22 @@ The harness did not touch `/Applications`, inspect real user secrets, launch the
 app, start the legacy backend, call live providers, or perform hosted rollback.
 It is current-head temporary rollback evidence, not final frozen-SHA release
 approval or public prior-release upgrade proof.
+`EV-20260623-087` records a current PR #75 head no-live WP-106/WP-107 readiness
+refresh on `8fd594721fc`: the documented isolated Python 3.12 path passed
+20 focused tests for credential isolation, native generate CLI behavior,
+provider-audit loss protection, and local route contracts; the selected native
+Xcode 27 fallback/secret suite passed 6 tests for Codex fallback secret filtering,
+fake-executable handoff, artifact secret-sentinel coverage, no-key fallback, and
+no-spend preflight. The ambient `python3` attempt failed under
+Python 3.14 with missing `google.genai`, so this is recorded as an
+environment-selection limitation rather than product regression. The same pass
+refreshed public hosted state: the HF Space API returned HTTP 200 with
+`runtime.stage=PAUSED` at Space SHA
+`587f33ecd98649a4588ff22c1bc3a865f6d8e3b4`, while the app root and `/config`
+returned HTTP 503. This is no-live fallback/hosted-state readiness evidence,
+not real Codex CLI fallback, live provider E2E, hosted functional validation,
+quality scoring, manual VoiceOver traversal, final release approval, or
+upstream acceptance.
 `EV-20260622-065` remains historical
 Release install provenance for the earlier
 `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` branch head and binary SHA-256
@@ -579,8 +596,10 @@ state is verified.
   Codex handoff environment only. `EV-20260623-078` refreshes current-head
   provider-free native generation/refinement store, provider ledger,
   secret-sentinel, recovery, and migration coverage with 71 selected Swift
-  tests; it does not cover live provider responses, real Codex CLI behavior,
-  runtime logs from a live run, or hosted artifacts.
+  tests; `EV-20260623-087` refreshes current PR #75 no-live fallback/secret and
+  local-route readiness with 20 focused Python tests plus 6 selected Xcode
+  fallback tests. These do not cover live provider responses, real Codex CLI
+  behavior, runtime logs from a live run, or hosted artifacts.
 - Hosted two-session proof on the real hosted surface, hosted negative-path
   validation, deployed SHA, runtime-log review, and hosted rollback before any
   public hosted-generation claim. `EV-20260622-040` is historical
