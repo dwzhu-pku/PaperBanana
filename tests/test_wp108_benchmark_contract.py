@@ -12,6 +12,8 @@ from utils.wp108_benchmark_contract import validate_manifest, validate_report
 REPO_ROOT = Path(__file__).resolve().parents[1]
 EXAMPLE_MANIFEST = REPO_ROOT / "docs" / "integration" / "wp108_no_live_manifest.example.json"
 EXAMPLE_REPORT = REPO_ROOT / "docs" / "integration" / "wp108_no_live_report.fixture.json"
+RC_MANIFEST = REPO_ROOT / "docs" / "integration" / "wp108_release_candidate_manifest.template.json"
+RC_REPORT = REPO_ROOT / "docs" / "integration" / "wp108_release_candidate_report.fixture.json"
 
 
 def _load(path: Path) -> dict:
@@ -156,6 +158,22 @@ def test_report_case_ids_must_match_manifest():
     manifest_contract = validate_manifest(manifest, manifest_path=EXAMPLE_MANIFEST, check_paths=False)
     with pytest.raises(ValueError, match="missing manifest cases"):
         validate_report(report, manifest_contract=manifest_contract, mode="fixture", no_provider=True)
+
+
+def test_release_candidate_template_requires_all_diagram_and_plot_cases():
+    manifest = _load(RC_MANIFEST)
+    report = _load(RC_REPORT)
+
+    manifest_contract = validate_manifest(manifest, manifest_path=RC_MANIFEST, check_paths=False)
+    validate_report(report, manifest_contract=manifest_contract, mode="fixture", no_provider=True)
+
+    assert len(manifest_contract["case_ids"]) == 8
+    assert report["summary"]["cases_total"] == 8
+    assert {case["task_type"] for case in manifest["cases"]} == {"diagram", "plot"}
+    assert all(case["non_private_fixture"] is True for case in manifest["cases"])
+    assert all(result["status"] == "not_scored" for result in report["case_results"])
+    assert report["summary"]["mean_score"] is None
+    assert report["summary"]["threshold_passed"] is False
 
 
 def test_check_paths_requires_ground_truth_file(tmp_path):

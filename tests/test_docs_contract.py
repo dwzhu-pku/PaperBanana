@@ -604,6 +604,17 @@ def test_wp007_manual_voiceover_packet_preserves_open_gate_boundary():
     assert "EV-20260623-095" in RELEASE_MANIFEST
     assert "EV-20260623-096" in RELEASE_MANIFEST
     assert "not completed full manual VoiceOver traversal" in RELEASE_MANIFEST
+    canonical_header = (
+        "route_id\tsurface\tstep\tcontrol_or_row\texpected_minimum\t"
+        "actual_spoken_output\tpass_fail\tnotes"
+    )
+    assert canonical_header in WP007_VOICEOVER_PACKET
+    assert not re.search(
+        r"^surface\tstep\tcontrol_or_row\texpected_minimum\tactual_spoken_output\tpass_fail\tnotes$",
+        WP007_VOICEOVER_PACKET,
+        re.MULTILINE,
+    )
+    assert "`pass_with_limitation`" in WP007_VOICEOVER_PACKET
 
 
 def test_local_install_rollback_runbook_keeps_preflight_scope_and_secret_boundary():
@@ -644,6 +655,11 @@ def test_wp108_no_live_contract_preserves_quality_claim_boundary():
         "docs/integration/wp108_quality_decision.schema.json",
         "docs/integration/wp108_no_live_run_map.schema.json",
         "docs/integration/wp108_quality_decision.example.json",
+        "docs/integration/wp108_release_candidate_manifest.template.json",
+        "docs/integration/wp108_release_candidate_report.fixture.json",
+        "Release-candidate template validation",
+        "planner-metaphor opt-in coverage",
+        "native manual plot examples remain disabled",
         "tests/test_wp108_human_review_packet.py",
         "tests/test_wp108_examples_contract.py",
         "tests/test_wp108_offline_evidence_chain.py",

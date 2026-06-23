@@ -161,12 +161,12 @@ SHA, add route rows before executing the pass.
 Use this table shape in `voiceover-speech-output.tsv`:
 
 ```text
-surface	step	control_or_row	expected_minimum	actual_spoken_output	pass_fail	notes
-Prompt Studio	VO-02.1	Prompt Editor	Prompt editor, editable text, current text or empty state	<actual>	<pass/fail>	<notes>
-Prompt Studio	VO-04.4	Reference row selected	Example id/title, selected state, visual intent/content summary	<actual>	<pass/fail>	<notes>
-Artifact Library	VO-08.2	Refine Image disabled	Refine Image, disabled, reason for non-image or missing image	<actual>	<pass/fail>	<notes>
-Run Details	VO-09.3	Selected-row summary	Selected run id, status, recovery/raw payload counts	<actual>	<pass/fail>	<notes>
-Settings Providers	VO-13.2	Provider status	Provider name, configured/not configured, unsupported status where applicable	<actual>	<pass/fail>	<notes>
+route_id	surface	step	control_or_row	expected_minimum	actual_spoken_output	pass_fail	notes
+VO-02	Prompt Studio	VO-02.1	Prompt Editor	Prompt editor, editable text, current text or empty state	<actual>	<pass/fail>	<notes>
+VO-04	Prompt Studio	VO-04.4	Reference row selected	Example id/title, selected state, visual intent/content summary	<actual>	<pass/fail>	<notes>
+VO-08	Artifact Library	VO-08.2	Refine Image disabled	Refine Image, disabled, reason for non-image or missing image	<actual>	<pass/fail>	<notes>
+VO-09	Run Details	VO-09.3	Selected-row summary	Selected run id, status, recovery/raw payload counts	<actual>	<pass/fail>	<notes>
+VO-13	Settings Providers	VO-13.2	Provider status	Provider name, configured/not configured, unsupported status where applicable	<actual>	<pass/fail>	<notes>
 ```
 
 Do not summarize speech output from memory. Record the actual words heard or
@@ -187,15 +187,18 @@ captured during the run, then separately state the interpretation.
 
 After execution, the completed evidence summary should classify each route:
 
+Completed artifacts must use the canonical lowercase machine values
+`pass`, `pass_with_limitation`, `fail`, or `not_run`.
+
 | Status | Meaning |
 |---|---|
-| Pass | Route was completed by keyboard, VoiceOver output met the pass criteria, and no unacceptable side effect occurred. |
-| Pass with limitation | Route was usable but has a bounded limitation recorded in `defects.md`; release owner must explicitly accept it. |
-| Fail | Route has a blocking accessibility, data exposure, focus, crash, or no-spend side-effect defect. |
-| Not run | Route was skipped; record why and keep WP-007/T-021 open. |
+| `pass` | Route was completed by keyboard, VoiceOver output met the pass criteria, and no unacceptable side effect occurred. |
+| `pass_with_limitation` | Route was usable but has a bounded limitation recorded in `defects.md`; release owner must explicitly accept it. |
+| `fail` | Route has a blocking accessibility, data exposure, focus, crash, or no-spend side-effect defect. |
+| `not_run` | Route was skipped; record why and keep WP-007/T-021 open. |
 
-WP-007/T-021 can only move to passed if every required route is Pass or an
-explicitly accepted Pass with limitation on the final candidate SHA.
+WP-007/T-021 can only move to passed if every required route is `pass` or an
+explicitly accepted `pass_with_limitation` on the final candidate SHA.
 
 ## Validation Performed For This Packet
 

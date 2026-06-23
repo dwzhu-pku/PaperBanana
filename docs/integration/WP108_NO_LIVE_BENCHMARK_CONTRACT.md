@@ -36,6 +36,8 @@ bounded live or reviewer-scored benchmark.
 | `docs/integration/wp108_human_review_packet.schema.json` | Reader-facing schema for blank human-review score packets. |
 | `docs/integration/wp108_quality_decision.schema.json` | Reader-facing schema for deterministic quality go/no-go decision reports over completed human-review reports. |
 | `docs/integration/wp108_no_live_manifest.example.json` | Example no-live manifest using non-private PaperBananaBench references. |
+| `docs/integration/wp108_release_candidate_manifest.template.json` | Release-candidate benchmark template that freezes an eight-case diagram/plot coverage target without provider calls, scores, or a quality claim. |
+| `docs/integration/wp108_release_candidate_report.fixture.json` | Matching fixture-mode report for the release-candidate template; all cases are intentionally `not_scored`. |
 | `docs/integration/wp108_human_review_packet.example.json` | Example blank human-review packet shape. |
 | `docs/integration/wp108_human_review_report.example.json` | Synthetic completed human-review report shape with two attested reviewers, adjudicated scores, and `publication_quality_claimed: false`. |
 | `docs/integration/wp108_quality_decision.example.json` | Example quality decision report shape with `publication_quality_claimed: false`. |
@@ -80,6 +82,25 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
 
 The first command is a contract gate. The second command only adds path
 existence checks; it still does not score output quality.
+
+Release-candidate template validation:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
+  python -m utils.wp108_benchmark_contract validate \
+  --manifest docs/integration/wp108_release_candidate_manifest.template.json \
+  --report docs/integration/wp108_release_candidate_report.fixture.json \
+  --mode fixture \
+  --no-provider \
+  --no-path-check
+```
+
+The template intentionally covers both `diagram` and `plot` cases, diagram
+manual-reference and no-manual-reference variants, zero-critic controls,
+planner-metaphor opt-in coverage, structured single- and multi-series plot
+cases, and the boundary that native manual plot examples remain disabled for
+this release candidate. The fixture report remains unscored and cannot pass the
+quality threshold.
 
 Native artifact-completeness validation for a generated no-live run map:
 

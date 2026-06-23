@@ -49,6 +49,8 @@ required_paths=(
   "docs/integration/wp108_human_review_packet.schema.json"
   "docs/integration/wp108_no_live_manifest.example.json"
   "docs/integration/wp108_no_live_manifest.schema.json"
+  "docs/integration/wp108_release_candidate_manifest.template.json"
+  "docs/integration/wp108_release_candidate_report.fixture.json"
   "docs/integration/wp108_quality_decision.example.json"
   "docs/integration/wp108_quality_decision.schema.json"
   "docs/integration/wp108_no_live_report.fixture.json"
