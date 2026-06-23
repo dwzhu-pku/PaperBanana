@@ -46,6 +46,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-108 human-review packet head | `86f9bb16fa524cc638a39d5c6c7e6d64a5b279c4` |
 | Latest WP-108 quality decision head | `b6a8a2a51d7ffd7ec8f348ecf892467d7cf7abcd` |
 | Latest WP-108 offline evidence-chain head | `64ac83f9de9112804857a53aa595ae2c6b8b4d8c` |
+| Latest WP-108 checked-in example contract head | `9127c20bb5c8dd50f5c2028ab12ccac50d3c65e5` |
 | Latest WP-107 no-live hosted-readiness smoke head | `4f5d7edfe1e7d937ae8cce3017c649f481883f91` |
 | Latest WP-208 Foundation Models disposition head | `69e9159ca9078952fc24609ded25995e73fe7c1a` |
 | Latest post-WP-208 full-gate/install head | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
@@ -155,6 +156,16 @@ provider, terminated the temporary server, and closed the port. This is still a
 localhost/no-live hosted-readiness proof only, not Hugging Face Space deployment
 proof, hosted provider generation, hosted runtime-log review, hosted rollback,
 or cross-session generation-artifact isolation.
+`EV-20260623-084` records no-live WP-108 checked-in example contract and
+release evidence-drift guard coverage on `9127c20bb5c8`: four WP-108 CLI
+validations passed for the fixture report, blank reviewer packet, completed
+synthetic human-review report, and quality decision example; 34 focused
+docs/WP-108 tests passed; `git diff --check` passed; and the native
+source-control contract passed. The new docs-contract drift guard fails if
+product, native, workflow, or runtime paths change after the latest full local
+native/Python/Xcode gate without a new full-gate record. This is reviewer
+readiness and evidence-governance proof only, not real final-candidate scoring
+or a publication-quality claim.
 `EV-20260622-065` remains historical
 Release install provenance for the earlier
 `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` branch head and binary SHA-256
@@ -446,6 +457,7 @@ channel approval, upgrade proof, or rollback proof.
 | WP-108 human-review packet contract | `EV-20260622-060` | Blank digest-bound two-reviewer packet preparation works from checked artifacts, and scored human-review reports now require reviewer/artifact provenance; no reviewer scores or quality claim |
 | WP-108 quality decision utility | `EV-20260622-062` | Completed human-review reports can now be reduced to an auditable go/no-go decision with manifest thresholds, dimension thresholds, adjudicated score-source policy, and critical-failure blockers; the recorded proof uses synthetic scores and makes no publication-quality claim |
 | WP-108 offline evidence chain | `EV-20260622-063` | Synthetic native artifacts now flow through run-map generation, artifact-completeness reporting, packet binding, completed synthetic human-review validation, and quality decision validation while preserving claim boundaries and excluding provider payload sentinel text; no real reviewer scores or quality claim |
+| WP-108 checked-in example bundle | `EV-20260623-084` | Checked-in fixture, packet, completed human-review report, and decision examples are mutually validator-clean without provider calls, and the release manifest now has an evidence-drift guard for product/runtime changes after the latest full local gate; no real reviewer scores or quality claim |
 | WP-107 no-live hosted-readiness smoke | `EV-20260623-083` | Current branch head refreshed the localhost share=False hosted-readiness smoke: fake startup key sentinels were absent, no key-entry UI returned, two clients called a non-provider endpoint, no live provider was used, and cleanup closed the port; not a Hugging Face Space deployment proof |
 | Native artifact secret-sentinel scan | `EV-20260622-044`, `EV-20260622-068`, `EV-20260623-078` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; current-head provider-free secret-sentinel checks passed again in the 71-test `EV-20260623-078` slice; live-provider and hosted scans remain open |
 | Temporary distinct-bundle rollback preflight | `EV-20260622-045`, `EV-20260622-058`, `EV-20260622-067`, `EV-20260623-078` | The latest run used a prior app from `1fa6cbe90e6f` and the current evidence head `6314142bab27`; it upgraded in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
@@ -587,7 +599,10 @@ state is verified.
   go/no-go decision-report generation for completed human-review reports, but
   its recorded proof uses synthetic scores. `EV-20260622-063` adds stitched offline chain coverage across synthetic native artifact checking, packet
   binding, completed synthetic human-review validation, and quality decision
-  validation. Actual final-candidate outputs, completed real reviewer/provider
+  validation. `EV-20260623-084` keeps the checked-in WP-108 fixture, packet,
+  completed human-review report, and decision examples mutually
+  validator-clean and adds a release evidence-drift guard. Actual
+  final-candidate outputs, completed real reviewer/provider
   scoring, repeated subset, stakeholder approval, and publication-quality
   evidence remain open.
 - Upstream maintainer review, merge, and issue closure before claiming upstream
