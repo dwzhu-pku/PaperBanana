@@ -19,7 +19,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest recorded remote-check evidence head | `0f500900f3b51050743aa86493a8274cee1663f8` |
 | Previous recorded remote-check evidence head | `772ac7df7b24cdca56173560299663cfe6f321a7` |
 | Earlier recorded remote-check evidence head | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
-| Earlier recorded remote-check evidence head | `de4c8170952ad8f0efa2aa8e901f248f3c878605` |
+| Oldest recorded remote-check evidence head | `de4c8170952ad8f0efa2aa8e901f248f3c878605` |
 | Latest current-head Release install evidence | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
 | Branch | `integration/native-first-rc-native` |
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
@@ -46,7 +46,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-108 human-review packet head | `86f9bb16fa524cc638a39d5c6c7e6d64a5b279c4` |
 | Latest WP-108 quality decision head | `b6a8a2a51d7ffd7ec8f348ecf892467d7cf7abcd` |
 | Latest WP-108 offline evidence-chain head | `64ac83f9de9112804857a53aa595ae2c6b8b4d8c` |
-| Latest WP-107 no-live hosted-readiness smoke head | `2312eae6cc7b968512f7dee5bccd8a582fc47113` |
+| Latest WP-107 no-live hosted-readiness smoke head | `4f5d7edfe1e7d937ae8cce3017c649f481883f91` |
 | Latest WP-208 Foundation Models disposition head | `69e9159ca9078952fc24609ded25995e73fe7c1a` |
 | Latest post-WP-208 full-gate/install head | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
 | Latest post-Codex-env full-gate/install head | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
@@ -135,7 +135,7 @@ isolated Python 3.12 tests with 8 provider-audit deprecation warnings, and
 `28036135701`. This is current integration head evidence, not live-provider,
 hosted, WP-108 quality, full manual VoiceOver, final release, or
 upstream-acceptance proof.
-`EV-20260623-082` records current-head fork remote checks and PR #75 handoff on
+`EV-20260623-082` records then-current-head fork remote checks and PR #75 handoff on
 `0f500900f3b`: fork `Native Structural Checks` run `28044099229` and fork
 `Python Tests` run `28044101020` succeeded; upstream PR #75 is open,
 non-draft, mergeable, and based on `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b`;
@@ -144,6 +144,17 @@ entry points, and a "Gates Still Open" section. The upstream PR check rollup is 
 review evidence for this head. This is PR handoff and quick-check evidence, not
 live-provider, hosted, WP-108 quality, full manual VoiceOver, final release, or
 upstream-acceptance proof.
+`EV-20260623-083` records a current-branch-head no-live WP-107 hosted-readiness
+refresh on `4f5d7edfe1e`: 37 focused Python tests passed across hosted
+readiness, credential isolation, plot execution policy, legacy plot agents, and
+docs contract; the localhost `share=False` smoke harness launched a sanitized
+temporary Gradio copy with hosted safety flags and fake startup credential
+sentinels, exposed no key-entry UI or API-key labels, kept sentinel values
+absent, let two independent clients call `/load_method_example`, used no live
+provider, terminated the temporary server, and closed the port. This is still a
+localhost/no-live hosted-readiness proof only, not Hugging Face Space deployment
+proof, hosted provider generation, hosted runtime-log review, hosted rollback,
+or cross-session generation-artifact isolation.
 `EV-20260622-065` remains historical
 Release install provenance for the earlier
 `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` branch head and binary SHA-256
@@ -304,7 +315,7 @@ enumerate nested SwiftUI split-view detail identifiers in this session. This is
 installed-app visual fallback plus Settings AX proof, not full manual
 VoiceOver speech-output traversal or release signoff.
 `EV-20260622-061` records the no-live WP-107 hosted-readiness smoke harness
-added on `2312eae6cc7b`: a sanitized localhost `share=False` Gradio copy
+added on `2312eae6cc7b968512f7dee5bccd8a582fc47113`: a sanitized localhost `share=False` Gradio copy
 launched with hosted safety flags, fake startup credential sentinels were absent
 from the served config/report, no `Apply Keys` control or API-key textbox labels
 were exposed, two independent clients called `/load_method_example`, and the
@@ -435,7 +446,7 @@ channel approval, upgrade proof, or rollback proof.
 | WP-108 human-review packet contract | `EV-20260622-060` | Blank digest-bound two-reviewer packet preparation works from checked artifacts, and scored human-review reports now require reviewer/artifact provenance; no reviewer scores or quality claim |
 | WP-108 quality decision utility | `EV-20260622-062` | Completed human-review reports can now be reduced to an auditable go/no-go decision with manifest thresholds, dimension thresholds, adjudicated score-source policy, and critical-failure blockers; the recorded proof uses synthetic scores and makes no publication-quality claim |
 | WP-108 offline evidence chain | `EV-20260622-063` | Synthetic native artifacts now flow through run-map generation, artifact-completeness reporting, packet binding, completed synthetic human-review validation, and quality decision validation while preserving claim boundaries and excluding provider payload sentinel text; no real reviewer scores or quality claim |
-| WP-107 no-live hosted-readiness smoke | `EV-20260622-061` | Reusable localhost share=False hosted-readiness smoke passed on the current harness head: fake startup key sentinels were absent, no key-entry UI returned, two clients called a non-provider endpoint, and cleanup closed the port; not a Hugging Face Space deployment proof |
+| WP-107 no-live hosted-readiness smoke | `EV-20260623-083` | Current branch head refreshed the localhost share=False hosted-readiness smoke: fake startup key sentinels were absent, no key-entry UI returned, two clients called a non-provider endpoint, no live provider was used, and cleanup closed the port; not a Hugging Face Space deployment proof |
 | Native artifact secret-sentinel scan | `EV-20260622-044`, `EV-20260622-068`, `EV-20260623-078` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; current-head provider-free secret-sentinel checks passed again in the 71-test `EV-20260623-078` slice; live-provider and hosted scans remain open |
 | Temporary distinct-bundle rollback preflight | `EV-20260622-045`, `EV-20260622-058`, `EV-20260622-067`, `EV-20260623-078` | The latest run used a prior app from `1fa6cbe90e6f` and the current evidence head `6314142bab27`; it upgraded in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
 | Runtime user-data migration slice | `EV-20260622-048`, `EV-20260622-058`, `EV-20260622-067`, `EV-20260623-078` | Isolated Application Support override, fake sentinel secret-store permissions, legacy run-store schema migration, stale-run recovery, Run Details / Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte preservation passed without live providers; the selected runtime migration/secret-store/RunStore migration slice was rerun on current evidence head `6314142bab27`, providing bounded runtime user-data migration proof for synthetic fixtures only |
@@ -456,7 +467,7 @@ channel approval, upgrade proof, or rollback proof.
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
 | `local/<model>` and `ollama/<model>` text routes | Documented and covered by mocked route/docs tests | `EV-20260622-007` and full Python suites | Optional real local/Ollama endpoint smoke remains open if promoted beyond mocked support |
 | Foundation Models | Unsupported for release | `D-05`, `D-13`, provider-support docs, and `EV-20260622-054` | Release-visible image model choices cannot route to Foundation Models, and the auxiliary assistant defaults to local fallback; do not promote as functional without implementation and tests |
-| Hosted Gradio/Space generation | Not release-verified | Credential/plot policy evidence exists for local code paths; sanitized localhost served credential smoke in `EV-20260622-040`; reusable current-head no-live localhost hosted-readiness smoke in `EV-20260622-061` | Real Hugging Face Space two-session proof, hosted negative-path validation, deployed SHA/logs, provider-backed hosted generation, hosted rollback, and cross-session generation-artifact isolation remain open |
+| Hosted Gradio/Space generation | Not release-verified | Credential/plot policy evidence exists for local code paths; sanitized localhost served credential smoke in `EV-20260622-040`; reusable no-live localhost hosted-readiness harness in `EV-20260622-061`; current-head no-live hosted-readiness refresh in `EV-20260623-083` | Real Hugging Face Space two-session proof, hosted negative-path validation, deployed SHA/logs, provider-backed hosted generation, hosted rollback, and cross-session generation-artifact isolation remain open |
 
 Per `D-05`, only routes with final smoke evidence can be described as supported
 release routes. Routes without final smoke remain experimental, mocked, local
@@ -535,9 +546,10 @@ state is verified.
 - Hosted two-session proof on the real hosted surface, hosted negative-path
   validation, deployed SHA, runtime-log review, and hosted rollback before any
   public hosted-generation claim. `EV-20260622-040` is historical
-  localhost-only credential/session smoke evidence, and `EV-20260622-061` is a
-  current-head no-live hosted-readiness smoke harness that runs on localhost
-  `share=False`; neither is a Hugging Face Space deployment proof.
+  localhost-only credential/session smoke evidence, `EV-20260622-061` adds the
+  reusable no-live hosted-readiness harness, and `EV-20260623-083` refreshes the
+  localhost `share=False` no-live hosted-readiness smoke on current branch head;
+  none of these is a Hugging Face Space deployment proof.
 - True install/upgrade/rollback proof and release manifest consistency on the
   final frozen release SHA. Current full local native/Python/Xcode gate evidence
   is covered by `EV-20260623-069`, current branch-head Release install and
