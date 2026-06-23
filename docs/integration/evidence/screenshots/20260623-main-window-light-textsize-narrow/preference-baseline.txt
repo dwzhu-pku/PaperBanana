@@ -1,0 +1,8 @@
+timestamp=2026-06-23T12:51:36Z
+head=5fe91fa3c6dee7c13fddb4651f55404e226775fb
+app_binary_sha256=080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5
+dark_mode=true
+repo_present=1
+repo_path=/Users/jeff/Codex_projects/PaperBanana-native-integrated
+text_size_present=0
+text_size=

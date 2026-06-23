@@ -1,0 +1,1 @@
+128c799ed83acc2eff894d55e5520be461d766a29967994da08a57519be0a342  docs/integration/evidence/screenshots/20260623-main-window-light-textsize-narrow/main-light-textsize-narrow-runLedger.png

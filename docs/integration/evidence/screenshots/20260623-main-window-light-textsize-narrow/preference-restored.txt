@@ -1,0 +1,5 @@
+timestamp=2026-06-23T12:52:13Z
+dark_mode=true
+repo_path=/Users/jeff/Codex_projects/PaperBanana-native-integrated
+text_size=
+paperbanana_processes=

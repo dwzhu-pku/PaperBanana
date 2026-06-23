@@ -1,0 +1,1 @@
+f48d41176c760cc05a8ca996b6224e3709ae8e19e652949b07d7c1d780930084  docs/integration/evidence/screenshots/20260623-main-window-light-textsize-narrow/main-light-textsize-narrow-runDetails.png

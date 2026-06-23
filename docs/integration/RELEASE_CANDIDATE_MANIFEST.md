@@ -17,11 +17,11 @@ been validated and leaves every unvalidated release claim open.
 | Previous sanitized full local native/Python/Xcode gate | `da8329597d196608a40bcf6be823c9ef684a9e16` |
 | Latest recorded remote-check evidence head | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
 | Previous recorded remote-check evidence head | `de4c8170952ad8f0efa2aa8e901f248f3c878605` |
-| Latest current-head Release install evidence | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
+| Latest current-head Release install evidence | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
 | Branch | `integration/native-first-rc-native` |
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
 | Upstream base | `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b` |
-| Latest product-source change | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
+| Latest product-source change | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
 | Latest native artifact-secret test head | `59e40f7b7c33b5e449a44224edc1d8dfb1508a6c` |
 | Latest temporary rollback preflight head | `c976aca0ee70f26a8473f7024deb0b11ae2fe884` |
 | Latest current-head rollback preflight head | `ad07fcc594dc4fa231724c8bf6831a03e191ee8a` |
@@ -32,6 +32,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-106 fake-Codex handoff test head | `6f48b2dcd055a32f0fa3cdca899ddcff7a9fd009` |
 | Latest WP-106 Codex handoff environment hardening head | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
 | Latest WP-007 Settings source-contract test head | `6ce551e868ddebb15e6dc87c989b690fc60a3277` |
+| Latest WP-007 Main Window Light text-size screenshot head | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
 | Latest WP-108 no-live artifact runner head | `dc8d8e5f5149eb8099a9ecb45628a74dcd610599` |
 | Latest WP-108 human-review packet head | `86f9bb16fa524cc638a39d5c6c7e6d64a5b279c4` |
 | Latest WP-108 quality decision head | `b6a8a2a51d7ffd7ec8f348ecf892467d7cf7abcd` |
@@ -109,12 +110,34 @@ running `PaperBanana` app process or current-worktree legacy backend after
 `28025752242` and remote `Python Tests` run `28025752249`. This is current-head
 Release build/install and quick remote-check evidence, not a live provider,
 hosted, quality, manual AX, rollback/upgrade, notarization, distribution, final
-release, or upstream-acceptance proof. `EV-20260622-065` remains historical
+release, or upstream-acceptance proof. It remains historical current-head Release build/install evidence for that pushed branch head, while
+`EV-20260623-072` is the later local product-source install/screenshot slice.
+`EV-20260622-065` remains historical
 Release install provenance for the earlier
 `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` branch head and binary SHA-256
 `d251ae8559d6fbcdb94c3e23b4449207a6ec842ce492f40c37944d12ce189591`;
 that historical proof also checked that no install-clone legacy backend remained
 running after `--no-open`.
+`EV-20260623-072` records a later product-source polish and Release install on
+`5fe91fa3c6de`: root sidebar selected-state tokens now use a dedicated
+`Color(nsColor: .selectedContentBackgroundColor)` based policy, the installed
+binary SHA-256 is
+`080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`, and
+Prompt Studio, Artifact Library, Run Details, and Run Ledger were captured in
+Light Mode with app-scoped Increased Text Size at the minimum main-window size.
+The screenshots live under
+`docs/integration/evidence/screenshots/20260623-main-window-light-textsize-narrow/`;
+`main-light-textsize-narrow-promptStudio.png` has SHA-256
+`e35086d710c1d52dc6f9623edeb8a907be13214d5c9968b700bc04e4f5722f9c`,
+`main-light-textsize-narrow-artifactLibrary.png` has SHA-256
+`f20ca1258589a1042f25b7e9e7dc7c9f21ed577c40d7f7bf25267eeaf91f9b8a`,
+`main-light-textsize-narrow-runDetails.png` has SHA-256
+`f48d41176c760cc05a8ca996b6224e3709ae8e19e652949b07d7c1d780930084`, and
+`main-light-textsize-narrow-runLedger.png` has SHA-256
+`128c799ed83acc2eff894d55e5520be461d766a29967994da08a57519be0a342`.
+The temporary repo-path override, Light appearance, and app-scoped Text Size
+override were restored after capture, and 6 focused native accessibility/adaptive/window source-contract tests passed. Dense table text truncation remains a bounded limitation in Run Details and Run Ledger at the
+minimum window size.
 `EV-20260622-061` records the no-live WP-107 hosted-readiness smoke harness
 added on `2312eae6cc7b`: a sanitized localhost `share=False` Gradio copy
 launched with hosted safety flags, fake startup credential sentinels were absent
@@ -211,11 +234,11 @@ provenance for product head `8ce7f3a2cca3`. `EV-20260622-057` validates remote s
 | Bundle version | `1` |
 | Binary architecture | `arm64` |
 | Code-signing check | Valid on disk; satisfies designated requirement |
-| Source checkout commit | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
-| Latest product-source change | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
-| Binary SHA-256 | `557ab15a73f2bbfa8c209fe6efd5399c0e3794f1a603e8a8825b008fd2121571` |
+| Source checkout commit | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
+| Latest product-source change | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
+| Binary SHA-256 | `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5` |
 | Install command | `DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer ./script/build_and_run.sh --release --install --no-open` |
-| Artifact evidence | `EV-20260623-070` |
+| Artifact evidence | `EV-20260623-072` |
 
 This is local install provenance only. It is not notarization, distribution
 channel approval, upgrade proof, or rollback proof.
@@ -226,11 +249,11 @@ channel approval, upgrade proof, or rollback proof.
 |---|---|---|
 | Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-057`, `EV-20260622-064`, `EV-20260623-069` | Passed with limitation |
 | Local aggregate native gate | `EV-20260623-069` | Latest full local gate passed through the documented `script/test_all.sh` command after the isolated Python 3.12 fallback fix: 167 Swift tests, 126 Python tests, and `codex-xcode27 proof` passed |
-| Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070` | Current branch-head Release build/install and installed-app artifact provenance passed with binary SHA-256 `557ab15a73f2bbfa8c209fe6efd5399c0e3794f1a603e8a8825b008fd2121571`; this does not replace full-gate evidence or rollback proof |
+| Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070`, `EV-20260623-072` | Latest product-source Release build/install and installed-app artifact provenance passed with binary SHA-256 `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`; this does not replace full-gate evidence or rollback proof |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070` | Passed with limitation; latest recorded remote quick checks are for `213fc941`, while `EV-20260623-069` records the latest local full gate and the self-hosted workflow dispatch limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068` | Partial; includes current-head source-level accessibility/keyboard contracts and source-level Settings accessibility/adaptive regression coverage, but not full manual VoiceOver traversal |
-| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is now recorded for Settings, but broader screenshot-based full-app adaptive signoff remains open |
+| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is recorded for Settings, and Light Mode Increased Text Size at the minimum main-window size is recorded for Prompt Studio, Artifact Library, Run Details, and Run Ledger after sidebar selection polish; broader screenshot-based full-app adaptive signoff remains open |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
 | WP-108 no-live artifact-completeness runner | `EV-20260622-051`, `EV-20260622-059` | Synthetic native output/request/metadata/provider-request/provider-response/provider-audit/run-store artifacts produce a fixture-mode report, and a no-live generator now maps explicit native run-store rows to the checker; no image scoring or quality claim |
@@ -246,7 +269,7 @@ channel approval, upgrade proof, or rollback proof.
 | Foundation Models disposition | `EV-20260622-054` | Release-visible image model choices do not route to Foundation Models, and the auxiliary assistant defaults to local fallback; Foundation Models remains unsupported |
 | Post-WP-208 full-gate/install proof | `EV-20260622-055` | Current branch head passed the full local aggregate gate, remote structural/Python checks, and Release build/install after the Foundation Models disposition |
 | Codex fallback environment hardening and full-gate/install proof | `EV-20260622-056` | The Swift Codex fallback handoff now launches with a constrained non-secret subprocess environment; focused and selected no-live fallback tests passed, then the full local aggregate gate, proof, and Release install passed |
-| Current-head Release install/artifact provenance | `EV-20260623-070` | The current branch head passed Release build/install from the current worktree, installed `/Applications/PaperBanana.app`, verified bundle metadata, local ad hoc code signing, arm64 binary hash, and confirmed no app or current-worktree legacy backend process remained running after `--no-open` |
+| Current-head Release install/artifact provenance | `EV-20260623-072` | The latest product-source head passed Release build/install from the current worktree, installed `/Applications/PaperBanana.app`, verified arm64 app provenance by binary hash, and restored capture preferences after `--no-open` and screenshot capture |
 
 ## Provider Support Matrix
 
@@ -268,7 +291,7 @@ only, or unsupported as stated above.
 
 | Requirement | Current status |
 |---|---|
-| Current app install provenance | Covered by `EV-20260623-070` |
+| Current app install provenance | Covered by `EV-20260623-072` |
 | Local app-bundle backup/install/restore preflight | Covered by `EV-20260622-037`; before, candidate, and restored binary hashes matched |
 | Temporary distinct-bundle upgrade from an older validated product commit | Covered historically by `EV-20260622-045`; current branch-head coverage is `EV-20260622-067`, using a prior app built from `1fa6cbe90e6f`, a distinct candidate hash, and an exact restored prior hash |
 | True upgrade from a retained public prior release artifact | Not yet proven |
@@ -298,8 +321,11 @@ state is verified.
   `EV-20260622-041`; source-level lower Workspace content regression protection
   is covered by `EV-20260622-066`; Light Mode Settings Increased Text Size and
   lower Workspace screenshot coverage is covered by `EV-20260623-071`.
-  Full-app Increased Text Size, hover/focus, narrow-width, and full-app adaptive
-  visual review remain open.
+  Prompt Studio, Artifact Library, Run Details, and Run Ledger Light Mode
+  Increased Text Size coverage at the minimum main-window size is covered by
+  `EV-20260623-072`, including the sidebar selection polish. Full-app Increased Text Size for remaining states, Dark Mode main-window text-size coverage,
+  hover/focus, inactive-window, sheet/error/recovery/loading, and full-app
+  adaptive visual review remain open.
 - Approved live provider/fallback native E2E with non-private fixtures, spend
   limit, redacted request/metadata/provider-artifact review, and
   failure/recovery proof. `EV-20260622-044` covers dry-run artifact
@@ -329,11 +355,12 @@ state is verified.
 - Repeat the full local/self-hosted native/Python/Xcode gate if a later
   product-code change lands or if the final frozen release-candidate SHA
   differs from `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d`.
-  `EV-20260623-069` is current-head full local gate evidence only; the
-  self-hosted GitHub Xcode 27 workflow still requires default-branch workflow
-  availability if selected as a required remote gate. `EV-20260623-070` is
-  current-head Release build/install evidence only; rollback/upgrade proof
-  remains separate.
+  `EV-20260623-069` is the latest full local gate evidence, while
+  `EV-20260623-072` is later focused source-contract and Release install
+  evidence for product-code SHA `5fe91fa3c6de`; it does not replace the full
+  local gate. The self-hosted GitHub Xcode 27 workflow still requires
+  default-branch workflow availability if selected as a required remote gate.
+  Rollback/upgrade proof remains separate.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
   `EV-20260622-043` confirms the current branch has evaluation-adjacent code but
   no safe no-live release-quality benchmark runner, frozen manifest, threshold,
