@@ -119,6 +119,10 @@ review anchors; it is not the sole current gate record. Later evidence includes
 `a251dda11fa2`, `EV-20260623-092` for the completed-packet validator,
 `EV-20260623-093` for validator hardening, and `EV-20260623-094` for current
 fork CI at `533857f04646` plus strict local full-gate Xcode build drift.
+`EV-20260623-095` records the repo-level current-Xcode compatibility pass on
+`29901fa32d9a` and the remaining global `codex-xcode27 host-audit` pinned-build
+blocker. It is compatibility evidence only and does not replace the latest full
+local gate at `a251dda11fa2`.
 
 - `EV-20260622-006`: original native aggregate gate at `e0cea781ca07`.
 - `EV-20260622-011`: portable CI and native gate scripts at `26adc4670944`.
