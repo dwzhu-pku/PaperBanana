@@ -697,6 +697,129 @@ final class ProviderRuntimeTests: XCTestCase {
         XCTAssertTrue(capturedEvents.map(\.stage).contains("started"))
     }
 
+    #if PAPERBANANA_ENABLE_REAL_CODEX_E2E_TESTS
+    func testCodexFallbackProviderClientExecutesRealCodexCLIWhenExplicitlyEnabled() async throws {
+        let environment = ProcessInfo.processInfo.environment
+        guard environment["PAPERBANANA_REAL_CODEX_E2E"] == "1" else {
+            throw XCTSkip(
+                "Set PAPERBANANA_REAL_CODEX_E2E=1 and PAPERBANANA_REAL_CODEX_BIN to run the live Codex CLI fallback E2E gate."
+            )
+        }
+
+        let codexBinaryPath = environment["PAPERBANANA_REAL_CODEX_BIN"] ?? "/opt/homebrew/bin/codex"
+        guard FileManager.default.isExecutableFile(atPath: codexBinaryPath) else {
+            throw XCTSkip("PAPERBANANA_REAL_CODEX_BIN is not executable: \(codexBinaryPath)")
+        }
+
+        let timeoutSeconds = TimeInterval(
+            Double(environment["PAPERBANANA_REAL_CODEX_TIMEOUT_SECONDS"] ?? "") ?? 900
+        )
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        let keepArtifacts = environment["PAPERBANANA_REAL_CODEX_KEEP_ARTIFACTS"] == "1"
+        defer {
+            if keepArtifacts {
+                print("PAPERBANANA_REAL_CODEX_E2E_ARTIFACTS=\(repoRoot.path)")
+            } else {
+                try? FileManager.default.removeItem(at: repoRoot)
+            }
+        }
+
+        let outputURL = repoRoot
+            .appendingPathComponent("results/native_generate/real_codex_fallback_e2e/generated_2K.png")
+        let providerRequestURL = outputURL
+            .deletingLastPathComponent()
+            .appendingPathComponent("provider_request.json")
+        let settings = Self.settings(repoRoot: repoRoot)
+        let client: any ProviderClient = CodexFallbackProviderClient(
+            codexExecutableURL: URL(fileURLWithPath: codexBinaryPath),
+            timeoutSeconds: max(timeoutSeconds, 30),
+            pollInterval: 1,
+            extraEnvironment: [
+                "GOOGLE_API_KEY": "paperbanana-real-codex-test-google-secret",
+                "OPENROUTER_API_KEY": "paperbanana-real-codex-test-openrouter-secret",
+                "OPENAI_API_KEY": "paperbanana-real-codex-test-openai-secret",
+                "AUTHORIZATION": "Bearer paperbanana-real-codex-test-bearer-secret",
+                "PAPERBANANA_PROVIDER_TOKEN": "paperbanana-real-codex-test-provider-token"
+            ]
+        )
+        let progressEvents = ProviderProgressEventCollector()
+
+        let response = try await client.execute(
+            ProviderClientRequest(
+                runID: "real_codex_fallback_e2e",
+                callID: "swift-real-codex-e2e-call",
+                workflow: .generation,
+                prompt: """
+                Create a small non-private test schematic with three labeled boxes: Input, PaperBanana, Output.
+                Use local code if helpful, keep the image simple, and write the requested PNG only.
+                """,
+                sourceImageURL: nil,
+                model: .codexFallback,
+                effectiveModel: ImageModelChoice.codexFallback.backendValue,
+                resolution: "2K",
+                aspectRatio: "16:9",
+                task: "scientific diagram",
+                settings: settings,
+                outputURL: outputURL,
+                providerRequestURL: providerRequestURL
+            ),
+            eventHandler: { event in
+                progressEvents.append(event)
+            }
+        )
+
+        let pngSignature = Data([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
+        let capturedEvents = progressEvents.events()
+        XCTAssertEqual(response.provider, .codexFallback)
+        XCTAssertEqual(response.model, ImageModelChoice.codexFallback.backendValue)
+        XCTAssertEqual(response.callID, "swift-real-codex-e2e-call")
+        let imageData = try XCTUnwrap(response.imageData)
+        XCTAssertTrue(imageData.starts(with: pngSignature))
+        XCTAssertEqual(response.usageMetadata["provider_spend"], "none")
+        XCTAssertEqual(response.usageMetadata["handoff_adapter"], "swift_codex")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outputURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: providerRequestURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: response.usageMetadata["prompt_path"] ?? ""))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: response.usageMetadata["log_path"] ?? ""))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: response.usageMetadata["message_path"] ?? ""))
+        XCTAssertEqual(capturedEvents.first?.stage, "provider_request_saved")
+        XCTAssertTrue(capturedEvents.map(\.stage).contains("prepared"))
+        XCTAssertTrue(capturedEvents.map(\.stage).contains("started"))
+
+        let providerRequestData = try Data(contentsOf: providerRequestURL)
+        let providerRequestPayload = try XCTUnwrap(JSONSerialization.jsonObject(with: providerRequestData) as? [String: Any])
+        XCTAssertEqual(providerRequestPayload["adapter"] as? String, "swift_codex")
+        XCTAssertEqual(providerRequestPayload["run_id"] as? String, "real_codex_fallback_e2e")
+        XCTAssertEqual(providerRequestPayload["call_id"] as? String, "swift-real-codex-e2e-call")
+        XCTAssertEqual(providerRequestPayload["output_path"] as? String, outputURL.path)
+        let commandArguments = try XCTUnwrap(providerRequestPayload["command_arguments"] as? [String])
+        XCTAssertEqual(commandArguments.prefix(3), ["exec", "-m", "gpt-5.5"])
+        XCTAssertTrue(commandArguments.contains(#"model_reasoning_effort="xhigh""#))
+        XCTAssertTrue(commandArguments.contains("--sandbox"))
+        XCTAssertTrue(commandArguments.contains("workspace-write"))
+        XCTAssertTrue(commandArguments.contains("-C"))
+        XCTAssertTrue(commandArguments.contains(repoRoot.path))
+        XCTAssertTrue(commandArguments.contains("--add-dir"))
+        XCTAssertTrue(commandArguments.contains(outputURL.deletingLastPathComponent().path))
+        XCTAssertTrue(commandArguments.contains("-o"))
+        XCTAssertTrue(commandArguments.contains { $0.hasSuffix(".message.txt") })
+
+        try Self.assertTextArtifactsDoNotContainMarkers(
+            [
+                providerRequestURL,
+                URL(fileURLWithPath: try XCTUnwrap(response.usageMetadata["prompt_path"])),
+                URL(fileURLWithPath: try XCTUnwrap(response.usageMetadata["log_path"])),
+                URL(fileURLWithPath: try XCTUnwrap(response.usageMetadata["message_path"]))
+            ],
+            markers: Self.realCodexForbiddenArtifactMarkers
+        )
+        let rawResponseText = try XCTUnwrap(String(data: response.rawResponseData, encoding: .utf8))
+        for marker in Self.realCodexForbiddenArtifactMarkers {
+            XCTAssertFalse(rawResponseText.contains(marker), "Raw response leaked forbidden marker: \(marker)")
+        }
+    }
+    #endif
+
     func testReadinessSnapshotSurfacesPathKeysBackendAndCodexFallback() throws {
         let repoRoot = try Self.makeTemporaryRepoRoot()
         defer { try? FileManager.default.removeItem(at: repoRoot) }
@@ -850,6 +973,36 @@ final class ProviderRuntimeTests: XCTestCase {
         try script.write(to: executableURL, atomically: true, encoding: .utf8)
         try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: executableURL.path)
         return executableURL
+    }
+
+    private static let realCodexForbiddenArtifactMarkers = [
+        "paperbanana-real-codex-test-google-secret",
+        "paperbanana-real-codex-test-openrouter-secret",
+        "paperbanana-real-codex-test-openai-secret",
+        "paperbanana-real-codex-test-bearer-secret",
+        "paperbanana-real-codex-test-provider-token",
+        "GOOGLE_API_KEY",
+        "OPENROUTER_API_KEY",
+        "OPENAI_API_KEY",
+        "AUTHORIZATION",
+        "PAPERBANANA_PROVIDER_TOKEN",
+        "PAPERBANANA_FAKE_CODEX",
+        "AIza",
+        "sk-"
+    ]
+
+    private static func assertTextArtifactsDoNotContainMarkers(
+        _ urls: [URL],
+        markers: [String],
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) throws {
+        for url in urls {
+            let text = try String(contentsOf: url, encoding: .utf8)
+            for marker in markers {
+                XCTAssertFalse(text.contains(marker), "\(url.path) leaked forbidden marker: \(marker)", file: file, line: line)
+            }
+        }
     }
 
     private static let tinyPNGBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADUlEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC"
