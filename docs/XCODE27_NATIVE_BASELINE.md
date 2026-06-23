@@ -27,6 +27,13 @@ targets, app-intent surfaces, or release packaging:
 ./script/xcode27_baseline_guard.sh
 ```
 
+The default release baseline remains Xcode build `27A5194q`. For supplemental
+host-compatibility evidence on a newer beta, set
+`PAPERBANANA_EXPECTED_XCODE_BUILD='Build version <build>'`; the baseline guard
+and native Xcode project contract consume the same override. Such a run is
+compatibility evidence only unless the release owner explicitly updates the
+accepted Xcode baseline.
+
 The guard verifies:
 
 - the selected Xcode and Swift toolchain,

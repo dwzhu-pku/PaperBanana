@@ -59,6 +59,20 @@ def test_ci_policy_documents_manual_xcode27_gate_and_no_secret_pr_policy():
         assert phrase in text
 
 
+def test_xcode_contract_uses_same_expected_build_override_as_baseline_guard():
+    baseline_guard = _read("script/xcode27_baseline_guard.sh")
+    xcode_contract = _read("script/check_native_xcode_contract.sh")
+    baseline_doc = _read("docs/XCODE27_NATIVE_BASELINE.md")
+
+    for text in (baseline_guard, xcode_contract, baseline_doc):
+        assert "PAPERBANANA_EXPECTED_XCODE_BUILD" in text
+        assert "27A5194q" in text
+
+    assert "PAPERBANANA_EXPECTED_XCODE_PRODUCT_BUILD_VERSION" in xcode_contract
+    assert "XCODE_PRODUCT_BUILD_VERSION" in xcode_contract
+    assert "compatibility evidence only" in baseline_doc
+
+
 def test_native_install_scripts_support_safe_temporary_rollback_preflight():
     build_script = _read("script/build_and_run.sh")
     preflight_script = _read("script/preflight_local_upgrade_rollback.sh")

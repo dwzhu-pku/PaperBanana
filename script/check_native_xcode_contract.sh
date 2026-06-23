@@ -6,6 +6,11 @@ PROJECT_FILE="$ROOT_DIR/PaperBanana.xcodeproj"
 PROJECT_SPEC="$ROOT_DIR/project.yml"
 SCHEME="PaperBanana"
 DESTINATION="platform=macOS,arch=arm64"
+EXPECTED_XCODE_PRODUCT_BUILD_VERSION="${PAPERBANANA_EXPECTED_XCODE_PRODUCT_BUILD_VERSION:-}"
+if [[ -z "$EXPECTED_XCODE_PRODUCT_BUILD_VERSION" && -n "${PAPERBANANA_EXPECTED_XCODE_BUILD:-}" ]]; then
+  EXPECTED_XCODE_PRODUCT_BUILD_VERSION="${PAPERBANANA_EXPECTED_XCODE_BUILD#Build version }"
+fi
+EXPECTED_XCODE_PRODUCT_BUILD_VERSION="${EXPECTED_XCODE_PRODUCT_BUILD_VERSION:-27A5194q}"
 export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode-beta.app/Contents/Developer}"
 
 fail() {
@@ -34,7 +39,7 @@ xcodebuild \
   -configuration Release \
   -destination "$DESTINATION" >"$settings_json"
 
-python3 - "$ROOT_DIR" "$list_json" "$settings_json" <<'PY'
+python3 - "$ROOT_DIR" "$list_json" "$settings_json" "$EXPECTED_XCODE_PRODUCT_BUILD_VERSION" <<'PY'
 import json
 import pathlib
 import sys
@@ -42,6 +47,7 @@ import sys
 root = pathlib.Path(sys.argv[1])
 list_path = pathlib.Path(sys.argv[2])
 settings_path = pathlib.Path(sys.argv[3])
+expected_xcode_product_build_version = sys.argv[4]
 
 def fail(message: str) -> None:
     print(f"ERROR: {message}", file=sys.stderr)
@@ -88,7 +94,7 @@ expected = {
     "SWIFT_VERSION": "6.0",
     "EFFECTIVE_SWIFT_VERSION": "6",
     "SDK_VERSION": "27.0",
-    "XCODE_PRODUCT_BUILD_VERSION": "27A5194q",
+    "XCODE_PRODUCT_BUILD_VERSION": expected_xcode_product_build_version,
 }
 for key, value in expected.items():
     actual = app_settings.get(key)
