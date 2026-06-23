@@ -16,8 +16,9 @@ been validated and leaves every unvalidated release claim open.
 | Latest full local native/Python/Xcode gate | `a251dda11fa29aa4ed430d25fa6dbc8cdd8834bb` |
 | Previous full local native/Python/Xcode gate | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
 | Previous sanitized full local native/Python/Xcode gate | `da8329597d196608a40bcf6be823c9ef684a9e16` |
-| Latest recorded remote-check evidence head | `772ac7df7b24cdca56173560299663cfe6f321a7` |
-| Previous recorded remote-check evidence head | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
+| Latest recorded remote-check evidence head | `0f500900f3b51050743aa86493a8274cee1663f8` |
+| Previous recorded remote-check evidence head | `772ac7df7b24cdca56173560299663cfe6f321a7` |
+| Earlier recorded remote-check evidence head | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
 | Earlier recorded remote-check evidence head | `de4c8170952ad8f0efa2aa8e901f248f3c878605` |
 | Latest current-head Release install evidence | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
 | Branch | `integration/native-first-rc-native` |
@@ -133,6 +134,15 @@ isolated Python 3.12 tests with 8 provider-audit deprecation warnings, and
 `Native Structural Checks` run `28036136383` and `Python Tests` run
 `28036135701`. This is current integration head evidence, not live-provider,
 hosted, WP-108 quality, full manual VoiceOver, final release, or
+upstream-acceptance proof.
+`EV-20260623-082` records current-head fork remote checks and PR #75 handoff on
+`0f500900f3b`: fork `Native Structural Checks` run `28044099229` and fork
+`Python Tests` run `28044101020` succeeded; upstream PR #75 is open,
+non-draft, mergeable, and based on `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b`;
+the PR body now records the current head, fork CI, `EV-20260623-081`, reviewer
+entry points, and a "Gates Still Open" section. The upstream PR check rollup is still empty, so fork CI and SHA-linked local evidence remain the executable
+review evidence for this head. This is PR handoff and quick-check evidence, not
+live-provider, hosted, WP-108 quality, full manual VoiceOver, final release, or
 upstream-acceptance proof.
 `EV-20260622-065` remains historical
 Release install provenance for the earlier
@@ -532,8 +542,9 @@ state is verified.
   final frozen release SHA. Current full local native/Python/Xcode gate evidence
   is covered by `EV-20260623-069`, current branch-head Release install and
   artifact provenance is covered by `EV-20260623-070`, current pushed
-  evidence-head remote quick-check consistency is covered by `EV-20260623-070`,
-  earlier pushed evidence-head consistency is covered by `EV-20260622-057`, temporary
+  evidence-head remote quick-check consistency is covered by `EV-20260623-082`,
+  earlier pushed evidence-head consistency is covered by `EV-20260623-070` and
+  `EV-20260622-057`, temporary
   distinct-bundle replacement/restore is covered historically by
   `EV-20260622-045`, repeated for the post-Codex-environment candidate in
   `EV-20260622-058`, and refreshed for `ad07fcc594dc` in `EV-20260622-067`, and
@@ -546,11 +557,10 @@ state is verified.
   migration proof, or hosted rollback proof.
 - Repeat the full local/self-hosted native/Python/Xcode gate if a later
   product-code change lands or if the final frozen release-candidate SHA
-  differs from `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d`.
-  `EV-20260623-069` is the latest full local gate evidence, while
-  `EV-20260623-072` is later focused source-contract and Release install
-  evidence for product-code SHA `5fe91fa3c6de`; it does not replace the full
-  local gate. The self-hosted GitHub Xcode 27 workflow still requires
+  requires a full-gate rerun. `EV-20260623-081` is the latest full local gate
+  evidence, while `EV-20260623-082` is current-head PR handoff and fork
+  quick-check evidence for the later evidence-only SHA `0f500900f3b`; it does
+  not replace the full local gate. The self-hosted GitHub Xcode 27 workflow still requires
   default-branch workflow availability if selected as a required remote gate.
   Rollback/upgrade proof remains separate.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
