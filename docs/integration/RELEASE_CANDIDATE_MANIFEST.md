@@ -45,8 +45,8 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-007 Prompt Studio keyboard/preflight AX head | `74e28eb68020df7bad84076aae29f39a158334b5` |
 | Latest WP-007 installed-app keyboard/AX fallback head | `55e54e68b1d3d1f7d99d96d8e4d2d86f2b71e4c7` |
 | Latest WP-007 manual VoiceOver traversal packet head | `b81a39909f4af9d9192b098c45357ac3667c9e34` |
-| Latest WP-007 manual VoiceOver artifact contract head | `728e39c2c15abd421da2fbbca9147aa912d0a265` |
-| Latest WP-007 completed-packet validator head | `728e39c2c15abd421da2fbbca9147aa912d0a265` |
+| Latest WP-007 manual VoiceOver artifact contract head | `2e1ab557ba5a876f57b1dcd364931aa9eb4b540f` |
+| Latest WP-007 completed-packet validator head | `2e1ab557ba5a876f57b1dcd364931aa9eb4b540f` |
 | Latest WP-108 no-live artifact runner head | `dc8d8e5f5149eb8099a9ecb45628a74dcd610599` |
 | Latest WP-108 human-review packet head | `86f9bb16fa524cc638a39d5c6c7e6d64a5b279c4` |
 | Latest WP-108 quality decision head | `b6a8a2a51d7ffd7ec8f348ecf892467d7cf7abcd` |
