@@ -122,7 +122,11 @@ fork CI at `533857f04646` plus strict local full-gate Xcode build drift.
 `EV-20260623-095` records the repo-level current-Xcode compatibility pass on
 `29901fa32d9a` and the remaining global `codex-xcode27 host-audit` pinned-build
 blocker. It is compatibility evidence only and does not replace the latest full
-local gate at `a251dda11fa2`.
+local gate at `a251dda11fa2`. `EV-20260623-096` records that current head
+`3beb7f0355f0` passed fork CI plus the full local aggregate gate with explicit
+`PAPERBANANA_EXPECTED_XCODE_BUILD='Build version 27A5209h'` after local global
+helper override support. It is current-beta override aggregate-gate evidence,
+not unqualified `27A5194q` release-baseline acceptance.
 
 - `EV-20260622-006`: original native aggregate gate at `e0cea781ca07`.
 - `EV-20260622-011`: portable CI and native gate scripts at `26adc4670944`.

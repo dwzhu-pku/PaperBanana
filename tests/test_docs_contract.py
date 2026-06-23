@@ -104,6 +104,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d",
         "a251dda11fa29aa4ed430d25fa6dbc8cdd8834bb",
         "29901fa32d9a44d692a54de5bd882a6b9efd35a5",
+        "3beb7f0355f0fb0680f962df96d0240380b11c47",
         "533857f046462ae71e843b7332f70f580916c015",
         "0f500900f3b51050743aa86493a8274cee1663f8",
         "0888cbe4b3b8d2d14c782634af1ed2df1c087067",
@@ -123,6 +124,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "6314142bab27c2591d57149ca18d5979d623ecc0",
         "55e54e68b1d3d1f7d99d96d8e4d2d86f2b71e4c7",
         "Latest recorded remote-check evidence head",
+        "Latest current-Xcode override aggregate gate head",
         "Latest native artifact-secret test head",
         "Latest temporary rollback preflight head",
         "Latest current-head rollback preflight head",
@@ -214,6 +216,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "EV-20260623-093",
         "EV-20260623-094",
         "EV-20260623-095",
+        "EV-20260623-096",
         "28025752242",
         "28025752249",
         "28035948312",
@@ -226,6 +229,8 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "28050755344",
         "28051616788",
         "28051616861",
+        "28061500458",
+        "28061500468",
         "27A5194q",
         "27A5209h",
         "host/toolchain drift evidence",
@@ -258,6 +263,10 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "current host Xcode beta drift",
         "repo-level current-Xcode compatibility",
         "global `codex-xcode27 host-audit`",
+        "current-Xcode override aggregate gate",
+        "global helper override support",
+        "current-beta override evidence",
+        "not strict `27A5194q` release-baseline acceptance",
         "147 Python tests",
         "37 focused Python tests",
         "fake startup credential sentinels",
@@ -586,6 +595,7 @@ def test_wp007_manual_voiceover_packet_preserves_open_gate_boundary():
     assert "EV-20260623-093" in RELEASE_MANIFEST
     assert "EV-20260623-094" in RELEASE_MANIFEST
     assert "EV-20260623-095" in RELEASE_MANIFEST
+    assert "EV-20260623-096" in RELEASE_MANIFEST
     assert "not completed full manual VoiceOver traversal" in RELEASE_MANIFEST
 
 
