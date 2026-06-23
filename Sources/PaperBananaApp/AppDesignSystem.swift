@@ -70,6 +70,16 @@ enum AppDesignSystem {
         static func selectionStroke(_ tint: Color = SemanticColors.accent, contrast: ColorSchemeContrast) -> Color {
             tint.opacity(contrast == .increased ? 0.82 : 0.45)
         }
+
+        static func sidebarSelectionFill(contrast: ColorSchemeContrast, colorScheme: ColorScheme) -> Color {
+            Color(nsColor: .selectedContentBackgroundColor)
+                .opacity(contrast == .increased ? 0.34 : (colorScheme == .dark ? 0.22 : 0.24))
+        }
+
+        static func sidebarSelectionStroke(contrast: ColorSchemeContrast, colorScheme: ColorScheme) -> Color {
+            Color(nsColor: .selectedContentBackgroundColor)
+                .opacity(contrast == .increased ? 0.62 : (colorScheme == .dark ? 0.26 : 0.30))
+        }
     }
 
     enum Motion {

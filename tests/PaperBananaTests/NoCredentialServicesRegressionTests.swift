@@ -164,6 +164,20 @@ final class NoCredentialServicesRegressionTests: XCTestCase {
             source.contains("showSettingsWindow:") && source.contains(#"Text("Settings")"#),
             "Root sidebar should open the native macOS Settings scene instead of embedding settings in the main workbench."
         )
+        XCTAssertTrue(
+            designSystem.contains("sidebarSelectionFill") &&
+                designSystem.contains("sidebarSelectionStroke") &&
+                designSystem.contains("Color(nsColor: .selectedContentBackgroundColor)") &&
+                source.contains("AppDesignSystem.Adaptive.sidebarSelectionFill") &&
+                source.contains("AppDesignSystem.Adaptive.sidebarSelectionStroke") &&
+                source.contains("@Environment(\\.colorScheme)"),
+            "Root sidebar should use dedicated adaptive sidebar selection tokens so Light Mode selected rows stay visible at increased text size and minimum width."
+        )
+        XCTAssertFalse(
+            source.contains("AppDesignSystem.Adaptive.selectionFill(contrast: colorSchemeContrast)") ||
+                source.contains("AppDesignSystem.Adaptive.selectionStroke(contrast: colorSchemeContrast)"),
+            "Root sidebar must not reuse the generic low-opacity selection token for primary navigation selection."
+        )
     }
 
     func testArtifactLibraryUsesRebuiltScopeStripWithoutLegacyFilterSearchBar() throws {

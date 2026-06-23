@@ -212,6 +212,7 @@ private struct RootActivityRailButton: View {
     let isSelected: Bool
     let action: () -> Void
 
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var colorSchemeContrast
 
     var body: some View {
@@ -226,10 +227,10 @@ private struct RootActivityRailButton: View {
         .background {
             if isSelected {
                 Circle()
-                    .fill(AppDesignSystem.Adaptive.selectionFill(contrast: colorSchemeContrast))
+                    .fill(AppDesignSystem.Adaptive.sidebarSelectionFill(contrast: colorSchemeContrast, colorScheme: colorScheme))
                     .overlay {
                         Circle()
-                            .stroke(AppDesignSystem.Adaptive.selectionStroke(contrast: colorSchemeContrast), lineWidth: 1)
+                            .stroke(AppDesignSystem.Adaptive.sidebarSelectionStroke(contrast: colorSchemeContrast, colorScheme: colorScheme), lineWidth: 1)
                     }
             }
         }
@@ -317,6 +318,7 @@ private struct RootSidebarCommandRow: View {
     let isSelected: Bool
     let action: () -> Void
 
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var colorSchemeContrast
 
     var body: some View {
@@ -344,10 +346,10 @@ private struct RootSidebarCommandRow: View {
         .background {
             if isSelected {
                 RoundedRectangle(cornerRadius: 7, style: .continuous)
-                    .fill(AppDesignSystem.Adaptive.selectionFill(contrast: colorSchemeContrast))
+                    .fill(AppDesignSystem.Adaptive.sidebarSelectionFill(contrast: colorSchemeContrast, colorScheme: colorScheme))
                     .overlay {
                         RoundedRectangle(cornerRadius: 7, style: .continuous)
-                            .stroke(AppDesignSystem.Adaptive.selectionStroke(contrast: colorSchemeContrast), lineWidth: 1)
+                            .stroke(AppDesignSystem.Adaptive.sidebarSelectionStroke(contrast: colorSchemeContrast, colorScheme: colorScheme), lineWidth: 1)
                     }
             }
         }
