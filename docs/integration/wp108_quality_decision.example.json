@@ -4,7 +4,7 @@
   "manifest_id": "paperbanana-m1-no-live-contract",
   "source_head": "example-source-head",
   "manifest_path": "docs/integration/wp108_no_live_manifest.example.json",
-  "report_path": "/tmp/wp108-human-review-report.json",
+  "report_path": "docs/integration/wp108_human_review_report.example.json",
   "evaluation_mode": "human_review",
   "decision": "go",
   "gate_passed": true,

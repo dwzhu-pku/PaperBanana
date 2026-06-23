@@ -1,3 +1,5 @@
+import re
+import subprocess
 from pathlib import Path
 
 
@@ -13,6 +15,15 @@ ROLLBACK_RUNBOOK = (
 WP108_CONTRACT = (
     REPO_ROOT / "docs" / "integration" / "WP108_NO_LIVE_BENCHMARK_CONTRACT.md"
 ).read_text(encoding="utf-8")
+
+
+def _manifest_table_value(label: str) -> str:
+    pattern = rf"^\| {re.escape(label)} \| `([^`]+)` \|$"
+    for line in RELEASE_MANIFEST.splitlines():
+        match = re.match(pattern, line)
+        if match:
+            return match.group(1)
+    raise AssertionError(f"Release candidate manifest is missing table value: {label}")
 
 
 def test_support_doc_contains_public_artifact_contract():
@@ -388,6 +399,55 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         assert phrase in RELEASE_MANIFEST
 
 
+def test_release_candidate_manifest_blocks_ungated_product_drift_after_full_gate():
+    latest_full_gate = _manifest_table_value("Latest full local native/Python/Xcode gate")
+    result = subprocess.run(
+        ["git", "diff", "--name-only", f"{latest_full_gate}..HEAD"],
+        cwd=REPO_ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+
+    changed_paths = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+    gated_roots = (
+        ".github/workflows/",
+        "PaperBanana.xcodeproj/",
+        "PaperBanana/",
+        "Sources/",
+        "agents/",
+        "configs/",
+        "paperbanana_gui/",
+        "script/",
+        "skill/",
+        "utils/",
+    )
+    gated_files = {
+        ".gitignore",
+        "Package.swift",
+        "app.py",
+        "demo.py",
+        "main.py",
+        "project.yml",
+        "requirements.txt",
+    }
+    blocked_paths = [
+        path
+        for path in changed_paths
+        if path in gated_files or path.startswith(gated_roots)
+    ]
+
+    assert blocked_paths == [], (
+        "Product, native, workflow, or runtime files changed after the latest "
+        "recorded full local native/Python/Xcode gate. Rerun and record a full "
+        f"gate before release handoff. Latest full gate: {latest_full_gate}. "
+        f"Blocked drift: {blocked_paths}"
+    )
+    assert "not live-provider" in RELEASE_MANIFEST
+
+
 def test_local_install_rollback_runbook_keeps_preflight_scope_and_secret_boundary():
     required_phrases = [
         "Local Install And Rollback Preflight Runbook",
@@ -422,10 +482,12 @@ def test_wp108_no_live_contract_preserves_quality_claim_boundary():
         "utils/wp108_quality_decision.py",
         "utils/wp108_no_live_artifact_runner.py",
         "docs/integration/wp108_human_review_packet.schema.json",
+        "docs/integration/wp108_human_review_report.example.json",
         "docs/integration/wp108_quality_decision.schema.json",
         "docs/integration/wp108_no_live_run_map.schema.json",
         "docs/integration/wp108_quality_decision.example.json",
         "tests/test_wp108_human_review_packet.py",
+        "tests/test_wp108_examples_contract.py",
         "tests/test_wp108_offline_evidence_chain.py",
         "tests/test_wp108_quality_decision.py",
         "tests/test_wp108_no_live_artifact_runner.py",

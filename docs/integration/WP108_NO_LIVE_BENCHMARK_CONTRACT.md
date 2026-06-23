@@ -37,6 +37,7 @@ bounded live or reviewer-scored benchmark.
 | `docs/integration/wp108_quality_decision.schema.json` | Reader-facing schema for deterministic quality go/no-go decision reports over completed human-review reports. |
 | `docs/integration/wp108_no_live_manifest.example.json` | Example no-live manifest using non-private PaperBananaBench references. |
 | `docs/integration/wp108_human_review_packet.example.json` | Example blank human-review packet shape. |
+| `docs/integration/wp108_human_review_report.example.json` | Synthetic completed human-review report shape with two attested reviewers, adjudicated scores, and `publication_quality_claimed: false`. |
 | `docs/integration/wp108_quality_decision.example.json` | Example quality decision report shape with `publication_quality_claimed: false`. |
 | `docs/integration/wp108_no_live_run_map.schema.json` | Reader-facing schema for mapping manifest cases to already-created native run artifacts. |
 | `docs/integration/wp108_no_live_run_map.example.json` | Example run-map shape for native output, request, metadata, provider-audit, and run-store artifacts. |
@@ -49,6 +50,7 @@ bounded live or reviewer-scored benchmark.
 | `tests/test_wp108_offline_evidence_chain.py` | CI-safe integration coverage that chains native artifact completeness, packet binding, completed human-review report validation, and quality decision validation without provider calls. |
 | `tests/test_wp108_quality_decision.py` | CI-safe quality decision and no-go coverage using synthetic completed human-review reports. |
 | `tests/test_wp108_no_live_artifact_runner.py` | CI-safe artifact-runner coverage using synthetic native artifacts. |
+| `tests/test_wp108_examples_contract.py` | CI-safe validation that the checked-in WP-108 examples are mutually validator-clean without provider calls or quality claims. |
 
 ## Validation
 
@@ -195,6 +197,25 @@ Human-review reports with scores must include `scoring_protocol`,
 lack that provenance. This prepares the workflow for real reviewer scoring but
 still does not replace WP-108's final scored benchmark run.
 
+The checked-in example packet and synthetic completed human-review report can be
+validated without provider calls:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
+  python -m utils.wp108_human_review_packet validate \
+  --manifest docs/integration/wp108_no_live_manifest.example.json \
+  --packet docs/integration/wp108_human_review_packet.example.json \
+  --no-path-check
+
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
+  python -m utils.wp108_benchmark_contract validate \
+  --manifest docs/integration/wp108_no_live_manifest.example.json \
+  --report docs/integration/wp108_human_review_report.example.json \
+  --mode human_review \
+  --no-provider \
+  --no-path-check
+```
+
 ## Quality Decision Reports
 
 Once reviewers have completed a `human_review` report, create an auditable
@@ -216,8 +237,8 @@ Validate a saved decision report with:
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
   python -m utils.wp108_quality_decision validate \
   --manifest docs/integration/wp108_no_live_manifest.example.json \
-  --report /tmp/wp108-human-review-report.json \
-  --decision /tmp/wp108-quality-decision.json \
+  --report docs/integration/wp108_human_review_report.example.json \
+  --decision docs/integration/wp108_quality_decision.example.json \
   --no-provider \
   --no-path-check
 ```
