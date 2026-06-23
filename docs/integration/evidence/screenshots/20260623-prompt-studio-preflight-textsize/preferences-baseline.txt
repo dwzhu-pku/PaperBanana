@@ -1,0 +1,8 @@
+timestamp=2026-06-23 09:27:32 EDT
+dark_mode=true
+repo_path=/Users/jeff/Codex_projects/PaperBanana-native-integrated
+default_image_model=gemini-3.1-flash-image-preview
+text_size=<absent>
+installed_binary_sha256=080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5
+native_generate_before=/Users/jeff/Codex_projects/PaperBanana/results/native_generate/native_generate_20260622_072111 /Users/jeff/Codex_projects/PaperBanana/results/native_generate/native_generate_20260622_072803
+run_store_status_before=completed:311

@@ -1,0 +1,9 @@
+timestamp=2026-06-23 09:29:16 EDT
+dark_mode=true
+system_events_dark_mode=true
+repo_path=/Users/jeff/Codex_projects/PaperBanana-native-integrated
+default_image_model=gemini-3.1-flash-image-preview
+text_size=<absent>
+paperbanana_processes=<none>
+native_generate_after=/Users/jeff/Codex_projects/PaperBanana/results/native_generate/native_generate_20260622_072111 /Users/jeff/Codex_projects/PaperBanana/results/native_generate/native_generate_20260622_072803
+run_store_status_after=completed:311
