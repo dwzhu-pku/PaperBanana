@@ -40,6 +40,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-208 Foundation Models disposition head | `69e9159ca9078952fc24609ded25995e73fe7c1a` |
 | Latest post-WP-208 full-gate/install head | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
 | Latest post-Codex-env full-gate/install head | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
+| Latest WP-007 Settings Light text-size screenshot head | `9cc610eec3913381094100b7dafa4677b21bc98a` |
 | Manifest status | Draft; not a frozen release tag |
 
 `EV-20260622-056` validates the later product-code head `8ce7f3a2cca3`
@@ -152,7 +153,17 @@ manual keyboard/VoiceOver traversal or screenshot-based adaptive visual signoff.
 `EV-20260622-066` validates the later `6ce551e868dd` source-level Settings
 Workspace lower-content contract slice. It is source-level regression
 protection only and does not replace screenshot-based lower Workspace/full-app
-visual signoff. `EV-20260622-067` refreshes the no-live temporary distinct-bundle rollback plus runtime-migration slice on `ad07fcc594dc`: the prior app from
+visual signoff. `EV-20260623-071` adds the corresponding Settings screenshot
+slice for Light Mode Increased Text Size on `9cc610eec391`: Workspace upper,
+Workspace lower, Providers, and Legacy captures are recorded with dimensions and
+SHA-256 digests under
+`docs/integration/evidence/screenshots/20260623-settings-light-increased-text-size/`;
+`settings-light-increased-text-workspace-lower.png` records lower Workspace
+screenshot coverage with SHA-256
+`698cf5fda33cff03eb4dea12e01de284bed5c6afd08e576f4f559da8f7f156fc`.
+Preferences were restored to Dark/absent, and 3 focused native accessibility/adaptive source-contract tests passed. This is still Settings
+only and does not replace full-app Increased Text Size or full manual
+VoiceOver/keyboard signoff. `EV-20260622-067` refreshes the no-live temporary distinct-bundle rollback plus runtime-migration slice on `ad07fcc594dc`: the prior app from
 `1fa6cbe90e6f` restored exactly by binary hash, the candidate hash differed,
 synthetic Application Support and `results/` fixtures stayed unchanged, and 6
 selected runtime-migration/secret-store Swift tests passed. `EV-20260622-068`
@@ -219,7 +230,7 @@ channel approval, upgrade proof, or rollback proof.
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070` | Passed with limitation; latest recorded remote quick checks are for `213fc941`, while `EV-20260623-069` records the latest local full gate and the self-hosted workflow dispatch limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068` | Partial; includes current-head source-level accessibility/keyboard contracts and source-level Settings accessibility/adaptive regression coverage, but not full manual VoiceOver traversal |
-| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066` | Partial; source-level lower Workspace content regression protection is covered, but broader screenshot-based full-app adaptive signoff remains open |
+| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is now recorded for Settings, but broader screenshot-based full-app adaptive signoff remains open |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
 | WP-108 no-live artifact-completeness runner | `EV-20260622-051`, `EV-20260622-059` | Synthetic native output/request/metadata/provider-request/provider-response/provider-audit/run-store artifacts produce a fixture-mode report, and a no-live generator now maps explicit native run-store rows to the checker; no image scoring or quality claim |
@@ -285,9 +296,10 @@ state is verified.
   in the current desktop session, so it is not a manual traversal substitute.
 - Dark Settings Increased Text Size visible content is covered by
   `EV-20260622-041`; source-level lower Workspace content regression protection
-  is covered by `EV-20260622-066`. Screenshot-based lower Workspace review,
-  Light Mode Settings Increased Text Size, full-app Increased Text Size,
-  hover/focus, narrow-width, and full-app adaptive visual review remain open.
+  is covered by `EV-20260622-066`; Light Mode Settings Increased Text Size and
+  lower Workspace screenshot coverage is covered by `EV-20260623-071`.
+  Full-app Increased Text Size, hover/focus, narrow-width, and full-app adaptive
+  visual review remain open.
 - Approved live provider/fallback native E2E with non-private fixtures, spend
   limit, redacted request/metadata/provider-artifact review, and
   failure/recovery proof. `EV-20260622-044` covers dry-run artifact

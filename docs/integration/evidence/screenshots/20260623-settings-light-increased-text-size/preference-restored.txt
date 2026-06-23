@@ -1,0 +1,2 @@
+restored_appearance=Dark
+restored_app_text=<absent>
