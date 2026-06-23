@@ -1,0 +1,6 @@
+destination=runDetails
+mode=dark
+dark_mode=true
+repo_path=/var/folders/lw/dzh536s508x4x52xqqb9kt7r0000gn/T/paperbanana-wp007-recovery-ledger-4nj_vw0a/repo
+default_model=__codex_gpt55_xhigh__
+text_size=    "local.paperbanana.gui" = L;

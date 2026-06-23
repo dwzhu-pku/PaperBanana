@@ -1,0 +1,5 @@
+repo_path=/Users/jeff/Codex_projects/PaperBanana-native-integrated
+default_model=gemini-3.1-flash-image-preview
+dark_mode=true
+paperbanana_text_size=
+paperbanana_processes=

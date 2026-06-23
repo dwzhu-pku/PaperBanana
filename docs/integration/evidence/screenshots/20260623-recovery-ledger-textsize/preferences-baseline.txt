@@ -1,0 +1,7 @@
+repo_path=/Users/jeff/Codex_projects/PaperBanana-native-integrated
+default_model=gemini-3.1-flash-image-preview
+dark_mode=true
+paperbanana_text_size=
+installed_binary_sha256=080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5
+fixture_repo=/var/folders/lw/dzh536s508x4x52xqqb9kt7r0000gn/T/paperbanana-wp007-recovery-ledger-4nj_vw0a/repo
+app_support_root=/var/folders/lw/dzh536s508x4x52xqqb9kt7r0000gn/T/paperbanana-wp007-recovery-ledger-4nj_vw0a/ApplicationSupport
