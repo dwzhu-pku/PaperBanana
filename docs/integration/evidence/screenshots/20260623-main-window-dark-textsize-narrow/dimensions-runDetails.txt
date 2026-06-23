@@ -1,0 +1,3 @@
+/Users/jeff/Codex_projects/PaperBanana-native-integrated/docs/integration/evidence/screenshots/20260623-main-window-dark-textsize-narrow/main-dark-textsize-narrow-runDetails.png
+  pixelWidth: 2728
+  pixelHeight: 1720

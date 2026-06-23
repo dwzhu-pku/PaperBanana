@@ -1,0 +1,1 @@
+a421a22f4d3380f26a5eb0f9beab2fc93e4bcf4b2c841581fe60bffd5b19ead9  docs/integration/evidence/screenshots/20260623-main-window-dark-textsize-narrow/main-dark-textsize-narrow-promptStudio.png

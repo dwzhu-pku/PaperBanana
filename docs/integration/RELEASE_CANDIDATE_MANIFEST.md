@@ -33,6 +33,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-106 Codex handoff environment hardening head | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
 | Latest WP-007 Settings source-contract test head | `6ce551e868ddebb15e6dc87c989b690fc60a3277` |
 | Latest WP-007 Main Window Light text-size screenshot head | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
+| Latest WP-007 Main Window Dark text-size screenshot head | `af97d6bb631862f80999adef796d4faff4b465b5` |
 | Latest WP-108 no-live artifact runner head | `dc8d8e5f5149eb8099a9ecb45628a74dcd610599` |
 | Latest WP-108 human-review packet head | `86f9bb16fa524cc638a39d5c6c7e6d64a5b279c4` |
 | Latest WP-108 quality decision head | `b6a8a2a51d7ffd7ec8f348ecf892467d7cf7abcd` |
@@ -138,6 +139,28 @@ The screenshots live under
 The temporary repo-path override, Light appearance, and app-scoped Text Size
 override were restored after capture, and 6 focused native accessibility/adaptive/window source-contract tests passed. Dense table text truncation remains a bounded limitation in Run Details and Run Ledger at the
 minimum window size.
+`EV-20260623-073` records a later screenshot-only Dark Mode companion slice
+captured from the installed EV-072 app artifact while the worktree was at
+`af97d6bb6318`: Prompt Studio, Artifact Library, Run Details, and Run Ledger
+were captured in Dark Mode with app-scoped Increased Text Size at the same
+minimum main-window size. The final capture explicitly launched
+`/Applications/PaperBanana.app`, verified the unchanged installed binary
+SHA-256 `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`,
+and restored the temporary repo-path and app-scoped Text Size overrides. The
+screenshots live under
+`docs/integration/evidence/screenshots/20260623-main-window-dark-textsize-narrow/`;
+`main-dark-textsize-narrow-promptStudio.png` has SHA-256
+`a421a22f4d3380f26a5eb0f9beab2fc93e4bcf4b2c841581fe60bffd5b19ead9`,
+`main-dark-textsize-narrow-artifactLibrary.png` has SHA-256
+`665ca1d14d378bb37ca9fc8f87d51856cb8a2b7fcb44c8a6bf9b3d8291eca3c9`,
+`main-dark-textsize-narrow-runDetails.png` has SHA-256
+`c1c530de9312cba6c04e787d01d1f98545dbc4f920ec0cf8d690ac6a90980677`, and
+`main-dark-textsize-narrow-runLedger.png` has SHA-256
+`923d94e6f994780c365d6cc98ef3b42d1321f4b1919bf7dfee7496894155d7cb`.
+Each screenshot is `2728 x 1720`. Artifact Library thumbnail overlays and dense
+run/call identifiers remain bounded density/truncation limitations, but no
+release-blocking Dark Mode Increased Text Size visual defect was observed in
+this slice.
 `EV-20260622-061` records the no-live WP-107 hosted-readiness smoke harness
 added on `2312eae6cc7b`: a sanitized localhost `share=False` Gradio copy
 launched with hosted safety flags, fake startup credential sentinels were absent
@@ -253,7 +276,7 @@ channel approval, upgrade proof, or rollback proof.
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070` | Passed with limitation; latest recorded remote quick checks are for `213fc941`, while `EV-20260623-069` records the latest local full gate and the self-hosted workflow dispatch limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068` | Partial; includes current-head source-level accessibility/keyboard contracts and source-level Settings accessibility/adaptive regression coverage, but not full manual VoiceOver traversal |
-| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is recorded for Settings, and Light Mode Increased Text Size at the minimum main-window size is recorded for Prompt Studio, Artifact Library, Run Details, and Run Ledger after sidebar selection polish; broader screenshot-based full-app adaptive signoff remains open |
+| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072`, `EV-20260623-073` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is recorded for Settings, and Light/Dark Mode Increased Text Size at the minimum main-window size is recorded for Prompt Studio, Artifact Library, Run Details, and Run Ledger after sidebar selection polish; broader screenshot-based full-app adaptive signoff remains open |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
 | WP-108 no-live artifact-completeness runner | `EV-20260622-051`, `EV-20260622-059` | Synthetic native output/request/metadata/provider-request/provider-response/provider-audit/run-store artifacts produce a fixture-mode report, and a no-live generator now maps explicit native run-store rows to the checker; no image scoring or quality claim |
@@ -323,7 +346,9 @@ state is verified.
   lower Workspace screenshot coverage is covered by `EV-20260623-071`.
   Prompt Studio, Artifact Library, Run Details, and Run Ledger Light Mode
   Increased Text Size coverage at the minimum main-window size is covered by
-  `EV-20260623-072`, including the sidebar selection polish. Full-app Increased Text Size for remaining states, Dark Mode main-window text-size coverage,
+  `EV-20260623-072`, including the sidebar selection polish, and the matching
+  Dark Mode main-window Increased Text Size slice is covered by
+  `EV-20260623-073`. Full-app Increased Text Size for remaining states,
   hover/focus, inactive-window, sheet/error/recovery/loading, and full-app
   adaptive visual review remain open.
 - Approved live provider/fallback native E2E with non-private fixtures, spend
