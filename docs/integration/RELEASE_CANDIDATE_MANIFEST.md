@@ -45,7 +45,8 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-007 Prompt Studio keyboard/preflight AX head | `74e28eb68020df7bad84076aae29f39a158334b5` |
 | Latest WP-007 installed-app keyboard/AX fallback head | `55e54e68b1d3d1f7d99d96d8e4d2d86f2b71e4c7` |
 | Latest WP-007 manual VoiceOver traversal packet head | `b81a39909f4af9d9192b098c45357ac3667c9e34` |
-| Latest WP-007 manual VoiceOver artifact contract head | `9a64b88566501bc2bfa07b5fd1f49aa9feeedcaf` |
+| Latest WP-007 manual VoiceOver artifact contract head | `728e39c2c15abd421da2fbbca9147aa912d0a265` |
+| Latest WP-007 completed-packet validator head | `728e39c2c15abd421da2fbbca9147aa912d0a265` |
 | Latest WP-108 no-live artifact runner head | `dc8d8e5f5149eb8099a9ecb45628a74dcd610599` |
 | Latest WP-108 human-review packet head | `86f9bb16fa524cc638a39d5c6c7e6d64a5b279c4` |
 | Latest WP-108 quality decision head | `b6a8a2a51d7ffd7ec8f348ecf892467d7cf7abcd` |
@@ -238,6 +239,14 @@ and no-secret boundary, cleanup/environment/defect templates, and a CI-safe
 template contract test. It is not app-launch, VoiceOver speech-output,
 keyboard traversal, GUI, provider, release-approval, or WP-007 completion
 evidence.
+`EV-20260623-092` records a completed-packet validator added from source head
+`dac44760c0ecec03e588b8984362f1e29a68520e`: the validator rejects missing
+required files, wrong TSV columns, missing `VO-01` through `VO-16` coverage,
+placeholders, invalid route dispositions, missing environment/cleanup fields,
+and obvious provider-secret patterns. It reports open `fail`, `not_run`, and
+`pass_with_limitation` routes without treating them as release approval. This is
+completed-evidence reviewability scaffolding only; it cannot verify spoken
+VoiceOver output or close WP-007.
 `EV-20260622-065` remains historical
 Release install provenance for the earlier
 `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` branch head and binary SHA-256
@@ -521,7 +530,7 @@ channel approval, upgrade proof, or rollback proof.
 | Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070`, `EV-20260623-072` | Latest product-source Release build/install and installed-app artifact provenance passed with binary SHA-256 `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`; this does not replace full-gate evidence or rollback proof |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070` | Passed with limitation; latest recorded remote quick checks are for `213fc941`, while `EV-20260623-069` records the latest local full gate and the self-hosted workflow dispatch limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
-| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079`, `EV-20260623-090`, `EV-20260623-091` | Partial; includes current-head source-level accessibility/keyboard contracts, source-level Settings accessibility/adaptive regression coverage, Reference Examples missing/malformed/empty state AX text, recovery-heavy Run Details / Run Ledger AX rows and controls, current-head Prompt Studio keyboard/preflight AX traversal, current-head Settings Workspace AX fallback proof, a manual VoiceOver traversal packet, and checked completed-artifact templates, but not completed full manual VoiceOver traversal |
+| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079`, `EV-20260623-090`, `EV-20260623-091`, `EV-20260623-092` | Partial; includes current-head source-level accessibility/keyboard contracts, source-level Settings accessibility/adaptive regression coverage, Reference Examples missing/malformed/empty state AX text, recovery-heavy Run Details / Run Ledger AX rows and controls, current-head Prompt Studio keyboard/preflight AX traversal, current-head Settings Workspace AX fallback proof, a manual VoiceOver traversal packet, checked completed-artifact templates, and a completed-packet structural validator, but not completed full manual VoiceOver traversal |
 | Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072`, `EV-20260623-073`, `EV-20260623-074`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is recorded for Settings, Light/Dark Mode Increased Text Size at the minimum main-window size is recorded for Prompt Studio, Artifact Library, Run Details, and Run Ledger after sidebar selection polish, the Prompt Studio no-spend preflight sheet Light/Dark Increased Text Size slice is recorded, Reference Examples missing/malformed/empty Light/Dark Increased Text Size edge states are recorded, Run Details / Run Ledger recovery/failure states are covered by EV-076, the Prompt Studio keyboard/AX preflight slice adds a current-head Dark Mode sheet screenshot, and EV-079 adds current-head provider-free installed-app screenshots for Prompt Studio, Artifact Library, Run Details, Run Ledger, and Settings Workspace; broader screenshot-based full-app adaptive signoff remains open |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
@@ -605,6 +614,10 @@ state is verified.
   `voiceover-speech-output.tsv`, `keyboard-traversal.tsv`, `environment.md`,
   `defects.md`, and `cleanup.md`, with required `VO-01` through `VO-16`
   coverage and placeholder-only template rows.
+  `EV-20260623-092` adds a completed-packet validator so future manual evidence
+  can be rejected for missing routes, placeholders, invalid dispositions,
+  missing environment/cleanup records, or obvious secret patterns before human
+  release review.
   These are still not completed manual VoiceOver speech-output traversal
   substitutes.
 - Dark Settings Increased Text Size visible content is covered by

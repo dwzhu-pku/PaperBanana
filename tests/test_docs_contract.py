@@ -137,6 +137,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "Latest WP-007 installed-app keyboard/AX fallback head",
         "Latest WP-007 manual VoiceOver traversal packet head",
         "Latest WP-007 manual VoiceOver artifact contract head",
+        "Latest WP-007 completed-packet validator head",
         "Latest WP-108 no-live artifact runner head",
         "Latest WP-108 quality decision head",
         "Latest WP-108 offline evidence-chain head",
@@ -201,6 +202,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "EV-20260623-088",
         "EV-20260623-089",
         "EV-20260623-091",
+        "EV-20260623-092",
         "28025752242",
         "28025752249",
         "28035948312",
@@ -392,6 +394,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "current-head source-level accessibility/keyboard contracts",
         "manual VoiceOver traversal packet",
         "checked completed-artifact templates",
+        "completed-packet structural validator",
         "not completed full manual VoiceOver traversal",
         "GUI AX/window capture was blocked",
         "no-live artifact-completeness runner",
@@ -545,6 +548,7 @@ def test_wp007_manual_voiceover_packet_preserves_open_gate_boundary():
 
     assert "EV-20260623-090" in RELEASE_MANIFEST
     assert "EV-20260623-091" in RELEASE_MANIFEST
+    assert "EV-20260623-092" in RELEASE_MANIFEST
     assert "not completed full manual VoiceOver traversal" in RELEASE_MANIFEST
 
 

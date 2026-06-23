@@ -10,6 +10,7 @@ TEMPLATE_DIR = REPO_ROOT / "docs" / "integration" / "wp007_voiceover_manual_temp
 README = TEMPLATE_DIR / "README.md"
 VOICEOVER_TEMPLATE = TEMPLATE_DIR / "voiceover-speech-output.template.tsv"
 KEYBOARD_TEMPLATE = TEMPLATE_DIR / "keyboard-traversal.template.tsv"
+VALIDATOR = TEMPLATE_DIR / "validate_completed_packet.py"
 
 EXPECTED_ROUTE_IDS = {f"VO-{index:02d}" for index in range(1, 17)}
 VOICEOVER_COLUMNS = [
@@ -68,6 +69,7 @@ def test_wp007_contract_preserves_manual_claim_boundary_and_required_files():
         "environment.template.md",
         "defects.template.md",
         "cleanup.template.md",
+        "validate_completed_packet.py",
         "provider secrets",
         "auth headers",
         "raw provider payloads",
@@ -124,3 +126,22 @@ def test_templates_do_not_contain_completed_manual_observations():
     assert "VoiceOver spoke:" not in template_text
     assert "pass\t" not in template_text
     assert "pass_with_limitation\t" not in template_text
+
+
+def test_wp007_contract_documents_completed_packet_validator_boundary():
+    combined = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (CONTRACT, README, VALIDATOR)
+    )
+
+    required_phrases = [
+        "Completed Packet Validation",
+        "validate_completed_packet.py",
+        "structurally reviewable",
+        "does not close WP-007",
+        "cannot verify the spoken output",
+        "must not be used to mark",
+        "Human release review is still required",
+    ]
+    for phrase in required_phrases:
+        assert phrase in combined

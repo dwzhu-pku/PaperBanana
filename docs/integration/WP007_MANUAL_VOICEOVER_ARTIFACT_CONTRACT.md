@@ -130,3 +130,22 @@ The completed packet must be tied to:
 The CI-safe contract test checks only the checked-in template shape and claim
 boundary. It intentionally does not validate a completed manual packet and does
 not close WP-007.
+
+## Completed Packet Validation
+
+After a human reviewer completes the manual pass, run the checked validator
+against the completed artifact directory:
+
+```bash
+python docs/integration/wp007_voiceover_manual_templates/validate_completed_packet.py \
+  docs/integration/evidence/screenshots/<timestamp>-wp007-manual-voiceover-keyboard
+```
+
+The validator checks required files, exact TSV columns, required `VO-01`
+through `VO-16` routes, placeholder removal, route dispositions,
+environment fields, cleanup fields, and obvious provider-secret patterns.
+
+A successful validation means only that the packet is structurally reviewable.
+It does not prove that VoiceOver spoke the recorded output, does not approve
+`pass_with_limitation` routes, and does not close WP-007 without human release
+review.

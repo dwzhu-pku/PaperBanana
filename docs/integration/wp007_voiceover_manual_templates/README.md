@@ -30,3 +30,14 @@ Completed packet file names should remove `.template`:
 
 The completed run must be reviewed by a human. Automated validators may reject
 missing or malformed artifacts; they must not mark WP-007 complete.
+
+After completing the manual pass, run the structural validator:
+
+```bash
+python docs/integration/wp007_voiceover_manual_templates/validate_completed_packet.py \
+  <completed-artifact-directory>
+```
+
+The validator checks packet structure, placeholders, required routes, and
+obvious secret patterns. It cannot verify the spoken output and does not close
+WP-007.
