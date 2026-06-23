@@ -15,9 +15,9 @@ been validated and leaves every unvalidated release claim open.
 |---|---|
 | Latest full local native/Python/Xcode gate | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
 | Previous sanitized full local native/Python/Xcode gate | `da8329597d196608a40bcf6be823c9ef684a9e16` |
-| Latest recorded remote-check evidence head | `9649730654f970e922c2767f2280afac5041f55d` |
+| Latest recorded remote-check evidence head | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
 | Previous recorded remote-check evidence head | `de4c8170952ad8f0efa2aa8e901f248f3c878605` |
-| Latest current-head Release install evidence | `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` |
+| Latest current-head Release install evidence | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
 | Branch | `integration/native-first-rc-native` |
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
 | Upstream base | `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b` |
@@ -96,18 +96,24 @@ Xcode 27 baseline guard, 167 Swift tests, 126 isolated Python 3.12 tests, and
 `codex-xcode27 proof`. GitHub still could not dispatch the self-hosted
 `Native Xcode 27 Full Gate` workflow because that workflow is not present on
 the repository default branch.
-`EV-20260622-065` records current-head Release build/install and installed-app
-artifact provenance on `6e4ee0f51e6b`: a detached temporary clone ran
-`script/build_and_run.sh --release --install --no-open` with provider
-credentials and local-routing variables unset, exited 0, and installed
+`EV-20260623-070` records current-head Release build/install and installed-app
+artifact provenance on `213fc9411e3e`: the current worktree ran
+`script/build_and_run.sh --release --install --no-open`, exited 0, and installed
 `/Applications/PaperBanana.app`. Post-install checks confirmed bundle identifier
-`local.paperbanana.gui`, version `0.1.0` build `1`, executable `PaperBanana`,
-an arm64 Mach-O binary, local code-signing validity, binary SHA-256
-`d251ae8559d6fbcdb94c3e23b4449207a6ec842ce492f40c37944d12ce189591`, and no
-running `PaperBanana` app process or install-clone legacy backend after
-`--no-open`. This is current-head Release build/install evidence, not a live
-provider, hosted, quality, manual AX, rollback/upgrade, notarization,
-distribution, final release, or upstream-acceptance proof.
+`local.paperbanana.gui`, version `0.1.0` build `1`, an arm64 Mach-O binary,
+local ad hoc code-signing validity, binary SHA-256
+`557ab15a73f2bbfa8c209fe6efd5399c0e3794f1a603e8a8825b008fd2121571`, and no
+running `PaperBanana` app process or current-worktree legacy backend after
+`--no-open`. The same pushed head passed remote `Native Structural Checks` run
+`28025752242` and remote `Python Tests` run `28025752249`. This is current-head
+Release build/install and quick remote-check evidence, not a live provider,
+hosted, quality, manual AX, rollback/upgrade, notarization, distribution, final
+release, or upstream-acceptance proof. `EV-20260622-065` remains historical
+Release install provenance for the earlier
+`6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` branch head and binary SHA-256
+`d251ae8559d6fbcdb94c3e23b4449207a6ec842ce492f40c37944d12ce189591`;
+that historical proof also checked that no install-clone legacy backend remained
+running after `--no-open`.
 `EV-20260622-061` records the no-live WP-107 hosted-readiness smoke harness
 added on `2312eae6cc7b`: a sanitized localhost `share=False` Gradio copy
 launched with hosted safety flags, fake startup credential sentinels were absent
@@ -194,11 +200,11 @@ provenance for product head `8ce7f3a2cca3`. `EV-20260622-057` validates remote s
 | Bundle version | `1` |
 | Binary architecture | `arm64` |
 | Code-signing check | Valid on disk; satisfies designated requirement |
-| Source checkout commit | `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` |
+| Source checkout commit | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
 | Latest product-source change | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
-| Binary SHA-256 | `d251ae8559d6fbcdb94c3e23b4449207a6ec842ce492f40c37944d12ce189591` |
+| Binary SHA-256 | `557ab15a73f2bbfa8c209fe6efd5399c0e3794f1a603e8a8825b008fd2121571` |
 | Install command | `DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer ./script/build_and_run.sh --release --install --no-open` |
-| Artifact evidence | `EV-20260622-065` |
+| Artifact evidence | `EV-20260623-070` |
 
 This is local install provenance only. It is not notarization, distribution
 channel approval, upgrade proof, or rollback proof.
@@ -209,8 +215,8 @@ channel approval, upgrade proof, or rollback proof.
 |---|---|---|
 | Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-057`, `EV-20260622-064`, `EV-20260623-069` | Passed with limitation |
 | Local aggregate native gate | `EV-20260623-069` | Latest full local gate passed through the documented `script/test_all.sh` command after the isolated Python 3.12 fallback fix: 167 Swift tests, 126 Python tests, and `codex-xcode27 proof` passed |
-| Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065` | Current branch-head Release build/install and installed-app artifact provenance passed with binary SHA-256 `d251ae8559d6fbcdb94c3e23b4449207a6ec842ce492f40c37944d12ce189591`; this does not replace full-gate evidence or rollback proof |
-| Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069` | Passed with limitation; latest recorded remote quick checks are for `9649730`, while `EV-20260623-069` records the later local full gate and the self-hosted workflow dispatch limitation |
+| Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070` | Current branch-head Release build/install and installed-app artifact provenance passed with binary SHA-256 `557ab15a73f2bbfa8c209fe6efd5399c0e3794f1a603e8a8825b008fd2121571`; this does not replace full-gate evidence or rollback proof |
+| Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070` | Passed with limitation; latest recorded remote quick checks are for `213fc941`, while `EV-20260623-069` records the latest local full gate and the self-hosted workflow dispatch limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068` | Partial; includes current-head source-level accessibility/keyboard contracts and source-level Settings accessibility/adaptive regression coverage, but not full manual VoiceOver traversal |
 | Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066` | Partial; source-level lower Workspace content regression protection is covered, but broader screenshot-based full-app adaptive signoff remains open |
@@ -229,7 +235,7 @@ channel approval, upgrade proof, or rollback proof.
 | Foundation Models disposition | `EV-20260622-054` | Release-visible image model choices do not route to Foundation Models, and the auxiliary assistant defaults to local fallback; Foundation Models remains unsupported |
 | Post-WP-208 full-gate/install proof | `EV-20260622-055` | Current branch head passed the full local aggregate gate, remote structural/Python checks, and Release build/install after the Foundation Models disposition |
 | Codex fallback environment hardening and full-gate/install proof | `EV-20260622-056` | The Swift Codex fallback handoff now launches with a constrained non-secret subprocess environment; focused and selected no-live fallback tests passed, then the full local aggregate gate, proof, and Release install passed |
-| Current-head Release install/artifact provenance | `EV-20260622-065` | The current branch head passed Release build/install from a detached temporary clone, installed `/Applications/PaperBanana.app`, verified bundle metadata, code signing, arm64 binary hash, and confirmed no app or install-clone legacy backend process remained running after `--no-open` |
+| Current-head Release install/artifact provenance | `EV-20260623-070` | The current branch head passed Release build/install from the current worktree, installed `/Applications/PaperBanana.app`, verified bundle metadata, local ad hoc code signing, arm64 binary hash, and confirmed no app or current-worktree legacy backend process remained running after `--no-open` |
 
 ## Provider Support Matrix
 
@@ -251,7 +257,7 @@ only, or unsupported as stated above.
 
 | Requirement | Current status |
 |---|---|
-| Current app install provenance | Covered by `EV-20260622-065` |
+| Current app install provenance | Covered by `EV-20260623-070` |
 | Local app-bundle backup/install/restore preflight | Covered by `EV-20260622-037`; before, candidate, and restored binary hashes matched |
 | Temporary distinct-bundle upgrade from an older validated product commit | Covered historically by `EV-20260622-045`; current branch-head coverage is `EV-20260622-067`, using a prior app built from `1fa6cbe90e6f`, a distinct candidate hash, and an exact restored prior hash |
 | True upgrade from a retained public prior release artifact | Not yet proven |
@@ -298,8 +304,9 @@ state is verified.
 - True install/upgrade/rollback proof and release manifest consistency on the
   final frozen release SHA. Current full local native/Python/Xcode gate evidence
   is covered by `EV-20260623-069`, current branch-head Release install and
-  artifact provenance is covered by `EV-20260622-065`, earlier pushed
-  evidence-head consistency is covered by `EV-20260622-057`, temporary
+  artifact provenance is covered by `EV-20260623-070`, current pushed
+  evidence-head remote quick-check consistency is covered by `EV-20260623-070`,
+  earlier pushed evidence-head consistency is covered by `EV-20260622-057`, temporary
   distinct-bundle replacement/restore is covered historically by
   `EV-20260622-045`, repeated for the post-Codex-environment candidate in
   `EV-20260622-058`, and refreshed for `ad07fcc594dc` in `EV-20260622-067`, and
@@ -312,7 +319,7 @@ state is verified.
   differs from `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d`.
   `EV-20260623-069` is current-head full local gate evidence only; the
   self-hosted GitHub Xcode 27 workflow still requires default-branch workflow
-  availability if selected as a required remote gate. `EV-20260622-065` is
+  availability if selected as a required remote gate. `EV-20260623-070` is
   current-head Release build/install evidence only; rollback/upgrade proof
   remains separate.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
