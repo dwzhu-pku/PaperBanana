@@ -103,6 +103,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "ddbf64bd1949e352b6c67261cbc39399d496231d",
         "4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d",
         "a251dda11fa29aa4ed430d25fa6dbc8cdd8834bb",
+        "533857f046462ae71e843b7332f70f580916c015",
         "0f500900f3b51050743aa86493a8274cee1663f8",
         "0888cbe4b3b8d2d14c782634af1ed2df1c087067",
         "9a64b88566501bc2bfa07b5fd1f49aa9feeedcaf",
@@ -210,6 +211,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "EV-20260623-091",
         "EV-20260623-092",
         "EV-20260623-093",
+        "EV-20260623-094",
         "28025752242",
         "28025752249",
         "28035948312",
@@ -220,6 +222,11 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "28044101020",
         "28050753666",
         "28050755344",
+        "28051616788",
+        "28051616861",
+        "27A5194q",
+        "27A5209h",
+        "host/toolchain drift evidence",
         "WP-108 no-live artifact runner utility",
         "run-map generator",
         "human-review packet contract",
@@ -246,6 +253,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "PR #75 handoff",
         "upstream PR check rollup is still empty",
         "current-head fork remote checks",
+        "current host Xcode beta drift",
         "37 focused Python tests",
         "fake startup credential sentinels",
         "current-head no-live hosted-readiness refresh",
@@ -560,6 +568,7 @@ def test_wp007_manual_voiceover_packet_preserves_open_gate_boundary():
     assert "EV-20260623-091" in RELEASE_MANIFEST
     assert "EV-20260623-092" in RELEASE_MANIFEST
     assert "EV-20260623-093" in RELEASE_MANIFEST
+    assert "EV-20260623-094" in RELEASE_MANIFEST
     assert "not completed full manual VoiceOver traversal" in RELEASE_MANIFEST
 
 

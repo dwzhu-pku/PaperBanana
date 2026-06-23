@@ -16,11 +16,12 @@ been validated and leaves every unvalidated release claim open.
 | Latest full local native/Python/Xcode gate | `a251dda11fa29aa4ed430d25fa6dbc8cdd8834bb` |
 | Previous full local native/Python/Xcode gate | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
 | Previous sanitized full local native/Python/Xcode gate | `da8329597d196608a40bcf6be823c9ef684a9e16` |
-| Latest recorded remote-check evidence head | `0888cbe4b3b8d2d14c782634af1ed2df1c087067` |
-| Previous recorded remote-check evidence head | `0f500900f3b51050743aa86493a8274cee1663f8` |
-| Earlier recorded remote-check evidence head | `772ac7df7b24cdca56173560299663cfe6f321a7` |
-| Older recorded remote-check evidence head | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
-| Oldest recorded remote-check evidence head | `de4c8170952ad8f0efa2aa8e901f248f3c878605` |
+| Latest recorded remote-check evidence head | `533857f046462ae71e843b7332f70f580916c015` |
+| Previous recorded remote-check evidence head | `0888cbe4b3b8d2d14c782634af1ed2df1c087067` |
+| Earlier recorded remote-check evidence head | `0f500900f3b51050743aa86493a8274cee1663f8` |
+| Older recorded remote-check evidence head | `772ac7df7b24cdca56173560299663cfe6f321a7` |
+| Oldest recorded remote-check evidence head | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
+| Historical recorded remote-check evidence head | `de4c8170952ad8f0efa2aa8e901f248f3c878605` |
 | Latest current-head Release install evidence | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
 | Branch | `integration/native-first-rc-native` |
 | Worktree | `/Users/jeff/Codex_projects/PaperBanana-native-integrated` |
@@ -175,7 +176,7 @@ product, native, workflow, or runtime paths change after the latest full local
 native/Python/Xcode gate without a new full-gate record. This is reviewer
 readiness and evidence-governance proof only, not real final-candidate scoring
 or a publication-quality claim.
-`EV-20260623-093` records the latest observed fork CI for pushed PR #75 head
+`EV-20260623-093` records earlier observed fork CI for pushed PR #75 head
 `0888cbe4b3b8`: Native Structural Checks run `28050753666` and Python Tests
 run `28050755344` passed, while the upstream PR check rollup remained empty.
 The same evidence item hardens the WP-007 completed-packet validator with
@@ -184,6 +185,15 @@ accepted-limitation requirements, Reference Examples `VO-04`/`VO-05` coverage,
 and recursive text-sidecar secret scanning. This is still not manual
 VoiceOver traversal evidence and does not replace the latest full local
 native/Python/Xcode gate at `a251dda11fa2`.
+`EV-20260623-094` records the latest observed fork CI for pushed PR #75 head
+`533857f04646`: Native Structural Checks run `28051616788` and Python Tests
+run `28051616861` passed, while the upstream PR check rollup remained empty.
+The same evidence item records a strict local full-gate attempt that stopped
+before Xcode tests because the repository guard expects Xcode beta
+`Build version 27A5194q`, while the installed `/Applications/Xcode-beta.app`
+reports `Build version 27A5209h`. This is host/toolchain drift evidence; it
+does not replace the latest successful full local native/Python/Xcode gate at
+`a251dda11fa2`.
 `EV-20260623-085` records a live, non-mutating Hugging Face hosted-state check
 on `0edd97b7da2b`: the public HF paper page, PaperBananaBench dataset page,
 Space page, and Space API returned HTTP 200, but the `dwzhu/PaperBanana` Space
@@ -545,7 +555,7 @@ channel approval, upgrade proof, or rollback proof.
 | Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-057`, `EV-20260622-064`, `EV-20260623-069` | Passed with limitation |
 | Local aggregate native gate | `EV-20260623-069` | Latest full local gate passed through the documented `script/test_all.sh` command after the isolated Python 3.12 fallback fix: 167 Swift tests, 126 Python tests, and `codex-xcode27 proof` passed |
 | Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070`, `EV-20260623-072` | Latest product-source Release build/install and installed-app artifact provenance passed with binary SHA-256 `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`; this does not replace full-gate evidence or rollback proof |
-| Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070`, `EV-20260623-082`, `EV-20260623-093` | Passed with limitation; latest recorded fork quick checks are for `0888cbe4b3b8` with Native Structural Checks run `28050753666` and Python Tests run `28050755344`; the upstream PR check rollup remained empty, `EV-20260623-069` records the self-hosted workflow dispatch limitation, and `EV-20260623-081` remains the latest local full native/Python/Xcode gate |
+| Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070`, `EV-20260623-082`, `EV-20260623-093`, `EV-20260623-094` | Passed with limitation; latest recorded fork quick checks are for `533857f04646` with Native Structural Checks run `28051616788` and Python Tests run `28051616861`; the upstream PR check rollup remained empty, `EV-20260623-094` records the current host Xcode beta drift (`27A5209h` installed versus `27A5194q` pinned), `EV-20260623-069` records the self-hosted workflow dispatch limitation, and `EV-20260623-081` remains the latest local full native/Python/Xcode gate |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079`, `EV-20260623-090`, `EV-20260623-091`, `EV-20260623-092`, `EV-20260623-093` | Partial; includes current-head source-level accessibility/keyboard contracts, source-level Settings accessibility/adaptive regression coverage, Reference Examples missing/malformed/empty state AX text, recovery-heavy Run Details / Run Ledger AX rows and controls, current-head Prompt Studio keyboard/preflight AX traversal, current-head Settings Workspace AX fallback proof, a manual VoiceOver traversal packet, checked completed-artifact templates, a completed-packet structural validator, and hardened no-live/reference-route validation for future completed packets, but not completed full manual VoiceOver traversal |
 | Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072`, `EV-20260623-073`, `EV-20260623-074`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is recorded for Settings, Light/Dark Mode Increased Text Size at the minimum main-window size is recorded for Prompt Studio, Artifact Library, Run Details, and Run Ledger after sidebar selection polish, the Prompt Studio no-spend preflight sheet Light/Dark Increased Text Size slice is recorded, Reference Examples missing/malformed/empty Light/Dark Increased Text Size edge states are recorded, Run Details / Run Ledger recovery/failure states are covered by EV-076, the Prompt Studio keyboard/AX preflight slice adds a current-head Dark Mode sheet screenshot, and EV-079 adds current-head provider-free installed-app screenshots for Prompt Studio, Artifact Library, Run Details, Run Ledger, and Settings Workspace; broader screenshot-based full-app adaptive signoff remains open |
@@ -710,9 +720,10 @@ state is verified.
 - Repeat the full local/self-hosted native/Python/Xcode gate if a later
   product-code change lands or if the final frozen release-candidate SHA
   requires a full-gate rerun. `EV-20260623-081` is the latest full local gate
-  evidence, while `EV-20260623-082` is current-head PR handoff and fork
-  quick-check evidence for the later evidence-only SHA `0f500900f3b`; it does
-  not replace the full local gate. The self-hosted GitHub Xcode 27 workflow still requires
+  evidence, while `EV-20260623-094` is current-head PR fork quick-check
+  evidence plus strict local full-gate host-drift evidence for SHA
+  `533857f04646`; it does not replace the full local gate. The self-hosted
+  GitHub Xcode 27 workflow still requires
   default-branch workflow availability if selected as a required remote gate.
   Rollback/upgrade proof remains separate.
 - WP-108 quality benchmark/rubric before making publication-quality claims.
