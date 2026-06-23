@@ -13,7 +13,8 @@ been validated and leaves every unvalidated release claim open.
 
 | Item | Value |
 |---|---|
-| Latest full local native/Python/Xcode gate | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
+| Latest full local native/Python/Xcode gate | `a251dda11fa29aa4ed430d25fa6dbc8cdd8834bb` |
+| Previous full local native/Python/Xcode gate | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
 | Previous sanitized full local native/Python/Xcode gate | `da8329597d196608a40bcf6be823c9ef684a9e16` |
 | Latest recorded remote-check evidence head | `772ac7df7b24cdca56173560299663cfe6f321a7` |
 | Previous recorded remote-check evidence head | `213fc9411e3eb6a6289aaea4c22f48b631045615` |
@@ -124,6 +125,15 @@ release, or upstream-acceptance proof. It remains historical current-head Releas
 `28035948312` and remote `Python Tests` run `28035945891`. This updates remote
 provenance after the installed-app keyboard/AX fallback evidence slice and does
 not replace the latest full local Xcode 27 gate.
+`EV-20260623-081` records the latest full local native/Python/Xcode 27 gate on
+`a251dda11fa2`: the documented `script/test_all.sh` command passed native
+source/project contracts, the Xcode 27 baseline guard, 167 Swift tests, 126
+isolated Python 3.12 tests with 8 provider-audit deprecation warnings, and
+`codex-xcode27 proof` with `status=passed halted=False`. The same-commit fork remote quick checks are green:
+`Native Structural Checks` run `28036136383` and `Python Tests` run
+`28036135701`. This is current integration head evidence, not live-provider,
+hosted, WP-108 quality, full manual VoiceOver, final release, or
+upstream-acceptance proof.
 `EV-20260622-065` remains historical
 Release install provenance for the earlier
 `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` branch head and binary SHA-256
