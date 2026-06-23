@@ -15,6 +15,13 @@ ROLLBACK_RUNBOOK = (
 WP108_CONTRACT = (
     REPO_ROOT / "docs" / "integration" / "WP108_NO_LIVE_BENCHMARK_CONTRACT.md"
 ).read_text(encoding="utf-8")
+WP007_VOICEOVER_PACKET = (
+    REPO_ROOT
+    / "docs"
+    / "integration"
+    / "evidence"
+    / "20260623-145051_b81a399_WP-007-manual-voiceover-traversal-packet.md"
+).read_text(encoding="utf-8")
 
 
 def _manifest_table_value(label: str) -> str:
@@ -128,6 +135,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "Latest WP-007 Recovery ledger text-size screenshot head",
         "Latest WP-007 Prompt Studio keyboard/preflight AX head",
         "Latest WP-007 installed-app keyboard/AX fallback head",
+        "Latest WP-007 manual VoiceOver traversal packet head",
         "Latest WP-108 no-live artifact runner head",
         "Latest WP-108 quality decision head",
         "Latest WP-108 offline evidence-chain head",
@@ -264,6 +272,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "environment-selection limitation",
         "c9b38cceeb33b61373f6b9aabe6c749fe5c33898",
         "b8b157d0c5d9d1750554cd66114315c72f5bf7fa",
+        "b81a39909f4af9d9192b098c45357ac3667c9e34",
         "codex-cli 0.142.0",
         "Codex CLI flag compatibility",
         "persisted `codex exec` handoff arguments",
@@ -379,6 +388,8 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "Full-app Increased Text Size",
         "broader screenshot-based full-app adaptive signoff remains open",
         "current-head source-level accessibility/keyboard contracts",
+        "manual VoiceOver traversal packet",
+        "not completed full manual VoiceOver traversal",
         "GUI AX/window capture was blocked",
         "no-live artifact-completeness runner",
         "no image scoring or quality claim",
@@ -427,6 +438,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "Not yet proven",
         "Known Open Gates",
         "Full manual keyboard navigation and VoiceOver traversal",
+        "EV-20260623-090",
         "Approved live provider/fallback native E2E",
         "Hosted two-session proof",
         "WP-108 quality benchmark",
@@ -492,6 +504,44 @@ def test_release_candidate_manifest_blocks_ungated_product_drift_after_full_gate
         f"Blocked drift: {blocked_paths}"
     )
     assert "not live-provider" in RELEASE_MANIFEST
+
+
+def test_wp007_manual_voiceover_packet_preserves_open_gate_boundary():
+    required_phrases = [
+        "WP-007 Manual VoiceOver Traversal Packet",
+        "Packet status | Prepared; manual traversal not executed",
+        "not completed traversal evidence",
+        "No app window was launched for this packet",
+        "No provider was called",
+        "same physical display as Codex",
+        "Do not read, print, copy, or attach real `secrets.json`",
+        "voiceover-speech-output.tsv",
+        "keyboard-traversal.tsv",
+        "actual spoken output",
+        "Pass Criteria",
+        "Stop Conditions",
+        "Route Checklist",
+        "VO-04",
+        "Prompt Studio Reference Examples",
+        "VO-08",
+        "Artifact Library disabled states",
+        "VO-09",
+        "Run Details table",
+        "VO-10",
+        "Provider Run Ledger",
+        "VO-11",
+        "Refine Image",
+        "VO-13",
+        "Settings Providers",
+        "WP-007/T-021 can only move to passed",
+        "No GUI, VoiceOver, Xcode, provider, or app-launch validation was performed",
+    ]
+
+    for phrase in required_phrases:
+        assert phrase in WP007_VOICEOVER_PACKET
+
+    assert "EV-20260623-090" in RELEASE_MANIFEST
+    assert "not completed full manual VoiceOver traversal" in RELEASE_MANIFEST
 
 
 def test_local_install_rollback_runbook_keeps_preflight_scope_and_secret_boundary():
