@@ -1,0 +1,4 @@
+captured_at=2026-06-23 10:31:16 EDT
+repo_path=/Users/jeff/Codex_projects/PaperBanana
+default_image_model=__codex_gpt55_xhigh__
+intent_destination=intent_prompt=paperbanana_processes=

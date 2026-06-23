@@ -1,0 +1,1 @@
+7618f3712a67dc73e4933202b005cc42c8227600b663fa0a9e715d35a5f4f015  docs/integration/evidence/screenshots/20260623-keyboard-ax-preflight-current-head/prompt-studio-preflight-keyboard-ax.png

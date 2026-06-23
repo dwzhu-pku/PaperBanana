@@ -1,0 +1,288 @@
+AXRole=AXApplication | AXTitle=PaperBanana
+  AXRole=AXWindow | AXSubrole=AXStandardWindow | AXTitle=PaperBanana | AXIdentifier=SwiftUI.WindowGroup<SwiftUI._ConditionalContent<PaperBanana.(unknown context at $1025a7f1c).PaperBananaTestHostView, PaperBanana.AppRootContainer>>-1-AppWindow-1 | AXFocused=false | AXPosition={x:1308, y:62} | AXSize={w:1680, h:970}
+    AXRole=AXGroup | AXSubrole=AXHostingView | AXFocused=true | AXPosition={x:1308, y:62} | AXSize={w:1680, h:970}
+      AXRole=AXButton | AXDescription=Prompt Studio | AXHelp=Prompt Studio | AXIdentifier=text.bubble | AXEnabled=true | AXPosition={x:1316, y:113} | AXSize={w:35, h:35}
+      AXRole=AXStaticText | AXValue=PaperBanana | AXEnabled=true | AXPosition={x:1413, y:109} | AXSize={w:82, h:16}
+      AXRole=AXStaticText | AXValue=Native figure cockpit | AXEnabled=true | AXPosition={x:1413, y:126} | AXSize={w:100, h:13}
+      AXRole=AXStaticText | AXValue=Ready | AXEnabled=true | AXPosition={x:1648, y:114} | AXSize={w:73, h:24}
+      AXRole=AXStaticText | AXValue=Prompt Studio | AXEnabled=true | AXPosition={x:1735, y:108} | AXSize={w:112, h:20}
+      AXRole=AXButton | AXDescription=Prompt Editor | AXHelp=Moves keyboard focus to the prompt editor. | AXEnabled=true | AXPosition={x:2614, y:116} | AXSize={w:114, h:20}
+      AXRole=AXButton | AXDescription=Run Controls | AXHelp=Moves keyboard focus to the main run control. | AXEnabled=true | AXPosition={x:2738, y:116} | AXSize={w:112, h:20}
+      AXRole=AXButton | AXDescription=Reveal Runs | AXHelp=Reveal the native generation results folder | AXEnabled=true | AXPosition={x:2860, y:116} | AXSize={w:107, h:20}
+      AXRole=AXStaticText | AXValue=/Users/jeff/Codex_projects/PaperBanana | AXFocused=false | AXPosition={x:1735, y:131} | AXSize={w:235, h:13}
+      AXRole=AXButton | AXDescription=Recovered Images | AXHelp=Recovered Images | AXIdentifier=checkmark.seal | AXEnabled=true | AXPosition={x:1317, y:154} | AXSize={w:34, h:34}
+      AXRole=AXButton | AXDescription=Run Details | AXHelp=Run Details | AXIdentifier=waveform.path.ecg.rectangle | AXEnabled=true | AXPosition={x:1317, y:194} | AXSize={w:34, h:34}
+      AXRole=AXButton | AXDescription=Run Ledger | AXHelp=Run Ledger | AXIdentifier=list.bullet.rectangle | AXEnabled=true | AXPosition={x:1317, y:234} | AXSize={w:34, h:34}
+      AXRole=AXButton | AXDescription=Diagnostics | AXHelp=Diagnostics | AXIdentifier=stethoscope | AXEnabled=true | AXPosition={x:1317, y:274} | AXSize={w:34, h:34}
+      AXRole=AXScrollArea | AXFocused=false | AXPosition={x:1361, y:155} | AXSize={w:267, h:818}
+        AXRole=AXStaticText | AXDescription=Native PaperBanana app is ready | AXValue=Path: /Users/jeff/Codex_projects/PaperBanana, Key: No generation key saved, Model: Codex fallback, Backend: Compatibility backend valid, Fallback: Codex fallback selected | AXHelp=Codex fallback is selected and will not spend provider API credits. | AXEnabled=true | AXPosition={x:1374, y:174} | AXSize={w:240, h:150}
+        AXRole=AXStaticText | AXValue=CREATE | AXEnabled=true | AXPosition={x:1385, y:344} | AXSize={w:43, h:14}
+        AXRole=AXButton | AXDescription=Prompt Studio | AXEnabled=true | AXPosition={x:1374, y:363} | AXSize={w:240, h:31}
+        AXRole=AXButton | AXDescription=Generate Candidates | AXEnabled=true | AXPosition={x:1375, y:396} | AXSize={w:239, h:30}
+        AXRole=AXButton | AXDescription=Refine Image | AXEnabled=true | AXPosition={x:1375, y:428} | AXSize={w:239, h:30}
+        AXRole=AXStaticText | AXValue=LIBRARY | AXEnabled=true | AXPosition={x:1385, y:478} | AXSize={w:48, h:14}
+        AXRole=AXButton | AXDescription=Recovered Images | AXEnabled=true | AXPosition={x:1375, y:498} | AXSize={w:239, h:30}
+        AXRole=AXButton | AXDescription=Artifact Library | AXEnabled=true | AXPosition={x:1375, y:530} | AXSize={w:239, h:30}
+        AXRole=AXStaticText | AXValue=OPERATIONS | AXEnabled=true | AXPosition={x:1385, y:580} | AXSize={w:72, h:14}
+        AXRole=AXButton | AXDescription=Run Details | AXEnabled=true | AXPosition={x:1375, y:600} | AXSize={w:239, h:30}
+        AXRole=AXButton | AXDescription=Run Ledger | AXEnabled=true | AXPosition={x:1375, y:632} | AXSize={w:239, h:30}
+        AXRole=AXStaticText | AXValue=DIAGNOSTICS | AXEnabled=true | AXPosition={x:1385, y:682} | AXSize={w:78, h:14}
+        AXRole=AXButton | AXDescription=Diagnostics | AXEnabled=true | AXPosition={x:1375, y:702} | AXSize={w:239, h:30}
+      AXRole=AXButton | AXDescription=Settings | AXHelp=Settings | AXIdentifier=gearshape | AXEnabled=true | AXPosition={x:1317, y:978} | AXSize={w:34, h:34}
+      AXRole=AXButton | AXDescription=Settings | AXEnabled=true | AXPosition={x:1375, y:988} | AXSize={w:239, h:30}
+      AXRole=AXSplitGroup | AXFocused=false | AXPosition={x:1629, y:159} | AXSize={w:1359, h:872}
+        AXRole=AXGroup | AXSubrole=AXHostingView | AXFocused=false | AXPosition={x:1629, y:159} | AXSize={w:679, h:872}
+        AXRole=AXSplitter | AXValue=679 | AXEnabled=false | AXFocused=false | AXPosition={x:2308, y:159} | AXSize={w:1, h:872}
+        AXRole=AXGroup | AXSubrole=AXHostingView | AXFocused=false | AXPosition={x:2309, y:159} | AXSize={w:679, h:872}
+          AXRole=AXScrollArea | AXFocused=false | AXPosition={x:2309, y:159} | AXSize={w:679, h:872}
+            AXRole=AXGroup | AXDescription=PaperBanana readiness: Ready | AXEnabled=true | AXPosition={x:2328, y:179} | AXSize={w:640, h:257}
+              AXRole=AXStaticText | AXValue=PaperBanana Readiness | AXEnabled=true | AXPosition={x:2344, y:193} | AXSize={w:176, h:16}
+              AXRole=AXStaticText | AXValue=Codex fallback is selected and will not spend provider API credits. | AXEnabled=true | AXPosition={x:2343, y:215} | AXSize={w:318, h:13}
+              AXRole=AXStaticText | AXValue=Ready | AXEnabled=true | AXPosition={x:2342, y:242} | AXSize={w:73, h:24}
+              AXRole=AXStaticText | AXValue=/Users/jeff/Codex_projects/PaperBanana | AXHelp=/Users/jeff/Codex_projects/PaperBanana | AXFocused=false | AXPosition={x:2429, y:247} | AXSize={w:235, h:13}
+              AXRole=AXStaticText | AXValue=Configured Path | AXEnabled=true | AXPosition={x:2344, y:287} | AXSize={w:102, h:13}
+              AXRole=AXStaticText | AXValue=/Users/jeff/Codex_projects/PaperBanana | AXFocused=false | AXPosition={x:2489, y:279} | AXSize={w:235, h:13}
+              AXRole=AXStaticText | AXValue=Native runs, recovered artifacts, ledgers, and review scans use this checkout. | AXFocused=false | AXPosition={x:2489, y:294} | AXSize={w:374, h:13}
+              AXRole=AXStaticText | AXValue=Generation Key | AXEnabled=true | AXPosition={x:2344, y:325} | AXSize={w:93, h:13}
+              AXRole=AXStaticText | AXValue=No generation key saved | AXFocused=false | AXPosition={x:2489, y:317} | AXSize={w:119, h:13}
+              AXRole=AXStaticText | AXValue=Paid model requests will not fail silently; they route to Codex fallback. | AXFocused=false | AXPosition={x:2489, y:332} | AXSize={w:335, h:13}
+              AXRole=AXStaticText | AXValue=Backend Validity | AXEnabled=true | AXPosition={x:2344, y:363} | AXSize={w:104, h:13}
+              AXRole=AXStaticText | AXValue=Compatibility backend valid | AXFocused=false | AXPosition={x:2489, y:355} | AXSize={w:133, h:13}
+              AXRole=AXStaticText | AXValue=The optional Python compatibility backend has app.py and a virtualenv Python. | AXFocused=false | AXPosition={x:2489, y:370} | AXSize={w:381, h:13}
+              AXRole=AXStaticText | AXValue=Deterministic Fallback | AXEnabled=true | AXPosition={x:2343, y:401} | AXSize={w:132, h:13}
+              AXRole=AXStaticText | AXValue=Codex fallback selected | AXFocused=false | AXPosition={x:2489, y:393} | AXSize={w:115, h:13}
+              AXRole=AXStaticText | AXValue=Generation uses gpt-5.5 with xhigh reasoning and records no provider API spend. | AXFocused=false | AXPosition={x:2489, y:408} | AXSize={w:393, h:13}
+            AXRole=AXStaticText | AXValue=Run Controls | AXEnabled=true | AXPosition={x:2344, y:469} | AXSize={w:107, h:16}
+            AXRole=AXButton | AXDescription=Generate | AXHelp=Starts the native generation flow. Press Command-Option-P to return to the prompt editor. | AXEnabled=true | AXFocused=false | AXPosition={x:2343, y:499} | AXSize={w:90, h:20}
+            AXRole=AXButton | AXDescription=Reveal Runs | AXEnabled=true | AXPosition={x:2443, y:499} | AXSize={w:107, h:20}
+            AXRole=AXCheckBox | AXDescription=No-spend dry run | AXValue=0 | AXHelp=Writes native run, request, metadata, and provider audit artifacts without provider spend. | AXEnabled=true | AXPosition={x:2343, y:533} | AXSize={w:111, h:14}
+            AXRole=AXStaticText | AXValue=Run Configuration | AXEnabled=true | AXPosition={x:2344, y:595} | AXSize={w:137, h:16}
+            AXRole=AXStaticText | AXValue=Model | AXEnabled=true | AXPosition={x:2343, y:625} | AXSize={w:30, h:13}
+            AXRole=AXPopUpButton | AXDescription=Model, Image model | AXValue=Codex fallback | AXEnabled=true | AXPosition={x:2343, y:644} | AXSize={w:130, h:20}
+            AXRole=AXStaticText | AXValue=Resolution | AXEnabled=true | AXPosition={x:2343, y:678} | AXSize={w:51, h:13}
+            AXRole=AXStaticText | AXValue=Aspect Ratio | AXEnabled=true | AXPosition={x:2411, y:678} | AXSize={w:61, h:13}
+            AXRole=AXPopUpButton | AXDescription=Resolution, Resolution | AXValue=2K | AXEnabled=true | AXPosition={x:2343, y:697} | AXSize={w:54, h:20}
+            AXRole=AXPopUpButton | AXDescription=Aspect Ratio, Aspect ratio | AXValue=16:9 | AXEnabled=true | AXPosition={x:2411, y:697} | AXSize={w:62, h:20}
+            AXRole=AXGroup | AXDescription=Reference examples | AXIdentifier=reference-examples-panel | AXEnabled=true | AXPosition={x:2328, y:751} | AXSize={w:640, h:498}
+              AXRole=AXStaticText | AXValue=Reference Examples | AXEnabled=true | AXPosition={x:2344, y:765} | AXSize={w:152, h:16}
+              AXRole=AXStaticText | AXValue=Optional manual PaperBananaBench diagram guidance. | AXEnabled=true | AXPosition={x:2343, y:788} | AXSize={w:267, h:13}
+              AXRole=AXStaticText | AXValue=0/10 | AXIdentifier=reference-examples-selection-summary | AXEnabled=true | AXPosition={x:2342, y:814} | AXSize={w:64, h:24}
+              AXRole=AXStaticText | AXValue=No manual examples selected. | AXIdentifier=reference-examples-selection-summary | AXEnabled=true | AXPosition={x:2416, y:820} | AXSize={w:147, h:13}
+              AXRole=AXButton | AXDescription=Clear selected reference examples | AXHelp=Removes all manual reference examples from the next run. | AXIdentifier=reference-examples-selection-summary | AXEnabled=false | AXPosition={x:2885, y:816} | AXSize={w:69, h:20}
+              AXRole=AXStaticText | AXValue=3 examples are missing local images. They can still be selected, but prompt guidance will use metadata only. | AXEnabled=true | AXPosition={x:2344, y:852} | AXSize={w:543, h:13}
+              AXRole=AXRadioGroup | AXDescription=Reference example scope, Reference example scope | AXValue=<AXUIElement 0x790cd3a8b0> {pid=95266} | AXHelp=Showing All | AXEnabled=true | AXFocused=false | AXPosition={x:2343, y:879} | AXSize={w:155, h:24}
+              AXRole=AXGroup | AXDescription=Search examples | AXEnabled=true | AXFocused=false | AXPosition={x:2342, y:912} | AXSize={w:519, h:29}
+              AXRole=AXStaticText | AXValue=298 of 298 shown | AXEnabled=true | AXPosition={x:2899, y:920} | AXSize={w:54, h:13}
+              AXRole=AXScrollArea | AXDescription=Reference example list | AXFocused=false | AXPosition={x:2343, y:955} | AXSize={w:611, h:280}
+            AXRole=AXStaticText | AXValue=Output Preview | AXEnabled=true | AXPosition={x:2344, y:1283} | AXSize={w:122, h:16}
+            AXRole=AXImage | AXDescription=Photo | AXIdentifier=photo | AXEnabled=true | AXPosition={x:2624, y:1372} | AXSize={w:48, h:38}
+            AXRole=AXStaticText | AXValue=No Image Yet | AXEnabled=true | AXPosition={x:2596, y:1427} | AXSize={w:104, h:20}
+            AXRole=AXStaticText | AXValue=Generated images appear here after the native run completes. | AXEnabled=true | AXPosition={x:2460, y:1461} | AXSize={w:376, h:16}
+            AXRole=AXStaticText | AXValue=Run Timeline | AXEnabled=true | AXPosition={x:2344, y:1595} | AXSize={w:106, h:16}
+            AXRole=AXStaticText | AXValue=Every paid provider call is tracked before execution and surfaced here. | AXEnabled=true | AXPosition={x:2343, y:1617} | AXSize={w:340, h:13}
+            AXRole=AXStaticText | AXValue=Waiting. | AXFocused=false | AXPosition={x:2343, y:1644} | AXSize={w:39, h:13}
+            AXRole=AXStaticText | AXValue=0% | AXEnabled=true | AXPosition={x:2938, y:1644} | AXSize={w:16, h:13}
+            AXRole=AXProgressIndicator | AXValue=0 | AXEnabled=true | AXPosition={x:2343, y:1671} | AXSize={w:611, h:20}
+            AXRole=AXStaticText | AXValue=Elapsed | AXEnabled=true | AXPosition={x:2343, y:1705} | AXSize={w:38, h:13}
+            AXRole=AXStaticText | AXValue=0s | AXEnabled=true | AXPosition={x:2407, y:1705} | AXSize={w:12, h:13}
+            AXRole=AXStaticText | AXValue=Last event | AXEnabled=true | AXPosition={x:2343, y:1724} | AXSize={w:50, h:13}
+            AXRole=AXStaticText | AXValue=0s | AXEnabled=true | AXPosition={x:2407, y:1724} | AXSize={w:12, h:13}
+            AXRole=AXImage | AXDescription=Syncing | AXIdentifier=arrow.triangle.2.circlepath | AXEnabled=true | AXPosition={x:2343, y:1752} | AXSize={w:16, h:13}
+            AXRole=AXStaticText | AXValue=Queued | AXEnabled=true | AXPosition={x:2369, y:1751} | AXSize={w:48, h:16}
+            AXRole=AXImage | AXDescription=Circle | AXIdentifier=circle | AXEnabled=true | AXPosition={x:2344, y:1778} | AXSize={w:13, h:13}
+            AXRole=AXStaticText | AXValue=Prepared | AXEnabled=true | AXPosition={x:2369, y:1777} | AXSize={w:55, h:16}
+            AXRole=AXImage | AXDescription=Circle | AXIdentifier=circle | AXEnabled=true | AXPosition={x:2344, y:1804} | AXSize={w:13, h:13}
+            AXRole=AXStaticText | AXValue=Model call | AXEnabled=true | AXPosition={x:2369, y:1803} | AXSize={w:62, h:16}
+            AXRole=AXImage | AXDescription=Circle | AXIdentifier=circle | AXEnabled=true | AXPosition={x:2344, y:1830} | AXSize={w:13, h:13}
+            AXRole=AXStaticText | AXValue=Saving | AXEnabled=true | AXPosition={x:2369, y:1829} | AXSize={w:41, h:16}
+            AXRole=AXImage | AXDescription=Circle | AXIdentifier=circle | AXEnabled=true | AXPosition={x:2344, y:1856} | AXSize={w:13, h:13}
+            AXRole=AXStaticText | AXValue=Complete | AXEnabled=true | AXPosition={x:2369, y:1855} | AXSize={w:58, h:16}
+            AXRole=AXScrollBar | AXValue=0 | AXEnabled=true | AXFocused=false | AXPosition={x:2970, y:158} | AXSize={w:19, h:867}
+              AXRole=AXValueIndicator | AXValue=0 | AXPosition={x:2979, y:162} | AXSize={w:6, h:429}
+              AXRole=AXButton | AXSubrole=AXIncrementArrow | AXPosition={x:2971, y:159} | AXSize={w:0, h:0}
+              AXRole=AXButton | AXSubrole=AXDecrementArrow | AXPosition={x:2971, y:159} | AXSize={w:0, h:0}
+              AXRole=AXButton | AXSubrole=AXIncrementPage | AXPosition={x:2979, y:592} | AXSize={w:6, h:429}
+              AXRole=AXButton | AXSubrole=AXDecrementPage | AXPosition={x:2979, y:162} | AXSize={w:6, h:0}
+    AXRole=AXButton | AXSubrole=AXCloseButton | AXEnabled=true | AXFocused=false | AXPosition={x:1316, y:70} | AXSize={w:16, h:16}
+    AXRole=AXButton | AXSubrole=AXFullScreenButton | AXHelp=this button also has an action to zoom the window | AXEnabled=true | AXFocused=false | AXPosition={x:1362, y:70} | AXSize={w:16, h:16}
+      AXRole=AXGroup | AXFocused=false | AXPosition={x:1363, y:71} | AXSize={w:14, h:14}
+    AXRole=AXButton | AXSubrole=AXMinimizeButton | AXEnabled=true | AXFocused=false | AXPosition={x:1339, y:70} | AXSize={w:16, h:16}
+    AXRole=AXStaticText | AXValue=PaperBanana | AXEnabled=true | AXFocused=false | AXPosition={x:1390, y:70} | AXSize={w:90, h:16}
+  AXRole=AXMenuBar | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:0} | AXSize={w:3008, h:30}
+    AXRole=AXMenuBarItem | AXTitle=Apple | AXEnabled=true | AXFocused=false | AXPosition={x:10, y:0} | AXSize={w:34, h:30}
+      AXRole=AXMenu | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=About This Mac | AXIdentifier=_aboutThisMacRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=System Information | AXIdentifier=_systemInformationRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=System Settings… | AXIdentifier=_systemSettingsRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=App Store | AXIdentifier=_appStoreRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Recent Items | AXIdentifier=_recentsRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+          AXRole=AXMenu | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Applications | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=MacScope.app | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “MacScope.app” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Mole.app | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “Mole.app” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=PaperBanana.app | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “PaperBanana.app” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=PaperBanana.app | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “PaperBanana.app” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=PaperBanana.app | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “PaperBanana.app” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=PaperBanana.app | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “PaperBanana.app” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=PaperBanana.app | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “PaperBanana.app” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=PaperBanana.app | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “PaperBanana.app” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=PaperBanana.app | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “PaperBanana.app” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=PaperBanana.app | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “PaperBanana.app” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Documents | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=DirtyTest-1F779920-DDC2-41DE-9C08-D8A5E3B5CD6B.mscope | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “DirtyTest-1F779920-DDC2-41DE-9C08-D8A5E3B5CD6B.mscope” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=DirtyTest-75BB45AD-AF69-4AF3-8618-503B31504111.mscope | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “DirtyTest-75BB45AD-AF69-4AF3-8618-503B31504111.mscope” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=DirtyTest-30645036-A36E-4D93-A969-B7692A77A42D.mscope | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “DirtyTest-30645036-A36E-4D93-A969-B7692A77A42D.mscope” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=DirtyTest-A70142F6-FA94-44D3-BE1A-3617A1241CDC.mscope | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “DirtyTest-A70142F6-FA94-44D3-BE1A-3617A1241CDC.mscope” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=DirtyTest-E9EF99B8-2828-4507-A9AD-5A3A5E42FB32.mscope | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “DirtyTest-E9EF99B8-2828-4507-A9AD-5A3A5E42FB32.mscope” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=PROJECT_COMPLETION_PLAN_06.22.26.md | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “PROJECT_COMPLETION_PLAN_06.22.26.md” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=PROJECT_COMPLETION_PLAN.md | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “PROJECT_COMPLETION_PLAN.md” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=TECHNICAL_CHALLENGE_decompiler_structuring.md | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “TECHNICAL_CHALLENGE_decompiler_structuring.md” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=WEExOTEyX1Byb2QuTUlNIE1BRVNUUk8gLSBQcm9k.ica | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “WEExOTEyX1Byb2QuTUlNIE1BRVNUUk8gLSBQcm9k.ica” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=WEExOTEyX1Byb2QuVmFyaWFuLVVzZXJIb21lMTgtMQ--.ica | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Show “WEExOTEyX1Byb2QuVmFyaWFuLVVzZXJIb21lMTgtMQ--.ica” in Finder | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Servers | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=video | AXIdentifier=_recentItemRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Clear Menu | AXIdentifier=_clearRecentItemsRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Force Quit… | AXIdentifier=_forceQuitPanelRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Force Quit PaperBanana | AXIdentifier=_forceQuitRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Sleep | AXIdentifier=_sleepRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Restart… | AXIdentifier=_restartRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Restart | AXIdentifier=_restartNowRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Shut Down… | AXIdentifier=_shutDownRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Shut Down | AXIdentifier=_shutDownNowRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Lock Screen | AXIdentifier=_lockScreenRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Log Out jeff… | AXIdentifier=_logOutRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Log Out jeff | AXIdentifier=_logOutNowRequested: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+    AXRole=AXMenuBarItem | AXTitle=PaperBanana | AXEnabled=true | AXFocused=false | AXPosition={x:43, y:0} | AXSize={w:106, h:30}
+      AXRole=AXMenu | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=About PaperBanana | AXIdentifier=orderFrontStandardAboutPanel: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Settings… | AXIdentifier=menuAction: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Services | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+          AXRole=AXMenu | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=No Services Apply | AXIdentifier=_noServicesApplyAction: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Services Settings… | AXIdentifier=_configureServicesMenu: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Hide PaperBanana | AXIdentifier=hide: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Hide Others | AXIdentifier=hideOtherApplications: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Show All | AXIdentifier=unhideAllApplications: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Quit PaperBanana | AXIdentifier=terminate: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Quit and Keep Windows | AXIdentifier=NSAlternateQuitMenuItem | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+    AXRole=AXMenuBarItem | AXTitle=File | AXEnabled=true | AXFocused=false | AXPosition={x:148, y:0} | AXSize={w:43, h:30}
+      AXRole=AXMenu | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=New PaperBanana Window | AXIdentifier=menuAction: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Close | AXIdentifier=performClose: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Close All | AXIdentifier=closeAll: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+    AXRole=AXMenuBarItem | AXTitle=Edit | AXEnabled=true | AXFocused=false | AXPosition={x:190, y:0} | AXSize={w:44, h:30}
+      AXRole=AXMenu | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Undo | AXIdentifier=undo: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Redo | AXIdentifier=redo: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Cut | AXIdentifier=cut: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Copy | AXIdentifier=copy: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Paste | AXIdentifier=paste: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Delete | AXIdentifier=delete: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Select All | AXIdentifier=selectAll: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=AutoFill | AXIdentifier=_NSMenuItemAutoFillIdentifier | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+          AXRole=AXMenu | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Contact… | AXIdentifier=_handleInsertFromContactsCommand: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Passwords… | AXIdentifier=_handleInsertFromPasswordsCommand: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Credit Card… | AXIdentifier=_handleInsertFromCreditCardsCommand: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Start Dictation… | AXIdentifier=startDictation: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Emoji & Symbols | AXIdentifier=orderFrontCharacterPalette: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+    AXRole=AXMenuBarItem | AXTitle=View | AXEnabled=true | AXFocused=false | AXPosition={x:233, y:0} | AXSize={w:50, h:30}
+      AXRole=AXMenu | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Show Tab Bar | AXIdentifier=toggleTabBar: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Show All Tabs | AXIdentifier=toggleTabOverview: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Enter Full Screen | AXIdentifier=toggleFullScreen: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+    AXRole=AXMenuBarItem | AXTitle=Window | AXEnabled=true | AXFocused=false | AXPosition={x:282, y:0} | AXSize={w:69, h:30}
+      AXRole=AXMenu | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Minimize | AXIdentifier=performMiniaturize: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Minimize All | AXIdentifier=miniaturizeAll: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Zoom | AXIdentifier=performZoom: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Zoom All | AXIdentifier=zoomAll: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Fill | AXIdentifier=_zoomFill: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Center | AXIdentifier=_zoomCenter: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Move & Resize | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+          AXRole=AXMenu | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Halves | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Left | AXIdentifier=_zoomLeft: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Right | AXIdentifier=_zoomRight: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Top | AXIdentifier=_zoomTop: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Bottom | AXIdentifier=_zoomBottom: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Quarters | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Top Left | AXIdentifier=_zoomTopLeft: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Top Right | AXIdentifier=_zoomTopRight: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Bottom Left | AXIdentifier=_zoomBottomLeft: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Bottom Right | AXIdentifier=_zoomBottomRight: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Arrange | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Left & Right | AXIdentifier=_zoomLeftAndRight: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Left & Quarters | AXIdentifier=_zoomLeftThreeUp: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Right & Left | AXIdentifier=_zoomRightAndLeft: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Right & Quarters | AXIdentifier=_zoomRightThreeUp: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Top & Bottom | AXIdentifier=_zoomTopAndBottom: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Top & Quarters | AXIdentifier=_zoomTopThreeUp: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Bottom & Top | AXIdentifier=_zoomBottomAndTop: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Bottom & Quarters | AXIdentifier=_zoomBottomThreeUp: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Quarters | AXIdentifier=_zoomQuarters: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Return to Previous Size | AXIdentifier=_zoomUntile: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Full Screen Tile | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+          AXRole=AXMenu | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Left of Screen | AXIdentifier=_tileLeft: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+            AXRole=AXMenuItem | AXTitle=Right of Screen | AXIdentifier=_tileRight: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Bring All to Front | AXIdentifier=arrangeInFront: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Arrange in Front | AXIdentifier=alternateArrangeInFront: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Remove Window from Set | AXIdentifier=_removeWindowFromStageManagerSet: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=PaperBanana | AXIdentifier=makeKeyAndOrderFront: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Show Previous Tab | AXIdentifier=selectPreviousTab: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Show Next Tab | AXIdentifier=selectNextTab: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Move Tab to New Window | AXIdentifier=moveTabToNewWindow: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Merge All Windows | AXIdentifier=mergeAllWindows: | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+    AXRole=AXMenuBarItem | AXTitle=Help | AXEnabled=true | AXFocused=false | AXPosition={x:350, y:0} | AXSize={w:49, h:30}
+      AXRole=AXMenu | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=Send PaperBanana Feedback to Apple | AXIdentifier=_openFeedbackAssistant: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXEnabled=false | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+        AXRole=AXMenuItem | AXTitle=PaperBanana Help | AXIdentifier=showHelp: | AXEnabled=true | AXFocused=false | AXPosition={x:0, y:1692} | AXSize={w:0, h:0}
+nodes_dumped=287

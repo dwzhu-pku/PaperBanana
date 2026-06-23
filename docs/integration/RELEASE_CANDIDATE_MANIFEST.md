@@ -37,6 +37,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-007 Prompt Studio preflight sheet text-size screenshot head | `8b0cf6d8d89ed0ecfcf2686ffd1fa57e2967529c` |
 | Latest WP-007 Reference dataset edge-state screenshot head | `e5f4636c0a225f240b8e71eaa90421000f8d0b5a` |
 | Latest WP-007 Recovery ledger text-size screenshot head | `6d715e162dc290bb24576f73b9e9695911267f8f` |
+| Latest WP-007 Prompt Studio keyboard/preflight AX head | `74e28eb68020df7bad84076aae29f39a158334b5` |
 | Latest WP-108 no-live artifact runner head | `dc8d8e5f5149eb8099a9ecb45628a74dcd610599` |
 | Latest WP-108 human-review packet head | `86f9bb16fa524cc638a39d5c6c7e6d64a5b279c4` |
 | Latest WP-108 quality decision head | `b6a8a2a51d7ffd7ec8f348ecf892467d7cf7abcd` |
@@ -238,6 +239,21 @@ provider payloads were stored, and the temporary app-scoped Text Size,
 appearance, repo-path, and Application Support overrides were restored. This is
 a bounded recovery/failure visual/AX slice, not full manual VoiceOver traversal
 or loading-state signoff.
+`EV-20260623-077` records a later installed-app Prompt Studio keyboard/AX
+preflight traversal captured while the worktree was at `74e28eb68020`: pressing
+the native Prompt Editor control moved focus to the prompt editor,
+`Command-Option-R` moved focus to the run control, `Command-Option-P` returned
+focus to the prompt editor, the `No-spend dry run` toggle and run control were
+reachable, the native preflight sheet opened with Cancel/Start and no
+paid-provider warning, and Cancel dismissed the sheet. The screenshot lives
+under
+`docs/integration/evidence/screenshots/20260623-keyboard-ax-preflight-current-head/`;
+`prompt-studio-preflight-keyboard-ax.png` has SHA-256
+`7618f3712a67dc73e4933202b005cc42c8227600b663fa0a9e715d35a5f4f015`
+and dimensions `3360 x 1940`. Sidecars confirmed no files newer than the marker
+were created in `results/native_generate` or `results/provider_audit`, and the
+temporary intent preferences were restored. This is an installed-app AX/keyboard
+slice, not full manual VoiceOver speech-output traversal or release signoff.
 `EV-20260622-061` records the no-live WP-107 hosted-readiness smoke harness
 added on `2312eae6cc7b`: a sanitized localhost `share=False` Gradio copy
 launched with hosted safety flags, fake startup credential sentinels were absent
@@ -352,8 +368,8 @@ channel approval, upgrade proof, or rollback proof.
 | Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070`, `EV-20260623-072` | Latest product-source Release build/install and installed-app artifact provenance passed with binary SHA-256 `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`; this does not replace full-gate evidence or rollback proof |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070` | Passed with limitation; latest recorded remote quick checks are for `213fc941`, while `EV-20260623-069` records the latest local full gate and the self-hosted workflow dispatch limitation |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
-| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075`, `EV-20260623-076` | Partial; includes current-head source-level accessibility/keyboard contracts, source-level Settings accessibility/adaptive regression coverage, Reference Examples missing/malformed/empty state AX text, and recovery-heavy Run Details / Run Ledger AX rows and controls, but not full manual VoiceOver traversal |
-| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072`, `EV-20260623-073`, `EV-20260623-074`, `EV-20260623-075`, `EV-20260623-076` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is recorded for Settings, Light/Dark Mode Increased Text Size at the minimum main-window size is recorded for Prompt Studio, Artifact Library, Run Details, and Run Ledger after sidebar selection polish, the Prompt Studio no-spend preflight sheet Light/Dark Increased Text Size slice is recorded, Reference Examples missing/malformed/empty Light/Dark Increased Text Size edge states are recorded, and Run Details / Run Ledger recovery/failure states are covered by EV-076; broader screenshot-based full-app adaptive signoff remains open |
+| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077` | Partial; includes current-head source-level accessibility/keyboard contracts, source-level Settings accessibility/adaptive regression coverage, Reference Examples missing/malformed/empty state AX text, recovery-heavy Run Details / Run Ledger AX rows and controls, and current-head Prompt Studio keyboard/preflight AX traversal, but not full manual VoiceOver traversal |
+| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072`, `EV-20260623-073`, `EV-20260623-074`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is recorded for Settings, Light/Dark Mode Increased Text Size at the minimum main-window size is recorded for Prompt Studio, Artifact Library, Run Details, and Run Ledger after sidebar selection polish, the Prompt Studio no-spend preflight sheet Light/Dark Increased Text Size slice is recorded, Reference Examples missing/malformed/empty Light/Dark Increased Text Size edge states are recorded, Run Details / Run Ledger recovery/failure states are covered by EV-076, and the Prompt Studio keyboard/AX preflight slice adds a current-head Dark Mode sheet screenshot; broader screenshot-based full-app adaptive signoff remains open |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
 | WP-108 no-live artifact-completeness runner | `EV-20260622-051`, `EV-20260622-059` | Synthetic native output/request/metadata/provider-request/provider-response/provider-audit/run-store artifacts produce a fixture-mode report, and a no-live generator now maps explicit native run-store rows to the checker; no image scoring or quality claim |
@@ -375,7 +391,7 @@ channel approval, upgrade proof, or rollback proof.
 
 | Route | Current release-candidate status | Evidence | Limitation |
 |---|---|---|---|
-| Native no-spend dry run | Validated for local provenance, manual-reference persistence, generation/refinement store artifact behavior, dry-run artifact secret-sentinel scanning, and Prompt Studio no-spend preflight sheet cancellation without run/provider artifacts | `EV-20260622-024`, `EV-20260622-025`, `EV-20260622-026`, `EV-20260622-038`, `EV-20260622-044`, `EV-20260622-068`, `EV-20260623-074` | Not a live provider generation result |
+| Native no-spend dry run | Validated for local provenance, manual-reference persistence, generation/refinement store artifact behavior, dry-run artifact secret-sentinel scanning, Prompt Studio no-spend preflight sheet cancellation without run/provider artifacts, and current-head Prompt Studio keyboard/preflight AX traversal | `EV-20260622-024`, `EV-20260622-025`, `EV-20260622-026`, `EV-20260622-038`, `EV-20260622-044`, `EV-20260622-068`, `EV-20260623-074`, `EV-20260623-077` | Not a live provider generation result |
 | Codex fallback | Implemented and covered by unit/component/store tests as a no-paid-provider path | Swift/Python test suites in `EV-20260622-035`; focused refinement fallback evidence in `EV-20260622-038`; store-level fake-Codex handoff evidence in `EV-20260622-049`; constrained handoff environment evidence in `EV-20260622-056` | Approved real Codex/live fallback E2E remains open |
 | Google Gemini / Nano Banana | Implemented and covered by mocked/error-path tests | Swift/Python test suites in `EV-20260622-035`; focused cancellation/timeout recovery evidence in `EV-20260622-039` | Approved live provider E2E remains open |
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
@@ -419,8 +435,9 @@ state is verified.
   in the current desktop session, so it is not a manual traversal substitute.
   `EV-20260623-076` adds source/live AX table recovery coverage for Run Details
   and Run Ledger recovery-heavy rows, selected-row summaries, status text, and
-  recovery controls, but it is still not a manual VoiceOver speech-output
-  traversal substitute.
+  recovery controls. `EV-20260623-077` adds installed-app Prompt Studio
+  keyboard focus and preflight Cancel/Start AX traversal on the current head.
+  These are still not manual VoiceOver speech-output traversal substitutes.
 - Dark Settings Increased Text Size visible content is covered by
   `EV-20260622-041`; source-level lower Workspace content regression protection
   is covered by `EV-20260622-066`; Light Mode Settings Increased Text Size and
@@ -435,9 +452,10 @@ state is verified.
   Text Size is covered by `EV-20260623-075`. Run Details and Run Ledger
   recovery/failure states are covered by `EV-20260623-076`, with a recorded
   Run Details semantic compression limitation for visible row status text.
-  Full-app Increased Text Size for
-  hover/focus, inactive-window outside Settings, loading states, other
-  sheets, and any states not explicitly captured remains open.
+  `EV-20260623-077` adds a current-head Prompt Studio preflight screenshot from
+  the keyboard/AX traversal. Full-app Increased Text Size for hover/focus,
+  inactive-window outside Settings, loading states, other sheets, and any states
+  not explicitly captured remains open.
 - Approved live provider/fallback native E2E with non-private fixtures, spend
   limit, redacted request/metadata/provider-artifact review, and
   failure/recovery proof. `EV-20260622-044` covers dry-run artifact

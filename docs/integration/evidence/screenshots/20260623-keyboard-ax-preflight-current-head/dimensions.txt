@@ -1,0 +1,3 @@
+/Users/jeff/Codex_projects/PaperBanana-native-integrated/docs/integration/evidence/screenshots/20260623-keyboard-ax-preflight-current-head/prompt-studio-preflight-keyboard-ax.png
+  pixelWidth: 3360
+  pixelHeight: 1940
