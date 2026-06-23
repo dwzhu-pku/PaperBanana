@@ -40,6 +40,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-109 runtime migration head | `6314142bab27c2591d57149ca18d5979d623ecc0` |
 | Latest WP-106 fake-Codex handoff test head | `6f48b2dcd055a32f0fa3cdca899ddcff7a9fd009` |
 | Latest WP-106 real Codex opt-in harness head | `b8b157d0c5d9d1750554cd66114315c72f5bf7fa` |
+| Latest WP-106 current-head real Codex compile-skip evidence head | `f963f4d77b022a324e4aa2b5e5896122320c177c` |
 | Latest WP-106 Codex handoff environment hardening head | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
 | Latest WP-007 Settings source-contract test head | `6ce551e868ddebb15e6dc87c989b690fc60a3277` |
 | Latest WP-007 Main Window Light text-size screenshot head | `5fe91fa3c6dee7c13fddb4651f55404e226775fb` |
@@ -282,6 +283,14 @@ compiled live harness reported 1 skipped test with 0 failures when included
 without live opt-in; the native source-control contract passed. This creates an
 auditable real-Codex entry point but is not a real Codex CLI image generation
 proof, does not run `codex exec`, and does not spend model quota.
+`EV-20260623-097` refreshes that live-only XCTest on current branch head
+`f963f4d77b022a324e4aa2b5e5896122320c177c`: the targeted Xcode command supplied
+`OTHER_SWIFT_FLAGS='-D PAPERBANANA_ENABLE_REAL_CODEX_E2E_TESTS'`, deliberately
+omitted `PAPERBANANA_REAL_CODEX_E2E=1`, wrote
+`/tmp/PaperBanana-real-codex-skip-f963f4d.xcresult`, and `xcresulttool`
+reported `result=Skipped`, `totalTestCount=1`, `skippedTests=1`, and
+`failedTests=0`. This is current-head compile/skip readiness only; it still
+does not run `codex exec`, spend quota, or prove real Codex CLI image generation.
 `EV-20260623-091` records a WP-007 manual VoiceOver artifact contract and
 template bundle added from source head `9a64b88566501bc2bfa07b5fd1f49aa9feeedcaf`.
 It defines the required completed packet files, exact TSV columns, `VO-01`
@@ -613,7 +622,7 @@ channel approval, upgrade proof, or rollback proof.
 | Route | Current release-candidate status | Evidence | Limitation |
 |---|---|---|---|
 | Native no-spend dry run | Validated for local provenance, manual-reference persistence, generation/refinement store artifact behavior, dry-run artifact secret-sentinel scanning, Prompt Studio no-spend preflight sheet cancellation without run/provider artifacts, and current-head Prompt Studio keyboard/preflight AX traversal | `EV-20260622-024`, `EV-20260622-025`, `EV-20260622-026`, `EV-20260622-038`, `EV-20260622-044`, `EV-20260622-068`, `EV-20260623-074`, `EV-20260623-077` | Not a live provider generation result |
-| Codex fallback | Implemented and covered by unit/component/store tests as a no-paid-provider path; an opt-in real Codex CLI XCTest harness exists but is not run by default | Swift/Python test suites in `EV-20260622-035`; focused refinement fallback evidence in `EV-20260622-038`; store-level fake-Codex handoff evidence in `EV-20260622-049`; constrained handoff environment evidence in `EV-20260622-056`; CLI flag/handoff argument compatibility in `EV-20260623-088`; opt-in real Codex harness coverage in `EV-20260623-089` | Approved real Codex/live fallback E2E remains open |
+| Codex fallback | Implemented and covered by unit/component/store tests as a no-paid-provider path; an opt-in real Codex CLI XCTest harness exists but is not run by default | Swift/Python test suites in `EV-20260622-035`; focused refinement fallback evidence in `EV-20260622-038`; store-level fake-Codex handoff evidence in `EV-20260622-049`; constrained handoff environment evidence in `EV-20260622-056`; CLI flag/handoff argument compatibility in `EV-20260623-088`; opt-in real Codex harness coverage in `EV-20260623-089`; current-head live-only compile/skip refresh in `EV-20260623-097` | Approved real Codex/live fallback E2E remains open |
 | Google Gemini / Nano Banana | Implemented and covered by mocked/error-path tests | Swift/Python test suites in `EV-20260622-035`; focused cancellation/timeout recovery evidence in `EV-20260622-039` | Approved live provider E2E remains open |
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
 | `local/<model>` and `ollama/<model>` text routes | Documented and covered by mocked route/docs tests | `EV-20260622-007` and full Python suites | Optional real local/Ollama endpoint smoke remains open if promoted beyond mocked support |
