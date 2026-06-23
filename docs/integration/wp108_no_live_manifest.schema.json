@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paperbanana.local/schemas/wp108_no_live_manifest.schema.json",
+  "title": "PaperBanana WP-108 No-Live Benchmark Manifest",
+  "type": "object",
+  "required": ["schema_version", "benchmark_id", "claim_boundary", "cases", "rubric", "thresholds"],
+  "properties": {
+    "schema_version": { "const": "wp108.no_live_manifest.v1" },
+    "benchmark_id": { "type": "string", "minLength": 1 },
+    "claim_boundary": { "type": "string", "minLength": 1 },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "case_id",
+          "task_type",
+          "split",
+          "content_ref",
+          "visual_intent_ref",
+          "path_to_gt_image",
+          "expected_outputs",
+          "non_private_fixture"
+        ],
+        "properties": {
+          "case_id": { "type": "string", "minLength": 1 },
+          "task_type": { "enum": ["diagram", "plot"] },
+          "split": { "type": "string", "minLength": 1 },
+          "content_ref": { "type": "string", "minLength": 1 },
+          "visual_intent_ref": { "type": "string", "minLength": 1 },
+          "path_to_gt_image": { "type": "string", "minLength": 1 },
+          "expected_outputs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "enum": [
+                "image",
+                "request_json",
+                "metadata_json",
+                "provider_request_json",
+                "provider_response_json",
+                "provider_audit",
+                "run_store"
+              ]
+            }
+          },
+          "non_private_fixture": { "const": true }
+        }
+      }
+    },
+    "rubric": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "scale", "pass_threshold", "anchors"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "scale": { "type": "string", "minLength": 1 },
+          "pass_threshold": { "type": "number" },
+          "anchors": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["score", "description"],
+              "properties": {
+                "score": { "type": "number" },
+                "description": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "required": ["minimum_cases", "minimum_mean_score", "max_critical_failures"],
+      "properties": {
+        "minimum_cases": { "type": "integer", "minimum": 1 },
+        "minimum_mean_score": { "type": "number" },
+        "max_critical_failures": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

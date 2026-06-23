@@ -1,0 +1,1 @@
+AXRole=AXTextArea | AXDescription=Image generation prompt | AXValue=WP-007 current-head keyboard AX traversal prompt. Do not start a live provider run. | AXHelp=Press Command-Option-R to move keyboard focus to Run Controls. | AXFocused=true | AXPosition={x:1673, y:279} | AXSize={w:591, h:360}

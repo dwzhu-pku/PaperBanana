@@ -1,0 +1,23 @@
+{
+  "fixture_root": "/var/folders/lw/dzh536s508x4x52xqqb9kt7r0000gn/T/paperbanana-wp007-recovery-ledger-4nj_vw0a",
+  "repo_root": "/var/folders/lw/dzh536s508x4x52xqqb9kt7r0000gn/T/paperbanana-wp007-recovery-ledger-4nj_vw0a/repo",
+  "no_live_providers": true,
+  "synthetic_statuses": [
+    "cancelled",
+    "timedOut",
+    "failed/raw payload",
+    "missingArtifact",
+    "rawRecovered"
+  ],
+  "native_run_dirs": [
+    "/var/folders/lw/dzh536s508x4x52xqqb9kt7r0000gn/T/paperbanana-wp007-recovery-ledger-4nj_vw0a/repo/results/native_refine/native_refine_cancelled",
+    "/var/folders/lw/dzh536s508x4x52xqqb9kt7r0000gn/T/paperbanana-wp007-recovery-ledger-4nj_vw0a/repo/results/native_generate/native_generate_timeout",
+    "/var/folders/lw/dzh536s508x4x52xqqb9kt7r0000gn/T/paperbanana-wp007-recovery-ledger-4nj_vw0a/repo/results/native_refine/native_refine_raw",
+    "/var/folders/lw/dzh536s508x4x52xqqb9kt7r0000gn/T/paperbanana-wp007-recovery-ledger-4nj_vw0a/repo/results/native_generate/ledger_missing_artifact",
+    "/var/folders/lw/dzh536s508x4x52xqqb9kt7r0000gn/T/paperbanana-wp007-recovery-ledger-4nj_vw0a/repo/results/native_refine/ledger_raw_recovered"
+  ],
+  "provider_audit_log": "/var/folders/lw/dzh536s508x4x52xqqb9kt7r0000gn/T/paperbanana-wp007-recovery-ledger-4nj_vw0a/repo/results/provider_audit/provider_calls_20260623.jsonl",
+  "run_store": "/var/folders/lw/dzh536s508x4x52xqqb9kt7r0000gn/T/paperbanana-wp007-recovery-ledger-4nj_vw0a/repo/results/run_store/paperbanana_runs.sqlite",
+  "secret_values": "none",
+  "fixture_correction": "Added native run folders for ledger_missing_artifact and ledger_raw_recovered before final screenshot capture to avoid orphan-row duplication in Run Details."
+}

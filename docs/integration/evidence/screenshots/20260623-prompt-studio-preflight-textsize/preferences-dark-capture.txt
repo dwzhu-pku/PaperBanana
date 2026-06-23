@@ -1,0 +1,7 @@
+timestamp=2026-06-23 09:27:45 EDT
+mode=dark
+dark_mode=true
+repo_path=/Users/jeff/Codex_projects/PaperBanana
+default_image_model=__codex_gpt55_xhigh__
+text_size=    "local.paperbanana.gui" = L;
+app_support_root=/tmp/paperbanana-preflight-appsupport.NeojE1

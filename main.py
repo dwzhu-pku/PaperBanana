@@ -71,10 +71,20 @@ async def main():
         help="retrieval setting for planner agent (default: auto)",
     )
     parser.add_argument(
+        "--planner-metaphor",
+        action="store_true",
+        help="enable diagram-only Planner visual-metaphor discovery before detailed description output",
+    )
+    parser.add_argument(
         "--max_critic_rounds",
         type=int,
         default=3,
         help="maximum number of critic rounds (default: 3)",
+    )
+    parser.add_argument(
+        "--agentic-critic",
+        action="store_true",
+        help="enable Gemini code_execution Critic path (default: disabled)",
     )
     parser.add_argument(
         "--main_model_name",
@@ -96,7 +106,9 @@ async def main():
         split_name=args.split_name,
         exp_mode=args.exp_mode,
         retrieval_setting=args.retrieval_setting,
+        planner_metaphor=args.planner_metaphor,
         max_critic_rounds=args.max_critic_rounds,
+        agentic_critic=args.agentic_critic,
         main_model_name=args.main_model_name,
         image_gen_model_name=args.image_gen_model_name,
         work_dir=Path(__file__).parent,

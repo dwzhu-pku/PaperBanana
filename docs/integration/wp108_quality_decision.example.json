@@ -1,0 +1,70 @@
+{
+  "schema_version": "wp108.quality_decision.v1",
+  "created_at_utc": "2026-06-22T00:00:00Z",
+  "manifest_id": "paperbanana-m1-no-live-contract",
+  "source_head": "example-source-head",
+  "manifest_path": "docs/integration/wp108_no_live_manifest.example.json",
+  "report_path": "docs/integration/wp108_human_review_report.example.json",
+  "evaluation_mode": "human_review",
+  "decision": "go",
+  "gate_passed": true,
+  "publication_quality_claimed": false,
+  "provider_scoring_used": false,
+  "thresholds": {
+    "minimum_cases": 1,
+    "minimum_mean_score": 3.0,
+    "max_critical_failures": 0,
+    "dimension_pass_thresholds": {
+      "semantic_faithfulness": 3.0,
+      "visual_legibility": 3.0,
+      "artifact_completeness": 3.0
+    },
+    "allowed_score_sources": [
+      "adjudicated_human_review"
+    ]
+  },
+  "observed": {
+    "cases_total": 1,
+    "reported_mean_score": 3.5,
+    "observed_mean_score": 3.5,
+    "report_threshold_passed": true,
+    "case_statuses": {
+      "diagram-ref-1-contract": "passed"
+    },
+    "dimension_results": {
+      "semantic_faithfulness": {
+        "average": 4.0,
+        "pass_threshold": 3.0,
+        "passed": true
+      },
+      "visual_legibility": {
+        "average": 3.0,
+        "pass_threshold": 3.0,
+        "passed": true
+      },
+      "artifact_completeness": {
+        "average": 3.5,
+        "pass_threshold": 3.0,
+        "passed": true
+      }
+    },
+    "case_critical_failures": [],
+    "reviewer_critical_failures": [],
+    "reviewer_count_by_case": {
+      "diagram-ref-1-contract": 2
+    },
+    "score_sources_by_case": {
+      "diagram-ref-1-contract": "adjudicated_human_review"
+    },
+    "disallowed_score_sources": {}
+  },
+  "artifact_binding": {
+    "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "run_map_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "artifact_report_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "review_packet_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "source_head": "example-source-head"
+  },
+  "blockers": [],
+  "claim_boundary": "This report is a deterministic decision over an already-completed WP-108 human_review report. It does not score images, call providers, repeat a benchmark subset, or by itself authorize a publication-quality claim."
+}

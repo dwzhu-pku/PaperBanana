@@ -1,0 +1,12 @@
+/Users/jeff/Codex_projects/PaperBanana-native-integrated/docs/integration/evidence/screenshots/20260623-settings-light-increased-text-size/settings-light-increased-text-legacy.png
+  pixelWidth: 1800
+  pixelHeight: 1296
+/Users/jeff/Codex_projects/PaperBanana-native-integrated/docs/integration/evidence/screenshots/20260623-settings-light-increased-text-size/settings-light-increased-text-providers.png
+  pixelWidth: 1800
+  pixelHeight: 1296
+/Users/jeff/Codex_projects/PaperBanana-native-integrated/docs/integration/evidence/screenshots/20260623-settings-light-increased-text-size/settings-light-increased-text-workspace-lower.png
+  pixelWidth: 1800
+  pixelHeight: 1296
+/Users/jeff/Codex_projects/PaperBanana-native-integrated/docs/integration/evidence/screenshots/20260623-settings-light-increased-text-size/settings-light-increased-text-workspace.png
+  pixelWidth: 1800
+  pixelHeight: 1296

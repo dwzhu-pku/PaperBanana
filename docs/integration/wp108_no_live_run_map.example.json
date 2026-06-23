@@ -1,0 +1,22 @@
+{
+  "schema_version": "wp108.no_live_run_map.v1",
+  "manifest_id": "paperbanana-m1-no-live-contract",
+  "provider_scoring_used": false,
+  "publication_quality_claimed": false,
+  "live_provider_used": false,
+  "cases": [
+    {
+      "case_id": "diagram-ref-1-contract",
+      "run_id": "native_generate_4K_20260622_130000",
+      "provider_call_id": "swift-local-fixture-call",
+      "run_dir": "results/native_runs/native_generate_4K_20260622_130000",
+      "image_path": "results/native_runs/native_generate_4K_20260622_130000/generated_4K.png",
+      "request_json": "results/native_runs/native_generate_4K_20260622_130000/request.json",
+      "metadata_json": "results/native_runs/native_generate_4K_20260622_130000/generated_4K.json",
+      "provider_request_json": "results/native_runs/native_generate_4K_20260622_130000/provider_request.json",
+      "provider_response_json": "results/native_runs/native_generate_4K_20260622_130000/generated_4K.provider_response.json",
+      "provider_audit_jsonl": "results/provider_audit/provider_calls_20260622.jsonl",
+      "run_store_db": "results/run_store/paperbanana_runs.sqlite"
+    }
+  ]
+}

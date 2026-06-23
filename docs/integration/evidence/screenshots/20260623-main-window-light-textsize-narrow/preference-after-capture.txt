@@ -1,0 +1,4 @@
+timestamp=2026-06-23T12:52:11Z
+dark_mode=false
+repo_path=/Users/jeff/Codex_projects/PaperBanana
+text_size=L

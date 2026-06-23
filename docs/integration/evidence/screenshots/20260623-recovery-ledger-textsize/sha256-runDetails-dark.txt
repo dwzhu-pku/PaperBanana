@@ -1,0 +1,1 @@
+48ec0c57684fedb5baea53c061153410f9013606a1ee4ea7f01e418d640e9d58  docs/integration/evidence/screenshots/20260623-recovery-ledger-textsize/recovery-dark-runDetails.png

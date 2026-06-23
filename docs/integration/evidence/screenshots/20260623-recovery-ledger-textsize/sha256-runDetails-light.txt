@@ -1,0 +1,1 @@
+0d6734cf564b68abd29e7f46e9ab596d31366b4767538e1455e9b2d909687535  docs/integration/evidence/screenshots/20260623-recovery-ledger-textsize/recovery-light-runDetails.png

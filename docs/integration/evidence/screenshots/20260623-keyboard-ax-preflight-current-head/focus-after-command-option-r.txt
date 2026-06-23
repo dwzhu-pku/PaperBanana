@@ -1,0 +1,1 @@
+AXRole=AXButton | AXDescription=Generate | AXHelp=Starts the native generation flow. Press Command-Option-P to return to the prompt editor. | AXEnabled=true | AXFocused=true | AXPosition={x:2343, y:499} | AXSize={w:90, h:20}

@@ -1,0 +1,5 @@
+captured_at=2026-06-23 10:31:03 EDT
+head=74e28eb68020df7bad84076aae29f39a158334b5
+repo_path=/Users/jeff/Codex_projects/PaperBanana-native-integrated
+default_image_model=gemini-3.1-flash-image-preview
+intent_destination=intent_prompt=

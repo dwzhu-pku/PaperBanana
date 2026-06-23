@@ -1,0 +1,6 @@
+number=1227 layer=0 title=PaperBanana bounds={
+    Height = 860;
+    Width = 1364;
+    X = 80;
+    Y = 110;
+}

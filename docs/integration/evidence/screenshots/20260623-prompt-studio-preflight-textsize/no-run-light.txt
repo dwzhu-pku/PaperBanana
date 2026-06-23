@@ -1,0 +1,7 @@
+mode=light
+run_id=native_generate_20260623_092909
+run_dir_exists=false
+run_store_rows=0
+provider_call_rows=0
+native_generate_newer_than_marker=
+provider_audit_newer_than_marker=

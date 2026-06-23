@@ -1,0 +1,1070 @@
+import AppKit
+import XCTest
+@testable import PaperBanana
+
+final class ProviderRuntimeTests: XCTestCase {
+    func testProviderClientFactoryRoutesGoogleToNativeClient() {
+        let settings = Self.settings(googleAPIKey: "test-google-key")
+        let plan = ImageProviderExecutionPlan(requestedModel: .nanoBananaPro, settings: settings)
+
+        let client = ProviderClientFactory().client(for: plan)
+
+        XCTAssertTrue(client is GoogleGeminiProviderClient)
+    }
+
+    func testProviderClientFactoryRoutesFallbackToNativeCodexClient() {
+        let settings = Self.settings()
+        let plan = ImageProviderExecutionPlan(requestedModel: .nanoBananaPro, settings: settings)
+
+        let client = ProviderClientFactory().client(for: plan)
+
+        XCTAssertTrue(client is CodexFallbackProviderClient)
+    }
+
+    func testCodexFallbackHandoffEnvironmentOmitsProviderSecrets() {
+        let repoRoot = URL(fileURLWithPath: "/tmp/PaperBananaProviderRuntimeTests", isDirectory: true)
+        let request = ProviderClientRequest(
+            runID: "codex-env-test",
+            callID: "codex-env-call",
+            workflow: .generation,
+            prompt: "Create a test figure.",
+            sourceImageURL: nil,
+            model: .codexFallback,
+            effectiveModel: ImageModelChoice.codexFallback.backendValue,
+            resolution: "2K",
+            aspectRatio: "16:9",
+            task: "scientific diagram",
+            settings: Self.settings(repoRoot: repoRoot),
+            outputURL: repoRoot.appendingPathComponent("generated.png")
+        )
+
+        let environment = CodexFallbackProviderClient.handoffEnvironment(
+            baseEnvironment: [
+                "PATH": "/usr/bin:/bin",
+                "HOME": "/Users/tester",
+                "CODEX_HOME": "/tmp/codex-home",
+                "CODEX_CONFIG_DIR": "/tmp/codex-config",
+                "GOOGLE_API_KEY": "base-google-secret",
+                "OPENROUTER_API_KEY": "base-openrouter-secret",
+                "OPENAI_API_KEY": "base-openai-secret",
+                "AUTHORIZATION": "Bearer base-secret",
+                "PAPERBANANA_PROVIDER_TOKEN": "base-paperbanana-token"
+            ],
+            request: request,
+            codexModel: "gpt-5.5",
+            reasoningEffort: "xhigh",
+            extraEnvironment: [
+                "PAPERBANANA_FAKE_CODEX_IMAGE_BASE64": Self.tinyPNGBase64,
+                "GOOGLE_API_KEY": "extra-google-secret",
+                "OPENROUTER_API_KEY": "extra-openrouter-secret",
+                "CODEX_SESSION_TOKEN": "extra-codex-token"
+            ]
+        )
+
+        XCTAssertEqual(environment["PATH"], "/usr/bin:/bin")
+        XCTAssertEqual(environment["HOME"], "/Users/tester")
+        XCTAssertEqual(environment["CODEX_HOME"], "/tmp/codex-home")
+        XCTAssertEqual(environment["CODEX_CONFIG_DIR"], "/tmp/codex-config")
+        XCTAssertEqual(environment["PAPERBANANA_FAKE_CODEX_IMAGE_BASE64"], Self.tinyPNGBase64)
+        XCTAssertEqual(environment["PAPERBANANA_CODEX_MODEL"], "gpt-5.5")
+        XCTAssertEqual(environment["PAPERBANANA_CODEX_REASONING_EFFORT"], "xhigh")
+        XCTAssertEqual(environment["PAPERBANANA_CODEX_IMAGE_HANDOFF"], "1")
+        XCTAssertEqual(environment["PAPERBANANA_RUN_ID"], "codex-env-test")
+        XCTAssertEqual(environment["PAPERBANANA_PROVIDER_CALL_ID"], "codex-env-call")
+
+        XCTAssertNil(environment["GOOGLE_API_KEY"])
+        XCTAssertNil(environment["OPENROUTER_API_KEY"])
+        XCTAssertNil(environment["OPENAI_API_KEY"])
+        XCTAssertNil(environment["AUTHORIZATION"])
+        XCTAssertNil(environment["PAPERBANANA_PROVIDER_TOKEN"])
+        XCTAssertNil(environment["CODEX_SESSION_TOKEN"])
+        let serialized = environment
+            .sorted { $0.key < $1.key }
+            .map { "\($0.key)=\($0.value)" }
+            .joined(separator: "\n")
+        XCTAssertFalse(serialized.contains("base-google-secret"))
+        XCTAssertFalse(serialized.contains("base-openrouter-secret"))
+        XCTAssertFalse(serialized.contains("base-openai-secret"))
+        XCTAssertFalse(serialized.contains("extra-google-secret"))
+        XCTAssertFalse(serialized.contains("extra-openrouter-secret"))
+        XCTAssertFalse(serialized.contains("extra-codex-token"))
+    }
+
+    func testProviderClientFactoryRoutesOpenRouterToNativeClient() {
+        let settings = Self.settings(openRouterAPIKey: "test-openrouter-key")
+        let plan = ImageProviderExecutionPlan(requestedModel: .nanoBananaPro, settings: settings)
+
+        let client = ProviderClientFactory().client(for: plan)
+
+        XCTAssertTrue(client is OpenRouterProviderClient)
+    }
+
+    func testReleaseVisibleImageModelsDoNotRouteToUnsupportedFoundationModelsProvider() {
+        let settingsVariants = [
+            Self.settings(),
+            Self.settings(googleAPIKey: "test-google-key"),
+            Self.settings(openRouterAPIKey: "test-openrouter-key")
+        ]
+
+        XCTAssertFalse(
+            ImageModelChoice.allCases.contains { $0.backendValue == ImageProviderKind.foundationModels.rawValue },
+            "Foundation Models must not be exposed as a release-visible image model until the provider is implemented and validated."
+        )
+
+        for settings in settingsVariants {
+            for model in ImageModelChoice.allCases {
+                let plan = ImageProviderExecutionPlan(requestedModel: model, settings: settings)
+                let client = ProviderClientFactory().client(for: plan)
+
+                XCTAssertNotEqual(plan.provider, .foundationModels)
+                XCTAssertFalse(client is FoundationModelsProviderClient)
+                XCTAssertNotEqual(plan.durableRequestFields["provider_kind"] as? String, ImageProviderKind.foundationModels.rawValue)
+            }
+        }
+    }
+
+    func testOpenRouterProviderClientWritesNativeImageRequestPayload() throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        let sourceURL = repoRoot.appendingPathComponent("source.png")
+        try Self.tinyPNGData.write(to: sourceURL)
+        let settings = Self.settings(repoRoot: repoRoot, openRouterAPIKey: "test-openrouter-key")
+        let request = ProviderClientRequest(
+            runID: "openrouter-payload-test",
+            callID: "swift-openrouter-test-call",
+            workflow: .refinement,
+            prompt: "Sharpen labels.",
+            sourceImageURL: sourceURL,
+            model: .nanoBananaPro,
+            effectiveModel: ImageModelChoice.nanoBananaPro.backendValue,
+            resolution: "4K",
+            aspectRatio: "16:9",
+            task: "scientific diagram",
+            settings: settings
+        )
+
+        let payloadData = try OpenRouterProviderClient().makeOpenRouterPayload(for: request)
+        let payload = try XCTUnwrap(JSONSerialization.jsonObject(with: payloadData) as? [String: Any])
+        let messages = try XCTUnwrap(payload["messages"] as? [[String: Any]])
+        let message = try XCTUnwrap(messages.first)
+        let content = try XCTUnwrap(message["content"] as? [[String: Any]])
+
+        XCTAssertEqual(payload["model"] as? String, "google/gemini-3-pro-image-preview")
+        XCTAssertEqual(payload["modalities"] as? [String], ["image", "text"])
+        XCTAssertEqual((payload["image_config"] as? [String: String])?["aspect_ratio"], "16:9")
+        XCTAssertEqual((payload["image_config"] as? [String: String])?["image_size"], "4K")
+        XCTAssertEqual(content.first?["type"] as? String, "text")
+        XCTAssertTrue((content.first?["text"] as? String)?.contains("Modify the attached image") == true)
+        XCTAssertEqual(content.last?["type"] as? String, "image_url")
+        let imageURL = try XCTUnwrap((content.last?["image_url"] as? [String: String])?["url"])
+        XCTAssertTrue(imageURL.hasPrefix("data:image/png;base64,"))
+    }
+
+    func testOpenRouterProviderClientExtractsImageBytesFromImageURLResponse() throws {
+        let responseData = Data(
+            """
+            {
+              "choices": [
+                {
+                  "message": {
+                    "role": "assistant",
+                    "content": "Generated image.",
+                    "images": [
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "data:image/png;base64,\(Self.tinyPNGBase64)"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 3,
+                "completion_tokens": 5,
+                "total_tokens": 8
+              }
+            }
+            """.utf8
+        )
+
+        let parsed = try OpenRouterProviderClient().extractImageAndText(from: responseData)
+
+        XCTAssertEqual(parsed.imageData, Data(base64Encoded: Self.tinyPNGBase64))
+        XCTAssertEqual(parsed.text, "Generated image.")
+        XCTAssertEqual(parsed.usageMetadata["total_tokens"], "8")
+    }
+
+    func testOpenRouterProviderClientPreservesHTTPErrorRawResponse() async throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        let errorData = Data(#"{"error":{"message":"quota exceeded"}}"#.utf8)
+        let session = Self.mockProviderSession(
+            statusCode: 429,
+            responseData: errorData
+        )
+        let client = OpenRouterProviderClient(session: session)
+
+        do {
+            _ = try await client.execute(
+                ProviderClientRequest(
+                    runID: "openrouter-http-error-test",
+                    callID: "swift-openrouter-error-call",
+                    workflow: .generation,
+                    prompt: "Create a test figure.",
+                    sourceImageURL: nil,
+                    model: .nanoBanana2,
+                    effectiveModel: ImageModelChoice.nanoBanana2.backendValue,
+                    resolution: "2K",
+                    aspectRatio: "16:9",
+                    task: "scientific diagram",
+                    settings: Self.settings(repoRoot: repoRoot, openRouterAPIKey: "test-openrouter-key")
+                ),
+                eventHandler: { _ in }
+            )
+            XCTFail("Expected OpenRouter HTTP error.")
+        } catch ProviderRuntimeError.providerHTTPStatus(let status, let preview, let rawData) {
+            XCTAssertEqual(status, 429)
+            XCTAssertTrue(preview.contains("quota exceeded"))
+            XCTAssertEqual(rawData, errorData)
+        } catch {
+            XCTFail("Expected providerHTTPStatus, got \(error).")
+        }
+    }
+
+    func testGoogleProviderClientPreservesMalformedSuccessRawResponse() async throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        let malformedData = Data("not-json-from-google".utf8)
+        let client = GoogleGeminiProviderClient(
+            session: Self.mockProviderSession(responseData: malformedData)
+        )
+
+        do {
+            _ = try await client.execute(
+                ProviderClientRequest(
+                    runID: "google-malformed-body-test",
+                    callID: "swift-gemini-malformed-call",
+                    workflow: .generation,
+                    prompt: "Create a test figure.",
+                    sourceImageURL: nil,
+                    model: .nanoBananaPro,
+                    effectiveModel: ImageModelChoice.nanoBananaPro.backendValue,
+                    resolution: "4K",
+                    aspectRatio: "16:9",
+                    task: "scientific diagram",
+                    settings: Self.settings(repoRoot: repoRoot, googleAPIKey: "test-google-key")
+                ),
+                eventHandler: { _ in }
+            )
+            XCTFail("Expected malformed provider response.")
+        } catch ProviderRuntimeError.malformedProviderResponseBody(let reason, let rawData) {
+            XCTAssertFalse(reason.isEmpty)
+            XCTAssertEqual(rawData, malformedData)
+        } catch {
+            XCTFail("Expected malformedProviderResponseBody, got \(error).")
+        }
+    }
+
+    func testOpenRouterProviderClientPreservesMalformedSuccessRawResponse() async throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        let malformedData = Data("not-json-from-openrouter".utf8)
+        let client = OpenRouterProviderClient(
+            session: Self.mockProviderSession(responseData: malformedData)
+        )
+
+        do {
+            _ = try await client.execute(
+                ProviderClientRequest(
+                    runID: "openrouter-malformed-body-test",
+                    callID: "swift-openrouter-malformed-call",
+                    workflow: .generation,
+                    prompt: "Create a test figure.",
+                    sourceImageURL: nil,
+                    model: .nanoBananaPro,
+                    effectiveModel: ImageModelChoice.nanoBananaPro.backendValue,
+                    resolution: "4K",
+                    aspectRatio: "16:9",
+                    task: "scientific diagram",
+                    settings: Self.settings(repoRoot: repoRoot, openRouterAPIKey: "test-openrouter-key")
+                ),
+                eventHandler: { _ in }
+            )
+            XCTFail("Expected malformed provider response.")
+        } catch ProviderRuntimeError.malformedProviderResponseBody(let reason, let rawData) {
+            XCTAssertFalse(reason.isEmpty)
+            XCTAssertEqual(rawData, malformedData)
+        } catch {
+            XCTFail("Expected malformedProviderResponseBody, got \(error).")
+        }
+    }
+
+    @MainActor
+    func testProviderCallRecorderFailsBeforeAuditWhenDurableRunIsMissing() throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        let settings = Self.settings(repoRoot: repoRoot, googleAPIKey: "test-google-key")
+        let providerPlan = ImageProviderExecutionPlan(requestedModel: .nanoBananaPro, settings: settings)
+        var capturedCallID = ""
+        var capturedEvents: [(String, Int, String)] = []
+
+        XCTAssertThrowsError(
+            try NativeProviderCallRecorder.start(
+                repoRoot: repoRoot,
+                runID: "missing_native_run",
+                workflow: .generation,
+                providerPlan: providerPlan,
+                setProviderCallID: { capturedCallID = $0 },
+                appendEvent: { stage, progress, message in
+                    capturedEvents.append((stage, progress, message))
+                }
+            )
+        ) { error in
+            guard case PaperBananaRunStoreError.missingRunRecord(let runID) = error else {
+                XCTFail("Expected missing durable run record error, got \(error).")
+                return
+            }
+            XCTAssertEqual(runID, "missing_native_run")
+        }
+
+        XCTAssertEqual(capturedCallID, "")
+        XCTAssertTrue(capturedEvents.isEmpty)
+        XCTAssertFalse(
+            FileManager.default.fileExists(
+                atPath: repoRoot.appendingPathComponent("results/provider_audit").path
+            )
+        )
+        XCTAssertTrue(try PaperBananaRunStore.fetchProviderCallsSynchronously(repoRoot: repoRoot).isEmpty)
+    }
+
+    @MainActor
+    func testProviderCallRecorderFailureThrowsBeforeAuditWhenDurableRunIsMissing() throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        let settings = Self.settings(repoRoot: repoRoot, googleAPIKey: "test-google-key")
+        let providerPlan = ImageProviderExecutionPlan(requestedModel: .nanoBananaPro, settings: settings)
+        let providerError = NSError(
+            domain: "PaperBananaProviderRuntimeTests",
+            code: 71,
+            userInfo: [NSLocalizedDescriptionKey: "Provider failed after returning no usable image."]
+        )
+
+        XCTAssertThrowsError(
+            try NativeProviderCallRecorder.fail(
+                error: providerError,
+                repoRoot: repoRoot,
+                runID: "missing_native_run",
+                callID: "orphan-failure-call",
+                workflow: .generation,
+                providerPlan: providerPlan
+            )
+        ) { error in
+            guard case PaperBananaRunStoreError.missingRunRecord(let runID) = error else {
+                XCTFail("Expected missing durable run record error, got \(error).")
+                return
+            }
+            XCTAssertEqual(runID, "missing_native_run")
+        }
+
+        XCTAssertFalse(
+            FileManager.default.fileExists(
+                atPath: repoRoot.appendingPathComponent("results/provider_audit").path
+            )
+        )
+        XCTAssertNil(try PaperBananaRunStore.fetchProviderCallSynchronously(callID: "orphan-failure-call", repoRoot: repoRoot))
+    }
+
+    @MainActor
+    func testProviderCallRecorderTerminalThrowsBeforeAuditWhenDurableRunIsMissing() throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        let settings = Self.settings(repoRoot: repoRoot, googleAPIKey: "test-google-key")
+        let providerPlan = ImageProviderExecutionPlan(requestedModel: .nanoBananaPro, settings: settings)
+
+        XCTAssertThrowsError(
+            try NativeProviderCallRecorder.terminal(
+                status: .timedOut,
+                message: "Provider call timed out.",
+                repoRoot: repoRoot,
+                runID: "missing_native_run",
+                callID: "orphan-timeout-call",
+                workflow: .refinement,
+                providerPlan: providerPlan
+            )
+        ) { error in
+            guard case PaperBananaRunStoreError.missingRunRecord(let runID) = error else {
+                XCTFail("Expected missing durable run record error, got \(error).")
+                return
+            }
+            XCTAssertEqual(runID, "missing_native_run")
+        }
+
+        XCTAssertFalse(
+            FileManager.default.fileExists(
+                atPath: repoRoot.appendingPathComponent("results/provider_audit").path
+            )
+        )
+        XCTAssertNil(try PaperBananaRunStore.fetchProviderCallSynchronously(callID: "orphan-timeout-call", repoRoot: repoRoot))
+    }
+
+    @MainActor
+    func testProviderCompletionBootstrapsRecoveredRunWhenLedgerIsMissing() throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        let runDirectory = repoRoot.appendingPathComponent("results/native_generate/missing_native_run", isDirectory: true)
+        try FileManager.default.createDirectory(at: runDirectory, withIntermediateDirectories: true)
+        let outputURL = runDirectory.appendingPathComponent("generated_4K.png")
+        let rawResponseURL = runDirectory.appendingPathComponent("generated_4K.provider_response.json")
+        let rawPayloadURL = runDirectory.appendingPathComponent("generated_4K.provider_raw.bin")
+        let response = ProviderResponse(
+            provider: .googleGemini,
+            model: ImageModelChoice.nanoBananaPro.backendValue,
+            callID: "swift-gemini-orphan-completion",
+            rawResponseData: Data(#"{"mock":true}"#.utf8),
+            imageData: Self.tinyPNGData,
+            text: "Provider returned an image.",
+            usageMetadata: ["totalTokenCount": "11"]
+        )
+        var savedRawResponseURL: URL?
+        var savedRawPayloadURL: URL?
+        var capturedEvents: [(String, Int, String)] = []
+        var metadataWriteCalled = false
+
+        let completion = try NativeProviderCompletionCoordinator.completeImageResponse(
+            response: response,
+            repoRoot: repoRoot,
+            runID: "missing_native_run",
+            workflow: .generation,
+            outputURL: outputURL,
+            rawResponseURL: rawResponseURL,
+            rawPayloadURL: rawPayloadURL,
+            savingMessage: "Saving generated image.",
+            successFallbackMessage: "Image generated successfully.",
+            failureMessagePrefix: "Failed to save generated image",
+            didSaveRawResponse: { savedRawResponseURL = $0 },
+            didSaveRawPayload: { savedRawPayloadURL = $0 },
+            appendEvent: { stage, progress, message in
+                capturedEvents.append((stage, progress, message))
+                let event = PaperBananaRunEvent(
+                    runID: "missing_native_run",
+                    stage: stage,
+                    progress: progress,
+                    message: message,
+                    timestamp: PaperBananaRunStore.timestamp(),
+                    rawResponsePath: rawResponseURL.path,
+                    rawPayloadPath: stage == "provider_response_saved" ? "" : rawPayloadURL.path,
+                    artifactPath: stage == "complete" ? outputURL.path : "",
+                    metadataPath: outputURL.deletingPathExtension().appendingPathExtension("json").path,
+                    providerCallID: response.callID
+                )
+                try? PaperBananaRunStore.writeEventSynchronously(event, repoRoot: repoRoot)
+            },
+            writeMetadata: {
+                metadataWriteCalled = true
+            }
+        )
+
+        XCTAssertEqual(completion.statusMessage, "Provider returned an image.")
+        XCTAssertEqual(savedRawResponseURL, rawResponseURL)
+        XCTAssertEqual(savedRawPayloadURL, rawPayloadURL)
+        XCTAssertTrue(metadataWriteCalled)
+        XCTAssertTrue(capturedEvents.contains { $0.0 == "complete" })
+        XCTAssertTrue(FileManager.default.fileExists(atPath: rawResponseURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: rawPayloadURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outputURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: completion.artifacts.auditArtifactURL.path))
+
+        let recoveredRun = try XCTUnwrap(
+            PaperBananaRunStore.fetchRunSynchronously(id: "missing_native_run", repoRoot: repoRoot)
+        )
+        XCTAssertEqual(recoveredRun.status, .recovered)
+        XCTAssertEqual(recoveredRun.providerCallID, "swift-gemini-orphan-completion")
+        XCTAssertEqual(recoveredRun.rawResponsePath, rawResponseURL.path)
+        XCTAssertEqual(recoveredRun.rawPayloadPath, rawPayloadURL.path)
+        XCTAssertEqual(recoveredRun.artifactPath, outputURL.path)
+        XCTAssertEqual(recoveredRun.spendClass, "paid_provider")
+        XCTAssertEqual(recoveredRun.recoveryStatus, "raw_payload")
+
+        let providerCall = try XCTUnwrap(
+            PaperBananaRunStore.fetchProviderCallSynchronously(
+                callID: "swift-gemini-orphan-completion",
+                repoRoot: repoRoot
+            )
+        )
+        XCTAssertEqual(providerCall.status, ProviderRunStatus.succeeded.rawValue)
+        XCTAssertEqual(providerCall.artifactPaths.map(URL.init(fileURLWithPath:)).map(\.lastPathComponent).sorted(), [
+            completion.artifacts.auditArtifactURL.lastPathComponent,
+            outputURL.lastPathComponent,
+            rawResponseURL.lastPathComponent
+        ].sorted())
+        XCTAssertEqual(providerCall.usageMetadata["totalTokenCount"], "11")
+
+        let providerEvents = try PaperBananaRunStore.fetchProviderCallEventsSynchronously(
+            callID: "swift-gemini-orphan-completion",
+            repoRoot: repoRoot
+        )
+        XCTAssertEqual(providerEvents.map(\.status), [
+            ProviderRunStatus.running.rawValue,
+            ProviderRunStatus.running.rawValue,
+            ProviderRunStatus.succeeded.rawValue
+        ])
+        XCTAssertEqual(providerEvents.last?.usageMetadata["totalTokenCount"], "11")
+    }
+
+    func testLegacyPythonProviderClientBuildsGenerationProcessWithProviderEnvironment() throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        let settings = Self.settings(repoRoot: repoRoot, googleAPIKey: "test-google-key")
+        let providerPlan = ImageProviderExecutionPlan(requestedModel: .nanoBanana2, settings: settings)
+        let outputDirectory = repoRoot.appendingPathComponent("results/native_generate", isDirectory: true)
+
+        let process = LegacyPythonProviderClient(providerKind: providerPlan.provider).makeProcess(
+            for: LegacyPythonProviderRequest(
+                workflow: .generation,
+                repoRoot: repoRoot,
+                runID: "native_generate_provider_runtime_test",
+                sourceURL: nil,
+                prompt: "Create a test figure.",
+                providerPlan: providerPlan,
+                resolution: "2K",
+                aspectRatio: "16:9",
+                task: "scientific diagram",
+                outputDirectory: outputDirectory,
+                dryRun: true,
+                mockProviderMode: nil
+            ),
+            settings: settings
+        )
+
+        XCTAssertEqual(process.executableURL, repoRoot.appendingPathComponent(".venv/bin/python"))
+        XCTAssertEqual(process.currentDirectoryURL, repoRoot)
+        XCTAssertEqual(process.arguments?.prefix(2), ["-m", "paperbanana_gui.native_generate"])
+        XCTAssertTrue(process.arguments?.contains("--dry-run") == true)
+        XCTAssertEqual(process.environment?["PAPERBANANA_IMAGE_PROVIDER_KIND"], "google_gemini")
+        XCTAssertEqual(process.environment?["PAPERBANANA_EFFECTIVE_IMAGE_MODEL"], ImageModelChoice.nanoBanana2.backendValue)
+        XCTAssertEqual(process.environment?["PAPERBANANA_CAN_SPEND_PROVIDER_CREDITS"], "1")
+        XCTAssertEqual(process.environment?["GOOGLE_API_KEY"], "test-google-key")
+    }
+
+    func testLegacyPythonProviderClientExecutesThroughProviderProtocolAndReturnsImageBytes() async throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        try Self.installFakePythonExecutable(repoRoot: repoRoot)
+        let settings = Self.settings(repoRoot: repoRoot, googleAPIKey: "secret-google-key")
+        let providerRequestURL = repoRoot
+            .appendingPathComponent("results/native_generate/native_generate_provider_runtime_test/provider_request.json")
+        let client: any ProviderClient = LegacyPythonProviderClient(
+            providerKind: .codexFallback,
+            dryRun: true
+        )
+        let progressEvents = ProviderProgressEventCollector()
+
+        let response = try await client.execute(
+            ProviderClientRequest(
+                runID: "native_generate_provider_runtime_test",
+                callID: "legacy-call-from-request",
+                workflow: .generation,
+                prompt: "Create a test figure.",
+                sourceImageURL: nil,
+                model: .codexFallback,
+                effectiveModel: ImageModelChoice.codexFallback.backendValue,
+                resolution: "2K",
+                aspectRatio: "16:9",
+                task: "scientific diagram",
+                settings: settings,
+                providerRequestURL: providerRequestURL
+            ),
+            eventHandler: { event in
+                progressEvents.append(event)
+            }
+        )
+
+        let capturedEvents = progressEvents.events()
+        XCTAssertEqual(response.provider, .codexFallback)
+        XCTAssertEqual(response.model, ImageModelChoice.codexFallback.backendValue)
+        XCTAssertEqual(response.callID, "fake-legacy-call")
+        XCTAssertEqual(response.imageData, Data(base64Encoded: Self.tinyPNGBase64))
+        XCTAssertTrue(response.text.contains("Fake legacy complete"))
+        XCTAssertEqual(response.usageMetadata["legacy_process_status"], "0")
+        XCTAssertTrue(String(data: response.rawResponseData, encoding: .utf8)?.contains("legacy_python") == true)
+        XCTAssertEqual(capturedEvents.map(\.stage), ["provider_request_saved", "complete"])
+        XCTAssertEqual(capturedEvents.first?.callID, "legacy-call-from-request")
+        XCTAssertEqual(capturedEvents.last?.callID, "fake-legacy-call")
+        XCTAssertEqual(capturedEvents.last?.nativeRunEvent?.runID, "native_generate_provider_runtime_test")
+        XCTAssertEqual(capturedEvents.last?.nativeRunEvent?.outputURL?.lastPathComponent, "generated_2K.png")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: providerRequestURL.path))
+        let manifestData = try Data(contentsOf: providerRequestURL)
+        let manifestText = try XCTUnwrap(String(data: manifestData, encoding: .utf8))
+        let manifest = try XCTUnwrap(JSONSerialization.jsonObject(with: manifestData) as? [String: Any])
+        XCTAssertEqual(manifest["adapter"] as? String, "legacy_python")
+        XCTAssertEqual(manifest["run_id"] as? String, "native_generate_provider_runtime_test")
+        XCTAssertEqual(manifest["call_id"] as? String, "legacy-call-from-request")
+        XCTAssertEqual(manifest["workflow"] as? String, "native_generate")
+        XCTAssertEqual(manifest["python_executable_path"] as? String, repoRoot.appendingPathComponent(".venv/bin/python").path)
+        XCTAssertTrue((manifest["command_arguments"] as? [String])?.contains("paperbanana_gui.native_generate") == true)
+        XCTAssertFalse(manifestText.contains("secret-google-key"))
+    }
+
+    func testCodexFallbackProviderClientExecutesNativeHandoffAndReturnsImageBytes() async throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        let codexExecutableURL = try Self.installFakeCodexExecutable(repoRoot: repoRoot)
+        let outputURL = repoRoot
+            .appendingPathComponent("results/native_generate/native_generate_provider_runtime_test/generated_2K.png")
+        let providerRequestURL = outputURL
+            .deletingLastPathComponent()
+            .appendingPathComponent("provider_request.json")
+        let environmentSnapshotURL = repoRoot.appendingPathComponent("codex-environment.snapshot.txt")
+        let settings = Self.settings(repoRoot: repoRoot)
+        let client: any ProviderClient = CodexFallbackProviderClient(
+            codexExecutableURL: codexExecutableURL,
+            timeoutSeconds: 5,
+            pollInterval: 0.05,
+            extraEnvironment: [
+                "PAPERBANANA_FAKE_CODEX_IMAGE_BASE64": Self.tinyPNGBase64,
+                "PAPERBANANA_FAKE_CODEX_ENV_SNAPSHOT_PATH": environmentSnapshotURL.path,
+                "GOOGLE_API_KEY": "extra-google-secret",
+                "OPENROUTER_API_KEY": "extra-openrouter-secret",
+                "OPENAI_API_KEY": "extra-openai-secret"
+            ]
+        )
+        let progressEvents = ProviderProgressEventCollector()
+
+        let response = try await client.execute(
+            ProviderClientRequest(
+                runID: "native_generate_provider_runtime_test",
+                callID: "swift-codex-test-call",
+                workflow: .generation,
+                prompt: "Create a test figure.",
+                sourceImageURL: nil,
+                model: .codexFallback,
+                effectiveModel: ImageModelChoice.codexFallback.backendValue,
+                resolution: "2K",
+                aspectRatio: "16:9",
+                task: "scientific diagram",
+                settings: settings,
+                outputURL: outputURL,
+                providerRequestURL: providerRequestURL
+            ),
+            eventHandler: { event in
+                progressEvents.append(event)
+            }
+        )
+
+        let capturedEvents = progressEvents.events()
+        XCTAssertEqual(response.provider, .codexFallback)
+        XCTAssertEqual(response.model, ImageModelChoice.codexFallback.backendValue)
+        XCTAssertEqual(response.callID, "swift-codex-test-call")
+        XCTAssertEqual(response.imageData, Data(base64Encoded: Self.tinyPNGBase64))
+        XCTAssertEqual(response.usageMetadata["provider_spend"], "none")
+        XCTAssertEqual(response.usageMetadata["handoff_adapter"], "swift_codex")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outputURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: providerRequestURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: response.usageMetadata["prompt_path"] ?? ""))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: response.usageMetadata["log_path"] ?? ""))
+        XCTAssertTrue(String(data: response.rawResponseData, encoding: .utf8)?.contains("swift_codex") == true)
+        let providerRequestPayload = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: providerRequestURL)) as? [String: Any])
+        XCTAssertEqual(providerRequestPayload["adapter"] as? String, "swift_codex")
+        XCTAssertEqual(providerRequestPayload["output_path"] as? String, outputURL.path)
+        XCTAssertEqual(providerRequestPayload["call_id"] as? String, "swift-codex-test-call")
+        let commandArguments = try XCTUnwrap(providerRequestPayload["command_arguments"] as? [String])
+        XCTAssertEqual(commandArguments.prefix(3), ["exec", "-m", "gpt-5.5"])
+        XCTAssertTrue(commandArguments.contains(#"model_reasoning_effort="xhigh""#))
+        XCTAssertTrue(commandArguments.contains("--sandbox"))
+        XCTAssertTrue(commandArguments.contains("workspace-write"))
+        XCTAssertTrue(commandArguments.contains("-C"))
+        XCTAssertTrue(commandArguments.contains(repoRoot.path))
+        XCTAssertTrue(commandArguments.contains("--add-dir"))
+        XCTAssertTrue(commandArguments.contains(outputURL.deletingLastPathComponent().path))
+        XCTAssertTrue(commandArguments.contains("-o"))
+        XCTAssertTrue(commandArguments.contains { $0.hasSuffix(".message.txt") })
+        XCTAssertTrue(commandArguments.last?.contains("Create one publication-quality academic scientific diagram as a PNG.") == true)
+        let snapshotText = try String(contentsOf: environmentSnapshotURL, encoding: .utf8)
+        XCTAssertTrue(snapshotText.contains("PAPERBANANA_CODEX_MODEL=gpt-5.5"))
+        XCTAssertTrue(snapshotText.contains("PAPERBANANA_CODEX_REASONING_EFFORT=xhigh"))
+        XCTAssertTrue(snapshotText.contains("PAPERBANANA_CODEX_IMAGE_HANDOFF=1"))
+        XCTAssertTrue(snapshotText.contains("PAPERBANANA_RUN_ID=native_generate_provider_runtime_test"))
+        XCTAssertFalse(snapshotText.contains("GOOGLE_API_KEY"))
+        XCTAssertFalse(snapshotText.contains("OPENROUTER_API_KEY"))
+        XCTAssertFalse(snapshotText.contains("OPENAI_API_KEY"))
+        XCTAssertFalse(snapshotText.contains("extra-google-secret"))
+        XCTAssertFalse(snapshotText.contains("extra-openrouter-secret"))
+        XCTAssertFalse(snapshotText.contains("extra-openai-secret"))
+        XCTAssertEqual(capturedEvents.first?.stage, "provider_request_saved")
+        XCTAssertTrue(capturedEvents.map(\.stage).contains("prepared"))
+        XCTAssertTrue(capturedEvents.map(\.stage).contains("started"))
+    }
+
+    #if PAPERBANANA_ENABLE_REAL_CODEX_E2E_TESTS
+    func testCodexFallbackProviderClientExecutesRealCodexCLIWhenExplicitlyEnabled() async throws {
+        let environment = ProcessInfo.processInfo.environment
+        guard environment["PAPERBANANA_REAL_CODEX_E2E"] == "1" else {
+            throw XCTSkip(
+                "Set PAPERBANANA_REAL_CODEX_E2E=1 and PAPERBANANA_REAL_CODEX_BIN to run the live Codex CLI fallback E2E gate."
+            )
+        }
+
+        let codexBinaryPath = environment["PAPERBANANA_REAL_CODEX_BIN"] ?? "/opt/homebrew/bin/codex"
+        guard FileManager.default.isExecutableFile(atPath: codexBinaryPath) else {
+            throw XCTSkip("PAPERBANANA_REAL_CODEX_BIN is not executable: \(codexBinaryPath)")
+        }
+
+        let timeoutSeconds = TimeInterval(
+            Double(environment["PAPERBANANA_REAL_CODEX_TIMEOUT_SECONDS"] ?? "") ?? 900
+        )
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        let keepArtifacts = environment["PAPERBANANA_REAL_CODEX_KEEP_ARTIFACTS"] == "1"
+        defer {
+            if keepArtifacts {
+                print("PAPERBANANA_REAL_CODEX_E2E_ARTIFACTS=\(repoRoot.path)")
+            } else {
+                try? FileManager.default.removeItem(at: repoRoot)
+            }
+        }
+
+        let outputURL = repoRoot
+            .appendingPathComponent("results/native_generate/real_codex_fallback_e2e/generated_2K.png")
+        let providerRequestURL = outputURL
+            .deletingLastPathComponent()
+            .appendingPathComponent("provider_request.json")
+        let settings = Self.settings(repoRoot: repoRoot)
+        let client: any ProviderClient = CodexFallbackProviderClient(
+            codexExecutableURL: URL(fileURLWithPath: codexBinaryPath),
+            timeoutSeconds: max(timeoutSeconds, 30),
+            pollInterval: 1,
+            extraEnvironment: [
+                "GOOGLE_API_KEY": "paperbanana-real-codex-test-google-secret",
+                "OPENROUTER_API_KEY": "paperbanana-real-codex-test-openrouter-secret",
+                "OPENAI_API_KEY": "paperbanana-real-codex-test-openai-secret",
+                "AUTHORIZATION": "Bearer paperbanana-real-codex-test-bearer-secret",
+                "PAPERBANANA_PROVIDER_TOKEN": "paperbanana-real-codex-test-provider-token"
+            ]
+        )
+        let progressEvents = ProviderProgressEventCollector()
+
+        let response = try await client.execute(
+            ProviderClientRequest(
+                runID: "real_codex_fallback_e2e",
+                callID: "swift-real-codex-e2e-call",
+                workflow: .generation,
+                prompt: """
+                Create a small non-private test schematic with three labeled boxes: Input, PaperBanana, Output.
+                Use local code if helpful, keep the image simple, and write the requested PNG only.
+                """,
+                sourceImageURL: nil,
+                model: .codexFallback,
+                effectiveModel: ImageModelChoice.codexFallback.backendValue,
+                resolution: "2K",
+                aspectRatio: "16:9",
+                task: "scientific diagram",
+                settings: settings,
+                outputURL: outputURL,
+                providerRequestURL: providerRequestURL
+            ),
+            eventHandler: { event in
+                progressEvents.append(event)
+            }
+        )
+
+        let pngSignature = Data([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
+        let capturedEvents = progressEvents.events()
+        XCTAssertEqual(response.provider, .codexFallback)
+        XCTAssertEqual(response.model, ImageModelChoice.codexFallback.backendValue)
+        XCTAssertEqual(response.callID, "swift-real-codex-e2e-call")
+        let imageData = try XCTUnwrap(response.imageData)
+        XCTAssertTrue(imageData.starts(with: pngSignature))
+        XCTAssertEqual(response.usageMetadata["provider_spend"], "none")
+        XCTAssertEqual(response.usageMetadata["handoff_adapter"], "swift_codex")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outputURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: providerRequestURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: response.usageMetadata["prompt_path"] ?? ""))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: response.usageMetadata["log_path"] ?? ""))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: response.usageMetadata["message_path"] ?? ""))
+        XCTAssertEqual(capturedEvents.first?.stage, "provider_request_saved")
+        XCTAssertTrue(capturedEvents.map(\.stage).contains("prepared"))
+        XCTAssertTrue(capturedEvents.map(\.stage).contains("started"))
+
+        let providerRequestData = try Data(contentsOf: providerRequestURL)
+        let providerRequestPayload = try XCTUnwrap(JSONSerialization.jsonObject(with: providerRequestData) as? [String: Any])
+        XCTAssertEqual(providerRequestPayload["adapter"] as? String, "swift_codex")
+        XCTAssertEqual(providerRequestPayload["run_id"] as? String, "real_codex_fallback_e2e")
+        XCTAssertEqual(providerRequestPayload["call_id"] as? String, "swift-real-codex-e2e-call")
+        XCTAssertEqual(providerRequestPayload["output_path"] as? String, outputURL.path)
+        let commandArguments = try XCTUnwrap(providerRequestPayload["command_arguments"] as? [String])
+        XCTAssertEqual(commandArguments.prefix(3), ["exec", "-m", "gpt-5.5"])
+        XCTAssertTrue(commandArguments.contains(#"model_reasoning_effort="xhigh""#))
+        XCTAssertTrue(commandArguments.contains("--sandbox"))
+        XCTAssertTrue(commandArguments.contains("workspace-write"))
+        XCTAssertTrue(commandArguments.contains("-C"))
+        XCTAssertTrue(commandArguments.contains(repoRoot.path))
+        XCTAssertTrue(commandArguments.contains("--add-dir"))
+        XCTAssertTrue(commandArguments.contains(outputURL.deletingLastPathComponent().path))
+        XCTAssertTrue(commandArguments.contains("-o"))
+        XCTAssertTrue(commandArguments.contains { $0.hasSuffix(".message.txt") })
+
+        try Self.assertTextArtifactsDoNotContainMarkers(
+            [
+                providerRequestURL,
+                URL(fileURLWithPath: try XCTUnwrap(response.usageMetadata["prompt_path"])),
+                URL(fileURLWithPath: try XCTUnwrap(response.usageMetadata["log_path"])),
+                URL(fileURLWithPath: try XCTUnwrap(response.usageMetadata["message_path"]))
+            ],
+            markers: Self.realCodexForbiddenArtifactMarkers
+        )
+        let rawResponseText = try XCTUnwrap(String(data: response.rawResponseData, encoding: .utf8))
+        for marker in Self.realCodexForbiddenArtifactMarkers {
+            XCTAssertFalse(rawResponseText.contains(marker), "Raw response leaked forbidden marker: \(marker)")
+        }
+    }
+    #endif
+
+    func testReadinessSnapshotSurfacesPathKeysBackendAndCodexFallback() throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        try Self.installFakePythonExecutable(repoRoot: repoRoot)
+        try Data("print('backend')\n".utf8).write(to: repoRoot.appendingPathComponent("app.py"))
+
+        let snapshot = PaperBananaReadinessSnapshot.make(
+            settings: Self.settings(repoRoot: repoRoot),
+            requestedModel: .nanoBananaPro
+        )
+
+        XCTAssertEqual(snapshot.statusTitle, "Ready with Codex Fallback")
+        XCTAssertEqual(snapshot.severity, .warning)
+        XCTAssertEqual(snapshot.configuredPathRow.value, repoRoot.path)
+        XCTAssertEqual(snapshot.configuredPathRow.severity, .ready)
+        XCTAssertEqual(snapshot.generationKeyRow.value, "No generation key saved")
+        XCTAssertEqual(snapshot.generationKeyRow.severity, .warning)
+        XCTAssertEqual(snapshot.backendValidityRow.value, "Compatibility backend valid")
+        XCTAssertEqual(snapshot.backendValidityRow.severity, .ready)
+        XCTAssertTrue(snapshot.deterministicFallbackRow.value.contains("Nano Banana Pro resolves to Codex fallback"))
+        XCTAssertTrue(snapshot.deterministicFallbackRow.detail.contains("no provider API spend"))
+        XCTAssertEqual(snapshot.deterministicFallbackRow.severity, .ready)
+    }
+
+    func testReadinessSnapshotSurfacesPaidProviderWhenGenerationKeyExists() throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        try Self.installFakePythonExecutable(repoRoot: repoRoot)
+        try Data("print('backend')\n".utf8).write(to: repoRoot.appendingPathComponent("app.py"))
+
+        let snapshot = PaperBananaReadinessSnapshot.make(
+            settings: Self.settings(repoRoot: repoRoot, googleAPIKey: "test-google-key"),
+            requestedModel: .nanoBananaPro
+        )
+
+        XCTAssertEqual(snapshot.statusTitle, "Ready")
+        XCTAssertEqual(snapshot.severity, .ready)
+        XCTAssertEqual(snapshot.generationKeyRow.value, "Google key saved")
+        XCTAssertEqual(snapshot.deterministicFallbackRow.value, "Google Gemini via Google API key")
+        XCTAssertTrue(snapshot.deterministicFallbackRow.detail.contains("can spend provider credits"))
+    }
+
+    private static func makeTemporaryRepoRoot() throws -> URL {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("PaperBananaProviderRuntimeTests-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        return url
+    }
+
+    private static func settings(
+        repoRoot: URL = URL(fileURLWithPath: "/tmp/PaperBanana", isDirectory: true),
+        googleAPIKey: String = "",
+        openRouterAPIKey: String = ""
+    ) -> PaperBananaSettingsSnapshot {
+        PaperBananaSettingsSnapshot(
+            repoPath: repoRoot.path,
+            serverPort: 7860,
+            defaultImageModel: .nanoBananaPro,
+            codexModel: "gpt-5.5",
+            codexReasoning: "xhigh",
+            googleAPIKey: googleAPIKey,
+            openRouterAPIKey: openRouterAPIKey
+        )
+    }
+
+    private static func mockProviderSession(
+        statusCode: Int = 200,
+        responseData: Data
+    ) -> URLSession {
+        MockProviderURLProtocol.statusCode = statusCode
+        MockProviderURLProtocol.responseData = responseData
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [MockProviderURLProtocol.self]
+        return URLSession(configuration: configuration)
+    }
+
+    private static func installFakePythonExecutable(repoRoot: URL) throws {
+        let binDirectory = repoRoot.appendingPathComponent(".venv/bin", isDirectory: true)
+        try FileManager.default.createDirectory(at: binDirectory, withIntermediateDirectories: true)
+        let executableURL = binDirectory.appendingPathComponent("python")
+        let script = """
+        #!/usr/bin/env python3
+        import base64
+        import json
+        import pathlib
+        import sys
+
+        def value_after(flag, default=""):
+            if flag not in sys.argv:
+                return default
+            index = sys.argv.index(flag)
+            if index + 1 >= len(sys.argv):
+                return default
+            return sys.argv[index + 1]
+
+        output_dir = pathlib.Path(value_after("--output-dir"))
+        run_id = value_after("--run-id")
+        resolution = value_after("--resolution", "2K")
+        run_dir = output_dir / run_id
+        run_dir.mkdir(parents=True, exist_ok=True)
+        output = run_dir / f"generated_{resolution}.png"
+        output.write_bytes(base64.b64decode("\(tinyPNGBase64)"))
+        print(json.dumps({
+            "stage": "complete",
+            "progress": 100,
+            "message": "Fake legacy complete.",
+            "run_id": run_id,
+            "run_dir": str(run_dir),
+            "output_path": str(output),
+            "metadata_path": str(output.with_suffix(".json")),
+            "prompt_path": str(run_dir / "prompt.txt"),
+            "request_path": str(run_dir / "request.json"),
+            "call_id": "fake-legacy-call",
+            "raw_response_path": "",
+            "raw_path": "",
+            "log_path": str(run_dir / "events.jsonl")
+        }), flush=True)
+        """
+        try script.write(to: executableURL, atomically: true, encoding: .utf8)
+        try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: executableURL.path)
+    }
+
+    private static func installFakeCodexExecutable(repoRoot: URL) throws -> URL {
+        let binDirectory = repoRoot.appendingPathComponent("bin", isDirectory: true)
+        try FileManager.default.createDirectory(at: binDirectory, withIntermediateDirectories: true)
+        let executableURL = binDirectory.appendingPathComponent("codex-fake")
+        let script = """
+        #!/usr/bin/env python3
+        import base64
+        import os
+        import pathlib
+        import re
+        import sys
+
+        prompt = sys.argv[-1]
+        match = re.search(r"(?:directly at:|Output path:)\\s*\\n([^\\n]+)", prompt)
+        if match is None:
+            print("No output path in prompt", file=sys.stderr)
+            sys.exit(12)
+        output = pathlib.Path(match.group(1).strip())
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_bytes(base64.b64decode(os.environ["PAPERBANANA_FAKE_CODEX_IMAGE_BASE64"]))
+        snapshot_path = os.environ.get("PAPERBANANA_FAKE_CODEX_ENV_SNAPSHOT_PATH", "")
+        if snapshot_path:
+            pathlib.Path(snapshot_path).write_text(
+                "\\n".join(f"{key}={value}" for key, value in sorted(os.environ.items())),
+                encoding="utf-8"
+            )
+        print(f"fake codex wrote {output}")
+        """
+        try script.write(to: executableURL, atomically: true, encoding: .utf8)
+        try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: executableURL.path)
+        return executableURL
+    }
+
+    private static let realCodexForbiddenArtifactMarkers = [
+        "paperbanana-real-codex-test-google-secret",
+        "paperbanana-real-codex-test-openrouter-secret",
+        "paperbanana-real-codex-test-openai-secret",
+        "paperbanana-real-codex-test-bearer-secret",
+        "paperbanana-real-codex-test-provider-token",
+        "GOOGLE_API_KEY",
+        "OPENROUTER_API_KEY",
+        "OPENAI_API_KEY",
+        "AUTHORIZATION",
+        "PAPERBANANA_PROVIDER_TOKEN",
+        "PAPERBANANA_FAKE_CODEX",
+        "AIza",
+        "sk-"
+    ]
+
+    private static func assertTextArtifactsDoNotContainMarkers(
+        _ urls: [URL],
+        markers: [String],
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) throws {
+        for url in urls {
+            let text = try String(contentsOf: url, encoding: .utf8)
+            for marker in markers {
+                XCTAssertFalse(text.contains(marker), "\(url.path) leaked forbidden marker: \(marker)", file: file, line: line)
+            }
+        }
+    }
+
+    private static let tinyPNGBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADUlEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC"
+
+    private static var tinyPNGData: Data {
+        let bitmap = NSBitmapImageRep(
+            bitmapDataPlanes: nil,
+            pixelsWide: 1,
+            pixelsHigh: 1,
+            bitsPerSample: 8,
+            samplesPerPixel: 4,
+            hasAlpha: true,
+            isPlanar: false,
+            colorSpaceName: .deviceRGB,
+            bytesPerRow: 4,
+            bitsPerPixel: 32
+        )!
+        bitmap.setColor(NSColor(calibratedRed: 0, green: 0.45, blue: 1, alpha: 1), atX: 0, y: 0)
+        return bitmap.representation(using: .png, properties: [:])!
+    }
+}
+
+private final class ProviderProgressEventCollector: @unchecked Sendable {
+    private let lock = NSLock()
+    private var capturedEvents: [ProviderProgressEvent] = []
+
+    func append(_ event: ProviderProgressEvent) {
+        lock.lock()
+        capturedEvents.append(event)
+        lock.unlock()
+    }
+
+    func events() -> [ProviderProgressEvent] {
+        lock.lock()
+        defer { lock.unlock() }
+        return capturedEvents
+    }
+}
+
+private final class MockProviderURLProtocol: URLProtocol, @unchecked Sendable {
+    nonisolated(unsafe) static var statusCode = 200
+    nonisolated(unsafe) static var responseData = Data()
+
+    override class func canInit(with request: URLRequest) -> Bool {
+        true
+    }
+
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        request
+    }
+
+    override func startLoading() {
+        let response = HTTPURLResponse(
+            url: request.url!,
+            statusCode: Self.statusCode,
+            httpVersion: "HTTP/1.1",
+            headerFields: ["Content-Type": "application/json"]
+        )!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: Self.responseData)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+
+    override func stopLoading() {}
+}

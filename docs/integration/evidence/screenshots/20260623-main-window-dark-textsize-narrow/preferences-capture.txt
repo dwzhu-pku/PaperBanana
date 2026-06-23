@@ -1,0 +1,3 @@
+dark_mode=true
+repo_path=/Users/jeff/Codex_projects/PaperBanana
+text_size=L

@@ -1,0 +1,60 @@
+# AX Dump for local.paperbanana.gui, pid 44161
+# Element lines: 46
+role=AXWindow | subrole=AXStandardWindow | id=com_apple_SwiftUI_Settings_window | title=Workspace
+  role=AXGroup | subrole=AXHostingView
+    role=AXScrollArea | id=paperbanana-settings-window | value=Checkout path, readiness, and native generation defaults. | desc=PaperBanana Settings
+      role=AXHeading | desc=Native Workspace
+        role=AXStaticText | value=PaperBanana checkout
+        role=AXTextField | id=settings-workspace-repo-path | value=/tmp/paperbanana-wp007-ax-fixture-20260623-105808 | desc=PaperBanana checkout | help=/tmp/paperbanana-wp007-ax-fixture-20260623-105808
+        role=AXStaticText | value=Native workflows scan and write run records, provider ledgers, recovered artifacts, and generated images under this checkout.
+        role=AXStaticText | value=PaperBanana checkout
+        role=AXTextField | id=settings-workspace-repo-path | value=/tmp/paperbanana-wp007-ax-fixture-20260623-105808 | desc=PaperBanana checkout | help=/tmp/paperbanana-wp007-ax-fixture-20260623-105808
+        role=AXStaticText | value=Native workflows scan and write run records, provider ledgers, recovered artifacts, and generated images under this checkout.
+      role=AXHeading | desc=PaperBanana Readiness
+        role=AXUnknown | desc=Backend Validity | help=Optional backend incomplete
+        role=AXUnknown | desc=Deterministic Fallback | help=Codex fallback selected
+        role=AXStaticText | value=Native Ready
+        role=AXStaticText | value=Native workflows are available; the optional compatibility backend is incomplete.
+        role=AXUnknown | desc=Configured Path | help=/tmp/paperbanana-wp007-ax-fixture-20260623-105808
+        role=AXUnknown | desc=Generation Key | help=No generation key saved
+        role=AXUnknown | desc=Backend Validity | help=Optional backend incomplete
+        role=AXUnknown | desc=Deterministic Fallback | help=Codex fallback selected
+      role=AXHeading | desc=Image Defaults
+      role=AXHeading | desc=Codex Fallback
+      role=AXScrollBar | value=0
+      role=AXHeading | desc=Native Workspace
+      role=AXHeading | desc=PaperBanana Readiness
+        role=AXUnknown | desc=Deterministic Fallback | help=Codex fallback selected
+      role=AXHeading | desc=Image Defaults
+      role=AXHeading | desc=Codex Fallback
+      role=AXHeading | desc=Native Workspace
+      role=AXHeading | desc=PaperBanana Readiness
+      role=AXScrollBar | value=0
+      role=AXHeading | desc=Image Defaults
+      role=AXHeading | desc=Codex Fallback
+    role=AXScrollArea | id=paperbanana-settings-window | value=Checkout path, readiness, and native generation defaults. | desc=PaperBanana Settings
+  role=AXToolbar
+  role=AXButton | subrole=AXCloseButton
+  role=AXButton | subrole=AXZoomButton
+  role=AXButton | subrole=AXMinimizeButton
+  role=AXStaticText | value=Workspace
+  role=AXButton | subrole=AXCloseButton
+  role=AXButton | subrole=AXMinimizeButton
+  role=AXButton | subrole=AXZoomButton
+  role=AXStaticText | value=Workspace
+  role=AXToolbar
+  role=AXGroup | subrole=AXHostingView
+role=AXWindow | subrole=AXStandardWindow | id=SwiftUI.WindowGroup<SwiftUI._ConditionalContent<PaperBanana.(unknown context at $102233f1c).PaperBananaTestHostView, PaperBanana.AppRootContainer>>-1-AppWindow-1 | title=PaperBanana
+role=AXApplication | title=PaperBanana
+# Required identifiers
+FOUND paperbanana-settings-window: role=AXScrollArea | title= | label= | value=Checkout path, readiness, and native generation defaults. | desc=PaperBanana Settings | help=
+MISSING settings-codex-model
+MISSING settings-codex-reasoning
+MISSING settings-google-api-key-field
+MISSING settings-legacy-server-port
+MISSING settings-openrouter-api-key-field
+MISSING settings-pane-legacy
+MISSING settings-pane-providers
+MISSING settings-pane-workspace
+MISSING settings-secret-store-location
+FOUND settings-workspace-repo-path: role=AXTextField | title= | label= | value=/tmp/paperbanana-wp007-ax-fixture-20260623-105808 | desc=PaperBanana checkout | help=/tmp/paperbanana-wp007-ax-fixture-20260623-105808

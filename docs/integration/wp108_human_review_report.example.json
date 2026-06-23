@@ -1,0 +1,73 @@
+{
+  "schema_version": "wp108.no_live_report.v1",
+  "manifest_id": "paperbanana-m1-no-live-contract",
+  "evaluation_mode": "human_review",
+  "provider_scoring_used": false,
+  "publication_quality_claimed": false,
+  "scoring_protocol": {
+    "reviewer_policy_id": "paperbanana-wp108-human-review-v1",
+    "scoring_mode": "human_review",
+    "minimum_reviewers_per_case": 2,
+    "adjudication_policy": "Synthetic fixture adjudicates final case scores after reviewer completion.",
+    "score_scale": {
+      "minimum": 0.0,
+      "maximum": 4.0
+    },
+    "critical_failure_policy": "Critical failures prevent a quality pass."
+  },
+  "artifact_binding": {
+    "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "run_map_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "artifact_report_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "review_packet_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "source_head": "example-source-head"
+  },
+  "case_results": [
+    {
+      "case_id": "diagram-ref-1-contract",
+      "status": "passed",
+      "scores": {
+        "semantic_faithfulness": 4.0,
+        "visual_legibility": 3.0,
+        "artifact_completeness": 3.5
+      },
+      "score_source": "adjudicated_human_review",
+      "scored_artifact": {
+        "run_id": "native_generate_20260622_072111",
+        "image_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "artifact_check_status": "fixture_passed"
+      },
+      "reviewer_scores": [
+        {
+          "reviewer_id": "reviewer-a",
+          "completed_at_utc": "2026-06-22T00:00:00Z",
+          "attestation": true,
+          "scores": {
+            "semantic_faithfulness": 4.0,
+            "visual_legibility": 3.0,
+            "artifact_completeness": 3.0
+          },
+          "critical_failures": []
+        },
+        {
+          "reviewer_id": "reviewer-b",
+          "completed_at_utc": "2026-06-22T00:01:00Z",
+          "attestation": true,
+          "scores": {
+            "semantic_faithfulness": 4.0,
+            "visual_legibility": 3.0,
+            "artifact_completeness": 4.0
+          },
+          "critical_failures": []
+        }
+      ],
+      "critical_failures": []
+    }
+  ],
+  "summary": {
+    "cases_total": 1,
+    "mean_score": 3.5,
+    "threshold_passed": true,
+    "claim_boundary": "Synthetic completed human-review fixture; not release evidence."
+  }
+}

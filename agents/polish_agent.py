@@ -24,6 +24,8 @@ from google.genai import types
 from PIL import Image
 
 from utils import generation_utils, image_utils
+from utils.config import load_style_guide_for_task, style_guide_filename_for_task
+from utils.legacy_generation_options import image_size_from_data
 from .base_agent import BaseAgent
 
 
@@ -48,17 +50,16 @@ class PolishAgent(BaseAgent):
         
         # Task-specific configurations
         if self.exp_config.task_name == "plot":
-            self.style_guide_filename = "neurips2025_plot_style_guide.md"
             self.suggestion_system_prompt = PLOT_SUGGESTION_SYSTEM_PROMPT
             self.task_config = {
                 "task_name": "plot",
             }
         else:
-            self.style_guide_filename = "neurips2025_diagram_style_guide.md"
             self.suggestion_system_prompt = DIAGRAM_SUGGESTION_SYSTEM_PROMPT
             self.task_config = {
                 "task_name": "diagram",
             }
+        self.style_guide_filename = style_guide_filename_for_task(self.task_config["task_name"])
 
     async def _generate_suggestions(self, gt_image_b64: str, style_guide: str) -> str:
         """Step 1: Generate improvement suggestions based on style guide"""
@@ -119,12 +120,10 @@ class PolishAgent(BaseAgent):
             return data
         
         # Load style guide
-        style_guide_path = self.exp_config.work_dir / "style_guides" / self.style_guide_filename
         try:
-            with open(style_guide_path, "r", encoding="utf-8") as f:
-                style_guide = f.read()
+            style_guide = load_style_guide_for_task(self.exp_config.work_dir, task_name)
         except Exception as e:
-            print(f"❌ Error loading style guide from {style_guide_path}: {e}")
+            print(f"❌ Error loading style guide {self.style_guide_filename}: {e}")
             return data
             
         print(f"🎨 [Step 1] Generating suggestions for {task_name}...")
@@ -163,13 +162,18 @@ class PolishAgent(BaseAgent):
         
         # Generate polished image
         aspect_ratio = data.get("additional_info", {}).get("rounded_ratio", "16:9")
+        image_size = image_size_from_data(data)
+        generation_utils.assert_not_local_openai_image_model(
+            self.image_gen_model_name,
+            route_name="polish image generation",
+        )
         try:
             if generation_utils.openrouter_client is not None:
                 image_config = {
                     "system_prompt": self.system_prompt,
                     "temperature": self.exp_config.temperature,
                     "aspect_ratio": aspect_ratio,
-                    "image_size": "1k",
+                    "image_size": image_size,
                 }
                 response_list = await generation_utils.call_openrouter_image_generation_with_retry_async(
                     model_name=self.image_gen_model_name,
@@ -190,7 +194,7 @@ class PolishAgent(BaseAgent):
                         response_modalities=["IMAGE"],
                         image_config=types.ImageConfig(
                             aspect_ratio=aspect_ratio,
-                            image_size="1k",
+                            image_size=image_size,
                         ),
                     ),
                     max_attempts=5,

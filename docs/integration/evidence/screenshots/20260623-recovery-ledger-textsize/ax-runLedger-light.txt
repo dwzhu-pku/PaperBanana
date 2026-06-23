@@ -1,0 +1,27 @@
+paperbanana_running=true
+pid=23359
+ax_trusted=true
+visited=304
+matches=22
+depth=3 role=AXStaticText subrole= id= title= desc= value=Run Ledger help= enabled=1
+depth=3 role=AXButton subrole= id=list.bullet.rectangle title= desc=Run Ledger value= help=Run Ledger enabled=1
+depth=3 role=AXButton subrole= id=arrow.clockwise title= desc=Refresh value= help=Refresh the run ledger enabled=1
+depth=3 role=AXRadioGroup subrole= id= title= desc=Run ledger scope, Run ledger scope value=<AXUIElement 0x79b4e549f0> {pid=23359} help=Showing All enabled=1
+depth=4 role=AXButton subrole= id= title= desc=Run Ledger value= help= enabled=1
+depth=4 role=AXRadioButton subrole=AXSegment id= title= desc=Needs Attention value=0 help= enabled=1
+depth=4 role=AXRadioButton subrole=AXSegment id= title= desc=Missing Artifacts value=0 help= enabled=1
+depth=4 role=AXRadioButton subrole=AXSegment id= title= desc=Raw Recovered value=0 help= enabled=1
+depth=4 role=AXMenuItem subrole= id=_logOutRequested: title=Log Out jeff… desc= value= help= enabled=1
+depth=4 role=AXMenuItem subrole= id=_logOutNowRequested: title=Log Out jeff desc= value= help= enabled=1
+depth=5 role=AXGroup subrole= id=provider-run-ledger-table title= desc=Provider call ledger value= help= enabled=1
+depth=5 role=AXUnknown subrole= id=provider-run-ledger-table-selection-summary title= desc=Selected provider call value= help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc=Nano Banana 2, Raw recovered value=Provider gemini. Run ledger_raw_recovered. Call ledger-raw-call. Status Raw recovered. Updated Jun 14, 2026 at 1:35 AM. 0 saved artifacts. 0 native artifacts. 1 raw artifacts. Usage No usage metadata. Needs attention help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc=Nano Banana 2, Missing artifact value=Provider gemini. Run ledger_missing_artifact. Call ledger-missing-call. Status Missing artifact. Updated Jun 14, 2026 at 1:30 AM. 0 saved artifacts. 0 native artifacts. 0 raw artifacts. Usage No usage metadata. Needs attention help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc=Codex fallback, Timed out value=Provider codex. Run native_generate_timeout. Call sqlite-timeout-call. Status Timed out. Updated Jun 14, 2026 at 1:15 AM. 0 saved artifacts. 0 native artifacts. 0 raw artifacts. Usage fixture: wp007, provider_spend: none. Needs attention help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc=Codex fallback, Cancelled value=Provider codex. Run native_refine_cancelled. Call sqlite-cancelled-call. Status Cancelled. Updated Jun 14, 2026 at 1:00 AM. 0 saved artifacts. 0 native artifacts. 0 raw artifacts. Usage fixture: wp007, provider_spend: none. Needs attention help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc= value=Raw recovered help= enabled=1
+depth=6 role=AXButton subrole= id= title= desc=Log value= help=Reveal the JSONL audit log enabled=1
+depth=6 role=AXButton subrole= id= title= desc=Surface value= help=Copy the first recoverable provider artifact into results/recovered enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc= value=Recovery candidates help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc= value=Provider Assistant help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc= value=Raw Recovery Payloads help= enabled=1

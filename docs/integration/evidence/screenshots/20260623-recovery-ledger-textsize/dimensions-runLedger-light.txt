@@ -1,0 +1,3 @@
+/Users/jeff/Codex_projects/PaperBanana-native-integrated/docs/integration/evidence/screenshots/20260623-recovery-ledger-textsize/recovery-light-runLedger.png
+  pixelWidth: 2728
+  pixelHeight: 1720

@@ -1,0 +1,1 @@
+f20ca1258589a1042f25b7e9e7dc7c9f21ed577c40d7f7bf25267eeaf91f9b8a  docs/integration/evidence/screenshots/20260623-main-window-light-textsize-narrow/main-light-textsize-narrow-artifactLibrary.png

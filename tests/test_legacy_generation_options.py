@@ -1,0 +1,130 @@
+import unittest
+
+from utils.legacy_generation_options import (
+    generation_additional_info,
+    image_size_for_figure_size,
+    is_plot_task,
+    normalize_legacy_input_content,
+)
+
+
+class LegacyGenerationOptionsTests(unittest.TestCase):
+    def test_plot_task_detection_accepts_display_labels(self) -> None:
+        self.assertTrue(is_plot_task("plot"))
+        self.assertTrue(is_plot_task("statistical plot"))
+        self.assertTrue(is_plot_task("PaperBanana Plot Mode"))
+        self.assertFalse(is_plot_task("diagram"))
+        self.assertFalse(is_plot_task(None))
+
+    def test_figure_size_maps_to_provider_image_size(self) -> None:
+        self.assertEqual(image_size_for_figure_size("1-3cm"), "1k")
+        self.assertEqual(image_size_for_figure_size("4-6cm"), "1k")
+        self.assertEqual(image_size_for_figure_size("7-9cm"), "2k")
+        self.assertEqual(image_size_for_figure_size("10-13cm"), "2k")
+        self.assertEqual(image_size_for_figure_size("14-17cm"), "4k")
+
+    def test_generation_additional_info_preserves_figure_size_and_image_size(self) -> None:
+        self.assertEqual(
+            generation_additional_info("21:9", "14-17cm"),
+            {"rounded_ratio": "21:9", "figure_size": "14-17cm", "image_size": "4k"},
+        )
+
+    def test_plot_text_input_parses_record_array_json(self) -> None:
+        content = """
+        [
+          {"Category": "Integration", "Current": 0, "Target": 4},
+          {"Category": "Security", "Current": 2, "Target": 4}
+        ]
+        """
+
+        parsed = normalize_legacy_input_content(content, "plot")
+
+        self.assertIsInstance(parsed, list)
+        self.assertEqual(parsed[0]["Category"], "Integration")
+        self.assertEqual(parsed[1]["Target"], 4)
+
+    def test_plot_text_input_parses_multiseries_dict_json(self) -> None:
+        content = """
+        {
+          "labels": ["Integration", "Governance"],
+          "current": [0, 1],
+          "target": [4, 3]
+        }
+        """
+
+        parsed = normalize_legacy_input_content(content, "statistical plot")
+
+        self.assertIsInstance(parsed, dict)
+        self.assertEqual(parsed["labels"], ["Integration", "Governance"])
+        self.assertEqual(parsed["target"], [4, 3])
+
+    def test_issue_67_record_array_schema_parses(self) -> None:
+        content = """
+        [
+          {"Category": "Capability 11: X", "Current": 0, "Target": 4},
+          {"Category": "Capability 8: X", "Current": 1, "Target": 3},
+          {"Category": "Capability 2: X", "Current": 1, "Target": 3},
+          {"Category": "Capability 10: X", "Current": 1, "Target": 3},
+          {"Category": "Capability 3: X", "Current": 1, "Target": 3},
+          {"Category": "Capability 13: X", "Current": 1, "Target": 3},
+          {"Category": "Capability 4: X", "Current": 2, "Target": 4},
+          {"Category": "Capability 12: X", "Current": 2, "Target": 4}
+        ]
+        """
+
+        parsed = normalize_legacy_input_content(content, "PaperBanana Plot Mode")
+
+        self.assertIsInstance(parsed, list)
+        self.assertEqual(len(parsed), 8)
+        self.assertEqual(parsed[0]["Category"], "Capability 11: X")
+        self.assertEqual(parsed[-1]["Target"], 4)
+
+    def test_issue_67_labels_multiseries_schema_parses(self) -> None:
+        content = """
+        {
+          "labels": [
+            "Capability 11: X",
+            "Capability 8: X",
+            "Capability 2: X",
+            "Capability 10: X",
+            "Capability 3: X",
+            "Capability 13: X",
+            "Capability 4: X",
+            "Capability 12: X"
+          ],
+          "Current Level": [0, 1, 1, 1, 1, 1, 2, 2],
+          "Target Level": [4, 3, 3, 3, 3, 3, 4, 4]
+        }
+        """
+
+        parsed = normalize_legacy_input_content(content, "plot")
+
+        self.assertIsInstance(parsed, dict)
+        self.assertEqual(parsed["labels"][0], "Capability 11: X")
+        self.assertEqual(parsed["Current Level"], [0, 1, 1, 1, 1, 1, 2, 2])
+        self.assertEqual(parsed["Target Level"][-1], 4)
+
+    def test_issue_67_minimal_labels_multiseries_schema_parses(self) -> None:
+        content = """
+        {
+          "labels": ["Integration", "Governance", "Culture", "Infra", "Availability", "Processes", "Quality", "Security"],
+          "current": [0, 1, 1, 1, 1, 1, 2, 2],
+          "target": [4, 3, 3, 3, 3, 3, 4, 4]
+        }
+        """
+
+        parsed = normalize_legacy_input_content(content, "statistical plot")
+
+        self.assertIsInstance(parsed, dict)
+        self.assertEqual(parsed["labels"][0], "Integration")
+        self.assertEqual(parsed["current"][0], 0)
+        self.assertEqual(parsed["target"][-1], 4)
+
+    def test_diagram_text_input_is_left_unchanged(self) -> None:
+        content = '{"not": "parsed for diagrams"}'
+
+        self.assertEqual(normalize_legacy_input_content(content, "diagram"), content)
+
+
+if __name__ == "__main__":
+    unittest.main()

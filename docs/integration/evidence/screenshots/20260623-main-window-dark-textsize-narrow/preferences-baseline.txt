@@ -1,0 +1,9 @@
+dark_mode=true
+repo_path=/Users/jeff/Codex_projects/PaperBanana-native-integrated
+repo_path_present=1
+text_size=<absent>
+text_size_present=0
+head=af97d6bb631862f80999adef796d4faff4b465b5
+latest_product_source=5fe91fa3c6dee7c13fddb4651f55404e226775fb
+installed_app=/Applications/PaperBanana.app
+installed_binary_sha256=080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5

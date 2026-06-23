@@ -1,0 +1,1 @@
+665ca1d14d378bb37ca9fc8f87d51856cb8a2b7fcb44c8a6bf9b3d8291eca3c9  docs/integration/evidence/screenshots/20260623-main-window-dark-textsize-narrow/main-dark-textsize-narrow-artifactLibrary.png

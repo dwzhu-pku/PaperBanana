@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paperbanana.local/schemas/wp108_quality_decision.schema.json",
+  "title": "PaperBanana WP-108 Quality Decision Report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "created_at_utc",
+    "manifest_id",
+    "source_head",
+    "evaluation_mode",
+    "decision",
+    "gate_passed",
+    "publication_quality_claimed",
+    "provider_scoring_used",
+    "thresholds",
+    "observed",
+    "artifact_binding",
+    "blockers",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema_version": { "const": "wp108.quality_decision.v1" },
+    "created_at_utc": { "type": "string", "minLength": 1 },
+    "manifest_id": { "type": "string", "minLength": 1 },
+    "source_head": { "type": "string" },
+    "manifest_path": { "type": "string" },
+    "report_path": { "type": "string" },
+    "evaluation_mode": { "const": "human_review" },
+    "decision": { "enum": ["go", "no_go"] },
+    "gate_passed": { "type": "boolean" },
+    "publication_quality_claimed": { "const": false },
+    "provider_scoring_used": { "type": "boolean" },
+    "thresholds": {
+      "type": "object",
+      "required": [
+        "minimum_cases",
+        "minimum_mean_score",
+        "max_critical_failures",
+        "dimension_pass_thresholds",
+        "allowed_score_sources"
+      ],
+      "properties": {
+        "minimum_cases": { "type": "integer", "minimum": 1 },
+        "minimum_mean_score": { "type": "number" },
+        "max_critical_failures": { "type": "integer", "minimum": 0 },
+        "dimension_pass_thresholds": { "type": "object" },
+        "allowed_score_sources": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      }
+    },
+    "observed": {
+      "type": "object",
+      "required": [
+        "cases_total",
+        "reported_mean_score",
+        "observed_mean_score",
+        "report_threshold_passed",
+        "case_statuses",
+        "dimension_results",
+        "case_critical_failures",
+        "reviewer_critical_failures",
+        "reviewer_count_by_case",
+        "score_sources_by_case",
+        "disallowed_score_sources"
+      ],
+      "properties": {
+        "cases_total": { "type": "integer", "minimum": 1 },
+        "reported_mean_score": { "type": "number" },
+        "observed_mean_score": { "type": "number" },
+        "report_threshold_passed": { "type": "boolean" },
+        "case_statuses": { "type": "object" },
+        "dimension_results": { "type": "object" },
+        "case_critical_failures": { "type": "array" },
+        "reviewer_critical_failures": { "type": "array" },
+        "reviewer_count_by_case": { "type": "object" },
+        "score_sources_by_case": { "type": "object" },
+        "disallowed_score_sources": { "type": "object" }
+      }
+    },
+    "artifact_binding": { "type": "object" },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "claim_boundary": { "type": "string", "minLength": 1 }
+  }
+}

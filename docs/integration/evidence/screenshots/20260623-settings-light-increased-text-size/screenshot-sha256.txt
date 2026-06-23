@@ -1,0 +1,4 @@
+04e9e8b6a2481c8d73d092258461feb396d7b625411f3abd7069e28ff8a1f569  docs/integration/evidence/screenshots/20260623-settings-light-increased-text-size/settings-light-increased-text-legacy.png
+29d3e382737c135222c360c1884ff667f2d4dda68a027c94c9b9865b030890fe  docs/integration/evidence/screenshots/20260623-settings-light-increased-text-size/settings-light-increased-text-providers.png
+698cf5fda33cff03eb4dea12e01de284bed5c6afd08e576f4f559da8f7f156fc  docs/integration/evidence/screenshots/20260623-settings-light-increased-text-size/settings-light-increased-text-workspace-lower.png
+76816b453c1737379dda7cbd494ecc4df9670ce24b0abb905654704ccd282491  docs/integration/evidence/screenshots/20260623-settings-light-increased-text-size/settings-light-increased-text-workspace.png

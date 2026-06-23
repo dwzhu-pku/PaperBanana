@@ -35,14 +35,20 @@ class PlannerAgent(BaseAgent):
 
         # Task-specific configurations
         if "plot" in self.exp_config.task_name:
-            self.system_prompt = PLOT_PLANNER_AGENT_SYSTEM_PROMPT
+            self.system_prompt = build_planner_system_prompt(
+                task_name="plot",
+                planner_metaphor=self.exp_config.planner_metaphor,
+            )
             self.task_config = {
                 "task_name": "plot",
                 "content_label": "Plot Raw Data",
                 "visual_intent_label": "Visual Intent of the Desired Plot",
             }
         else:
-            self.system_prompt = DIAGRAM_PLANNER_AGENT_SYSTEM_PROMPT
+            self.system_prompt = build_planner_system_prompt(
+                task_name="diagram",
+                planner_metaphor=self.exp_config.planner_metaphor,
+            )
             self.task_config = {
                 "task_name": "diagram",
                 "content_label": "Methodology Section",
@@ -122,6 +128,15 @@ class PlannerAgent(BaseAgent):
 
 
 
+def build_planner_system_prompt(task_name: str, planner_metaphor: bool = False) -> str:
+    """Return the Planner system prompt, preserving defaults byte-for-byte."""
+    if "plot" in task_name:
+        return PLOT_PLANNER_AGENT_SYSTEM_PROMPT
+    if planner_metaphor:
+        return DIAGRAM_PLANNER_AGENT_SYSTEM_PROMPT + DIAGRAM_PLANNER_METAPHOR_SUPPLEMENT
+    return DIAGRAM_PLANNER_AGENT_SYSTEM_PROMPT
+
+
 DIAGRAM_PLANNER_AGENT_SYSTEM_PROMPT = """
 I am working on a task: given the 'Methodology' section of a paper, and the caption of the desired figure, automatically generate a corresponding illustrative diagram. I will input the text of the 'Methodology' section, the figure caption, and your output should be a detailed description of an illustrative figure that effectively represents the methods described in the text.
 
@@ -129,6 +144,13 @@ To help you understand the task better, and grasp the principles for generating 
 
 ** IMPORTANT: **
 Your description should be as detailed as possible. Semantically, clearly describe each element and their connections. Formally, include various details such as background style (typically pure white or very light pastel), colors, line thickness, icon styles, etc. Remember: vague or unclear specifications will only make the generated figure worse, not better.
+"""
+
+DIAGRAM_PLANNER_METAPHOR_SUPPLEMENT = """
+
+Planner metaphor mode (diagram-only): Before producing the detailed description, identify a compact visual metaphor that can organize the diagram's layout and relationships, such as a pipeline, map, layered stack, control loop, branching tree, or hub-and-spoke network. Use the metaphor only as a conceptual guide for the diagram composition.
+
+Return the same detailed textual figure-description output requested above. Do not output SVG, code, image markup, a separate sketch, or rendering instructions beyond the detailed description.
 """
 
 PLOT_PLANNER_AGENT_SYSTEM_PROMPT = """
@@ -139,4 +161,3 @@ To help you understand the task better, and grasp the principles for generating 
 ** IMPORTANT: **
 Your description should be as detailed as possible. For content, explain the precise mapping of variables to visual channels (x, y, hue) and explicitly enumerate every raw data point's coordinate to be drawn to ensure accuracy. For presentation, specify the exact aesthetic parameters, including specific HEX color codes, font sizes for all labels, line widths, marker dimensions, legend placement, and grid styles. You should learn from the examples' content presentation and aesthetic design (e.g., color schemes).
 """
-

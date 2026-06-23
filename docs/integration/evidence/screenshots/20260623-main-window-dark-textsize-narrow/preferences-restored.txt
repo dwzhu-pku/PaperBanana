@@ -1,0 +1,4 @@
+dark_mode=true
+repo_path=/Users/jeff/Codex_projects/PaperBanana-native-integrated
+text_size=<absent>
+paperbanana_processes=<none>

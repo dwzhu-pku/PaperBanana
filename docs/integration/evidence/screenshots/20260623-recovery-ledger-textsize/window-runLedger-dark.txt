@@ -1,0 +1,1 @@
+position=80,80 size=1364x860

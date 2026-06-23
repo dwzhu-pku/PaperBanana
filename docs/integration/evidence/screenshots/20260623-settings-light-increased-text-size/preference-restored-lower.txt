@@ -1,0 +1,2 @@
+lower_capture_restored_appearance=Dark
+lower_capture_restored_app_text=<absent>

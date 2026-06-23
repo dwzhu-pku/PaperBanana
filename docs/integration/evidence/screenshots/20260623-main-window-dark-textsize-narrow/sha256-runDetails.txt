@@ -1,0 +1,1 @@
+c1c530de9312cba6c04e787d01d1f98545dbc4f920ec0cf8d690ac6a90980677  docs/integration/evidence/screenshots/20260623-main-window-dark-textsize-narrow/main-dark-textsize-narrow-runDetails.png

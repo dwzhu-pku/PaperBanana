@@ -1,0 +1,12 @@
+state=missing
+mode=light
+fixture_root=/tmp/paperbanana-wp007-reference-dataset-edge-states/fixture-missing
+support_root=/tmp/paperbanana-wp007-reference-dataset-edge-states/support-detail-missing-light
+scroll_point=2728,492
+results_files_under_fixture=
+/tmp/paperbanana-wp007-reference-dataset-edge-states/fixture-missing/results/run_store
+/tmp/paperbanana-wp007-reference-dataset-edge-states/fixture-missing/results/run_store/paperbanana_runs.sqlite
+/tmp/paperbanana-wp007-reference-dataset-edge-states/fixture-missing/results/run_store/paperbanana_runs.sqlite-shm
+/tmp/paperbanana-wp007-reference-dataset-edge-states/fixture-missing/results/run_store/paperbanana_runs.sqlite-wal
+native_generate_dirs_under_fixture=
+provider_audit_files_under_fixture=

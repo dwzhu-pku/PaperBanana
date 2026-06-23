@@ -73,7 +73,12 @@ class PaperVizProcessor:
             current_best_image_key = f"target_{task_name}_desc0_base64_jpg"
         else: # default to stylist
             current_best_image_key = f"target_{task_name}_stylist_desc0_base64_jpg"
-            
+
+        max_rounds = max(0, int(max_rounds or 0))
+        if max_rounds == 0:
+            data["eval_image_field"] = current_best_image_key
+            return data
+
         for round_idx in range(max_rounds):
             data["current_critic_round"] = round_idx
             data = await self.critic_agent.process(data, source=source)
@@ -145,7 +150,7 @@ class PaperVizProcessor:
             data = await self.planner_agent.process(data)
             data = await self.visualizer_agent.process(data)
             # Use max_critic_rounds from data if available, otherwise default to 3
-            max_rounds = data.get("max_critic_rounds", 3)
+            max_rounds = data.get("max_critic_rounds", self.exp_config.max_critic_rounds)
             data = await self._run_critic_iterations(data, task_name, max_rounds=max_rounds, source="planner")
             if "demo" in exp_mode: do_eval = False
 
@@ -256,4 +261,3 @@ class PaperVizProcessor:
             data, task_name=exp_config.task_name, work_dir=exp_config.work_dir
         )
         return data
-

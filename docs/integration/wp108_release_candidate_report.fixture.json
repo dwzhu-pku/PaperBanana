@@ -1,0 +1,63 @@
+{
+  "schema_version": "wp108.no_live_report.v1",
+  "manifest_id": "paperbanana-m1-release-candidate-template",
+  "evaluation_mode": "fixture",
+  "provider_scoring_used": false,
+  "publication_quality_claimed": false,
+  "case_results": [
+    {
+      "case_id": "diagram-with-references-paperbanana-01",
+      "status": "not_scored",
+      "scores": {},
+      "critical_failures": []
+    },
+    {
+      "case_id": "diagram-without-references-paperbanana-02",
+      "status": "not_scored",
+      "scores": {},
+      "critical_failures": []
+    },
+    {
+      "case_id": "diagram-zero-critic-control-paperbanana-03",
+      "status": "not_scored",
+      "scores": {},
+      "critical_failures": []
+    },
+    {
+      "case_id": "diagram-planner-metaphor-optin-paperbanana-04",
+      "status": "not_scored",
+      "scores": {},
+      "critical_failures": []
+    },
+    {
+      "case_id": "plot-structured-single-series-paperbanana-01",
+      "status": "not_scored",
+      "scores": {},
+      "critical_failures": []
+    },
+    {
+      "case_id": "plot-structured-multi-series-paperbanana-02",
+      "status": "not_scored",
+      "scores": {},
+      "critical_failures": []
+    },
+    {
+      "case_id": "plot-zero-critic-control-paperbanana-03",
+      "status": "not_scored",
+      "scores": {},
+      "critical_failures": []
+    },
+    {
+      "case_id": "plot-native-manual-examples-disabled-paperbanana-04",
+      "status": "not_scored",
+      "scores": {},
+      "critical_failures": []
+    }
+  ],
+  "summary": {
+    "cases_total": 8,
+    "mean_score": null,
+    "threshold_passed": false,
+    "claim_boundary": "Fixture validates release-candidate manifest/report shape only; no output was generated or scored."
+  }
+}

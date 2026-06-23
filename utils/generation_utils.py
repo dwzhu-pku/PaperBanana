@@ -36,6 +36,7 @@ import os
 
 import yaml
 from pathlib import Path
+from utils import provider_audit
 
 # Load config
 config_path = Path(__file__).parent.parent / "configs" / "model_config.yaml"
@@ -55,7 +56,28 @@ gemini_client = None
 anthropic_client = None
 openai_client = None
 openrouter_client = None
+local_openai_client = None
 openrouter_api_key = ""
+local_openai_base_url = ""
+local_openai_api_key = ""
+
+OLLAMA_OPENAI_BASE_URL = "http://localhost:11434/v1"
+LOCAL_OPENAI_MODEL_PREFIXES = ("local/", "ollama/")
+
+
+def is_local_openai_model_name(model_name: str) -> bool:
+    """Return whether a model name targets a local text-only route."""
+    return bool(model_name) and model_name.strip().lower().startswith(LOCAL_OPENAI_MODEL_PREFIXES)
+
+
+def assert_not_local_openai_image_model(model_name: str, route_name: str = "image generation") -> None:
+    """Reject local OpenAI-compatible text routes before image-provider dispatch."""
+    if is_local_openai_model_name(model_name):
+        raise ValueError(
+            f"{model_name!r} uses a local OpenAI-compatible text route. "
+            f"Local/Ollama routes are text-only and cannot be used for {route_name}. "
+            "Set image_gen_model_name to a supported image-capable provider model."
+        )
 
 
 def reinitialize_clients():
@@ -67,7 +89,8 @@ def reinitialize_clients():
     Returns a list of client names that were successfully initialized.
     """
     global gemini_client, anthropic_client, openai_client
-    global openrouter_client, openrouter_api_key
+    global openrouter_client, local_openai_client, openrouter_api_key
+    global local_openai_base_url, local_openai_api_key
 
     initialized = []
 
@@ -105,6 +128,18 @@ def reinitialize_clients():
         initialized.append("OpenRouter")
     else:
         openrouter_client = None
+
+    local_openai_base_url = get_config_val("local_openai", "base_url", "LOCAL_OPENAI_BASE_URL", "")
+    local_openai_api_key = get_config_val("local_openai", "api_key", "LOCAL_OPENAI_API_KEY", "")
+    if local_openai_base_url:
+        local_openai_client = AsyncOpenAI(
+            base_url=local_openai_base_url,
+            api_key=local_openai_api_key or "local",
+        )
+        print("Initialized Local OpenAI-compatible Client")
+        initialized.append("Local OpenAI-compatible")
+    else:
+        local_openai_client = None
 
     return initialized
 
@@ -162,6 +197,17 @@ async def call_gemini_with_retry_async(
 
     current_contents = contents
     for attempt in range(max_attempts):
+        modality = "image" if ("nanoviz" in model_name or "image" in model_name) else "text"
+        call_id = provider_audit.start_call(
+            provider="gemini",
+            model=model_name,
+            modality=modality,
+            context=error_context,
+            attempt=attempt + 1,
+            max_attempts=max_attempts,
+            contents=current_contents,
+            config=config,
+        )
         try:
             # Use global client
             client = gemini_client
@@ -178,21 +224,49 @@ async def call_gemini_with_retry_async(
                 or "image" in model_name
             ):
                 raw_response_list = []
+                artifact_paths = []
                 if not response.candidates or not response.candidates[0].content.parts:
+                    provider_audit.finish_call(
+                        call_id=call_id,
+                        provider="gemini",
+                        model=model_name,
+                        modality=modality,
+                        context=error_context,
+                        attempt=attempt + 1,
+                        success=False,
+                        message="No image parts returned.",
+                    )
                     print(
                         f"[Warning]: Failed to generate image, retrying in {retry_delay} seconds..."
                     )
                     await asyncio.sleep(retry_delay)
                     continue
 
-                # In this mode, we can only have one candidate
                 for part in response.candidates[0].content.parts:
-                    if part.inline_data:
-                        # Append base64 encoded image data to raw_response_list
+                    if getattr(part, "inline_data", None):
+                        artifact_path = provider_audit.save_image_bytes(
+                            call_id=call_id,
+                            provider="gemini",
+                            model=model_name,
+                            image_bytes=part.inline_data.data,
+                            suffix="png",
+                        )
+                        artifact_paths.append(str(artifact_path))
                         raw_response_list.append(
                             base64.b64encode(part.inline_data.data).decode("utf-8")
                         )
-                        break
+                provider_audit.finish_call(
+                    call_id=call_id,
+                    provider="gemini",
+                    model=model_name,
+                    modality=modality,
+                    context=error_context,
+                    attempt=attempt + 1,
+                    success=bool(raw_response_list),
+                    response_count=len(raw_response_list),
+                    artifacts=artifact_paths,
+                    message="Image response received." if raw_response_list else "No inline image data found.",
+                )
 
             # Otherwise, for text generation models
             else:
@@ -202,12 +276,32 @@ async def call_gemini_with_retry_async(
                     for part in candidate.content.parts
                     if part.text is not None
                 ]
+                provider_audit.finish_call(
+                    call_id=call_id,
+                    provider="gemini",
+                    model=model_name,
+                    modality=modality,
+                    context=error_context,
+                    attempt=attempt + 1,
+                    success=bool(raw_response_list),
+                    response_count=len(raw_response_list),
+                    message="Text response received." if raw_response_list else "No text returned.",
+                )
             result_list.extend([r for r in raw_response_list if r and r.strip() != ""])
             if len(result_list) >= target_candidate_count:
                 result_list = result_list[:target_candidate_count]
                 break
 
         except Exception as e:
+            provider_audit.fail_call(
+                call_id=call_id,
+                provider="gemini",
+                model=model_name,
+                modality=modality,
+                context=error_context,
+                attempt=attempt + 1,
+                error=e,
+            )
             context_msg = f" for {error_context}" if error_context else ""
             
             # Exponential backoff (capped at 30s)
@@ -460,6 +554,109 @@ async def call_openai_with_retry_async(
     return response_text_list
 
 
+def _get_local_openai_client(use_ollama_default: bool = False):
+    """Return a configured OpenAI-compatible local text client."""
+    if local_openai_client is not None:
+        return local_openai_client
+
+    base_url = get_config_val("local_openai", "base_url", "LOCAL_OPENAI_BASE_URL", "")
+    api_key = get_config_val("local_openai", "api_key", "LOCAL_OPENAI_API_KEY", "")
+    if use_ollama_default and not base_url:
+        base_url = OLLAMA_OPENAI_BASE_URL
+        api_key = api_key or "ollama"
+
+    if not base_url:
+        raise RuntimeError(
+            "Local OpenAI-compatible client was not initialized: missing base URL. "
+            "Set LOCAL_OPENAI_BASE_URL or local_openai.base_url in configs/model_config.yaml. "
+            "For Ollama, use http://localhost:11434/v1 or the ollama/<model> prefix."
+        )
+
+    return AsyncOpenAI(base_url=base_url, api_key=api_key or "local")
+
+
+async def call_local_openai_with_retry_async(
+    model_name, contents, config, max_attempts=5, retry_delay=30, error_context="",
+    use_ollama_default=False,
+):
+    """
+    ASYNC: Call an OpenAI-compatible local text endpoint.
+
+    This route is intentionally limited to chat/text generation. It does not
+    make local OpenAI-compatible servers a drop-in image-generation backend.
+    """
+    client = _get_local_openai_client(use_ollama_default=use_ollama_default)
+    system_prompt = config["system_prompt"]
+    temperature = config["temperature"]
+    candidate_num = config["candidate_num"]
+    max_tokens = config["max_completion_tokens"]
+    response_text_list = []
+
+    current_contents = contents
+    is_input_valid = False
+    for attempt in range(max_attempts):
+        try:
+            openai_contents = _convert_to_openai_format(current_contents)
+            first_response = await client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": openai_contents},
+                ],
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            content = first_response.choices[0].message.content or ""
+            if not content.strip():
+                print("Local OpenAI-compatible endpoint returned empty content, retrying...")
+                if attempt < max_attempts - 1:
+                    await asyncio.sleep(retry_delay)
+                continue
+            response_text_list.append(content)
+            is_input_valid = True
+            break
+
+        except Exception as e:
+            context_msg = f" for {error_context}" if error_context else ""
+            current_delay = min(retry_delay * (2 ** attempt), 60)
+            print(
+                f"Local OpenAI-compatible attempt {attempt + 1} failed{context_msg}: {e}. "
+                f"Retrying in {current_delay}s..."
+            )
+            if attempt < max_attempts - 1:
+                await asyncio.sleep(current_delay)
+
+    if not is_input_valid:
+        context_msg = f" for {error_context}" if error_context else ""
+        print(f"Error: All {max_attempts} local OpenAI-compatible attempts failed{context_msg}.")
+        return ["Error"] * candidate_num
+
+    remaining_candidates = candidate_num - 1
+    if remaining_candidates > 0:
+        valid_openai_contents = _convert_to_openai_format(current_contents)
+        tasks = [
+            client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": valid_openai_contents},
+                ],
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            for _ in range(remaining_candidates)
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        for res in results:
+            if isinstance(res, Exception):
+                print(f"Error generating a subsequent local OpenAI-compatible candidate: {res}")
+                response_text_list.append("Error")
+            else:
+                response_text_list.append(res.choices[0].message.content or "Error")
+
+    return response_text_list
+
+
 async def call_openai_image_generation_with_retry_async(
     model_name, prompt, config, max_attempts=5, retry_delay=30, error_context=""
 ):
@@ -487,19 +684,67 @@ async def call_openai_image_generation_with_retry_async(
     })
 
     for attempt in range(max_attempts):
+        call_id = provider_audit.start_call(
+            provider="openai",
+            model=model_name,
+            modality="image",
+            context=error_context,
+            attempt=attempt + 1,
+            max_attempts=max_attempts,
+            contents=[{"type": "text", "text": prompt}],
+            config=type("ImageConfigSummary", (), gen_params)(),
+        )
         try:
             response = await openai_client.images.generate(**gen_params)
             
             # OpenAI images.generate returns a list of images in response.data
             if response.data and response.data[0].b64_json:
+                artifact_path = provider_audit.save_base64_image(
+                    call_id=call_id,
+                    provider="openai",
+                    model=model_name,
+                    base64_image=response.data[0].b64_json,
+                    suffix="png",
+                )
+                provider_audit.finish_call(
+                    call_id=call_id,
+                    provider="openai",
+                    model=model_name,
+                    modality="image",
+                    context=error_context,
+                    attempt=attempt + 1,
+                    success=True,
+                    response_count=1,
+                    artifacts=[str(artifact_path)],
+                    message="Image response received.",
+                )
                 return [response.data[0].b64_json]
             else:
+                provider_audit.finish_call(
+                    call_id=call_id,
+                    provider="openai",
+                    model=model_name,
+                    modality="image",
+                    context=error_context,
+                    attempt=attempt + 1,
+                    success=False,
+                    message="No image data returned.",
+                )
                 print(f"[Warning]: Failed to generate image via OpenAI, no data returned.")
                 if attempt < max_attempts - 1:
                     await asyncio.sleep(retry_delay)
                 continue
 
         except Exception as e:
+            provider_audit.fail_call(
+                call_id=call_id,
+                provider="openai",
+                model=model_name,
+                modality="image",
+                context=error_context,
+                attempt=attempt + 1,
+                error=e,
+            )
             context_msg = f" for {error_context}" if error_context else ""
             print(
                 f"Attempt {attempt + 1} for OpenAI image generation model {model_name} failed{context_msg}: {e}. Retrying in {retry_delay} seconds..."
@@ -647,6 +892,19 @@ async def call_openrouter_image_generation_with_retry_async(
     }
 
     for attempt in range(max_attempts):
+        call_id = provider_audit.start_call(
+            provider="openrouter",
+            model=model_name,
+            modality="image",
+            context=error_context,
+            attempt=attempt + 1,
+            max_attempts=max_attempts,
+            contents=contents,
+            config=type("OpenRouterImageConfigSummary", (), {
+                "temperature": temperature,
+                "response_modalities": ["image", "text"],
+            })(),
+        )
         try:
             async with httpx.AsyncClient(timeout=300) as client:
                 resp = await client.post(
@@ -659,6 +917,16 @@ async def call_openrouter_image_generation_with_retry_async(
 
             choices = data.get("choices", [])
             if not choices:
+                provider_audit.finish_call(
+                    call_id=call_id,
+                    provider="openrouter",
+                    model=model_name,
+                    modality="image",
+                    context=error_context,
+                    attempt=attempt + 1,
+                    success=False,
+                    message="No choices returned.",
+                )
                 print(f"[Warning]: OpenRouter image generation returned no choices, retrying...")
                 if attempt < max_attempts - 1:
                     await asyncio.sleep(retry_delay)
@@ -673,6 +941,25 @@ async def call_openrouter_image_generation_with_retry_async(
                     if isinstance(part, dict) and "inline_data" in part:
                         b64_data = part["inline_data"].get("data", "")
                         if b64_data:
+                            artifact_path = provider_audit.save_base64_image(
+                                call_id=call_id,
+                                provider="openrouter",
+                                model=model_name,
+                                base64_image=b64_data,
+                                suffix="png",
+                            )
+                            provider_audit.finish_call(
+                                call_id=call_id,
+                                provider="openrouter",
+                                model=model_name,
+                                modality="image",
+                                context=error_context,
+                                attempt=attempt + 1,
+                                success=True,
+                                response_count=1,
+                                artifacts=[str(artifact_path)],
+                                message="Inline image response received.",
+                            )
                             return [b64_data]
 
             # Try extracting from images field (OpenRouter standard)
@@ -688,6 +975,25 @@ async def call_openrouter_image_generation_with_retry_async(
                 else:
                     b64_data = data_url
                 if b64_data:
+                    artifact_path = provider_audit.save_base64_image(
+                        call_id=call_id,
+                        provider="openrouter",
+                        model=model_name,
+                        base64_image=b64_data,
+                        suffix="png",
+                    )
+                    provider_audit.finish_call(
+                        call_id=call_id,
+                        provider="openrouter",
+                        model=model_name,
+                        modality="image",
+                        context=error_context,
+                        attempt=attempt + 1,
+                        success=True,
+                        response_count=1,
+                        artifacts=[str(artifact_path)],
+                        message="Image URL response received.",
+                    )
                     return [b64_data]
 
             # Try extracting base64 from text content
@@ -695,14 +1001,52 @@ async def call_openrouter_image_generation_with_retry_async(
                 if "," in content:
                     b64_data = content.split(",", 1)[1]
                     if b64_data:
+                        artifact_path = provider_audit.save_base64_image(
+                            call_id=call_id,
+                            provider="openrouter",
+                            model=model_name,
+                            base64_image=b64_data,
+                            suffix="png",
+                        )
+                        provider_audit.finish_call(
+                            call_id=call_id,
+                            provider="openrouter",
+                            model=model_name,
+                            modality="image",
+                            context=error_context,
+                            attempt=attempt + 1,
+                            success=True,
+                            response_count=1,
+                            artifacts=[str(artifact_path)],
+                            message="Data URL text image response received.",
+                        )
                         return [b64_data]
 
+            provider_audit.finish_call(
+                call_id=call_id,
+                provider="openrouter",
+                model=model_name,
+                modality="image",
+                context=error_context,
+                attempt=attempt + 1,
+                success=False,
+                message="No image data returned.",
+            )
             print(f"[Warning]: OpenRouter image generation returned no images, retrying...")
             if attempt < max_attempts - 1:
                 await asyncio.sleep(retry_delay)
             continue
 
         except httpx.HTTPStatusError as e:
+            provider_audit.fail_call(
+                call_id=call_id,
+                provider="openrouter",
+                model=model_name,
+                modality="image",
+                context=error_context,
+                attempt=attempt + 1,
+                error=f"HTTP {e.response.status_code} - {e.response.text}",
+            )
             context_msg = f" for {error_context}" if error_context else ""
             current_delay = min(retry_delay * (2 ** attempt), 60)
             print(
@@ -716,6 +1060,15 @@ async def call_openrouter_image_generation_with_retry_async(
                 print(f"Error: All {max_attempts} attempts failed{context_msg}")
                 return ["Error"]
         except Exception as e:
+            provider_audit.fail_call(
+                call_id=call_id,
+                provider="openrouter",
+                model=model_name,
+                modality="image",
+                context=error_context,
+                attempt=attempt + 1,
+                error=e,
+            )
             context_msg = f" for {error_context}" if error_context else ""
             current_delay = min(retry_delay * (2 ** attempt), 60)
             print(
@@ -752,15 +1105,24 @@ async def call_model_with_retry_async(
     Unified router that dispatches to the correct provider based on model_name.
 
     Routing rules:
-      1. Explicit prefix overrides: "openrouter/" -> OpenRouter, "claude-" -> Anthropic,
-         "gpt-"/"o1-"/"o3-"/"o4-" -> OpenAI
+      1. Explicit prefix overrides: "openrouter/" -> OpenRouter,
+         "local/" and "ollama/" -> local OpenAI-compatible text endpoints,
+         "claude-" -> Anthropic, "gpt-"/"o1-"/"o3-"/"o4-" -> OpenAI
       2. No prefix: auto-detect based on which API key is configured.
          Priority: OpenRouter > Gemini > Anthropic > OpenAI
     """
     # Explicit provider prefix overrides auto-detection
+    use_ollama_default = False
     if model_name.startswith("openrouter/"):
         provider = "openrouter"
         actual_model = model_name[len("openrouter/"):]
+    elif model_name.startswith("local/"):
+        provider = "local_openai"
+        actual_model = model_name[len("local/"):]
+    elif model_name.startswith("ollama/"):
+        provider = "local_openai"
+        actual_model = model_name[len("ollama/"):]
+        use_ollama_default = True
     elif model_name.startswith("claude-"):
         provider = "anthropic"
         actual_model = model_name
@@ -807,6 +1169,7 @@ async def call_model_with_retry_async(
         "openrouter": call_openrouter_with_retry_async,
         "anthropic": call_claude_with_retry_async,
         "openai": call_openai_with_retry_async,
+        "local_openai": call_local_openai_with_retry_async,
     }[provider]
 
     return await call_fn(
@@ -816,4 +1179,5 @@ async def call_model_with_retry_async(
         max_attempts=max_attempts,
         retry_delay=retry_delay,
         error_context=error_context,
+        **({"use_ollama_default": use_ollama_default} if provider == "local_openai" else {}),
     )

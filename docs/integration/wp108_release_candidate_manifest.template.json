@@ -1,0 +1,250 @@
+{
+  "schema_version": "wp108.no_live_manifest.v1",
+  "benchmark_id": "paperbanana-m1-release-candidate-template",
+  "claim_boundary": "Release-candidate template only; freezes intended WP-108 coverage but does not score outputs, call providers, or support a publication-quality claim. Plot cases are evaluation fixtures, not native manual plot-example support.",
+  "cases": [
+    {
+      "case_id": "diagram-with-references-paperbanana-01",
+      "task_type": "diagram",
+      "split": "diagram_with_references",
+      "content_ref": "data/PaperBananaBench/diagram/ref.json#ref_1.content",
+      "visual_intent_ref": "data/PaperBananaBench/diagram/ref.json#ref_1.visual_intent",
+      "path_to_gt_image": "data/PaperBananaBench/diagram/gt/ref_1.png",
+      "expected_outputs": [
+        "image",
+        "request_json",
+        "metadata_json",
+        "provider_request_json",
+        "provider_audit",
+        "run_store"
+      ],
+      "non_private_fixture": true
+    },
+    {
+      "case_id": "diagram-without-references-paperbanana-02",
+      "task_type": "diagram",
+      "split": "diagram_without_references",
+      "content_ref": "data/PaperBananaBench/diagram/ref.json#ref_2.content",
+      "visual_intent_ref": "data/PaperBananaBench/diagram/ref.json#ref_2.visual_intent",
+      "path_to_gt_image": "data/PaperBananaBench/diagram/gt/ref_2.png",
+      "expected_outputs": [
+        "image",
+        "request_json",
+        "metadata_json",
+        "provider_request_json",
+        "provider_audit",
+        "run_store"
+      ],
+      "non_private_fixture": true
+    },
+    {
+      "case_id": "diagram-zero-critic-control-paperbanana-03",
+      "task_type": "diagram",
+      "split": "diagram_zero_critic_control",
+      "content_ref": "data/PaperBananaBench/diagram/ref.json#ref_3.content",
+      "visual_intent_ref": "data/PaperBananaBench/diagram/ref.json#ref_3.visual_intent",
+      "path_to_gt_image": "data/PaperBananaBench/diagram/gt/ref_3.png",
+      "expected_outputs": [
+        "image",
+        "request_json",
+        "metadata_json",
+        "provider_request_json",
+        "provider_audit",
+        "run_store"
+      ],
+      "non_private_fixture": true
+    },
+    {
+      "case_id": "diagram-planner-metaphor-optin-paperbanana-04",
+      "task_type": "diagram",
+      "split": "diagram_planner_metaphor_optin",
+      "content_ref": "data/PaperBananaBench/diagram/ref.json#ref_4.content",
+      "visual_intent_ref": "data/PaperBananaBench/diagram/ref.json#ref_4.visual_intent",
+      "path_to_gt_image": "data/PaperBananaBench/diagram/gt/ref_4.png",
+      "expected_outputs": [
+        "image",
+        "request_json",
+        "metadata_json",
+        "provider_request_json",
+        "provider_audit",
+        "run_store"
+      ],
+      "non_private_fixture": true
+    },
+    {
+      "case_id": "plot-structured-single-series-paperbanana-01",
+      "task_type": "plot",
+      "split": "plot_structured_single_series",
+      "content_ref": "data/PaperBananaBench/plot/ref.json#ref_1.content",
+      "visual_intent_ref": "data/PaperBananaBench/plot/ref.json#ref_1.visual_intent",
+      "path_to_gt_image": "data/PaperBananaBench/plot/gt/ref_1.png",
+      "expected_outputs": [
+        "image",
+        "request_json",
+        "metadata_json",
+        "provider_request_json",
+        "provider_audit",
+        "run_store"
+      ],
+      "non_private_fixture": true
+    },
+    {
+      "case_id": "plot-structured-multi-series-paperbanana-02",
+      "task_type": "plot",
+      "split": "plot_structured_multi_series",
+      "content_ref": "data/PaperBananaBench/plot/ref.json#ref_2.content",
+      "visual_intent_ref": "data/PaperBananaBench/plot/ref.json#ref_2.visual_intent",
+      "path_to_gt_image": "data/PaperBananaBench/plot/gt/ref_2.png",
+      "expected_outputs": [
+        "image",
+        "request_json",
+        "metadata_json",
+        "provider_request_json",
+        "provider_audit",
+        "run_store"
+      ],
+      "non_private_fixture": true
+    },
+    {
+      "case_id": "plot-zero-critic-control-paperbanana-03",
+      "task_type": "plot",
+      "split": "plot_zero_critic_control",
+      "content_ref": "data/PaperBananaBench/plot/ref.json#ref_3.content",
+      "visual_intent_ref": "data/PaperBananaBench/plot/ref.json#ref_3.visual_intent",
+      "path_to_gt_image": "data/PaperBananaBench/plot/gt/ref_3.png",
+      "expected_outputs": [
+        "image",
+        "request_json",
+        "metadata_json",
+        "provider_request_json",
+        "provider_audit",
+        "run_store"
+      ],
+      "non_private_fixture": true
+    },
+    {
+      "case_id": "plot-native-manual-examples-disabled-paperbanana-04",
+      "task_type": "plot",
+      "split": "plot_manual_examples_disabled_boundary",
+      "content_ref": "data/PaperBananaBench/plot/ref.json#ref_4.content",
+      "visual_intent_ref": "data/PaperBananaBench/plot/ref.json#ref_4.visual_intent",
+      "path_to_gt_image": "data/PaperBananaBench/plot/gt/ref_4.png",
+      "expected_outputs": [
+        "image",
+        "request_json",
+        "metadata_json",
+        "provider_request_json",
+        "provider_audit",
+        "run_store"
+      ],
+      "non_private_fixture": true
+    }
+  ],
+  "rubric": [
+    {
+      "id": "semantic_faithfulness",
+      "name": "Semantic faithfulness",
+      "scale": "0-4 integer or decimal score",
+      "pass_threshold": 3.0,
+      "anchors": [
+        {
+          "score": 0,
+          "description": "Major scientific meaning is absent or contradicted."
+        },
+        {
+          "score": 3,
+          "description": "Core scientific relationships, variables, and labels are preserved with only minor omissions."
+        },
+        {
+          "score": 4,
+          "description": "Scientific meaning, variables, labels, and key relationships are faithfully represented."
+        }
+      ]
+    },
+    {
+      "id": "visual_legibility",
+      "name": "Visual legibility",
+      "scale": "0-4 integer or decimal score",
+      "pass_threshold": 3.0,
+      "anchors": [
+        {
+          "score": 0,
+          "description": "The output is unreadable or visually incoherent."
+        },
+        {
+          "score": 3,
+          "description": "The output is readable with minor layout, spacing, or labeling issues."
+        },
+        {
+          "score": 4,
+          "description": "The output is clear, well organized, and suitable for detailed scientific review."
+        }
+      ]
+    },
+    {
+      "id": "structural_coherence",
+      "name": "Structural coherence",
+      "scale": "0-4 integer or decimal score",
+      "pass_threshold": 3.0,
+      "anchors": [
+        {
+          "score": 0,
+          "description": "The diagram or plot structure prevents interpretation of the intended relationship."
+        },
+        {
+          "score": 3,
+          "description": "The structural organization communicates the intended relationship with minor ambiguity."
+        },
+        {
+          "score": 4,
+          "description": "The structural organization is coherent, complete, and aligned to the intended relationship."
+        }
+      ]
+    },
+    {
+      "id": "style_and_labeling",
+      "name": "Style and labeling",
+      "scale": "0-4 integer or decimal score",
+      "pass_threshold": 3.0,
+      "anchors": [
+        {
+          "score": 0,
+          "description": "Labels, typography, or style choices make the output unsuitable for review."
+        },
+        {
+          "score": 3,
+          "description": "Labels and style choices are usable with minor polish issues."
+        },
+        {
+          "score": 4,
+          "description": "Labels, typography, and style choices are consistent, readable, and review-ready."
+        }
+      ]
+    },
+    {
+      "id": "artifact_completeness",
+      "name": "Artifact completeness",
+      "scale": "0-4 integer or decimal score",
+      "pass_threshold": 3.0,
+      "anchors": [
+        {
+          "score": 0,
+          "description": "Required output or provenance artifacts are missing."
+        },
+        {
+          "score": 3,
+          "description": "Required artifacts are present and traceable with minor documentation gaps."
+        },
+        {
+          "score": 4,
+          "description": "Required artifacts, provenance, and recovery evidence are complete and internally consistent."
+        }
+      ]
+    }
+  ],
+  "thresholds": {
+    "minimum_cases": 8,
+    "minimum_mean_score": 3.0,
+    "max_critical_failures": 0
+  }
+}

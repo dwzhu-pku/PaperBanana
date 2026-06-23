@@ -1,0 +1,51 @@
+ax_trusted=true
+reference_panel_present=true
+reference_panel.role=AXGroup
+reference_panel.description=Reference examples
+reference_panel.value=
+reference_panel.enabled=1
+element.depth=0
+element.role=AXGroup
+element.identifier=reference-examples-panel
+element.description=Reference examples
+element.title=
+element.value=
+element.help=
+element.enabled=1
+--
+element.depth=1
+element.role=AXStaticText
+element.identifier=
+element.description=
+element.title=
+element.value=Reference Examples
+element.help=
+element.enabled=1
+--
+element.depth=1
+element.role=AXStaticText
+element.identifier=
+element.description=
+element.title=
+element.value=Optional manual PaperBananaBench diagram guidance.
+element.help=
+element.enabled=1
+--
+element.depth=1
+element.role=AXStaticText
+element.identifier=
+element.description=
+element.title=
+element.value=Reference File Needs Review
+element.help=
+element.enabled=1
+--
+element.depth=1
+element.role=AXStaticText
+element.identifier=
+element.description=
+element.title=
+element.value=The data couldn’t be read because it isn’t in the correct format.
+element.help=
+element.enabled=
+--

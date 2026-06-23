@@ -1,0 +1,21 @@
+{
+  "schema_version": "wp108.no_live_report.v1",
+  "manifest_id": "paperbanana-m1-no-live-contract",
+  "evaluation_mode": "fixture",
+  "provider_scoring_used": false,
+  "publication_quality_claimed": false,
+  "case_results": [
+    {
+      "case_id": "diagram-ref-1-contract",
+      "status": "not_scored",
+      "scores": {},
+      "critical_failures": []
+    }
+  ],
+  "summary": {
+    "cases_total": 1,
+    "mean_score": null,
+    "threshold_passed": false,
+    "claim_boundary": "Fixture validates contract shape only; no quality threshold was evaluated."
+  }
+}

@@ -1,0 +1,24 @@
+paperbanana_running=true
+pid=23294
+ax_trusted=true
+visited=328
+matches=19
+depth=3 role=AXStaticText subrole= id= title= desc= value=Native Run Cockpit help= enabled=1
+depth=3 role=AXButton subrole= id=list.bullet.rectangle title= desc=Run Ledger value= help=Run Ledger enabled=1
+depth=3 role=AXRadioGroup subrole= id= title= desc=Run scope, Run scope value=<AXUIElement 0x78fdaefa50> {pid=23294} help=Showing Needs Attention enabled=1
+depth=4 role=AXButton subrole= id= title= desc=Run Ledger value= help= enabled=1
+depth=4 role=AXRadioButton subrole=AXSegment id= title= desc=Needs Attention value=1 help= enabled=1
+depth=4 role=AXMenuItem subrole= id=_logOutRequested: title=Log Out jeff… desc= value= help= enabled=1
+depth=4 role=AXMenuItem subrole= id=_logOutNowRequested: title=Log Out jeff desc= value= help= enabled=1
+depth=5 role=AXGroup subrole= id=run-details-table title= desc=Run list value= help= enabled=1
+depth=5 role=AXUnknown subrole= id=run-details-table-selection-summary title= desc=Selected run value= help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc=ledger_raw_recovered, Failed value=Workflow native_refine. Stage failed. Model Nano Banana 2. Resolution 4K. Aspect ratio 16:9. Elapsed 0s. 1 output files. 1 recoverable files. Provider Nano Banana 2. Needs attention help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc=ledger_missing_artifact, Failed value=Workflow native_generate. Stage failed. Model Nano Banana 2. Resolution 4K. Aspect ratio 16:9. Elapsed 0s. 1 output files. 0 recoverable files. Provider Nano Banana 2. Needs attention help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc=native_refine_raw, Failed value=Workflow native_refine. Stage failed. Model Codex fallback. Resolution 4K. Aspect ratio 16:9. Elapsed 3s. 1 output files. 2 recoverable files. Provider No provider call linked. Needs attention help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc=native_generate_timeout, Timed out value=Workflow native_generate. Stage timeout. Model Codex fallback. Resolution 4K. Aspect ratio 16:9. Elapsed 5m 0s. 1 output files. 0 recoverable files. Provider Codex fallback. Needs attention help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc=native_refine_cancelled, Cancelled value=Workflow native_refine. Stage cancelled. Model Codex fallback. Resolution 4K. Aspect ratio 16:9. Elapsed 12s. 1 output files. 0 recoverable files. Provider Codex fallback. Needs attention help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc= value=Needs Attention help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc= value=Run Assistant help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc= value=Durable run folder, request, event log, outputs, and raw recovery payloads. help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc= value=Native event log milestones for this run. help= enabled=1
+depth=6 role=AXStaticText subrole= id= title= desc= value=Raw recovered help= enabled=1
