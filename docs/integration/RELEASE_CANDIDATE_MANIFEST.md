@@ -48,6 +48,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-108 offline evidence-chain head | `64ac83f9de9112804857a53aa595ae2c6b8b4d8c` |
 | Latest WP-108 checked-in example contract head | `9127c20bb5c8dd50f5c2028ab12ccac50d3c65e5` |
 | Latest WP-107 no-live hosted-readiness smoke head | `4f5d7edfe1e7d937ae8cce3017c649f481883f91` |
+| Latest WP-107 live HF Space state check head | `0edd97b7da2b25c439690ddb124ae8d11d0eafea` |
 | Latest WP-208 Foundation Models disposition head | `69e9159ca9078952fc24609ded25995e73fe7c1a` |
 | Latest post-WP-208 full-gate/install head | `1fa6cbe90e6f585c33bad323febd80fbade6d340` |
 | Latest post-Codex-env full-gate/install head | `8ce7f3a2cca30d2572144d8edd5e7b52490938e4` |
@@ -166,6 +167,16 @@ product, native, workflow, or runtime paths change after the latest full local
 native/Python/Xcode gate without a new full-gate record. This is reviewer
 readiness and evidence-governance proof only, not real final-candidate scoring
 or a publication-quality claim.
+`EV-20260623-085` records a live, non-mutating Hugging Face hosted-state check
+on `0edd97b7da2b`: the public HF paper page, PaperBananaBench dataset page,
+Space page, and Space API returned HTTP 200, but the `dwzhu/PaperBanana` Space
+API reported `runtime.stage=PAUSED` at Space repo SHA
+`587f33ecd98649a4588ff22c1bc3a865f6d8e3b4`; the app subdomain and `/config`
+returned HTTP 503, and the Space page rendered `This Space has been paused.`
+No generation request, provider call, credentials, browser automation, restart,
+deployment mutation, log access, or rollback was performed. This is current
+hosted-state evidence and an external blocker diagnosis, not hosted functional
+generation proof.
 `EV-20260622-065` remains historical
 Release install provenance for the earlier
 `6e4ee0f51e6bbdcb956503f393648a60c95cb4f9` branch head and binary SHA-256
@@ -459,6 +470,7 @@ channel approval, upgrade proof, or rollback proof.
 | WP-108 offline evidence chain | `EV-20260622-063` | Synthetic native artifacts now flow through run-map generation, artifact-completeness reporting, packet binding, completed synthetic human-review validation, and quality decision validation while preserving claim boundaries and excluding provider payload sentinel text; no real reviewer scores or quality claim |
 | WP-108 checked-in example bundle | `EV-20260623-084` | Checked-in fixture, packet, completed human-review report, and decision examples are mutually validator-clean without provider calls, and the release manifest now has an evidence-drift guard for product/runtime changes after the latest full local gate; no real reviewer scores or quality claim |
 | WP-107 no-live hosted-readiness smoke | `EV-20260623-083` | Current branch head refreshed the localhost share=False hosted-readiness smoke: fake startup key sentinels were absent, no key-entry UI returned, two clients called a non-provider endpoint, no live provider was used, and cleanup closed the port; not a Hugging Face Space deployment proof |
+| WP-107 live HF hosted-state check | `EV-20260623-085` | Public HF artifact pages and Space metadata are reachable, but the Space runtime is paused and the app subdomain plus `/config` return HTTP 503; hosted functional generation, logs, rollback, and two-session proof remain blocked by external hosted state |
 | Native artifact secret-sentinel scan | `EV-20260622-044`, `EV-20260622-068`, `EV-20260623-078` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; current-head provider-free secret-sentinel checks passed again in the 71-test `EV-20260623-078` slice; live-provider and hosted scans remain open |
 | Temporary distinct-bundle rollback preflight | `EV-20260622-045`, `EV-20260622-058`, `EV-20260622-067`, `EV-20260623-078` | The latest run used a prior app from `1fa6cbe90e6f` and the current evidence head `6314142bab27`; it upgraded in a temporary install path, restored to the prior hash, and preserved synthetic Application Support/results fixtures |
 | Runtime user-data migration slice | `EV-20260622-048`, `EV-20260622-058`, `EV-20260622-067`, `EV-20260623-078` | Isolated Application Support override, fake sentinel secret-store permissions, legacy run-store schema migration, stale-run recovery, Run Details / Provider Ledger / Artifact Library rediscovery, and synthetic artifact byte preservation passed without live providers; the selected runtime migration/secret-store/RunStore migration slice was rerun on current evidence head `6314142bab27`, providing bounded runtime user-data migration proof for synthetic fixtures only |
@@ -479,7 +491,7 @@ channel approval, upgrade proof, or rollback proof.
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
 | `local/<model>` and `ollama/<model>` text routes | Documented and covered by mocked route/docs tests | `EV-20260622-007` and full Python suites | Optional real local/Ollama endpoint smoke remains open if promoted beyond mocked support |
 | Foundation Models | Unsupported for release | `D-05`, `D-13`, provider-support docs, and `EV-20260622-054` | Release-visible image model choices cannot route to Foundation Models, and the auxiliary assistant defaults to local fallback; do not promote as functional without implementation and tests |
-| Hosted Gradio/Space generation | Not release-verified | Credential/plot policy evidence exists for local code paths; sanitized localhost served credential smoke in `EV-20260622-040`; reusable no-live localhost hosted-readiness harness in `EV-20260622-061`; current-head no-live hosted-readiness refresh in `EV-20260623-083` | Real Hugging Face Space two-session proof, hosted negative-path validation, deployed SHA/logs, provider-backed hosted generation, hosted rollback, and cross-session generation-artifact isolation remain open |
+| Hosted Gradio/Space generation | Blocked by paused public Space; not release-verified | Credential/plot policy evidence exists for local code paths; sanitized localhost served credential smoke in `EV-20260622-040`; reusable no-live localhost hosted-readiness harness in `EV-20260622-061`; current-head no-live hosted-readiness refresh in `EV-20260623-083`; live HF hosted-state check in `EV-20260623-085` found `runtime.stage=PAUSED` and app endpoints returning HTTP 503 | Real Hugging Face Space two-session proof, hosted negative-path validation, deployed candidate SHA/logs, provider-backed hosted generation, hosted rollback, and cross-session generation-artifact isolation remain open until the Space is restarted or deployment access is provided |
 
 Per `D-05`, only routes with final smoke evidence can be described as supported
 release routes. Routes without final smoke remain experimental, mocked, local
@@ -561,7 +573,10 @@ state is verified.
   localhost-only credential/session smoke evidence, `EV-20260622-061` adds the
   reusable no-live hosted-readiness harness, and `EV-20260623-083` refreshes the
   localhost `share=False` no-live hosted-readiness smoke on current branch head;
-  none of these is a Hugging Face Space deployment proof.
+  none of these is a Hugging Face Space deployment proof. `EV-20260623-085`
+  verifies the current public HF Space state and finds the Space paused, with
+  app endpoints returning HTTP 503; hosted functional validation remains blocked
+  until the Space is restarted or deployment access is provided.
 - True install/upgrade/rollback proof and release manifest consistency on the
   final frozen release SHA. Current full local native/Python/Xcode gate evidence
   is covered by `EV-20260623-069`, current branch-head Release install and
