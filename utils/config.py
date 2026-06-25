@@ -22,6 +22,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
+from utils.legacy_generation_options import is_plot_task
+
 
 @dataclass
 class ExpConfig:
@@ -41,6 +43,7 @@ class ExpConfig:
     timestamp: str | None = None
 
     def __post_init__(self):
+        self.task_name = "plot" if is_plot_task(self.task_name) else "diagram"
         os.environ["TZ"] = "America/Los_Angeles"  # set the timezone as you like
         if hasattr(time, "tzset"):
             time.tzset()  # Only available on Unix; no-op guard for Windows

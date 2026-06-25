@@ -95,6 +95,8 @@ You can also run the Gradio app locally:
 python app.py
 ```
 
+The Gradio **Figure Size** setting maps `1-3cm` and `4-6cm` to `1k`, `7-9cm` and `10-13cm` to `2k`, and `14-17cm` to `4k` for Gemini and OpenRouter image-generation calls. OpenAI `gpt-image` requests continue to use their existing fixed-size API path.
+
 #### Option 2: Interactive Demo (Streamlit)
 The easiest way to launch PaperBanana is via the interactive Streamlit demo:
 ```bash
@@ -128,6 +130,14 @@ python main.py \
   --split_name "test" \
   --exp_mode "dev_full" \
   --retrieval_setting "auto"
+
+# Legacy matplotlib plot-code generation with no few-shot retrieval
+python main.py \
+  --dataset_name "PaperBananaBench" \
+  --task_name "plot" \
+  --split_name "test" \
+  --exp_mode "vanilla" \
+  --retrieval_setting "none"
 ```
 
 **Available Options:**
@@ -310,5 +320,3 @@ If you find this repo helpful, please cite our paper as follows:
 This is not an officially supported Google product. This project is not eligible for the [Google Open Source Software Vulnerability Rewards Program](https://bughunters.google.com/open-source-security).
 
 Our goal is simply to benefit the community, so currently we have no plans to use it for commercial purposes. The core methodology was developed during my internship at Google, and patents have been filed for these specific workflows by Google. While this doesn't impact open-source research efforts, it restricts third-party commercial applications using similar logic.
-
-
