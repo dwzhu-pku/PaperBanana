@@ -71,6 +71,11 @@ async def main():
         help="retrieval setting for planner agent (default: auto)",
     )
     parser.add_argument(
+        "--planner-metaphor",
+        action="store_true",
+        help="enable diagram-only Planner visual-metaphor discovery before detailed description output",
+    )
+    parser.add_argument(
         "--max_critic_rounds",
         type=int,
         default=3,
@@ -96,6 +101,7 @@ async def main():
         split_name=args.split_name,
         exp_mode=args.exp_mode,
         retrieval_setting=args.retrieval_setting,
+        planner_metaphor=args.planner_metaphor,
         max_critic_rounds=args.max_critic_rounds,
         main_model_name=args.main_model_name,
         image_gen_model_name=args.image_gen_model_name,
