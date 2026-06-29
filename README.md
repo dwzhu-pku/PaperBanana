@@ -55,7 +55,7 @@ cd PaperBanana
 ### Step2: Configuration
 PaperBanana supports configuring API keys from a YAML configuration file or via environment variables. 
 
-We recommend duplicate the `configs/model_config.template.yaml` file into `configs/model_config.yaml` to externalize all user configurations. This file is ignored by git to keep your api keys and configurations secret. In `model_config.yaml`, remember to fill in the two model names (`defaults.main_model_name` and `defaults.image_gen_model_name`) and set **at least one** API key under `api_keys`—for example only `google_api_key` (Gemini), or only `openrouter_api_key` (OpenRouter). **You do not need both; either one is enough.** If both are configured, OpenRouter is preferred for routing when available.
+We recommend duplicating the `configs/model_config.template.yaml` file into `configs/model_config.yaml` to externalize all user configurations. This file is ignored by git to keep your API keys and configurations secret. In `model_config.yaml`, remember to fill in the two model names (`defaults.main_model_name` and `defaults.image_gen_model_name`) and set **at least one** API key under `api_keys`—for example only `google_api_key` (Gemini), or only `openrouter_api_key` (OpenRouter). **You do not need both; either one is enough.** If both are configured, OpenRouter is preferred for routing when available.
 
 Note that if you need to generate many candidates simultaneously, you will require an API key that supports high concurrency.
 
@@ -71,7 +71,7 @@ First download [PaperBananaBench](https://huggingface.co/datasets/dwzhu/PaperBan
     source .venv/bin/activate  # or .venv\Scripts\activate on Windows
     ```
 
-3. Install python 3.12
+3. Install Python 3.12
     ```bash
     uv python install 3.12
     ```
