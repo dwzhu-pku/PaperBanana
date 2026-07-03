@@ -127,6 +127,14 @@ local gate at `a251dda11fa2`. `EV-20260623-096` records that current head
 `PAPERBANANA_EXPECTED_XCODE_BUILD='Build version 27A5209h'` after local global
 helper override support. It is current-beta override aggregate-gate evidence,
 not unqualified `27A5194q` release-baseline acceptance.
+`EV-20260703-099` records the current-upstream merge-hygiene refresh after
+upstream merged PR #69 and PR #71: PR #75 now targets upstream base
+`836455537e863b5a2f40dace487a782c0bc5ef94`, head
+`c233aecb7ef84201d4b52772a7932fde6fe70c74`, fork `Native Structural Checks`
+run `28682951149`, fork `Python Tests` run `28682951179`, and upstream PR #75
+reported `MERGEABLE` / `CLEAN` with an empty upstream PR check rollup. This is
+no-live mergeability/provenance evidence and does not replace the latest full
+local gate at `19456ee`.
 
 - `EV-20260622-006`: original native aggregate gate at `e0cea781ca07`.
 - `EV-20260622-011`: portable CI and native gate scripts at `26adc4670944`.

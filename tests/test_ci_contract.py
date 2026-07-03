@@ -59,6 +59,21 @@ def test_ci_policy_documents_manual_xcode27_gate_and_no_secret_pr_policy():
         assert phrase in text
 
 
+def test_native_source_control_contract_checks_diff_hygiene_and_merge_markers():
+    text = _read("script/check_native_source_control_contract.sh")
+
+    required_phrases = [
+        "git diff --check",
+        "git diff --cached --check",
+        "merge_marker_hits",
+        "git grep -n -I -E '^(<<<<<<<|=======|>>>>>>>)'",
+        "unresolved merge markers",
+    ]
+
+    for phrase in required_phrases:
+        assert phrase in text
+
+
 def test_xcode_contract_uses_same_expected_build_override_as_baseline_guard():
     baseline_guard = _read("script/xcode27_baseline_guard.sh")
     xcode_contract = _read("script/check_native_xcode_contract.sh")

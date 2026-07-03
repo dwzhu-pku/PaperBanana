@@ -188,4 +188,21 @@ if (( ${#unstaged_durable_paths[@]} > 0 )); then
   exit 1
 fi
 
+if ! git diff --check -- "${durable_roots[@]}"; then
+  fail "native Xcode support files contain whitespace errors in unstaged changes."
+fi
+
+if ! git diff --cached --check -- "${durable_roots[@]}"; then
+  fail "native Xcode support files contain whitespace errors in staged changes."
+fi
+
+merge_marker_hits="$(
+  git grep -n -I -E '^(<<<<<<<|=======|>>>>>>>)' -- "${durable_roots[@]}" || true
+)"
+if [[ -n "$merge_marker_hits" ]]; then
+  printf 'ERROR: native Xcode support files contain unresolved merge markers:\n' >&2
+  printf '%s\n' "$merge_marker_hits" >&2
+  exit 1
+fi
+
 echo "PaperBanana native source-control contract passed."
