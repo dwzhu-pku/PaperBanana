@@ -1,30 +1,34 @@
 # WP-007 Manual VoiceOver Artifact Contract
 
-Status: prepared artifact contract, not traversal evidence
+Status: archived optional artifact contract, not a release gate
 
-This contract defines the durable files required for the remaining WP-007/T-021
-manual keyboard and VoiceOver speech-output pass. It validates the shape of the
-manual packet; it cannot validate that VoiceOver actually spoke the recorded words.
+This contract defines optional durable files for a future manual keyboard and
+VoiceOver speech-output pass. It validates the shape of a manual packet; it
+cannot validate that VoiceOver actually spoke the recorded words.
 
-A completed run must be performed and reviewed by a human on the candidate app.
-Automated checks may reject missing, malformed, placeholder, or contradictory
-artifacts. Automated checks must not mark WP-007 complete.
+As of `EV-20260703-104`, completed VoiceOver speech-output traversal is no
+longer required as a native-first release gate. If a future reviewer elects to
+perform this optional pass, it must still be reviewed by a human on the
+candidate app. Automated checks may reject missing, malformed, placeholder, or
+contradictory artifacts, but automated checks must not claim VoiceOver
+validation or screen-reader-complete support.
 
 ## Scope Boundary
 
-This contract and its templates do not close WP-007. They do not launch the app,
-enable VoiceOver, start live generation, call a provider, restart Hugging Face,
-score images, approve release, or prove upstream acceptance.
+This contract and its templates do not close or block WP-007. They do not
+launch the app, enable VoiceOver, start live generation, call a provider,
+restart Hugging Face, score images, approve release, or prove upstream
+acceptance.
 
 The templates are safe to keep in source control because they contain only
 synthetic prompts and placeholders. A completed evidence packet must not contain
 provider secrets, auth headers, private dataset paths, private manuscript text,
 or raw provider payloads.
 
-## Required Files
+## Optional Packet Files
 
-A completed manual traversal packet must include these files in one artifact
-directory under `docs/integration/evidence/screenshots/` or another
+An optional completed manual traversal packet should include these files in one
+artifact directory under `docs/integration/evidence/screenshots/` or another
 SHA-linked evidence directory recorded in the evidence summary.
 
 | File | Required role |
@@ -110,9 +114,11 @@ packet should quote or transcribe the material VoiceOver output heard during
 the pass, then separately record whether that output is understandable and
 complete enough for the route.
 
-WP-007/T-021 remains open if any required route is `fail` or `not_run`. A route
-marked `pass_with_limitation` requires an explicit release-owner acceptance in
-`defects.md`; otherwise WP-007/T-021 remains open.
+An optional packet is not acceptable as VoiceOver review evidence if any
+required route is `fail` or `not_run`. A route marked `pass_with_limitation`
+requires an explicit release-owner acceptance in `defects.md`; otherwise that
+optional packet remains incomplete. Per `EV-20260703-104`, this optional packet
+state does not block WP-007 release-candidate handoff.
 
 The completed packet must be tied to:
 

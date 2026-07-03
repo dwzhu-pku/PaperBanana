@@ -50,15 +50,17 @@ def test_wp007_contract_preserves_manual_claim_boundary_and_required_files():
     combined = f"{contract}\n{readme}"
 
     required_phrases = [
-        "Status: prepared artifact contract, not traversal evidence",
+        "Status: archived optional artifact contract, not a release gate",
+        "EV-20260703-104",
+        "longer required as a native-first release gate",
         "cannot validate that VoiceOver actually spoke the recorded words",
-        "Automated checks must not mark WP-007 complete",
-        "do not close WP-007",
-        "do not launch the app",
+        "must not claim VoiceOver",
+        "do not close or block WP-007",
+        "launch the app",
         "start live generation",
         "call a provider",
         "same physical display as Codex",
-        "completed run must be reviewed by a human",
+        "future reviewer explicitly chooses to run the optional manual pass",
         "voiceover-speech-output.tsv",
         "keyboard-traversal.tsv",
         "environment.md",
@@ -73,7 +75,7 @@ def test_wp007_contract_preserves_manual_claim_boundary_and_required_files():
         "provider secrets",
         "auth headers",
         "raw provider payloads",
-        "WP-007/T-021 remains open",
+        "must not be used to claim VoiceOver validation",
     ]
 
     for phrase in required_phrases:

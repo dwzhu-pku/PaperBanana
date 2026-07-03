@@ -175,6 +175,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "Latest WP-007 manual VoiceOver artifact contract evidence commit",
         "Latest WP-007 completed-packet validator evidence commit",
         "Latest WP-007 completed-packet validator hardening evidence head",
+        "Latest WP-007 VoiceOver traversal de-scope decision head",
         "Latest WP-108 no-live artifact runner head",
         "Latest WP-108 quality decision head",
         "Latest WP-108 offline evidence-chain head",
@@ -441,7 +442,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "Command-Option-R",
         "Command-Option-P",
         "No-spend dry run` toggle",
-        "preflight Cancel/Start AX traversal",
+        "preflight sheet opened with Cancel/Start",
         "run-details-table",
         "provider-run-ledger-table",
         "Log",
@@ -466,12 +467,9 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "Full-app Increased Text Size",
         "broader screenshot-based full-app adaptive signoff remains open",
         "current-head source-level accessibility/keyboard contracts",
-        "manual VoiceOver traversal packet",
-        "checked completed-artifact templates",
-        "completed-packet structural validator",
-        "hardened no-live/reference-route validation",
-        "not completed full manual VoiceOver traversal",
-        "GUI AX/window capture was blocked",
+        "optional archived VoiceOver packet/validator tooling",
+        "no longer blocked on completed VoiceOver traversal",
+        "VoiceOver-validated or screen-reader-complete",
         "no-live artifact-completeness runner",
         "no image scoring or quality claim",
         "WP-208 Foundation Models disposition",
@@ -518,7 +516,10 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "Rollback And Upgrade Status",
         "Not yet proven",
         "Known Open Gates",
-        "Full manual keyboard navigation and VoiceOver traversal",
+        "WP-007 VoiceOver traversal is de-scoped as a release blocker",
+        "EV-20260703-104",
+        "required release gates",
+        "Do not claim VoiceOver validation",
         "EV-20260623-090",
         "Approved live provider/fallback native E2E",
         "Hosted two-session proof",
@@ -639,7 +640,10 @@ def test_wp007_manual_voiceover_packet_preserves_open_gate_boundary():
     assert "EV-20260623-094" in RELEASE_MANIFEST
     assert "EV-20260623-095" in RELEASE_MANIFEST
     assert "EV-20260623-096" in RELEASE_MANIFEST
-    assert "not completed full manual VoiceOver traversal" in RELEASE_MANIFEST
+    assert "EV-20260703-104" in RELEASE_MANIFEST
+    assert "WP-007 VoiceOver traversal is de-scoped as a release blocker" in RELEASE_MANIFEST
+    assert "required release gates" in RELEASE_MANIFEST
+    assert "Do not claim VoiceOver validation" in RELEASE_MANIFEST
     canonical_header = (
         "route_id\tsurface\tstep\tcontrol_or_row\texpected_minimum\t"
         "actual_spoken_output\tpass_fail\tnotes"

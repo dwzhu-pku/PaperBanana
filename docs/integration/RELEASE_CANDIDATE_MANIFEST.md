@@ -60,6 +60,7 @@ been validated and leaves every unvalidated release claim open.
 | Latest WP-007 manual VoiceOver artifact contract evidence commit | `dac44760c0ecec03e588b8984362f1e29a68520e` |
 | Latest WP-007 completed-packet validator evidence commit | `2e1ab557ba5a876f57b1dcd364931aa9eb4b540f` |
 | Latest WP-007 completed-packet validator hardening evidence head | `0888cbe4b3b8d2d14c782634af1ed2df1c087067` |
+| Latest WP-007 VoiceOver traversal de-scope decision head | `63932c2ffe207a00cc3488ff6873227ae08e592e` |
 | Latest WP-108 no-live artifact runner head | `dc8d8e5f5149eb8099a9ecb45628a74dcd610599` |
 | Latest WP-108 human-review packet head | `86f9bb16fa524cc638a39d5c6c7e6d64a5b279c4` |
 | Latest WP-108 quality decision head | `b6a8a2a51d7ffd7ec8f348ecf892467d7cf7abcd` |
@@ -614,7 +615,7 @@ channel approval, upgrade proof, or rollback proof.
 | Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070`, `EV-20260623-072` | Latest product-source Release build/install and installed-app artifact provenance passed with binary SHA-256 `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`; this does not replace full-gate evidence or rollback proof |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070`, `EV-20260623-082`, `EV-20260623-093`, `EV-20260623-094`, `EV-20260623-095`, `EV-20260623-096`, `EV-20260703-099`, `EV-20260703-101` | Passed with limitation; latest recorded fork quick checks are for current evidence head `507d9bd9336` with Native Structural Checks run `28683352957` and Python Tests run `28683353016`; upstream PR #75 is based on `836455537e863b5a2f40dace487a782c0bc5ef94`, reports `mergeable=MERGEABLE` / `mergeStateStatus=CLEAN`, and still has an empty upstream PR check rollup. `EV-20260623-094` records the current host Xcode beta drift (`27A5209h` installed versus `27A5194q` pinned), `EV-20260623-095` records repo-level current-Xcode compatibility with 167 Swift tests and 147 Python tests while the aggregate gate is blocked at the global proof-tool layer, `EV-20260623-096` records current-Xcode override aggregate-gate success after default-preserving global helper override support, `EV-20260703-099` records current-upstream merge hygiene, prior fork Native Structural Checks run `28682951149`, prior fork Python Tests run `28682951179`, and a content-identical ancestry merge from `e903b4b` to `c233aec`; the source-control contract now includes `git diff --check`, `git diff --cached --check`, and a tracked-file merge-marker scan. `EV-20260703-101` records current evidence-head fork CI and confirms the drift from latest full-gated product source `d308109b28fc` to `507d9bd9336` is limited to evidence, release-manifest, full-gate evidence, and docs-contract files. `EV-20260623-069` records the self-hosted workflow dispatch limitation, and `EV-20260623-081` remains the latest strict-baseline full local native/Python/Xcode gate |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
-| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079`, `EV-20260623-090`, `EV-20260623-091`, `EV-20260623-092`, `EV-20260623-093` | Partial; includes current-head source-level accessibility/keyboard contracts, source-level Settings accessibility/adaptive regression coverage, Reference Examples missing/malformed/empty state AX text, recovery-heavy Run Details / Run Ledger AX rows and controls, current-head Prompt Studio keyboard/preflight AX traversal, current-head Settings Workspace AX fallback proof, a manual VoiceOver traversal packet, checked completed-artifact templates, a completed-packet structural validator, and hardened no-live/reference-route validation for future completed packets, but not completed full manual VoiceOver traversal |
+| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079`, `EV-20260623-090`, `EV-20260623-091`, `EV-20260623-092`, `EV-20260623-093`, `EV-20260703-104` | Partial but no longer blocked on completed VoiceOver traversal; includes current-head source-level accessibility/keyboard contracts, source-level Settings accessibility/adaptive regression coverage, Reference Examples missing/malformed/empty state AX text, recovery-heavy Run Details / Run Ledger AX rows and controls, current-head Prompt Studio keyboard/preflight AX traversal, current-head Settings Workspace AX fallback proof, and optional archived VoiceOver packet/validator tooling. The release-candidate claim boundary explicitly excludes VoiceOver-validated or screen-reader-complete support unless a future dedicated review is performed. |
 | Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072`, `EV-20260623-073`, `EV-20260623-074`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is recorded for Settings, Light/Dark Mode Increased Text Size at the minimum main-window size is recorded for Prompt Studio, Artifact Library, Run Details, and Run Ledger after sidebar selection polish, the Prompt Studio no-spend preflight sheet Light/Dark Increased Text Size slice is recorded, Reference Examples missing/malformed/empty Light/Dark Increased Text Size edge states are recorded, Run Details / Run Ledger recovery/failure states are covered by EV-076, the Prompt Studio keyboard/AX preflight slice adds a current-head Dark Mode sheet screenshot, and EV-079 adds current-head provider-free installed-app screenshots for Prompt Studio, Artifact Library, Run Details, Run Ledger, and Settings Workspace; broader screenshot-based full-app adaptive signoff remains open |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
 | WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
@@ -675,40 +676,15 @@ state is verified.
 
 ## Known Open Gates
 
-- Full manual keyboard navigation and VoiceOver traversal across Settings,
-  reference rows, Artifact Library disabled states, preflight sheets, and table
-  workflows. `EV-20260622-050` covers source-level Settings
-  accessibility/adaptive contracts, and `EV-20260622-053` confirms the current
-  head still passes source-level accessibility/keyboard and Settings
-  accessibility/adaptive contracts. `EV-20260622-053` also records that GUI AX/window capture was blocked
-  in the current desktop session, so it is not a manual traversal substitute.
-  `EV-20260623-076` adds source/live AX table recovery coverage for Run Details
-  and Run Ledger recovery-heavy rows, selected-row summaries, status text, and
-  recovery controls. `EV-20260623-077` adds installed-app Prompt Studio
-  keyboard focus and preflight Cancel/Start AX traversal on the current head.
-  `EV-20260623-079` adds provider-free installed-app visual fallback coverage
-  for Prompt Studio, Artifact Library, Run Details, Run Ledger, and Settings
-  Workspace, plus Settings Workspace AX proof, while recording that generic AX
-  tree dumping did not enumerate SwiftUI split-view detail identifiers in this
-  session.
-  `EV-20260623-090` defines the remaining manual VoiceOver packet with final-SHA
-  provenance, installed app hash capture, same-display/no-live preconditions,
-  required artifact files, pass criteria, stop conditions, route checklist, and
-  speech-output capture template.
-  `EV-20260623-091` adds a separate artifact contract and checked templates for
-  `voiceover-speech-output.tsv`, `keyboard-traversal.tsv`, `environment.md`,
-  `defects.md`, and `cleanup.md`, with required `VO-01` through `VO-16`
-  coverage and placeholder-only template rows.
-  `EV-20260623-092` adds a completed-packet validator so future manual evidence
-  can be rejected for missing routes, placeholders, invalid dispositions,
-  missing environment/cleanup records, or obvious secret patterns before human
-  release review.
-  `EV-20260623-093` hardens that validator so future manual evidence is also
-  rejected for contradictory no-live/same-display fields, mismatched route
-  dispositions, missing accepted-limitation records, missing Reference Examples
-  `VO-04`/`VO-05` coverage, or nested text-sidecar secret markers.
-  These are still not completed manual VoiceOver speech-output traversal
-  substitutes.
+- WP-007 VoiceOver traversal is de-scoped as a release blocker by
+  `EV-20260703-104`. The candidate keeps existing source-level
+  accessibility/keyboard contracts, Settings accessibility/adaptive contracts,
+  Reference Examples edge-state AX text, Run Details / Run Ledger recovery AX
+  coverage, Prompt Studio keyboard/preflight AX traversal, Settings Workspace
+  AX fallback proof, and current visual/adaptive evidence. `EV-20260623-090`
+  through `EV-20260623-093` remain archived optional/future-review tooling, not
+  required release gates. Do not claim VoiceOver validation or
+  screen-reader-complete support without a future explicit review.
 - Dark Settings Increased Text Size visible content is covered by
   `EV-20260622-041`; source-level lower Workspace content regression protection
   is covered by `EV-20260622-066`; Light Mode Settings Increased Text Size and
