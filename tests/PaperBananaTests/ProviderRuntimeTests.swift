@@ -700,9 +700,14 @@ final class ProviderRuntimeTests: XCTestCase {
     #if PAPERBANANA_ENABLE_REAL_CODEX_E2E_TESTS
     func testCodexFallbackProviderClientExecutesRealCodexCLIWhenExplicitlyEnabled() async throws {
         let environment = ProcessInfo.processInfo.environment
-        guard environment["PAPERBANANA_REAL_CODEX_E2E"] == "1" else {
+        #if PAPERBANANA_FORCE_REAL_CODEX_E2E
+        let liveCodexE2EEnabled = true
+        #else
+        let liveCodexE2EEnabled = environment["PAPERBANANA_REAL_CODEX_E2E"] == "1"
+        #endif
+        guard liveCodexE2EEnabled else {
             throw XCTSkip(
-                "Set PAPERBANANA_REAL_CODEX_E2E=1 and PAPERBANANA_REAL_CODEX_BIN to run the live Codex CLI fallback E2E gate."
+                "Set PAPERBANANA_REAL_CODEX_E2E=1 and PAPERBANANA_REAL_CODEX_BIN, or compile with PAPERBANANA_FORCE_REAL_CODEX_E2E, to run the live Codex CLI fallback E2E gate."
             )
         }
 
@@ -715,7 +720,12 @@ final class ProviderRuntimeTests: XCTestCase {
             Double(environment["PAPERBANANA_REAL_CODEX_TIMEOUT_SECONDS"] ?? "") ?? 900
         )
         let repoRoot = try Self.makeTemporaryRepoRoot()
+        try Self.initializeGitRepository(at: repoRoot)
+        #if PAPERBANANA_FORCE_REAL_CODEX_E2E
+        let keepArtifacts = true
+        #else
         let keepArtifacts = environment["PAPERBANANA_REAL_CODEX_KEEP_ARTIFACTS"] == "1"
+        #endif
         defer {
             if keepArtifacts {
                 print("PAPERBANANA_REAL_CODEX_E2E_ARTIFACTS=\(repoRoot.path)")
@@ -867,6 +877,27 @@ final class ProviderRuntimeTests: XCTestCase {
             .appendingPathComponent("PaperBananaProviderRuntimeTests-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
         return url
+    }
+
+    private static func initializeGitRepository(at url: URL) throws {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/git")
+        process.arguments = ["init", "-q"]
+        process.currentDirectoryURL = url
+        let output = Pipe()
+        process.standardOutput = output
+        process.standardError = output
+        try process.run()
+        process.waitUntilExit()
+        guard process.terminationStatus == 0 else {
+            let data = output.fileHandleForReading.readDataToEndOfFile()
+            let message = String(data: data, encoding: .utf8) ?? "git init failed"
+            throw NSError(
+                domain: "PaperBananaProviderRuntimeTests",
+                code: Int(process.terminationStatus),
+                userInfo: [NSLocalizedDescriptionKey: message]
+            )
+        }
     }
 
     private static func settings(

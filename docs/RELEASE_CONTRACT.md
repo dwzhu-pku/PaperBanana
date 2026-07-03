@@ -11,21 +11,33 @@ external maintainer, provider, CI, or security decisions are already resolved.
 
 ## Milestones
 
-### M1 - Native-First Local Release Candidate
+### M1 - Core Native Initial Release
 
-M1 is a native-first local release candidate for Apple Silicon macOS users, with
-legacy Gradio, Streamlit, and CLI surfaces retained as compatibility paths.
+M1 is a native local core-feature release boundary for Apple Silicon macOS users.
+Legacy Gradio, Streamlit, hosted, and CLI surfaces remain compatibility or
+follow-up surfaces unless separately validated.
 
-M1 requires:
+M1-core requires:
 
-- the native macOS app to build, test, install, and pass visual/accessibility
-  review on the final candidate SHA;
-- credential-isolated legacy compatibility paths;
-- hosted plot-code execution disabled unless a real sandbox is approved;
-- supported provider routes backed by final smoke evidence;
-- release documentation that distinguishes native local, legacy local, and
-  hosted behavior;
-- no open P0 security or provenance risk.
+- the native macOS app to build, install, and preserve SHA-linked local evidence
+  on the final candidate head;
+- Prompt Studio core generation setup, manual reference examples, no-spend
+  provenance, Artifact Library, Run Details, and Provider Ledger evidence;
+- exactly one approved live Codex fallback smoke with non-private fixtures,
+  generated artifacts, coherent provider metadata, and a passing secret-sentinel
+  scan;
+- final local rollback/install proof using a retained prior app artifact, clearly
+  labeled as local preflight if the prior artifact is only the locally installed
+  `/Applications/PaperBanana.app`;
+- release documentation that distinguishes the native local core-feature
+  boundary from deferred hosted, legacy, quality, notarization, accessibility,
+  and upstream-acceptance claims;
+- no open P0 security or provenance risk inside the native local core boundary.
+
+Accessibility gates are excluded from this initial local boundary and remain
+non-blocking follow-up evidence. This includes VoiceOver, keyboard traversal
+signoff, AX proof, Increased Text, Increased Contrast, Reduce Motion, Reduce
+Transparency, and adaptive accessibility signoff.
 
 ### M2 - Focused Upstream Issue Closeout
 
@@ -45,7 +57,7 @@ M1.
 
 | Decision ID | Decision | Provisional default | Stop condition | Owner role |
 |---|---|---|---|---|
-| D-01 | Immediate milestone lane | Native-first M1 with legacy compatibility; full issue closeout is a separate M2 lane. | Maintainer or project owner rejects native-first scope or requires dual hosted/native release. | Project/product owner and maintainer |
+| D-01 | Immediate milestone lane | Core native local M1; full issue closeout, hosted validation, publication-quality scoring, notarization, and accessibility signoff are separate lanes. | Maintainer or project owner rejects native-local scope or requires dual hosted/native release. | Project/product owner and maintainer |
 | D-02 | Hosted credential model | Server-side/startup-only provider credentials; no hosted UI key entry. | Approved process-isolated per-user credential architecture exists. | Security/product owner |
 | D-03 | Public plot-code execution | Hosted plot-code execution disabled until sandboxed; trusted local execution may remain explicit. | Public hosted plot execution is required and a reviewed sandbox is available. | Security/product owner |
 | D-04 | Native secret storage | `0600` local Application Support secret file is acceptable only for local preview after secret/log scans pass. | Security owner requires Keychain or no persistence for M1. | Product/security owner |
@@ -88,8 +100,13 @@ M1.
 
 - Native macOS is the primary local workflow for M1.
 - Native validation must be tied to the exact candidate SHA.
-- Passing source-control or build checks is not sufficient without UI,
-  accessibility, provider, artifact, and recovery evidence for release claims.
+- Passing source-control or build checks is not sufficient without core UI,
+  Codex smoke, artifact, install, and rollback evidence for M1-core release
+  claims.
+- Accessibility evidence is not a blocker for the initial native local
+  core-feature boundary. Do not claim accessibility validation, VoiceOver
+  validation, screen-reader completeness, or adaptive accessibility signoff until
+  a later explicit review is performed and accepted.
 - Foundation Models must remain hidden, disabled, or clearly unsupported unless
   implemented with tests.
 

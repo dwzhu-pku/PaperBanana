@@ -515,15 +515,30 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "runtime user-data migration proof",
         "Rollback And Upgrade Status",
         "Not yet proven",
-        "Known Open Gates",
-        "WP-007 VoiceOver traversal is de-scoped as a release blocker",
+        "Core Native Initial Release Boundary",
+        "native local core-feature validated",
+        "Included gates: build/install; manual reference examples; no-spend provenance;",
+        "one live Codex smoke; Artifact Library / Run Details / Provider Ledger;",
+        "final local rollback/install proof",
+        "Excluded gates: all accessibility gates, hosted/HF validation, WP-108 scoring,",
+        "publication-quality claims, notarization/distribution, and upstream acceptance",
+        "Accessibility gates are excluded from the native local core-feature boundary",
+        "Live Codex smoke",
+        "PAPERBANANA_REAL_CODEX_E2E=1",
+        "provider_spend=none",
+        "handoff_adapter=swift_codex",
+        "Final local rollback/install proof",
+        "Excluded Non-Blocking Gates",
         "EV-20260703-104",
-        "required release gates",
-        "Do not claim VoiceOver validation",
+        "Do not claim accessibility validation, VoiceOver validation, screen-reader",
+        "keyboard traversal signoff",
+        "AX proof",
+        "Increased Text",
+        "Increased Contrast",
+        "Reduce Motion",
+        "Reduce Transparency",
         "EV-20260623-090",
-        "Approved live provider/fallback native E2E",
-        "Hosted two-session proof",
-        "WP-108 quality benchmark",
+        "hosted/HF, WP-108 scoring, publication-quality, notarization/distribution",
         "WP-108 no-live benchmark contract scaffold",
         "go/no-go decision-report generation",
         "stitched offline chain coverage",
@@ -532,7 +547,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "no safe no-live release-quality benchmark runner",
         "no image scoring or quality claim",
         "Release Claim Boundary",
-        "must not be described as release-ready",
+        "must not be described as accessibility-validated",
     ]
 
     for phrase in required_phrases:
@@ -641,9 +656,9 @@ def test_wp007_manual_voiceover_packet_preserves_open_gate_boundary():
     assert "EV-20260623-095" in RELEASE_MANIFEST
     assert "EV-20260623-096" in RELEASE_MANIFEST
     assert "EV-20260703-104" in RELEASE_MANIFEST
-    assert "WP-007 VoiceOver traversal is de-scoped as a release blocker" in RELEASE_MANIFEST
-    assert "required release gates" in RELEASE_MANIFEST
-    assert "Do not claim VoiceOver validation" in RELEASE_MANIFEST
+    assert "Accessibility gates are excluded from the native local core-feature boundary" in RELEASE_MANIFEST
+    assert "Do not claim accessibility validation, VoiceOver validation, screen-reader" in RELEASE_MANIFEST
+    assert "keyboard traversal signoff" in RELEASE_MANIFEST
     canonical_header = (
         "route_id\tsurface\tstep\tcontrol_or_row\texpected_minimum\t"
         "actual_spoken_output\tpass_fail\tnotes"

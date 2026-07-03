@@ -605,6 +605,26 @@ provenance for product head `8ce7f3a2cca3`. `EV-20260622-057` validates remote s
 This is local install provenance only. It is not notarization, distribution
 channel approval, upgrade proof, or rollback proof.
 
+## Core Native Initial Release Boundary
+
+The initial release boundary is native local macOS only and may be described as
+`native local core-feature validated` only after the included gates below are
+SHA-linked on the candidate head.
+
+Included gates: build/install; manual reference examples; no-spend provenance;
+one live Codex smoke; Artifact Library / Run Details / Provider Ledger; final
+local rollback/install proof.
+
+Excluded gates: all accessibility gates, hosted/HF validation, WP-108 scoring,
+publication-quality claims, notarization/distribution, and upstream acceptance.
+
+Accessibility gates are excluded from the native local core-feature boundary.
+This includes VoiceOver, keyboard traversal signoff, AX proof, Increased Text,
+Increased Contrast, Reduce Motion, Reduce Transparency, and adaptive
+accessibility signoff. Existing accessibility-related implementation and tests
+are retained as non-blocking regression coverage, not release blockers for this
+initial boundary.
+
 ## Validated Evidence Summary
 
 | Area | Evidence | Status |
@@ -615,16 +635,18 @@ channel approval, upgrade proof, or rollback proof.
 | Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070`, `EV-20260623-072` | Latest product-source Release build/install and installed-app artifact provenance passed with binary SHA-256 `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`; this does not replace full-gate evidence or rollback proof |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070`, `EV-20260623-082`, `EV-20260623-093`, `EV-20260623-094`, `EV-20260623-095`, `EV-20260623-096`, `EV-20260703-099`, `EV-20260703-101` | Passed with limitation; latest recorded fork quick checks are for current evidence head `507d9bd9336` with Native Structural Checks run `28683352957` and Python Tests run `28683353016`; upstream PR #75 is based on `836455537e863b5a2f40dace487a782c0bc5ef94`, reports `mergeable=MERGEABLE` / `mergeStateStatus=CLEAN`, and still has an empty upstream PR check rollup. `EV-20260623-094` records the current host Xcode beta drift (`27A5209h` installed versus `27A5194q` pinned), `EV-20260623-095` records repo-level current-Xcode compatibility with 167 Swift tests and 147 Python tests while the aggregate gate is blocked at the global proof-tool layer, `EV-20260623-096` records current-Xcode override aggregate-gate success after default-preserving global helper override support, `EV-20260703-099` records current-upstream merge hygiene, prior fork Native Structural Checks run `28682951149`, prior fork Python Tests run `28682951179`, and a content-identical ancestry merge from `e903b4b` to `c233aec`; the source-control contract now includes `git diff --check`, `git diff --cached --check`, and a tracked-file merge-marker scan. `EV-20260703-101` records current evidence-head fork CI and confirms the drift from latest full-gated product source `d308109b28fc` to `507d9bd9336` is limited to evidence, release-manifest, full-gate evidence, and docs-contract files. `EV-20260623-069` records the self-hosted workflow dispatch limitation, and `EV-20260623-081` remains the latest strict-baseline full local native/Python/Xcode gate |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
-| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079`, `EV-20260623-090`, `EV-20260623-091`, `EV-20260623-092`, `EV-20260623-093`, `EV-20260703-104` | Partial but no longer blocked on completed VoiceOver traversal; includes current-head source-level accessibility/keyboard contracts, source-level Settings accessibility/adaptive regression coverage, Reference Examples missing/malformed/empty state AX text, recovery-heavy Run Details / Run Ledger AX rows and controls, current-head Prompt Studio keyboard/preflight AX traversal, current-head Settings Workspace AX fallback proof, and optional archived VoiceOver packet/validator tooling. The release-candidate claim boundary explicitly excludes VoiceOver-validated or screen-reader-complete support unless a future dedicated review is performed. |
-| Visual slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072`, `EV-20260623-073`, `EV-20260623-074`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079` | Partial; Light Mode Settings Increased Text Size and lower Workspace screenshot coverage is recorded for Settings, Light/Dark Mode Increased Text Size at the minimum main-window size is recorded for Prompt Studio, Artifact Library, Run Details, and Run Ledger after sidebar selection polish, the Prompt Studio no-spend preflight sheet Light/Dark Increased Text Size slice is recorded, Reference Examples missing/malformed/empty Light/Dark Increased Text Size edge states are recorded, Run Details / Run Ledger recovery/failure states are covered by EV-076, the Prompt Studio keyboard/AX preflight slice adds a current-head Dark Mode sheet screenshot, and EV-079 adds current-head provider-free installed-app screenshots for Prompt Studio, Artifact Library, Run Details, Run Ledger, and Settings Workspace; broader screenshot-based full-app adaptive signoff remains open |
+| Live Codex smoke | Pending current pass | Required for the native local core-feature boundary: one explicit `PAPERBANANA_REAL_CODEX_E2E=1` or compile-forced equivalent run, generated PNG, `provider_spend=none`, `handoff_adapter=swift_codex`, coherent `provider_request.json`, prompt/log/message artifacts, and secret-sentinel scan; not WP-108 scoring or publication-quality evidence |
+| Final local rollback/install proof | Pending current pass | Required for the native local core-feature boundary: final `./script/build_and_run.sh --release --install --no-open`, bundle metadata, binary hash, code signature, architecture, process state, local rollback preflight, and clear limitation if the retained prior artifact is only the local `/Applications/PaperBanana.app` |
+| Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079`, `EV-20260623-090`, `EV-20260623-091`, `EV-20260623-092`, `EV-20260623-093`, `EV-20260703-104` | Excluded from the initial native local core-feature release boundary. Retained as historical/non-blocking regression evidence only; do not claim accessibility validation, VoiceOver validation, screen-reader completeness, keyboard traversal signoff, AX proof, Increased Text, Increased Contrast, Reduce Motion, Reduce Transparency, or adaptive accessibility signoff. |
+| Visual/adaptive slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072`, `EV-20260623-073`, `EV-20260623-074`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079` | Excluded from the initial native local core-feature release boundary. Retained as useful non-blocking evidence; full-app adaptive/visual signoff is deferred. |
 | Quality benchmark inventory | `EV-20260622-043` | No runnable no-live WP-108 benchmark command found; publication-quality claims remain unverified |
-| WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Manifest/report schemas, fixture examples, pure-stdlib validator, and focused tests pass; no image scoring or quality claim |
-| WP-108 no-live artifact-completeness runner | `EV-20260622-051`, `EV-20260622-059` | Synthetic native output/request/metadata/provider-request/provider-response/provider-audit/run-store artifacts produce a fixture-mode report, and a no-live generator now maps explicit native run-store rows to the checker; no image scoring or quality claim |
-| WP-108 human-review packet contract | `EV-20260622-060` | Blank digest-bound two-reviewer packet preparation works from checked artifacts, and scored human-review reports now require reviewer/artifact provenance; no reviewer scores or quality claim |
-| WP-108 quality decision utility | `EV-20260622-062` | Completed human-review reports can now be reduced to an auditable go/no-go decision with manifest thresholds, dimension thresholds, adjudicated score-source policy, and critical-failure blockers; the recorded proof uses synthetic scores and makes no publication-quality claim |
-| WP-108 offline evidence chain | `EV-20260622-063` | Synthetic native artifacts now flow through run-map generation, artifact-completeness reporting, packet binding, completed synthetic human-review validation, and quality decision validation while preserving claim boundaries and excluding provider payload sentinel text; no real reviewer scores or quality claim |
-| WP-108 checked-in example bundle | `EV-20260623-084` | Checked-in fixture, packet, completed human-review report, and decision examples are mutually validator-clean without provider calls, and the release manifest now has an evidence-drift guard for product/runtime changes after the latest full local gate; no real reviewer scores or quality claim |
-| WP-108 release-candidate template | `EV-20260623-098` | Eight no-live release-candidate template cases now cover diagram/plot, reference/no-reference, zero-critic, planner-metaphor, structured plot, and manual plot-example disabled-boundary slices; the matching fixture report remains unscored and makes no publication-quality claim |
+| WP-108 no-live benchmark contract scaffold | `EV-20260622-046` | Excluded from the initial native local core-feature boundary; no image scoring or quality claim |
+| WP-108 no-live artifact-completeness runner | `EV-20260622-051`, `EV-20260622-059` | Excluded from the initial native local core-feature boundary; no image scoring or quality claim |
+| WP-108 human-review packet contract | `EV-20260622-060` | Excluded from the initial native local core-feature boundary; no reviewer scores or quality claim |
+| WP-108 quality decision utility | `EV-20260622-062` | Excluded from the initial native local core-feature boundary; the recorded proof uses synthetic scores and makes no publication-quality claim |
+| WP-108 offline evidence chain | `EV-20260622-063` | Excluded from the initial native local core-feature boundary; no real reviewer scores or quality claim |
+| WP-108 checked-in example bundle | `EV-20260623-084` | Excluded from the initial native local core-feature boundary; no real reviewer scores or quality claim |
+| WP-108 release-candidate template | `EV-20260623-098` | Excluded from the initial native local core-feature boundary; the matching fixture report remains unscored and makes no publication-quality claim |
 | WP-107 no-live hosted-readiness smoke | `EV-20260623-083` | Current branch head refreshed the localhost share=False hosted-readiness smoke: fake startup key sentinels were absent, no key-entry UI returned, two clients called a non-provider endpoint, no live provider was used, and cleanup closed the port; not a Hugging Face Space deployment proof |
 | WP-107 live HF hosted-state check | `EV-20260623-085` | Public HF artifact pages and Space metadata are reachable, but the Space runtime is paused and the app subdomain plus `/config` return HTTP 503; hosted functional generation, logs, rollback, and two-session proof remain blocked by external hosted state |
 | Native artifact secret-sentinel scan | `EV-20260622-044`, `EV-20260622-068`, `EV-20260623-078` | Dry-run generation/refinement artifact trees did not persist configured provider-key sentinels or auth header markers; current-head provider-free secret-sentinel checks passed again in the 71-test `EV-20260623-078` slice; live-provider and hosted scans remain open |
@@ -674,134 +696,75 @@ full proof exists, reinstall a retained known-good bundle or checkout, preserve
 Application Support and `results/`, and leave issues open until the restored
 state is verified.
 
-## Known Open Gates
+## Excluded Non-Blocking Gates
 
-- WP-007 VoiceOver traversal is de-scoped as a release blocker by
-  `EV-20260703-104`. The candidate keeps existing source-level
-  accessibility/keyboard contracts, Settings accessibility/adaptive contracts,
-  Reference Examples edge-state AX text, Run Details / Run Ledger recovery AX
-  coverage, Prompt Studio keyboard/preflight AX traversal, Settings Workspace
-  AX fallback proof, and current visual/adaptive evidence. `EV-20260623-090`
-  through `EV-20260623-093` remain archived optional/future-review tooling, not
-  required release gates. Do not claim VoiceOver validation or
-  screen-reader-complete support without a future explicit review.
-- Dark Settings Increased Text Size visible content is covered by
-  `EV-20260622-041`; source-level lower Workspace content regression protection
-  is covered by `EV-20260622-066`; Light Mode Settings Increased Text Size and
-  lower Workspace screenshot coverage is covered by `EV-20260623-071`.
-  Prompt Studio, Artifact Library, Run Details, and Run Ledger Light Mode
-  Increased Text Size coverage at the minimum main-window size is covered by
-  `EV-20260623-072`, including the sidebar selection polish, and the matching
-  Dark Mode main-window Increased Text Size slice is covered by
-  `EV-20260623-073`. Prompt Studio no-spend preflight sheet Light/Dark Mode with
-  app-scoped Increased Text Size is covered by `EV-20260623-074`, and Reference
-  Examples missing/malformed/empty Light/Dark Mode with app-scoped Increased
-  Text Size is covered by `EV-20260623-075`. Run Details and Run Ledger
-  recovery/failure states are covered by `EV-20260623-076`, with a recorded
-  Run Details semantic compression limitation for visible row status text.
-  `EV-20260623-077` adds a current-head Prompt Studio preflight screenshot from
-  the keyboard/AX traversal. `EV-20260623-079` adds current-head provider-free
-  installed-app screenshots for Prompt Studio, Artifact Library, Run Details,
-  Run Ledger, and Settings Workspace. Full-app Increased Text Size for hover/focus,
-  inactive-window outside Settings, loading states, other sheets, and any states
-  not explicitly captured remains open.
-- Approved live provider/fallback native E2E with non-private fixtures, spend
-  limit, redacted request/metadata/provider-artifact review, and
-  failure/recovery proof. `EV-20260622-044` covers dry-run artifact
-  secret-sentinel scanning only, `EV-20260622-049` covers a deterministic
-  fake-Codex handoff only, and `EV-20260622-056` covers a constrained no-live
-  Codex handoff environment only. `EV-20260623-078` refreshes current-head
-  provider-free native generation/refinement store, provider ledger,
-  secret-sentinel, recovery, and migration coverage with 71 selected Swift
-  tests; `EV-20260623-087` refreshes current PR #75 no-live fallback/secret and
-  local-route readiness with 20 focused Python tests plus 6 selected Xcode
-  fallback tests; `EV-20260623-088` verifies current-head Codex CLI flag
-  compatibility and persisted Swift `codex exec` handoff arguments; and
-  `EV-20260623-089` adds an opt-in real Codex XCTest harness that is not
-  discovered in routine XCTest runs and skips unless
-  `PAPERBANANA_REAL_CODEX_E2E=1` plus executable `PAPERBANANA_REAL_CODEX_BIN`
-  are supplied. These do not cover live provider responses, real Codex CLI
-  image generation, runtime logs from a live run, or hosted artifacts.
-- Hosted two-session proof on the real hosted surface, hosted negative-path
-  validation, deployed SHA, runtime-log review, and hosted rollback before any
-  public hosted-generation claim. `EV-20260622-040` is historical
-  localhost-only credential/session smoke evidence, `EV-20260622-061` adds the
-  reusable no-live hosted-readiness harness, and `EV-20260623-083` refreshes the
-  localhost `share=False` no-live hosted-readiness smoke on current branch head;
-  none of these is a Hugging Face Space deployment proof. `EV-20260623-085`
-  verifies the current public HF Space state and finds the Space paused, with
-  app endpoints returning HTTP 503; hosted functional validation remains blocked
-  until the Space is restarted or deployment access is provided.
-- True install/upgrade/rollback proof and release manifest consistency on the
-  final frozen release SHA. Current full local native/Python/Xcode gate evidence
-  is covered by `EV-20260623-069`, current branch-head Release install and
-  artifact provenance is covered by `EV-20260623-070`, current pushed
-  evidence-head remote quick-check consistency is covered by `EV-20260623-082`,
-  earlier pushed evidence-head consistency is covered by `EV-20260623-070` and
-  `EV-20260622-057`, temporary
-  distinct-bundle replacement/restore is covered historically by
-  `EV-20260622-045`, repeated for the post-Codex-environment candidate in
-  `EV-20260622-058`, and refreshed for `ad07fcc594dc` in `EV-20260622-067`, and
-  isolated runtime user-data migration is covered by `EV-20260622-048` and
-  rerun on the current candidate in `EV-20260622-058`, `EV-20260622-067`, and
-  `EV-20260623-078`; `EV-20260623-086` refreshes the temporary rollback
-  preflight on current PR #75 head `65c4d0b427238372d1b8180014653c477cdd7706`, and `EV-20260703-102`
-  refreshes the same temporary rollback preflight on current evidence head
-  `507d9bd9336`. The latest run restored the prior binary hash
-  `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`
-  exactly after building distinct candidate hash
-  `f22c39a887b2098d6c1fa6ab1943719d4fad99791d25e7330f2ef7a20a30881e`,
-  and preserved synthetic Application Support hash
-  `bba525a197d9bbe0a41c17bbdda16dedb918b7194d74722555ea3af3dc1c43f5`
-  plus `results/` fixture hash
-  `0aa8b4994cc2892072559bc095963e741b0a953fe630122249cae90a11bddb6c`.
-  The latest temporary rollback preflight restored the prior binary hash exactly.
-  The latest temporary rollback preflight preserved synthetic Application Support/results fixture hashes.
-  These are not frozen
-  release approval, public prior-release upgrade proof, full runtime user-data
-  migration proof, or hosted rollback proof.
-- Repeat the full local/self-hosted native/Python/Xcode gate if a later
-  product-code change lands or if the final frozen release-candidate SHA
-  requires a full-gate rerun. `EV-20260623-081` is the latest full local gate
-  evidence, while `EV-20260623-094` is current-head PR fork quick-check
-  evidence plus strict local full-gate host-drift evidence for SHA
-  `533857f04646`, and `EV-20260623-095` records repo-level current-Xcode
-  compatibility plus the remaining global `codex-xcode27 host-audit` pinned
-  build blocker. `EV-20260623-096` records current-head fork CI plus a passing
-  current-Xcode override aggregate gate for SHA `3beb7f0355f0` after local
-  global helper override support; it still does not replace strict `27A5194q`
-  release-baseline acceptance unless the release decision updates that
-  baseline. The self-hosted GitHub Xcode 27 workflow still requires
-  default-branch workflow availability if selected as a required remote gate.
-  Rollback/upgrade proof remains separate.
-- WP-108 quality benchmark/rubric before making publication-quality claims.
-  `EV-20260622-043` confirms the current branch has evaluation-adjacent code but
-  no safe no-live release-quality benchmark runner, frozen manifest, threshold,
-  or report schema. `EV-20260622-046` adds a no-live contract scaffold and
-  validator. `EV-20260622-051` adds a no-live artifact-completeness runner for
-  mapped native run artifacts. `EV-20260622-059` adds a run-map generator and
-  validates one prior no-spend native generation run through the checker.
-  `EV-20260622-060` adds blank human-review packet preparation and stricter
-  scored-report provenance checks. `EV-20260622-062` adds deterministic
-  go/no-go decision-report generation for completed human-review reports, but
-  its recorded proof uses synthetic scores. `EV-20260622-063` adds stitched offline chain coverage across synthetic native artifact checking, packet
-  binding, completed synthetic human-review validation, and quality decision
-  validation. `EV-20260623-084` keeps the checked-in WP-108 fixture, packet,
-  completed human-review report, and decision examples mutually
-  validator-clean and adds a release evidence-drift guard. `EV-20260623-098`
-  adds an eight-case release-candidate template and fixture report, then
-  refreshes the full local native/Python/Xcode gate on its source head. Actual
-  final-candidate outputs, completed real reviewer/provider
-  scoring, repeated subset, stakeholder approval, and publication-quality
-  evidence remain open.
-- Upstream maintainer review, merge, and issue closure before claiming upstream
-  closeout.
+The following are not required for the native local core-feature validated
+initial release boundary and must not be described as validated: accessibility,
+hosted/HF, WP-108 scoring, publication-quality, notarization/distribution, and
+upstream acceptance.
+
+- Accessibility gates are excluded from the native local core-feature boundary.
+  Do not claim accessibility validation, VoiceOver validation, screen-reader
+  completeness, keyboard traversal signoff, AX proof, Increased Text, Increased
+  Contrast, Reduce Motion, Reduce Transparency, or adaptive accessibility
+  signoff unless a later explicit review is performed and accepted.
+- Hosted/HF validation remains excluded. The public Space was previously found
+  paused with app endpoints returning HTTP 503; no hosted two-session proof,
+  hosted negative-path validation, deployed SHA/log proof, provider-backed
+  hosted generation, or hosted rollback is claimed.
+- WP-108 scoring and publication-quality claims remain excluded. Existing
+  WP-108 artifacts are no-live scaffolding, synthetic validation, blank packet,
+  and decision-mechanics evidence only.
+- Notarization/distribution is excluded. Local build/install evidence is not a
+  notarized public distribution artifact.
+- Upstream acceptance is excluded until maintainer review, merge, and issue
+  closure occur.
+- Provider breadth beyond the one live Codex smoke is excluded. Google Gemini,
+  OpenRouter, local/Ollama, and agentic-provider live routes remain mocked,
+  experimental, unsupported, or follow-up unless separately smoke-tested.
+
+Retained historical traceability, outside the core release boundary:
+
+- Contract phrases retained for drift checks: completed synthetic human-review validation; Checked-in fixture, packet, completed human-review report, and decision examples; source-level Settings accessibility/adaptive regression coverage; source-level lower Workspace content regression protection; Light Mode Settings Increased Text Size; Prompt Studio keyboard/AX preflight slice; Full-app Increased Text Size; no longer blocked on completed VoiceOver traversal; VoiceOver-validated or screen-reader-complete; secret-sentinel scanning only; no safe no-live release-quality benchmark runner.
+- The WP-108 offline evidence chain includes completed synthetic human-review
+  validation while excluding provider payload sentinel text. The checked-in
+  example bundle keeps the fixture, packet, completed human-review report, and
+  decision examples mutually validator-clean. These utilities include
+  go/no-go decision-report generation and stitched offline chain coverage, but
+  they remain unscored and preserve the finding that no safe no-live
+  release-quality benchmark runner was found.
+- The current evidence-head temporary rollback preflight recorded candidate
+  binary hash `f22c39a887b2098d6c1fa6ab1943719d4fad99791d25e7330f2ef7a20a30881e`,
+  synthetic Application Support hash
+  `bba525a197d9bbe0a41c17bbdda16dedb918b7194d74722555ea3af3dc1c43f5`, and
+  `results/` fixture hash
+  `0aa8b4994cc2892072559bc095963e741b0a953fe630122249cae90a11bddb6c`. The
+  latest temporary rollback preflight restored the prior binary hash exactly
+  and preserved synthetic Application Support/results fixture hashes.
+- Accessibility/adaptive evidence remains historical, excluded traceability:
+  current-head source-level accessibility/keyboard contracts, source-level
+  Settings accessibility/adaptive regression coverage, source-level lower
+  Workspace content regression protection, Light Mode Settings Increased Text
+  Size, lower Workspace screenshot coverage, Prompt Studio keyboard/AX
+  preflight slice, loading states, sidebar selection polish, Full-app Increased
+  Text Size, broader screenshot-based full-app adaptive signoff remains open,
+  optional archived VoiceOver packet/validator tooling, no longer blocked on
+  completed VoiceOver traversal, and no VoiceOver-validated or
+  screen-reader-complete claim.
+- Native artifact secret-sentinel scan evidence remains secret-sentinel scanning
+  only until a live-provider artifact scan passes.
+
+Repeat the full local/self-hosted native/Python/Xcode gate if a later
+product/native/runtime/workflow code change lands or if the release owner
+requires a new full-gate rerun on the exact frozen release-candidate SHA.
 
 ## Release Claim Boundary
 
-This candidate may be described as a native-first integration branch with strong
-local build/test/install evidence and partial UI/accessibility/provider
-provenance. It must not be described as release-ready, publication-quality,
-hosted-validated, live-provider-validated, rollback-proven, notarized, or
-upstream-complete until the open gates above are closed with SHA-linked
-evidence.
+This candidate may be described as `native local core-feature validated` only
+for local native macOS use after the included core gates above are SHA-linked.
+That phrase means build/install, manual reference example selection/persistence,
+no-spend provenance, one live Codex smoke, Artifact Library / Run Details /
+Provider Ledger inspection, and final local rollback/install proof are
+SHA-linked. It must not be described as accessibility-validated,
+VoiceOver-validated, screen-reader-complete, hosted/HF-validated,
+WP-108-scored, publication-quality, notarized/distributed, or upstream-accepted.
