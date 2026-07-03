@@ -13,9 +13,10 @@ been validated and leaves every unvalidated release claim open.
 
 | Item | Value |
 |---|---|
-| Latest full local native/Python/Xcode gate | `19456ee01cf51828c36b92558042300e7394b2d9` |
-| Previous full local native/Python/Xcode gate | `a251dda11fa29aa4ed430d25fa6dbc8cdd8834bb` |
-| Earlier full local native/Python/Xcode gate | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
+| Latest full local native/Python/Xcode gate | `d308109b28fc4118e00aa0830bbf1594beec0494` |
+| Previous full local native/Python/Xcode gate | `19456ee01cf51828c36b92558042300e7394b2d9` |
+| Earlier full local native/Python/Xcode gate | `a251dda11fa29aa4ed430d25fa6dbc8cdd8834bb` |
+| Older full local native/Python/Xcode gate | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
 | Previous sanitized full local native/Python/Xcode gate | `da8329597d196608a40bcf6be823c9ef684a9e16` |
 | Latest recorded remote-check evidence head | `c233aecb7ef84201d4b52772a7932fde6fe70c74` |
 | Latest current-upstream merge-hygiene evidence head | `c233aecb7ef84201d4b52772a7932fde6fe70c74` |
@@ -606,8 +607,8 @@ channel approval, upgrade proof, or rollback proof.
 
 | Area | Evidence | Status |
 |---|---|---|
-| Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-057`, `EV-20260622-064`, `EV-20260623-069`, `EV-20260623-098` | Passed with limitation |
-| Local aggregate native gate | `EV-20260623-098` | Latest full local gate passed through the documented `script/test_all.sh` command with explicit `PAPERBANANA_EXPECTED_XCODE_BUILD='Build version 27A5209h'`: 167 Swift tests, 149 Python tests, and `codex-xcode27 proof` passed; this is current-beta override evidence, not strict `27A5194q` release-baseline acceptance |
+| Source/project structure | `EV-20260622-035`, `EV-20260622-042`, `EV-20260622-047`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-057`, `EV-20260622-064`, `EV-20260623-069`, `EV-20260623-098`, `EV-20260703-100` | Passed with limitation |
+| Local aggregate native gate | `EV-20260703-100` | Latest full local gate passed through the documented `script/test_all.sh` command with explicit `PAPERBANANA_EXPECTED_XCODE_BUILD='Build version 27A5209h'`: hardened source-control contract, host audit `overall=true`, project scan with 0 errors and 3 warnings, 167 Swift tests, 150 Python tests, and `codex-xcode27 proof status=passed halted=False`; this is current-beta override evidence, not strict `27A5194q` release-baseline acceptance |
 | Current-Xcode override aggregate gate | `EV-20260623-096` | Passed with limitation; current head `3beb7f0355f0` passed `script/test_all.sh` with explicit `PAPERBANANA_EXPECTED_XCODE_BUILD='Build version 27A5209h'` after local global helper override support; this is current-beta override evidence, not strict `27A5194q` release-baseline acceptance |
 | Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070`, `EV-20260623-072` | Latest product-source Release build/install and installed-app artifact provenance passed with binary SHA-256 `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`; this does not replace full-gate evidence or rollback proof |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070`, `EV-20260623-082`, `EV-20260623-093`, `EV-20260623-094`, `EV-20260623-095`, `EV-20260623-096`, `EV-20260703-099` | Passed with limitation; latest recorded fork quick checks are for `c233aecb7ef8` with Native Structural Checks run `28682951149` and Python Tests run `28682951179`; upstream PR #75 is now based on `836455537e863b5a2f40dace487a782c0bc5ef94`, reports `mergeable=MERGEABLE` / `mergeStateStatus=CLEAN`, and still has an empty upstream PR check rollup. `EV-20260623-094` records the current host Xcode beta drift (`27A5209h` installed versus `27A5194q` pinned), `EV-20260623-095` records repo-level current-Xcode compatibility with 167 Swift tests and 147 Python tests while the aggregate gate is blocked at the global proof-tool layer, `EV-20260623-096` records current-Xcode override aggregate-gate success after default-preserving global helper override support, `EV-20260703-099` records current-upstream merge hygiene and a content-identical ancestry merge from `e903b4b` to `c233aec`; the source-control contract now includes `git diff --check`, `git diff --cached --check`, and a tracked-file merge-marker scan. `EV-20260623-069` records the self-hosted workflow dispatch limitation, and `EV-20260623-081` remains the latest strict-baseline full local native/Python/Xcode gate |
