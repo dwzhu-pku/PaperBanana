@@ -1,0 +1,12 @@
+2222	Workspace	{
+    Height = 648;
+    Width = 900;
+    X = "-2480";
+    Y = 254;
+}
+2173	PaperBanana	{
+    Height = 860;
+    Width = 1364;
+    X = "-2480";
+    Y = 220;
+}

@@ -1,0 +1,17 @@
+## process snapshot before cleanup
+2026-07-03T22:05:03Z
+30768 /System/Library/PrivateFrameworks/ScreenReader.framework/Versions/A/Resources/VoiceOver Quickstart.app/Contents/MacOS/VoiceOver Quickstart -splash
+79521 /Applications/PaperBanana.app/Contents/MacOS/PaperBanana
+## macOS
+ProductName:		macOS
+ProductVersion:		27.0
+BuildVersion:		26A5368g
+## architecture
+arm64
+## Xcode
+Xcode 27.0
+Build version 27A5209h
+## candidate
+## integration/native-first-rc-native...jdotc1/integration/native-first-rc-native
+?? docs/integration/evidence/screenshots/20260703-175811-wp007-manual-voiceover-keyboard/
+9a2d056a9ae3652deff18779ba78d20581125ef2

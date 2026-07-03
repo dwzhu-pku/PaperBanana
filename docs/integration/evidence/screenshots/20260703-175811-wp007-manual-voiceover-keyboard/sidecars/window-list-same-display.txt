@@ -1,0 +1,12 @@
+owner=PaperBanana number=2173 name=PaperBanana bounds={
+    Height = 860;
+    Width = 1364;
+    X = "-2480";
+    Y = 220;
+} layer=0
+owner=Codex number=779 name=Codex bounds={
+    Height = 1410;
+    Width = 1028;
+    X = "-2556";
+    Y = 172;
+} layer=0

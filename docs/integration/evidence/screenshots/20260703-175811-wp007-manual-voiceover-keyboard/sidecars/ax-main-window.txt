@@ -1,0 +1,233 @@
+depth=0 role=AXApplication subrole= id= title=PaperBanana desc= value= help= focused= enabled=
+  depth=1 role=AXWindow subrole=AXStandardWindow id=SwiftUI.WindowGroup<SwiftUI._ConditionalContent<PaperBanana.(unknown context at $104ecff3c).PaperBananaTestHostView, PaperBanana.AppRootContainer>>-1-AppWindow-2 title=PaperBanana desc= value= help= focused=0 enabled=
+    depth=2 role=AXGroup subrole=AXHostingView id= title= desc= value= help= focused=0 enabled=
+      depth=3 role=AXButton subrole= id=text.bubble title= desc=Prompt Studio value= help=Prompt Studio focused= enabled=1
+      depth=3 role=AXStaticText subrole= id= title= desc= value=PaperBanana help= focused= enabled=1
+      depth=3 role=AXStaticText subrole= id= title= desc= value=Recovered Images help= focused= enabled=1
+      depth=3 role=AXStaticText subrole= id= title= desc= value=Native figure cockpit help= focused= enabled=1
+      depth=3 role=AXButton subrole= id= title= desc=Reveal Recovery Folder value= help=Reveal the recovered image folder in Finder focused= enabled=1
+      depth=3 role=AXButton subrole= id=arrow.clockwise title= desc=Refresh value= help=Refresh the artifact library focused= enabled=1
+      depth=3 role=AXStaticText subrole= id= title= desc= value=0 recovered images surfaced from /Users/jeff/Codex_projects/PaperBanana-native-integrated/results/recovered help= focused=0 enabled=
+      depth=3 role=AXButton subrole= id=checkmark.seal title= desc=Recovered Images value= help=Recovered Images focused= enabled=1
+      depth=3 role=AXButton subrole= id=waveform.path.ecg.rectangle title= desc=Run Details value= help=Run Details focused= enabled=1
+      depth=3 role=AXButton subrole= id=list.bullet.rectangle title= desc=Run Ledger value= help=Run Ledger focused= enabled=1
+      depth=3 role=AXButton subrole= id=stethoscope title= desc=Diagnostics value= help=Diagnostics focused= enabled=1
+      depth=3 role=AXScrollArea subrole= id= title= desc= value= help= focused=0 enabled=
+        depth=4 role=AXStaticText subrole= id= title= desc=Native PaperBanana app is ready value=Path: /Users/jeff/Codex_projects/PaperBanana-native-integrated, Key: No generation key saved, Model: Nano Banana 2, Backend: Optional backend incomplete, Fallback: Nano Banana 2 resolves to Codex fallback help=No generation key is saved, so paid model requests resolve to deterministic Codex fallback. focused= enabled=1
+        depth=4 role=AXStaticText subrole= id= title= desc= value=CREATE help= focused= enabled=1
+        depth=4 role=AXButton subrole= id= title= desc=Prompt Studio value= help= focused= enabled=1
+        depth=4 role=AXButton subrole= id= title= desc=Generate Candidates value= help= focused= enabled=1
+        depth=4 role=AXButton subrole= id= title= desc=Refine Image value= help= focused= enabled=1
+        depth=4 role=AXStaticText subrole= id= title= desc= value=LIBRARY help= focused= enabled=1
+        depth=4 role=AXButton subrole= id= title= desc=Recovered Images value= help= focused= enabled=1
+        depth=4 role=AXButton subrole= id= title= desc=Artifact Library value= help= focused= enabled=1
+        depth=4 role=AXStaticText subrole= id= title= desc= value=OPERATIONS help= focused= enabled=1
+        depth=4 role=AXButton subrole= id= title= desc=Run Details value= help= focused= enabled=1
+        depth=4 role=AXButton subrole= id= title= desc=Run Ledger value= help= focused= enabled=1
+        depth=4 role=AXStaticText subrole= id= title= desc= value=DIAGNOSTICS help= focused= enabled=1
+        depth=4 role=AXButton subrole= id= title= desc=Diagnostics value= help= focused= enabled=1
+      depth=3 role=AXRadioGroup subrole= id= title= desc=Artifact scope, Artifact scope value=<AXUIElement> help=Showing Recovered focused=0 enabled=1
+        depth=4 role=AXRadioButton subrole=AXSegment id= title= desc=Recovered value=1 help= focused=0 enabled=1
+        depth=4 role=AXRadioButton subrole=AXSegment id= title= desc=Images value=0 help= focused=0 enabled=1
+        depth=4 role=AXRadioButton subrole=AXSegment id= title= desc=Favorites value=0 help= focused=0 enabled=1
+        depth=4 role=AXRadioButton subrole=AXSegment id= title= desc=All value=0 help= focused=0 enabled=1
+      depth=3 role=AXGroup subrole= id= title= desc=Search artifacts value= help= focused=1 enabled=1
+        depth=4 role=AXTextField subrole= id=workspace-search-search-artifacts title= desc=Search artifacts value=No search text help=Search artifacts focused=1 enabled=1
+      depth=3 role=AXStaticText subrole= id= title= desc= value=0 of 99 shown help= focused= enabled=1
+      depth=3 role=AXButton subrole= id=gearshape title= desc=Settings value= help=Settings focused= enabled=1
+      depth=3 role=AXButton subrole= id= title= desc=Settings value= help= focused= enabled=1
+      depth=3 role=AXSplitGroup subrole= id= title= desc= value= help= focused=0 enabled=
+        depth=4 role=AXGroup subrole=AXHostingView id= title= desc= value= help= focused=0 enabled=
+          depth=5 role=AXImage subrole= id=photo.stack title= desc=Stack Of Photos value= help= focused= enabled=1
+          depth=5 role=AXStaticText subrole= id= title= desc= value=No Artifacts help= focused= enabled=1
+          depth=5 role=AXStaticText subrole= id= title= desc= value=PaperBanana results are scanned from /Users/jeff/Codex_projects/PaperBanana-native-integrated/results. help= focused= enabled=1
+        depth=4 role=AXSplitter subrole= id= title= desc= value=521 help= focused=0 enabled=0
+        depth=4 role=AXGroup subrole=AXHostingView id= title= desc= value= help= focused=0 enabled=
+          depth=5 role=AXImage subrole= id=photo.stack title= desc=Stack Of Photos value= help= focused= enabled=1
+          depth=5 role=AXStaticText subrole= id= title= desc= value=No Artifact Selected help= focused= enabled=1
+          depth=5 role=AXStaticText subrole= id= title= desc= value=Select a PaperBanana artifact to inspect, open, reveal, copy, or favorite it. help= focused= enabled=1
+    depth=2 role=AXButton subrole=AXCloseButton id= title= desc= value= help= focused=0 enabled=1
+    depth=2 role=AXButton subrole=AXFullScreenButton id= title= desc= value= help=this button also has an action to zoom the window focused=0 enabled=1
+      depth=3 role=AXGroup subrole= id= title= desc= value= help= focused=0 enabled=
+    depth=2 role=AXButton subrole=AXMinimizeButton id= title= desc= value= help= focused=0 enabled=1
+    depth=2 role=AXStaticText subrole= id= title= desc= value=PaperBanana help= focused=0 enabled=1
+  depth=1 role=AXMenuBar subrole= id= title= desc= value= help= focused=0 enabled=1
+    depth=2 role=AXMenuBarItem subrole= id= title=Apple desc= value= help= focused=0 enabled=1
+      depth=3 role=AXMenu subrole= id= title= desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_aboutThisMacRequested: title=About This Mac desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_systemInformationRequested: title=System Information desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=_systemSettingsRequested: title=System Settings… desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_appStoreRequested: title=App Store desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=_recentsRequested: title=Recent Items desc= value= help= focused=0 enabled=1
+          depth=5 role=AXMenu subrole= id= title= desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id= title=Applications desc= value= help= focused=0 enabled=0
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Finder.app desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “Finder.app” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=GitHub Desktop.app desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “GitHub Desktop.app” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=GitHub.app desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “GitHub.app” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Google Chrome.app desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “Google Chrome.app” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=MacScope.app desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “MacScope.app” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=MacScope.app desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “MacScope.app” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=MacScope.app desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “MacScope.app” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Podcasts.app desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “Podcasts.app” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Sensei.app desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “Sensei.app” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=System Settings.app desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “System Settings.app” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+            depth=6 role=AXMenuItem subrole= id= title=Documents desc= value= help= focused=0 enabled=0
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=DirtyTest-7AB3ABCE-569D-473C-A878-E176DF15A175.mscope desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “DirtyTest-7AB3ABCE-569D-473C-A878-E176DF15A175.mscope” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=DirtyTest-07DBAA2F-9C10-410D-9247-2D205C0A2982.mscope desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “DirtyTest-07DBAA2F-9C10-410D-9247-2D205C0A2982.mscope” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=DirtyTest-C23D9A66-FF56-4B15-A750-D8252DE180EC.mscope desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “DirtyTest-C23D9A66-FF56-4B15-A750-D8252DE180EC.mscope” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=DirtyTest-C43989B4-5566-4F0D-A7DE-D42397AF209C.mscope desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “DirtyTest-C43989B4-5566-4F0D-A7DE-D42397AF209C.mscope” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=DirtyTest-ED926616-87EE-4A14-9EAC-4B7D3CC10607.mscope desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “DirtyTest-ED926616-87EE-4A14-9EAC-4B7D3CC10607.mscope” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=jeff desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “jeff” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=macOS empowerment desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “macOS empowerment” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Safari Technology Preview.pkg desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “Safari Technology Preview.pkg” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=VS_Code desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “VS_Code” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=WEExOTEyX1Byb2QuTW9uYWNv.ica desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=Show “WEExOTEyX1Byb2QuTW9uYWNv.ica” in Finder desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+            depth=6 role=AXMenuItem subrole= id= title=Servers desc= value= help= focused=0 enabled=0
+            depth=6 role=AXMenuItem subrole= id=_recentItemRequested: title=video desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+            depth=6 role=AXMenuItem subrole= id=_clearRecentItemsRequested: title=Clear Menu desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=_forceQuitPanelRequested: title=Force Quit… desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_forceQuitRequested: title=Force Quit PaperBanana desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=_sleepRequested: title=Sleep desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_restartRequested: title=Restart… desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_restartNowRequested: title=Restart desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_shutDownRequested: title=Shut Down… desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_shutDownNowRequested: title=Shut Down desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=_lockScreenRequested: title=Lock Screen desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_logOutRequested: title=Log Out jeff… desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_logOutNowRequested: title=Log Out jeff desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+    depth=2 role=AXMenuBarItem subrole= id= title=PaperBanana desc= value= help= focused=0 enabled=1
+      depth=3 role=AXMenu subrole= id= title= desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=orderFrontStandardAboutPanel: title=About PaperBanana desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=menuAction: title=Settings… desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id= title=Services desc= value= help= focused=0 enabled=1
+          depth=5 role=AXMenu subrole= id= title= desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_processRequest: title=Toggle Instruments Recording desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_configureServicesMenu: title=Services Settings… desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=hide: title=Hide PaperBanana desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=hideOtherApplications: title=Hide Others desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=unhideAllApplications: title=Show All desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=terminate: title=Quit PaperBanana desc= value= help= focused=0 enabled=1
+    depth=2 role=AXMenuBarItem subrole= id= title=File desc= value= help= focused=0 enabled=1
+      depth=3 role=AXMenu subrole= id= title= desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=menuAction: title=New PaperBanana Window desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=performClose: title=Close desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=closeAll: title=Close All desc= value= help= focused=0 enabled=1
+    depth=2 role=AXMenuBarItem subrole= id= title=Edit desc= value= help= focused=0 enabled=1
+      depth=3 role=AXMenu subrole= id= title= desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=undo: title=Undo desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=redo: title=Redo desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=cut: title=Cut desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=copy: title=Copy desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=paste: title=Paste desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=delete: title=Delete desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=selectAll: title=Select All desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=_NSMenuItemAutoFillIdentifier title=AutoFill desc= value= help= focused=0 enabled=1
+          depth=5 role=AXMenu subrole= id= title= desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_handleInsertFromContactsCommand: title=Contact… desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_handleInsertFromPasswordsCommand: title=Passwords… desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_handleInsertFromCreditCardsCommand: title=Credit Card… desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=startDictation: title=Start Dictation… desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=orderFrontCharacterPalette: title=Emoji & Symbols desc= value= help= focused=0 enabled=1
+    depth=2 role=AXMenuBarItem subrole= id= title=View desc= value= help= focused=0 enabled=1
+      depth=3 role=AXMenu subrole= id= title= desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=toggleTabBar: title=Show Tab Bar desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=toggleTabOverview: title=Show All Tabs desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=toggleFullScreen: title=Enter Full Screen desc= value= help= focused=0 enabled=1
+    depth=2 role=AXMenuBarItem subrole= id= title=Window desc= value= help= focused=0 enabled=1
+      depth=3 role=AXMenu subrole= id= title= desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=performMiniaturize: title=Minimize desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=miniaturizeAll: title=Minimize All desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=performZoom: title=Zoom desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=zoomAll: title=Zoom All desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_zoomFill: title=Fill desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_zoomCenter: title=Center desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id= title=Move & Resize desc= value= help= focused=0 enabled=1
+          depth=5 role=AXMenu subrole= id= title= desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id= title=Halves desc= value= help= focused=0 enabled=0
+            depth=6 role=AXMenuItem subrole= id=_zoomLeft: title=Left desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomRight: title=Right desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomTop: title=Top desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomBottom: title=Bottom desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+            depth=6 role=AXMenuItem subrole= id= title=Quarters desc= value= help= focused=0 enabled=0
+            depth=6 role=AXMenuItem subrole= id=_zoomTopLeft: title=Top Left desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomTopRight: title=Top Right desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomBottomLeft: title=Bottom Left desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomBottomRight: title=Bottom Right desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+            depth=6 role=AXMenuItem subrole= id= title=Arrange desc= value= help= focused=0 enabled=0
+            depth=6 role=AXMenuItem subrole= id=_zoomLeftAndRight: title=Left & Right desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomLeftThreeUp: title=Left & Quarters desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomRightAndLeft: title=Right & Left desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomRightThreeUp: title=Right & Quarters desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomTopAndBottom: title=Top & Bottom desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomTopThreeUp: title=Top & Quarters desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomBottomAndTop: title=Bottom & Top desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomBottomThreeUp: title=Bottom & Quarters desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_zoomQuarters: title=Quarters desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+            depth=6 role=AXMenuItem subrole= id=_zoomUntile: title=Return to Previous Size desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id= title=Full Screen Tile desc= value= help= focused=0 enabled=1
+          depth=5 role=AXMenu subrole= id= title= desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_tileLeft: title=Left of Screen desc= value= help= focused=0 enabled=1
+            depth=6 role=AXMenuItem subrole= id=_tileRight: title=Right of Screen desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=_moveToDisplay: title=Move to Pro Display XDR desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_moveAllToDisplay: title=Move All to Pro Display XDR desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=arrangeInFront: title=Bring All to Front desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=alternateArrangeInFront: title=Arrange in Front desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_removeWindowFromStageManagerSet: title=Remove Window from Set desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=selectPreviousTab: title=Show Previous Tab desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=selectNextTab: title=Show Next Tab desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=moveTabToNewWindow: title=Move Tab to New Window desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=mergeAllWindows: title=Merge All Windows desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=makeKeyAndOrderFront: title=PaperBanana desc= value= help= focused=0 enabled=1
+    depth=2 role=AXMenuBarItem subrole= id= title=Help desc= value= help= focused=0 enabled=1
+      depth=3 role=AXMenu subrole= id= title= desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id=_openFeedbackAssistant: title=Send PaperBanana Feedback to Apple desc= value= help= focused=0 enabled=1
+        depth=4 role=AXMenuItem subrole= id= title= desc= value= help= focused=0 enabled=0
+        depth=4 role=AXMenuItem subrole= id=showHelp: title=PaperBanana Help desc= value= help= focused=0 enabled=1
+DUMPED_NODES=232

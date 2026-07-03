@@ -1,0 +1,4 @@
+## process snapshot after cleanup
+2026-07-03T22:05:21Z
+## temp support root
+removed: /tmp/paperbanana-wp007-support-9a2d056-20260703175811
