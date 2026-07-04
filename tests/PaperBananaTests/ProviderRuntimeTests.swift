@@ -664,6 +664,11 @@ final class ProviderRuntimeTests: XCTestCase {
         XCTAssertTrue(FileManager.default.fileExists(atPath: providerRequestURL.path))
         XCTAssertTrue(FileManager.default.fileExists(atPath: response.usageMetadata["prompt_path"] ?? ""))
         XCTAssertTrue(FileManager.default.fileExists(atPath: response.usageMetadata["log_path"] ?? ""))
+        let messagePath = try XCTUnwrap(response.usageMetadata["message_path"])
+        XCTAssertTrue(FileManager.default.fileExists(atPath: messagePath))
+        let messageText = try String(contentsOf: URL(fileURLWithPath: messagePath), encoding: .utf8)
+        XCTAssertTrue(messageText.contains("PaperBanana Codex fallback completed after native PNG validation."))
+        XCTAssertTrue(messageText.contains("PNG validation passed."))
         XCTAssertTrue(String(data: response.rawResponseData, encoding: .utf8)?.contains("swift_codex") == true)
         let providerRequestPayload = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: providerRequestURL)) as? [String: Any])
         XCTAssertEqual(providerRequestPayload["adapter"] as? String, "swift_codex")
@@ -695,6 +700,62 @@ final class ProviderRuntimeTests: XCTestCase {
         XCTAssertEqual(capturedEvents.first?.stage, "provider_request_saved")
         XCTAssertTrue(capturedEvents.map(\.stage).contains("prepared"))
         XCTAssertTrue(capturedEvents.map(\.stage).contains("started"))
+    }
+
+    func testCodexFallbackProviderClientReturnsImageWhenCodexWritesPNGThenFailsWithoutMessageArtifact() async throws {
+        let repoRoot = try Self.makeTemporaryRepoRoot()
+        defer { try? FileManager.default.removeItem(at: repoRoot) }
+        let codexExecutableURL = try Self.installFakeCodexExecutable(repoRoot: repoRoot)
+        let outputURL = repoRoot
+            .appendingPathComponent("results/native_generate/native_generate_provider_runtime_test/generated_2K.png")
+        let providerRequestURL = outputURL
+            .deletingLastPathComponent()
+            .appendingPathComponent("provider_request.json")
+        let settings = Self.settings(repoRoot: repoRoot)
+        let client: any ProviderClient = CodexFallbackProviderClient(
+            codexExecutableURL: codexExecutableURL,
+            timeoutSeconds: 5,
+            pollInterval: 0.05,
+            extraEnvironment: [
+                "PAPERBANANA_FAKE_CODEX_IMAGE_BASE64": Self.tinyPNGBase64,
+                "PAPERBANANA_FAKE_CODEX_EXIT_AFTER_WRITE": "42"
+            ]
+        )
+
+        let response = try await client.execute(
+            ProviderClientRequest(
+                runID: "native_generate_provider_runtime_test",
+                callID: "swift-codex-nonzero-after-png-call",
+                workflow: .generation,
+                prompt: "Create a test figure.",
+                sourceImageURL: nil,
+                model: .codexFallback,
+                effectiveModel: ImageModelChoice.codexFallback.backendValue,
+                resolution: "2K",
+                aspectRatio: "16:9",
+                task: "scientific diagram",
+                settings: settings,
+                outputURL: outputURL,
+                providerRequestURL: providerRequestURL
+            ),
+            eventHandler: { _ in }
+        )
+
+        XCTAssertEqual(response.provider, .codexFallback)
+        XCTAssertEqual(response.model, ImageModelChoice.codexFallback.backendValue)
+        XCTAssertEqual(response.callID, "swift-codex-nonzero-after-png-call")
+        XCTAssertEqual(response.imageData, Data(base64Encoded: Self.tinyPNGBase64))
+        XCTAssertEqual(response.usageMetadata["provider_spend"], "none")
+        XCTAssertEqual(response.usageMetadata["handoff_adapter"], "swift_codex")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outputURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: providerRequestURL.path))
+        let messagePath = try XCTUnwrap(response.usageMetadata["message_path"])
+        XCTAssertTrue(FileManager.default.fileExists(atPath: messagePath))
+        let messageText = try String(contentsOf: URL(fileURLWithPath: messagePath), encoding: .utf8)
+        XCTAssertTrue(messageText.contains("PNG validation passed after Codex exited with code 42."))
+        XCTAssertTrue(messageText.contains("PaperBanana Codex fallback completed after native PNG validation."))
+        let rawResponseText = try XCTUnwrap(String(data: response.rawResponseData, encoding: .utf8))
+        XCTAssertTrue(rawResponseText.contains("PNG validation passed after Codex exited with code 42."))
     }
 
     #if PAPERBANANA_ENABLE_REAL_CODEX_E2E_TESTS
@@ -999,6 +1060,9 @@ final class ProviderRuntimeTests: XCTestCase {
                 "\\n".join(f"{key}={value}" for key, value in sorted(os.environ.items())),
                 encoding="utf-8"
             )
+        exit_after_write = os.environ.get("PAPERBANANA_FAKE_CODEX_EXIT_AFTER_WRITE", "")
+        if exit_after_write:
+            sys.exit(int(exit_after_write))
         print(f"fake codex wrote {output}")
         """
         try script.write(to: executableURL, atomically: true, encoding: .utf8)

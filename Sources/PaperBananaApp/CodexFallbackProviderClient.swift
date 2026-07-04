@@ -214,21 +214,27 @@ struct CodexFallbackProviderClient: ProviderClient {
             }
 
             if !process.isRunning {
+                if let imageData = Self.validatedPNGData(at: handoff.outputURL) {
+                    let message: String
+                    if process.terminationStatus == 0 {
+                        message = "PNG validation passed."
+                    } else {
+                        message = "PNG validation passed after Codex exited with code \(process.terminationStatus). Log: \(handoff.logURL.path)"
+                    }
+                    return try Self.response(
+                        request: request,
+                        handoff: handoff,
+                        imageData: imageData,
+                        message: message
+                    )
+                }
                 if process.terminationStatus != 0 {
                     throw ProviderRuntimeError.codexHandoffFailed(
                         "Codex exited with code \(process.terminationStatus). Log: \(handoff.logURL.path)"
                     )
                 }
-                guard let imageData = Self.validatedPNGData(at: handoff.outputURL) else {
-                    throw ProviderRuntimeError.codexHandoffFailed(
-                        "Codex exited successfully but did not create a valid PNG at \(handoff.outputURL.path). Log: \(handoff.logURL.path)"
-                    )
-                }
-                return try Self.response(
-                    request: request,
-                    handoff: handoff,
-                    imageData: imageData,
-                    message: "PNG validation passed."
+                throw ProviderRuntimeError.codexHandoffFailed(
+                    "Codex exited successfully but did not create a valid PNG at \(handoff.outputURL.path). Log: \(handoff.logURL.path)"
                 )
             }
 
@@ -407,13 +413,14 @@ struct CodexFallbackProviderClient: ProviderClient {
         imageData: Data,
         message: String
     ) throws -> ProviderResponse {
-        ProviderResponse(
+        let messageArtifact = try ensuredMessageArtifact(handoff: handoff, fallbackMessage: message)
+        return ProviderResponse(
             provider: .codexFallback,
             model: request.effectiveModel,
             callID: request.callID,
-            rawResponseData: try rawResponseData(request: request, handoff: handoff, message: message),
+            rawResponseData: try rawResponseData(request: request, handoff: handoff, message: messageArtifact),
             imageData: imageData,
-            text: message,
+            text: messageArtifact,
             usageMetadata: [
                 "provider_spend": "none",
                 "handoff_adapter": "swift_codex",
@@ -422,6 +429,33 @@ struct CodexFallbackProviderClient: ProviderClient {
                 "message_path": handoff.messageURL.path
             ]
         )
+    }
+
+    private static func ensuredMessageArtifact(
+        handoff: CodexHandoffArtifacts,
+        fallbackMessage: String
+    ) throws -> String {
+        if let existingMessage = try? String(contentsOf: handoff.messageURL, encoding: .utf8),
+           existingMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
+            return existingMessage
+        }
+
+        let message = """
+        PaperBanana Codex fallback completed after native PNG validation.
+
+        \(fallbackMessage)
+
+        Codex did not finish writing its requested message artifact before the native client accepted the validated PNG output. This fallback message preserves the provider-artifact contract for local run inspection.
+
+        Output: \(handoff.outputURL.path)
+        Log: \(handoff.logURL.path)
+        """
+        try FileManager.default.createDirectory(
+            at: handoff.messageURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try message.write(to: handoff.messageURL, atomically: true, encoding: .utf8)
+        return message
     }
 
     private static func rawResponseData(
