@@ -1,47 +1,71 @@
-# PaperBanana PR #72 Native macOS Review Map
+# PaperBanana PR #75 Native macOS Review Map
 
 Created: 2026-06-22
+Last refreshed: 2026-07-03
 Current integration branch: `integration/native-first-rc-native`
-Baseline reviewed SHA before this map/update slice: `4c9d779fd9de`
-Upstream base: `ddeb2a9a8cf6c8119dd29a97c1f1a7312d27dc7b`
+Current PR #75 head: `7b17e4be452c746d8a8e00c00f505ca6b10cd8c8`
+Current upstream base: `836455537e863b5a2f40dace487a782c0bc5ef94`
+Current full-gated product-source head: `56cbf379238342c699766c3f87854711e9e7aa62`
+Baseline reviewed SHA before the original map/update slice: `4c9d779fd9de`
 Original PR #72 head recorded in the branch map: `e0cea781ca07fefcd9a00e14520bdf673d138ee6`
 
 ## Purpose
 
-PR #72 is intentionally broad: it introduces the native macOS app, durable run
-stores, provider runtime, Artifact Library, Run Details, Provider Run Ledger,
-manual reference examples, Python bridge compatibility, native scripts, tests,
-and documentation. This map breaks the review into component lanes so reviewers
-can inspect one coherent area at a time without treating the native stack as an
-undifferentiated 100+ file patch.
+PR #75 is the current native-first integration/review vehicle. It carries the
+original broad PR #72 native stack plus later upstream integration, security,
+provider, CI, evidence, and core-release closure work. This map breaks the
+native stack into component lanes so reviewers can inspect one coherent area at
+a time without treating the branch as an undifferentiated 100+ file patch.
 
-This file is a review aid, not a release-completion claim. The evidence manifest
-remains authoritative for which checks have passed and which manual/live gates
-remain open.
+This file is a review aid, not a release-completion claim. The release
+candidate manifest and evidence manifest remain authoritative for which checks
+have passed, which claims are allowed, and which gates remain deferred.
+
+## Current Review Boundary
+
+The current maintainer-review request is for the bounded native local macOS
+core-feature boundary only. The supported phrase is:
+
+`native local core-feature validated`
+
+That phrase is limited to build/install, manual reference examples, no-spend
+provenance, one live Codex fallback smoke, Artifact Library, Run Details,
+Provider Ledger, and local rollback/install preflight. `EV-20260703-107`
+records the latest full local gate plus passing live Codex smoke on product
+commit `56cbf379238342c699766c3f87854711e9e7aa62`.
+
+Accessibility validation, VoiceOver validation, keyboard traversal signoff, AX
+proof, Increased Text, Increased Contrast, Reduce Motion, Reduce Transparency,
+adaptive accessibility signoff, hosted/HF validation, WP-108 scoring,
+publication-quality claims, notarization/distribution, public prior-release
+upgrade proof, full provider-matrix validation, and upstream acceptance are
+deferred and must not be inferred from this review map.
 
 ## Review Protocol
 
-1. Review the branch against `origin/main` at `ddeb2a9a8cf6`.
+1. Review the branch against `origin/main` at
+   `836455537e863b5a2f40dace487a782c0bc5ef94`.
 2. Review component lanes below, then cross-check shared contracts.
 3. For each lane, inspect the listed files and the linked evidence entries.
-4. Treat source-contract tests as regression guards, not substitutes for manual
-   UI/accessibility/provider validation.
-5. Do not close WP-007 or WP-105 until the final candidate SHA has current
-   source-control, project-drift, Xcode, build/install, visual, accessibility,
-   and evidence-manifest coverage.
+4. Treat source-contract tests as regression guards, not substitutes for any
+   deferred manual UI, accessibility, hosted, provider-breadth, quality, or
+   distribution validation.
+5. Use `docs/integration/RELEASE_CANDIDATE_MANIFEST.md` and
+   `docs/integration/EVIDENCE_MANIFEST.md` as the source of truth for the
+   bounded release claim and deferred gates.
 
 Recommended diff commands:
 
 ```bash
 git diff --stat origin/main...integration/native-first-rc-native
-git log --oneline --reverse ddeb2a9..integration/native-first-rc-native
+git log --oneline --reverse origin/main..integration/native-first-rc-native
 git diff --name-only origin/main...integration/native-first-rc-native
-git range-diff ddeb2a9..e0cea781 ddeb2a9..integration/native-first-rc-native
+git range-diff ddeb2a9..e0cea781 origin/main..integration/native-first-rc-native
 ```
 
 The final `range-diff` is expected to show additional integration/security,
-CI, visual-polish, accessibility, and evidence commits beyond the original
-native PR head.
+CI, visual-polish, accessibility-regression, provider, live Codex, and evidence
+commits beyond the original native PR head.
 
 ## Commit Groups
 
@@ -52,15 +76,16 @@ native PR head.
 | Native prompt/provider integration | `7594d4d`, `fac7cc8`, `79425e8`, `7ce4f07` | Plot fallback prompt behavior, provider audit calls, clean-worktree native gate portability, local-route image rejection, and direct Gemini refinement audit preservation. |
 | CI and gate portability | `26adc46`, `75f6d99` | Portable CI workflows, native structural checks, Ruby pinning, and script portability away from a single local host path. |
 | Evidence records | `1524a00`, `d43a6c8`, `4a8df78`, `7271e07`, `1e1688f`, `949bd3c`, `4c9d779`, `eebe392`, `c914acd`, `20cfdf3`, `5ace50d`, `f5ac814`, `1fa6cbe` | SHA-linked validation records and manifest updates. Review for accuracy and limitations, not product behavior. |
-| Visual/accessibility polish | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812`, `261ad29`, `cf9531c`, `706e054` | Sidebar/settings polish, search/card accessibility landmarks, Settings form layout, native table accessibility summaries, Prompt Studio keyboard focus escape, adaptive material fallback, minimum-window contract, preflight/reference/disabled-action landmarks, Settings inactive-window evidence, and source-level regression contracts. |
-| Live accessibility evidence | `fdcaad1`, `e393430`, `f360dc6` | Installed-app AX proof for no-spend preflight row semantics, non-image Artifact inspector disabled-action hints, manual reference-row selectable/selected/search/selection-limit states, and current branch-head aggregate gate/install evidence. |
+| Visual/accessibility regression coverage | `1c74527`, `14cc59e`, `3d7ad20`, `632ed26`, `b5e9812`, `261ad29`, `cf9531c`, `706e054` | Sidebar/settings polish, search/card accessibility landmarks, Settings form layout, native table accessibility summaries, Prompt Studio keyboard focus escape, adaptive material fallback, minimum-window contract, preflight/reference/disabled-action landmarks, Settings inactive-window evidence, and source-level regression contracts. These remain useful evidence but are deferred from the initial core-release gate. |
+| Installed-app AX spot evidence | `fdcaad1`, `e393430`, `f360dc6` | Installed-app AX proof for no-spend preflight row semantics, non-image Artifact inspector disabled-action hints, manual reference-row selectable/selected/search/selection-limit states, and current branch-head aggregate gate/install evidence. These are spot checks, not a VoiceOver validation claim. |
 
 ## Original PR #72 Source Stack Mapping
 
 The original native PR #72 branch was recorded at `e0cea781ca07`. The current
-integration branch keeps that source stack but adds later integration, CI,
-visual, accessibility, and evidence commits. Use this table to reconcile the
-original PR body with the integrated branch:
+integration branch keeps that source stack but adds later upstream integration,
+CI, visual/accessibility regression coverage, provider, live Codex, and evidence
+commits. Use this table to reconcile the original PR body with the integrated
+branch:
 
 | Original native commit | Integrated branch commit | Role |
 |---|---|---|
@@ -255,14 +280,16 @@ Current evidence:
 
 Open gaps:
 
-- Full manual VoiceOver and keyboard traversal remain required.
+- Full manual VoiceOver and keyboard traversal are deferred from the initial
+  native local core-feature boundary and must not be claimed from this map.
 - Prompt Studio prompt-to-run-control keyboard escape is covered by
   `EV-20260622-027`.
 - Dark Settings Increased Text Size visible-content review is covered by
   `EV-20260622-041` for the three native Settings tabs. Lower Workspace content,
   Light Mode Settings Increased Text Size plus broader full-app Increased Text
-  Size, inactive-window, hover/focus, and adaptive-state screenshot review
-  remains required outside the Settings and source-policy increments.
+  Size, inactive-window, hover/focus, and adaptive-state screenshot review are
+  useful follow-up for a later visual/accessibility signoff, not blockers for
+  the bounded core-feature claim.
 
 ### 3. Prompt Studio And Manual Reference Examples
 
@@ -323,10 +350,10 @@ Open gaps:
   missing-image filtering, 10-of-10 selection cap, or durable selected-reference
   provenance. Live reference-row AX proof now covers selectable, selected,
   keyboard-search, `10/10`, and selection-limit states. Full manual VoiceOver
-  speech-output/reading-order traversal and running-disabled row state remain
-  open under WP-007.
-- Approved live provider/fallback E2E remains covered under the provider
-  runtime follow-up below, not by this no-spend manual-reference evidence.
+  speech-output/reading-order traversal and running-disabled row state are
+  deferred outside the initial core boundary.
+- The approved one-live-Codex smoke is covered under the provider runtime lane
+  by `EV-20260703-107`, not by this no-spend manual-reference evidence.
 
 ### 4. Provider Runtime, Secrets, And Native Generation
 
@@ -394,9 +421,13 @@ Current evidence:
 
 Open gaps:
 
-- Native secret-store threat-model signoff remains required.
-- Approved live paid provider smoke and live-run sentinel secret/artifact/log
-  scan remain required before release claims.
+- Native secret-store threat-model signoff remains follow-up if saved provider
+  secrets or a broader local threat model are promoted beyond the current
+  bounded local core scope.
+- The approved one-live-Codex smoke and strict credential-pattern scan are
+  closed by `EV-20260703-107`. Live paid provider smoke, broader provider
+  matrix coverage, and provider-specific artifact/log scanning remain deferred
+  before any Gemini/OpenRouter/local/Ollama/provider-breadth support claim.
 
 ### 5. Artifact Library, Image Preview, And Refinement
 
@@ -471,8 +502,9 @@ Open gaps:
   by `EV-20260622-031`, with live non-image inspector disabled-action AX proof
   covered by `EV-20260622-033`. Remaining Artifact Library work is broader
   keyboard, VoiceOver speech-output, disabled-state exploration across more
-  file kinds, and adaptive-mode validation.
-- Live refinement/provider E2E remains required before release claims.
+  file kinds, and adaptive-mode validation outside the initial core boundary.
+- Live refinement/provider E2E beyond the one approved Codex fallback smoke
+  remains deferred before refinement/provider-breadth claims.
 
 ### 6. Run Details, Provider Ledger, Recovery, And Workflow Evaluation
 
@@ -528,9 +560,10 @@ Current evidence:
 
 Open gaps:
 
-- Manual VoiceOver and keyboard traversal remain required for the table
-  workflows beyond the table-selection AX summary proof.
-- Live provider/failure/recovery E2E on a final candidate remains required.
+- Manual VoiceOver and keyboard traversal for table workflows remain deferred
+  beyond the table-selection AX summary proof.
+- Live provider/failure/recovery E2E beyond the one approved Codex fallback
+  smoke remains deferred before broader provider or recovery claims.
 
 ### 7. Python Bridge And Legacy Compatibility
 
@@ -628,11 +661,13 @@ Representative commands used to build this map:
 ```bash
 git status --short --branch
 git branch -vv
-git log --oneline --reverse ddeb2a9..HEAD
+git log --oneline --reverse origin/main..HEAD
 git log --reverse --oneline origin/main..jdotc1/native/macos-first-class
 git diff --stat origin/main...HEAD
 git diff --name-status origin/main...HEAD
 git diff --name-status origin/main...jdotc1/native/macos-first-class
+gh pr view 75 --repo dwzhu-pku/PaperBanana --json headRefOid,baseRefOid,mergeStateStatus,isDraft
+gh run list --repo jdotc1/PaperBanana --branch integration/native-first-rc-native --limit 4
 git show --stat --oneline --find-renames fe433a1 7ba0e87 09cd0e7 0dcf9d5
 git show --stat --oneline --find-renames 8921e2e 443d727 7594d4d fac7cc8
 git show --stat --oneline --find-renames 79425e8 7ce4f07 26adc46 75f6d99
@@ -661,6 +696,7 @@ docs/integration/evidence/20260622-104120_706e054453d5_WP-007-settings-inactive-
 docs/integration/evidence/20260622-114551_9791008e65bf_WP-007-settings-increased-text-size.md
 docs/integration/evidence/20260622-105100_fdcaad163836_WP-007-live-preflight-artifact-ax.md
 docs/integration/evidence/20260622-110059_e39343070296_WP-007-reference-row-ax.md
+docs/integration/evidence/20260703-204207_56cbf37_live-codex-smoke-passed.md
 Design/DesignBrief.md
 README.md
 ```
@@ -670,67 +706,30 @@ README.md
 | Area | Current status | Why |
 |---|---|---|
 | Native implementation existence | Implemented | Native source, tests, scripts, assets, and docs are present on `integration/native-first-rc-native`. |
-| Source/build/test baseline | Strong partial evidence | Full Swift suite, Python suite, native source-control, project-drift, and build/install checks have passed on recent SHAs. `EV-20260622-056` covers the latest post-Codex-env hardening full local native/Python/Xcode 27 gate and Release build/install proof on product head `8ce7f3a2cca3`; `EV-20260622-055` covers the earlier post-WP-208 full local gate, remote structural/Python checks, and Release build/install proof on branch head `1fa6cbe90e6f`; `EV-20260622-053` covers earlier current-head focused accessibility/keyboard contracts, project-drift, and remote structural/Python checks; `EV-20260622-054` covers the WP-208 Foundation Models product-code change with focused and affected-class Swift tests; `EV-20260622-035` covers earlier Release build/install proof for `f360dc6d5ccd`. A final release-candidate rerun remains required only if later product code changes land or the frozen release SHA differs. |
-| Visual polish | Partial evidence | Default Light/Dark screenshots exist for main surfaces and Settings, Settings adaptive screenshots are covered by `EV-20260622-022`, bounded Settings inactive-window screenshots are covered by `EV-20260622-032`, and Dark Settings Increased Text Size visible-content screenshots are covered by `EV-20260622-041`. Lower Workspace content, Light Mode Settings Increased Text Size plus broader full-app Increased Text Size and adaptive states remain open. |
-| Accessibility | Partial evidence | Source contracts and limited AX spot checks exist. Live table AX re-probe is covered by `EV-20260622-021`, Prompt Studio prompt/run-control keyboard escape is covered by `EV-20260622-027`, Artifact Library card action-menu reachability is covered by `EV-20260622-029`, preflight/reference/disabled-action source semantics are covered by `EV-20260622-031`, live no-spend preflight plus non-image Artifact disabled-action AX proof is covered by `EV-20260622-033`, live reference-row selectable/selected/search/cap AX proof is covered by `EV-20260622-034`, Settings source-level accessibility/adaptive regression contracts are covered by `EV-20260622-050`, current-head focused accessibility/keyboard plus Settings source contracts are covered by `EV-20260622-053`, `EV-20260623-090` defines the manual VoiceOver traversal packet, `EV-20260623-091` defines the completed-artifact contract/templates, and `EV-20260623-092` adds a structural validator for future completed packets. Full manual keyboard/VoiceOver traversal remains open; `EV-20260622-053` records that the current desktop AX/window capture path was not trustworthy for manual signoff, and `EV-20260623-090`/`EV-20260623-091`/`EV-20260623-092` are preparation artifacts rather than completed speech-output evidence. |
-| Provider/security | Partial evidence | Mock/no-spend provider tests, credential isolation, local-route image rejection, a native Prompt Studio no-spend dry-run control, one real-data no-spend artifact-provenance run, real-data search/filter plus 10-reference cap persistence, focused no-spend generation/refinement store provenance tests, focused no-live cancellation/timeout/stale-run recovery tests, dry-run artifact secret-sentinel scanning in `EV-20260622-044`, Foundation Models disposition in `EV-20260622-054`, post-WP-208 full-gate regression coverage in `EV-20260622-055`, Codex fallback constrained subprocess-environment hardening plus post-hardening full-gate/install proof in `EV-20260622-056`, and sanitized localhost served credential smoke are covered. Live provider artifact/log scanning and real hosted session proof remain open. |
-| Quality benchmark | Not complete | `EV-20260622-043` found evaluation-adjacent code and a referenced-evaluation viewer, but no runnable no-live WP-108 benchmark command, frozen manifest, threshold, report schema, reviewer rubric, or CI gate. `EV-20260622-046` adds a CI-safe no-live manifest/report contract scaffold and validator. `EV-20260622-051` adds a no-live artifact-completeness runner for mapped native run artifacts. Actual generated final-candidate outputs, reviewer/provider scoring, repeated subset, and go/no-go quality evidence remain open. |
-| Release readiness | Not complete | Current post-Codex-env hardening install/full-gate provenance is covered by `EV-20260622-056`, draft release-manifest consistency is covered by `EV-20260622-036`, real `/Applications` app-bundle rollback mechanics are covered by `EV-20260622-037`, temporary distinct-bundle replacement/restore with synthetic data preservation is covered by `EV-20260622-045`, and Foundation Models release-surface disposition is covered by `EV-20260622-054`; provider E2E, public prior-release upgrade proof, runtime user-data migration, hosted rollback, final frozen-SHA manifest consistency, quality benchmark, notarization/distribution decision, and upstream maintainer acceptance remain open. |
+| Source/build/test baseline | Current for bounded core scope | `EV-20260703-107` records the latest full local native/Python/Xcode gate on product commit `56cbf379238342c699766c3f87854711e9e7aa62`: native contracts, host audit, project scan, 168 Swift tests, 150 Python tests, and `codex-xcode27 proof` passed with the explicit `27A5209h` Xcode baseline override. Fork CI also passed on PR head `7b17e4be452c746d8a8e00c00f505ca6b10cd8c8`. |
+| Manual reference examples | Validated for core scope | Real-data loading/search/filter, missing-image state, 10-example cap, no-spend persistence, and durable selected-reference provenance are covered by `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, and later full-gate evidence. |
+| Codex fallback live smoke | Validated for one selected route | `EV-20260703-107` records the approved live Codex fallback XCTest passing with a nonblank 4096 x 2304 PNG, coherent `swift_codex` metadata, non-empty `generated_2K.codex.message.txt`, and clean strict credential-pattern scan. This validates only the selected Codex fallback route. |
+| Local rollback/install preflight | Passed with limitation | `EV-20260703-105` records local rollback preflight with a retained distinct prior app artifact plus final local `/Applications/PaperBanana.app` install. This is not public prior-release upgrade, hosted rollback, notarization, or public distribution proof. |
+| Visual/accessibility evidence | Deferred from initial core scope | Existing source contracts, AX spot checks, and visual/adaptive screenshots remain useful regression evidence. They do not support accessibility validation, VoiceOver validation, screen-reader completeness, keyboard traversal signoff, or adaptive accessibility signoff for the initial release. |
+| Hosted/HF | Deferred from initial core scope | Hosted credential/plot policies and localhost/no-live checks exist, but public HF functional generation, two-session proof, hosted negative paths, logs, and hosted rollback remain unvalidated. |
+| Quality benchmark | Deferred from initial core scope | WP-108 tooling and synthetic/no-live evidence exist, but real final-candidate outputs, reviewer scoring, repeated subset, stakeholder approval, and publication-quality evidence remain open. |
+| Upstream acceptance | Not yet complete | PR #75 is ready for bounded maintainer review, but upstream completion requires maintainer review, merge, and issue-closure acceptance. |
 
-## Required Follow-Up Before Full Signoff
+## Deferred Follow-Up Outside The Initial Core Boundary
 
-- Record a final full native/Python/Xcode gate on the frozen release-candidate
-  SHA if it differs from `8ce7f3a2cca3` or later product-code changes land.
-- Run the full manual keyboard and VoiceOver traversal, including Run Details
-  and Provider Run Ledger table focus beyond the AX summary proof in
-  `EV-20260622-021`, plus Prompt Studio states beyond the focused
-  prompt/run-control escape path in `EV-20260622-027`, reference-example
-  running-disabled state beyond source contracts and the live selectable/cap
-  proof in `EV-20260622-034`, and VoiceOver speech output beyond the live
-  preflight/Artifact disabled-action AX proof in `EV-20260622-033`. Settings
-  source-level contracts are covered by `EV-20260622-050` and current-head
-  source contract revalidation plus GUI automation blocker evidence is covered
-  by `EV-20260622-053`, but manual traversal remains open.
-- Use `EV-20260623-090` as the execution packet for that pass: record actual
-  VoiceOver speech output, keyboard routes, defects, environment, installed app
-  hash, cleanup, and per-route disposition before changing the accessibility
-  review status.
-- Use the `EV-20260623-091` contract templates for the completed packet shape:
-  `voiceover-speech-output.tsv`, `keyboard-traversal.tsv`, `environment.md`,
-  `defects.md`, and `cleanup.md` must replace all placeholders with observed
-  manual data before any reviewer can treat the route as run.
-- Run the `EV-20260623-092` completed-packet validator against the completed
-  artifact directory before review. A validator pass only means the packet is
-  structurally reviewable; it does not prove VoiceOver output or close WP-007.
-- Capture adaptive visual evidence for full-app Increased Text Size,
-  hover/focus, and narrow widths; broader full-app inactive-window evidence also
-  remains open. `EV-20260622-022` covers Settings Increased Contrast, Reduce
-  Transparency, and Reduce Motion, `EV-20260622-032` covers a bounded Settings
-  inactive-window slice, and `EV-20260622-041` covers Dark Settings Increased
-  Text Size visible content across Workspace, Providers, and Legacy tabs.
-- Validate Artifact Library broader keyboard, VoiceOver, disabled-state, and
-  adaptive-mode behavior now that lower inspector scroll reachability has
-  top/bottom Light/Dark screenshot evidence and card action-menu reachability
-  is covered by `EV-20260622-029`, with disabled-action source hints covered by
-  `EV-20260622-031` and live non-image inspector disabled-action AX proof
-  covered by `EV-20260622-033`.
-- Run at least one approved live provider/fallback native E2E and inspect
-  durable request/metadata/provider artifacts. `EV-20260622-038` covers
-  no-spend generation/refinement store artifact and provenance behavior only;
-  `EV-20260622-039` covers mocked/no-live cancellation, timeout, and stale-run
-  recovery only; `EV-20260622-044` covers dry-run artifact secret-sentinel
-  scanning only; `EV-20260622-049` covers deterministic fake-Codex store
-  handoff only; `EV-20260622-056` covers constrained no-live Codex handoff
-  environment hardening only.
-- Complete real hosted two-session/negative-path validation before any public
-  hosted claim. `EV-20260622-040` is localhost-only served credential smoke,
-  not public hosted deployment evidence.
-- Produce final frozen-SHA release manifest consistency, install/upgrade/
-  rollback proof, and upstream review handoff before calling the project
-  complete. `EV-20260622-036` covers only the draft current-candidate manifest,
-  `EV-20260622-037` covers local app-bundle rollback preflight mechanics, and
-  `EV-20260622-045` covers temporary distinct-bundle replacement/restore plus
-  synthetic data preservation only.
-- Complete the real WP-108 quality benchmark before any publication-quality
-  claim. `EV-20260622-046` validates the no-live contract scaffold only, and
-  `EV-20260622-051` validates no-live artifact-completeness mechanics only.
+- Accessibility validation: run a future explicit VoiceOver/keyboard traversal
+  if that claim is reintroduced. Use the `EV-20260623-090` packet,
+  `EV-20260623-091` templates, and `EV-20260623-092` validator as preparation
+  artifacts only; they are not current release blockers.
+- Broader visual/adaptive signoff: capture additional hover/focus, narrow-width,
+  inactive-window, Increased Text, Increased Contrast, Reduce Motion, and
+  Reduce Transparency evidence only if a later milestone requires those claims.
+- Provider breadth: run separate live smokes before claiming Gemini,
+  OpenRouter, local/Ollama, paid-provider, or full provider-matrix support.
+- Hosted/HF: restart/deploy the Space and validate deployed SHA, two sessions,
+  negative paths, logs, provider behavior, and rollback before any public hosted
+  claim.
+- Quality: complete the real WP-108 benchmark and reviewer decision before any
+  publication-quality claim.
+- Distribution: complete notarization/distribution and true public prior-release
+  upgrade proof before claiming a public packaged release.
