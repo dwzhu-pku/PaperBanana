@@ -15,6 +15,13 @@ EVIDENCE_MANIFEST = (
 PR75_REVIEW_MAP = (
     REPO_ROOT / "docs" / "integration" / "PR72_REVIEW_MAP.md"
 ).read_text(encoding="utf-8")
+PR75_REVIEW_READINESS_EVIDENCE = (
+    REPO_ROOT
+    / "docs"
+    / "integration"
+    / "evidence"
+    / "20260703-231646_7c8f287_PR75-review-readiness-refresh.md"
+).read_text(encoding="utf-8")
 ROLLBACK_RUNBOOK = (
     REPO_ROOT / "docs" / "integration" / "LOCAL_INSTALL_ROLLBACK_RUNBOOK.md"
 ).read_text(encoding="utf-8")
@@ -185,8 +192,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "74e28eb68020df7bad84076aae29f39a158334b5",
         "6314142bab27c2591d57149ca18d5979d623ecc0",
         "55e54e68b1d3d1f7d99d96d8e4d2d86f2b71e4c7",
-        "Current PR #75 branch head",
-        "Latest review-readiness evidence head",
+        "Latest review-readiness evidence source head",
         "Previous recorded fork quick-check evidence head before core-smoke/docs-only closure",
         "Latest core native initial release evidence attempt",
         "Latest current-upstream merge-hygiene evidence head",
@@ -613,15 +619,18 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
 
 
 def test_pr75_review_readiness_docs_track_current_head_distinct_from_full_gate():
-    current_pr_head = "7c8f287fba7c9ad953c0594f2c21b174a892c9d6"
+    review_readiness_source_head = "7c8f287fba7c9ad953c0594f2c21b174a892c9d6"
     full_gated_product_head = "56cbf379238342c699766c3f87854711e9e7aa62"
 
-    assert f"Current PR #75 branch head: `{current_pr_head}`" in PR75_REVIEW_MAP
-    assert f"| Current PR #75 branch head | `{current_pr_head}` |" in RELEASE_MANIFEST
-    assert f"| Latest review-readiness evidence head | `{current_pr_head}` |" in RELEASE_MANIFEST
+    assert f"Latest completed PR #75 review-readiness evidence source head: `{review_readiness_source_head}`" in PR75_REVIEW_MAP
+    assert f"| Latest review-readiness evidence source head | `{review_readiness_source_head}` |" in RELEASE_MANIFEST
+    assert "The live PR #75 branch tip is intentionally not recorded as a static manifest" in RELEASE_MANIFEST
     assert "EV-20260703-108" in EVIDENCE_MANIFEST
     assert "review-readiness refresh" in EVIDENCE_MANIFEST
+    assert "The live PR branch tip is intentionally not frozen" in PR75_REVIEW_READINESS_EVIDENCE
     assert "Current PR #75 head: `7b17e4be452c746d8a8e00c00f505ca6b10cd8c8`" not in PR75_REVIEW_MAP
+    assert "Current PR #75 branch head" not in PR75_REVIEW_MAP
+    assert "Current PR #75 branch head" not in RELEASE_MANIFEST
     assert "current evidence head `507d9bd9336`" not in RELEASE_MANIFEST
     assert "Latest recorded remote-check evidence head" not in RELEASE_MANIFEST
     assert f"current full-gated product/core-smoke evidence commit\n`{full_gated_product_head}`" in RELEASE_MANIFEST
