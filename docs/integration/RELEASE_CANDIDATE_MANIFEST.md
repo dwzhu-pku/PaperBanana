@@ -19,7 +19,7 @@ been validated and leaves every unvalidated release claim open.
 | Older full local native/Python/Xcode gate | `4f9c4683e52f50e7cbef4262b9a41c4d64ffb60d` |
 | Previous sanitized full local native/Python/Xcode gate | `da8329597d196608a40bcf6be823c9ef684a9e16` |
 | Latest recorded remote-check evidence head | `507d9bd9336ae835b9c12f48aec4d6d376f2c38d` |
-| Latest core native initial release evidence attempt | `8ec62ee5062f3e48f9af0c999ba290ab8d53a315` |
+| Latest core native initial release evidence attempt | `d3406b0346d26c9e6447475c7e50e122dcc42a03` |
 | Latest full-gated product source head | `d308109b28fc4118e00aa0830bbf1594beec0494` |
 | Latest current-upstream merge-hygiene evidence head | `c233aecb7ef84201d4b52772a7932fde6fe70c74` |
 | Previous recorded remote-check evidence head after template | `e903b4b4c26ca356eecfec5c8b7b1d7fddeb1dbc` |
@@ -613,10 +613,10 @@ The initial release boundary is native local macOS only and may be described as
 SHA-linked on the candidate head.
 
 Current status: not yet native local core-feature validated. `EV-20260703-105`
-records passed local rollback/install proof for evidence head
-`8ec62ee5062f3e48f9af0c999ba290ab8d53a315`, but the required live Codex smoke
-is blocked because Xcode ended the selected XCTest at about 360 seconds before
-a generated PNG or Codex message artifact was produced.
+records passed local rollback/install proof, and `EV-20260703-106` records that
+the approved live Codex retry produced a valid PNG. The required live Codex
+smoke remains blocked because the selected XCTest failed when
+`generated_2K.codex.message.txt` was missing.
 
 Included gates: build/install; manual reference examples; no-spend provenance;
 one live Codex smoke; Artifact Library / Run Details / Provider Ledger; final
@@ -642,7 +642,7 @@ initial boundary.
 | Release build/install | `EV-20260622-035`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-056`, `EV-20260622-065`, `EV-20260623-070`, `EV-20260623-072` | Latest product-source Release build/install and installed-app artifact provenance passed with binary SHA-256 `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`; this does not replace full-gate evidence or rollback proof |
 | Remote Python 3.12 workflow | `EV-20260622-028`, `EV-20260622-042`, `EV-20260622-052`, `EV-20260622-053`, `EV-20260622-055`, `EV-20260622-057`, `EV-20260623-069`, `EV-20260623-070`, `EV-20260623-082`, `EV-20260623-093`, `EV-20260623-094`, `EV-20260623-095`, `EV-20260623-096`, `EV-20260703-099`, `EV-20260703-101` | Passed with limitation; latest recorded fork quick checks are for current evidence head `507d9bd9336` with Native Structural Checks run `28683352957` and Python Tests run `28683353016`; upstream PR #75 is based on `836455537e863b5a2f40dace487a782c0bc5ef94`, reports `mergeable=MERGEABLE` / `mergeStateStatus=CLEAN`, and still has an empty upstream PR check rollup. `EV-20260623-094` records the current host Xcode beta drift (`27A5209h` installed versus `27A5194q` pinned), `EV-20260623-095` records repo-level current-Xcode compatibility with 167 Swift tests and 147 Python tests while the aggregate gate is blocked at the global proof-tool layer, `EV-20260623-096` records current-Xcode override aggregate-gate success after default-preserving global helper override support, `EV-20260703-099` records current-upstream merge hygiene, prior fork Native Structural Checks run `28682951149`, prior fork Python Tests run `28682951179`, and a content-identical ancestry merge from `e903b4b` to `c233aec`; the source-control contract now includes `git diff --check`, `git diff --cached --check`, and a tracked-file merge-marker scan. `EV-20260703-101` records current evidence-head fork CI and confirms the drift from latest full-gated product source `d308109b28fc` to `507d9bd9336` is limited to evidence, release-manifest, full-gate evidence, and docs-contract files. `EV-20260623-069` records the self-hosted workflow dispatch limitation, and `EV-20260623-081` remains the latest strict-baseline full local native/Python/Xcode gate |
 | Manual reference examples | `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, `EV-20260622-068` | Real local data, search/filter, 10-example cap, no-spend persistence, and current-head provider-free reference store/prompt enrichment validation passed |
-| Live Codex smoke | `EV-20260703-105` | Blocked; the selected real Codex fallback XCTest reached `codex exec` and persisted `provider_request.json` SHA-256 `b5a8289c0b3de59e4fbf233530a4e664d1f1ec6d2ce62c42eb08778cd2c9fc4d`, prompt SHA-256 `9e22b6d986352d28bb0d06bc46d85f5bc1681f8a632e8f3fcf10989e680d646e`, and log SHA-256 `39497474a06c16b73785edf35d640730f084b76ea41e5ebab3ea42ed0c565a68` with `handoff_adapter=swift_codex` and `provider_spend=none`, but Xcode ended the test action at about 360 seconds before `generated_2K.png` or `generated_2K.codex.message.txt`; no native local core-feature validated claim yet |
+| Live Codex smoke | `EV-20260703-105`, `EV-20260703-106` | Blocked; the latest retry on `d3406b0346d26c9e6447475c7e50e122dcc42a03` produced valid non-blank `generated_2K.png` at 2048 x 1152 with SHA-256 `09555feb2078aaabcce0cd18073c4759ed87f39008223a90345f4a9d0de744f4`, coherent `provider_request.json` SHA-256 `3e1c6ef818015e0ccc7e89a036334606e2f406f01eec139969d37e149657e2c7` with `handoff_adapter=swift_codex`, prompt SHA-256 `6618a9077ba7094c35e24570c7d4065569fbb9cf5f78be4ebd7e94f407edeb49`, and log SHA-256 `be7a8d571cfba9d926f2956690de4d9bea394111e912eddc18988e17f954980f`; the XCTest still failed because required `generated_2K.codex.message.txt` was missing after the Codex log ended with `zsh:148: read-only variable: status`; no native local core-feature validated claim yet |
 | Final local rollback/install proof | `EV-20260703-105` | Passed with limitation; local rollback preflight used retained distinct prior app `/tmp/paperbanana-wp109-rollback-507d9bd-20260703172751/PaperBanana.prior.app`, restored prior binary hash `080423215684e9e25ee7240d6c5a4d9b083ff2a41071820590d2f74086646bd5`, preserved synthetic Application Support hash `bba525a197d9bbe0a41c17bbdda16dedb918b7194d74722555ea3af3dc1c43f5` and `results/` hash `0aa8b4994cc2892072559bc095963e741b0a953fe630122249cae90a11bddb6c`, then final `/Applications/PaperBanana.app` install passed with binary SHA-256 `f22c39a887b2098d6c1fa6ab1943719d4fad99791d25e7330f2ef7a20a30881e`; not public prior-release upgrade, hosted rollback, notarization, or upstream release proof |
 | Accessibility slices | `EV-20260622-021`, `EV-20260622-027`, `EV-20260622-029`, `EV-20260622-031`, `EV-20260622-033`, `EV-20260622-034`, `EV-20260622-050`, `EV-20260622-053`, `EV-20260622-068`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079`, `EV-20260623-090`, `EV-20260623-091`, `EV-20260623-092`, `EV-20260623-093`, `EV-20260703-104` | Excluded from the initial native local core-feature release boundary. Retained as historical/non-blocking regression evidence only; do not claim accessibility validation, VoiceOver validation, screen-reader completeness, keyboard traversal signoff, AX proof, Increased Text, Increased Contrast, Reduce Motion, Reduce Transparency, or adaptive accessibility signoff. |
 | Visual/adaptive slices | `EV-20260622-013`, `EV-20260622-015`, `EV-20260622-018`, `EV-20260622-022`, `EV-20260622-030`, `EV-20260622-032`, `EV-20260622-041`, `EV-20260622-066`, `EV-20260623-071`, `EV-20260623-072`, `EV-20260623-073`, `EV-20260623-074`, `EV-20260623-075`, `EV-20260623-076`, `EV-20260623-077`, `EV-20260623-079` | Excluded from the initial native local core-feature release boundary. Retained as useful non-blocking evidence; full-app adaptive/visual signoff is deferred. |
@@ -671,7 +671,7 @@ initial boundary.
 | Route | Current release-candidate status | Evidence | Limitation |
 |---|---|---|---|
 | Native no-spend dry run | Validated for local provenance, manual-reference persistence, generation/refinement store artifact behavior, dry-run artifact secret-sentinel scanning, Prompt Studio no-spend preflight sheet cancellation without run/provider artifacts, and current-head Prompt Studio keyboard/preflight AX traversal | `EV-20260622-024`, `EV-20260622-025`, `EV-20260622-026`, `EV-20260622-038`, `EV-20260622-044`, `EV-20260622-068`, `EV-20260623-074`, `EV-20260623-077` | Not a live provider generation result |
-| Codex fallback | Implemented and covered by unit/component/store tests as a no-paid-provider path; an opt-in real Codex CLI XCTest harness exists and `EV-20260703-105` proves the selected live route reached `codex exec`, but it did not produce the required PNG before the Xcode test action ended | Swift/Python test suites in `EV-20260622-035`; focused refinement fallback evidence in `EV-20260622-038`; store-level fake-Codex handoff evidence in `EV-20260622-049`; constrained handoff environment evidence in `EV-20260622-056`; CLI flag/handoff argument compatibility in `EV-20260623-088`; opt-in real Codex harness coverage in `EV-20260623-089`; current-head live-only compile/skip refresh in `EV-20260623-097`; blocked live attempt in `EV-20260703-105` | Approved real Codex/live fallback E2E remains open; retry needs explicit approval with Xcode test timeouts disabled or raised, and no alternate provider route should be substituted silently |
+| Codex fallback | Implemented and covered by unit/component/store tests as a no-paid-provider path; the selected live route reached `codex exec` in `EV-20260703-105`, then produced a valid PNG in `EV-20260703-106`, but the XCTest still failed because the required Codex message artifact was missing | Swift/Python test suites in `EV-20260622-035`; focused refinement fallback evidence in `EV-20260622-038`; store-level fake-Codex handoff evidence in `EV-20260622-049`; constrained handoff environment evidence in `EV-20260622-056`; CLI flag/handoff argument compatibility in `EV-20260623-088`; opt-in real Codex harness coverage in `EV-20260623-089`; current-head live-only compile/skip refresh in `EV-20260623-097`; blocked live attempts in `EV-20260703-105` and `EV-20260703-106` | Approved real Codex/live fallback E2E remains open; next work should address the missing message-file/root shell-failure issue in a separate fix plan, and no alternate provider route should be substituted silently |
 | Google Gemini / Nano Banana | Implemented and covered by mocked/error-path tests | Swift/Python test suites in `EV-20260622-035`; focused cancellation/timeout recovery evidence in `EV-20260622-039` | Approved live provider E2E remains open |
 | OpenRouter | Implemented where retained and covered by route/error-path tests | Swift/Python test suites in `EV-20260622-035` | Approved live provider E2E remains open |
 | `local/<model>` and `ollama/<model>` text routes | Documented and covered by mocked route/docs tests | `EV-20260622-007` and full Python suites | Optional real local/Ollama endpoint smoke remains open if promoted beyond mocked support |
@@ -763,9 +763,9 @@ Retained historical traceability, outside the core release boundary:
   only until a live-provider artifact scan passes.
 
 The core native initial release boundary remains open because the selected live
-Codex smoke is blocked in `EV-20260703-105`. Retrying that live gate requires
-explicit approval; do not silently switch to Gemini, OpenRouter, hosted/HF, or
-any other live provider route.
+Codex smoke is blocked in `EV-20260703-106`: the retry produced a valid PNG but
+failed the required message-artifact gate. Do not silently switch to Gemini,
+OpenRouter, hosted/HF, or any other live provider route.
 Contract phrase retained for live-route drift checks: do not silently switch to Gemini, OpenRouter, hosted/HF, or any other live provider route.
 
 Repeat the full local/self-hosted native/Python/Xcode gate if a later
@@ -782,6 +782,6 @@ Provider Ledger inspection, and final local rollback/install proof are
 SHA-linked. It must not be described as accessibility-validated,
 VoiceOver-validated, screen-reader-complete, hosted/HF-validated,
 WP-108-scored, publication-quality, notarized/distributed, or upstream-accepted.
-At the current evidence head `8ec62ee5062f3e48f9af0c999ba290ab8d53a315`,
+At the current evidence head `d3406b0346d26c9e6447475c7e50e122dcc42a03`,
 the phrase is still not allowed because the one live Codex smoke remains
-blocked.
+blocked by the missing Codex message artifact.
