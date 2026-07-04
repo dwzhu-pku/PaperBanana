@@ -15,7 +15,9 @@ Maintainer clarification: PaperBanana is an orchestration framework around provi
 
 ## Demo Availability
 
-The hosted web demo is available on Hugging Face Spaces at https://huggingface.co/spaces/dwzhu/PaperBanana. The local Gradio app can be launched with:
+The hosted web demo project page is on Hugging Face Spaces at https://huggingface.co/spaces/dwzhu/PaperBanana. Runtime availability can change with the Space state, provider configuration, and quota. Current native release-candidate evidence does not claim hosted/HF functional validation, hosted two-session isolation, hosted negative-path validation, hosted logs, or hosted rollback.
+
+The local Gradio app can be launched with:
 
 ```bash
 python app.py
@@ -27,7 +29,7 @@ The Streamlit demo can be launched with:
 streamlit run demo.py
 ```
 
-The hosted Space and local apps still require a working provider route for generation. Configure OpenRouter or Google Gemini for the full diagram generation flow.
+Hosted deployments and local apps still require a working provider route for generation. For local or operator-controlled deployments, configure an appropriate text route and image-generation route before use. PR #75 validates only the selected live Codex fallback smoke for the native local core boundary; it does not validate hosted/HF generation or Gemini/OpenRouter live release routes.
 
 ## Provider And Model Choice
 
@@ -36,11 +38,15 @@ PaperBanana separates text or vision-language reasoning from image generation:
 - `defaults.main_model_name` is the text or vision-language route used by planner, stylist, and critic calls.
 - `defaults.image_gen_model_name` is the image-generation route used by visualizer and polish calls.
 
-Recommended full-flow setups:
+Configurable provider route examples:
 
 - OpenRouter for unified hosted routing, using model names such as `openrouter/google/gemini-3.1-pro-preview` for text or vision-language calls and an image-capable model for image generation.
 - Google Gemini direct API, using Gemini text and image generation models.
 - OpenAI direct API for supported text routes and OpenAI image models where the code path explicitly calls OpenAI image generation.
+
+Release-support status depends on separate smoke evidence for the target route
+and environment. The current bounded native release evidence should not be read
+as full provider-matrix validation.
 
 Local OpenAI-compatible endpoints, including Ollama, are supported only for text-route calls through `local/<model>` or `ollama/<model>`. They are not a full image-generation backend. Keep `defaults.image_gen_model_name` pointed at a supported hosted image model if you need diagram rendering.
 

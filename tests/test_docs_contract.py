@@ -38,11 +38,16 @@ def test_support_doc_contains_public_artifact_contract():
     assert "https://huggingface.co/datasets/dwzhu/PaperBananaBench" in SUPPORT_DOC
     assert "https://huggingface.co/spaces/dwzhu/PaperBanana" in SUPPORT_DOC
     assert "no separate PaperBanana model checkpoint is required" in SUPPORT_DOC
+    assert "does not claim hosted/HF functional validation" in SUPPORT_DOC
+    assert "hosted two-session isolation" in SUPPORT_DOC
 
 
 def test_support_doc_contains_provider_and_quota_contracts():
     required_phrases = [
         "Provider And Model Choice",
+        "Configurable provider route examples",
+        "Release-support status depends on separate smoke evidence",
+        "full provider-matrix validation",
         "Local OpenAI-Compatible Text Route",
         "not a full image-generation backend",
         "Provider Quota, Billing, And Suspension",
@@ -60,6 +65,26 @@ def test_readme_links_durable_support_and_local_text_limits():
     assert "local/<model>" in README
     assert "ollama/<model>" in README
     assert "text-route support only" in README
+    assert "native local core-feature validated" in README
+    assert "Publication-quality outcomes remain an explicit evaluation goal" in README
+    assert "separate WP-108 benchmark/rubric evidence" in README
+    assert "only the selected Codex fallback route has a live smoke" in README
+    assert "does not claim hosted/HF functional validation" in README
+
+
+def test_public_docs_do_not_overclaim_unvalidated_release_gates():
+    combined = f"{README}\n{SUPPORT_DOC}"
+
+    forbidden_phrases = [
+        "Try it online — no setup required",
+        "Recommended full-flow setups",
+        "PaperBanana achieves high-quality academic illustration generation",
+        "The native app supports Google Gemini/Nano Banana models, OpenRouter when retained, and the Codex fallback",
+        "Configure OpenRouter or Google Gemini for the full diagram generation flow",
+    ]
+
+    for phrase in forbidden_phrases:
+        assert phrase not in combined
 
 
 def test_docs_do_not_restore_hosted_key_entry_guidance():
