@@ -3,7 +3,7 @@
 Created: 2026-06-22
 Last refreshed: 2026-07-03
 Current integration branch: `integration/native-first-rc-native`
-Current PR #75 head: `7b17e4be452c746d8a8e00c00f505ca6b10cd8c8`
+Current PR #75 branch head: `7c8f287fba7c9ad953c0594f2c21b174a892c9d6`
 Current upstream base: `836455537e863b5a2f40dace487a782c0bc5ef94`
 Current full-gated product-source head: `56cbf379238342c699766c3f87854711e9e7aa62`
 Baseline reviewed SHA before the original map/update slice: `4c9d779fd9de`
@@ -706,7 +706,7 @@ README.md
 | Area | Current status | Why |
 |---|---|---|
 | Native implementation existence | Implemented | Native source, tests, scripts, assets, and docs are present on `integration/native-first-rc-native`. |
-| Source/build/test baseline | Current for bounded core scope | `EV-20260703-107` records the latest full local native/Python/Xcode gate on product commit `56cbf379238342c699766c3f87854711e9e7aa62`: native contracts, host audit, project scan, 168 Swift tests, 150 Python tests, and `codex-xcode27 proof` passed with the explicit `27A5209h` Xcode baseline override. Fork CI also passed on PR head `7b17e4be452c746d8a8e00c00f505ca6b10cd8c8`. |
+| Source/build/test baseline | Current for bounded core scope | `EV-20260703-107` records the latest full local native/Python/Xcode gate on product commit `56cbf379238342c699766c3f87854711e9e7aa62`: native contracts, host audit, project scan, 168 Swift tests, 150 Python tests, and `codex-xcode27 proof` passed with the explicit `27A5209h` Xcode baseline override. `EV-20260703-108` records the later docs-only PR review-readiness refresh on PR branch head `7c8f287fba7c9ad953c0594f2c21b174a892c9d6`, including fork Native Structural Checks run `28691538764`, fork Python Tests run `28691538781`, docs contract, diff hygiene, and source-control contract. |
 | Manual reference examples | Validated for core scope | Real-data loading/search/filter, missing-image state, 10-example cap, no-spend persistence, and durable selected-reference provenance are covered by `EV-20260622-023` through `EV-20260622-026`, `EV-20260622-034`, and later full-gate evidence. |
 | Codex fallback live smoke | Validated for one selected route | `EV-20260703-107` records the approved live Codex fallback XCTest passing with a nonblank 4096 x 2304 PNG, coherent `swift_codex` metadata, non-empty `generated_2K.codex.message.txt`, and clean strict credential-pattern scan. This validates only the selected Codex fallback route. |
 | Local rollback/install preflight | Passed with limitation | `EV-20260703-105` records local rollback preflight with a retained distinct prior app artifact plus final local `/Applications/PaperBanana.app` install. This is not public prior-release upgrade, hosted rollback, notarization, or public distribution proof. |

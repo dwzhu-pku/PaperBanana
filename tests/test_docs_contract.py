@@ -9,6 +9,12 @@ README = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
 RELEASE_MANIFEST = (
     REPO_ROOT / "docs" / "integration" / "RELEASE_CANDIDATE_MANIFEST.md"
 ).read_text(encoding="utf-8")
+EVIDENCE_MANIFEST = (
+    REPO_ROOT / "docs" / "integration" / "EVIDENCE_MANIFEST.md"
+).read_text(encoding="utf-8")
+PR75_REVIEW_MAP = (
+    REPO_ROOT / "docs" / "integration" / "PR72_REVIEW_MAP.md"
+).read_text(encoding="utf-8")
 ROLLBACK_RUNBOOK = (
     REPO_ROOT / "docs" / "integration" / "LOCAL_INSTALL_ROLLBACK_RUNBOOK.md"
 ).read_text(encoding="utf-8")
@@ -133,6 +139,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "533857f046462ae71e843b7332f70f580916c015",
         "c233aecb7ef84201d4b52772a7932fde6fe70c74",
         "d308109b28fc4118e00aa0830bbf1594beec0494",
+        "7c8f287fba7c9ad953c0594f2c21b174a892c9d6",
         "507d9bd9336ae835b9c12f48aec4d6d376f2c38d",
         "e903b4b4c26ca356eecfec5c8b7b1d7fddeb1dbc",
         "836455537e863b5a2f40dace487a782c0bc5ef94",
@@ -142,12 +149,15 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "EV-20260703-105",
         "EV-20260703-106",
         "EV-20260703-107",
+        "EV-20260703-108",
         "28682951149",
         "28682951179",
         "28683352957",
         "28683353016",
+        "28691538764",
+        "28691538781",
         "current-upstream merge hygiene",
-        "current evidence-head fork CI",
+        "review-readiness fork checks",
         "mergeable=MERGEABLE",
         "mergeStateStatus=CLEAN",
         "empty upstream PR check rollup",
@@ -175,7 +185,9 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "74e28eb68020df7bad84076aae29f39a158334b5",
         "6314142bab27c2591d57149ca18d5979d623ecc0",
         "55e54e68b1d3d1f7d99d96d8e4d2d86f2b71e4c7",
-        "Latest recorded remote-check evidence head",
+        "Current PR #75 branch head",
+        "Latest review-readiness evidence head",
+        "Previous recorded fork quick-check evidence head before core-smoke/docs-only closure",
         "Latest core native initial release evidence attempt",
         "Latest current-upstream merge-hygiene evidence head",
         "Previous recorded remote-check evidence head after template",
@@ -361,7 +373,7 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
         "EV-20260623-086",
         "EV-20260703-102",
         "temporary distinct-bundle rollback preflight",
-        "current evidence head `507d9bd9336`",
+        "historical evidence head `507d9bd9336`",
         "f22c39a887b2098d6c1fa6ab1943719d4fad99791d25e7330f2ef7a20a30881e",
         "bba525a197d9bbe0a41c17bbdda16dedb918b7194d74722555ea3af3dc1c43f5",
         "0aa8b4994cc2892072559bc095963e741b0a953fe630122249cae90a11bddb6c",
@@ -598,6 +610,21 @@ def test_release_candidate_manifest_tracks_required_provenance_and_open_gates():
 
     for phrase in required_phrases:
         assert phrase in RELEASE_MANIFEST
+
+
+def test_pr75_review_readiness_docs_track_current_head_distinct_from_full_gate():
+    current_pr_head = "7c8f287fba7c9ad953c0594f2c21b174a892c9d6"
+    full_gated_product_head = "56cbf379238342c699766c3f87854711e9e7aa62"
+
+    assert f"Current PR #75 branch head: `{current_pr_head}`" in PR75_REVIEW_MAP
+    assert f"| Current PR #75 branch head | `{current_pr_head}` |" in RELEASE_MANIFEST
+    assert f"| Latest review-readiness evidence head | `{current_pr_head}` |" in RELEASE_MANIFEST
+    assert "EV-20260703-108" in EVIDENCE_MANIFEST
+    assert "review-readiness refresh" in EVIDENCE_MANIFEST
+    assert "Current PR #75 head: `7b17e4be452c746d8a8e00c00f505ca6b10cd8c8`" not in PR75_REVIEW_MAP
+    assert "current evidence head `507d9bd9336`" not in RELEASE_MANIFEST
+    assert "Latest recorded remote-check evidence head" not in RELEASE_MANIFEST
+    assert f"current full-gated product/core-smoke evidence commit\n`{full_gated_product_head}`" in RELEASE_MANIFEST
 
 
 def test_release_candidate_manifest_blocks_ungated_product_drift_after_full_gate():
