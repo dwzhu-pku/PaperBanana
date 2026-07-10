@@ -44,6 +44,10 @@ PaperBanana achieves high-quality academic illustration generation by orchestrat
 4. **Visualizer Agent**: Transforms textual descriptions into visual outputs using state-of-the-art image generation models
 5. **Critic Agent**: Forms a closed-loop refinement mechanism with the Visualizer through multi-round iterative improvements
 
+## Hardware Requirements
+
+**No local GPU/CUDA is required.** PaperBanana does not run any model locally — every step of the pipeline (text reasoning by the Retriever/Planner/Stylist/Critic agents, image generation by the Visualizer agent, and the LLM-as-judge evaluation in `utils/eval_toolkits.py`) is a remote API call to Gemini, OpenAI, Anthropic, or OpenRouter. A CPU-only machine (including a plain laptop, a free-tier cloud notebook, or a CPU-only Docker container) runs PaperBanana identically to a GPU machine. The bundled Colab notebook (`notebooks/PaperBanana_Colab_End_to_End.ipynb`) does not request or use a GPU runtime either — it only relies on Colab for Google Drive mounting (to persist inputs/outputs) and convenient `pip` installs, so a CPU runtime is sufficient there as well.
+
 ## Quick Start
 
 ### Step1: Clone the Repo
@@ -61,6 +65,8 @@ Note that if you need to generate many candidates simultaneously, you will requi
 
 ### Step3: Downloading the Dataset
 First download [PaperBananaBench](https://huggingface.co/datasets/dwzhu/PaperBananaBench), then place it under the `data` directory (e.g., `data/PaperBananaBench/`). The framework is designed to function gracefully without the dataset by bypassing the Retriever Agent's few-shot learning capability. If interested in the original PDFs, please download them from [PaperBananaDiagramPDFs](https://huggingface.co/datasets/dwzhu/PaperBananaDiagramPDFs).
+
+Note: this dataset step is only truly optional for the Gradio (`app.py`) and Streamlit (`demo.py`) UIs. Running `python main.py` with its defaults (Option 3 below) requires the corresponding `data/<dataset_name>/<task_name>/<split_name>.json` file (e.g., `data/PaperBananaBench/diagram/test.json`) to already exist locally, or it will exit with a `FileNotFoundError` before making any API calls.
 
 ### Step4: Installing the Environment
 1. We use `uv` to manage Python packages. Please install `uv` following the instructions [here](https://docs.astral.sh/uv/getting-started/installation/).
