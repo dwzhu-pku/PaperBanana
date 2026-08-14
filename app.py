@@ -190,6 +190,28 @@ async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9
         except Exception as e:
             print(f"OpenRouter refine failed: {e}, falling back...")
 
+    # Path 1b: OrcaRouter
+    try:
+        from utils.generation_utils import call_orcarouter_image_generation_with_retry_async
+        _has_orcarouter = True
+    except ImportError:
+        _has_orcarouter = False
+    orcarouter_api_key = get_config_val("api_keys", "orcarouter_api_key", "ORCAROUTER_API_KEY", "")
+    if _has_orcarouter and orcarouter_api_key:
+        try:
+            contents = [
+                {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": image_b64}},
+                {"type": "text", "text": edit_prompt},
+            ]
+            cfg = {"system_prompt": "", "temperature": 1.0, "aspect_ratio": aspect_ratio, "image_size": image_size}
+            result = await call_orcarouter_image_generation_with_retry_async(
+                model_name=image_model, contents=contents, config=cfg, max_attempts=3, retry_delay=10, error_context="refine_image",
+            )
+            if result and result[0] != "Error":
+                return base64.b64decode(result[0]), "Image refined successfully! (via OrcaRouter)"
+        except Exception as e:
+            print(f"OrcaRouter refine failed: {e}, falling back...")
+
     # Path 2 & 3: Gemini native SDK
     try:
         from google import genai
@@ -472,12 +494,17 @@ def build_app():
         with gr.Accordion("API Keys", open=False):
             gr.Markdown(
                 "**You do not need both keys.** Fill **at least one**: **OpenRouter** *or* **Google (Gemini)**. "
-                "If both are set, OpenRouter is preferred for automatic routing when available."
+                "If both are set, OpenRouter is preferred for automatic routing when available. "
+                "OrcaRouter is also supported as an OpenAI-compatible routing gateway."
             )
             with gr.Row():
                 openrouter_key_input = gr.Textbox(
                     label="OpenRouter API Key (optional)", type="password", placeholder="sk-or-...",
                     value=get_config_val("api_keys", "openrouter_api_key", "OPENROUTER_API_KEY", ""),
+                )
+                orcarouter_key_input = gr.Textbox(
+                    label="OrcaRouter API Key (optional)", type="password", placeholder="sk-orca-...",
+                    value=get_config_val("api_keys", "orcarouter_api_key", "ORCAROUTER_API_KEY", ""),
                 )
                 google_key_input = gr.Textbox(
                     label="Google API Key (optional)", type="password", placeholder="AIza...",
@@ -485,9 +512,11 @@ def build_app():
                 )
             gr.Markdown("*Keys are used only for this session and never stored.*")
 
-            def apply_keys(or_key, g_key):
+            def apply_keys(or_key, oca_key, g_key):
                 if or_key:
                     os.environ["OPENROUTER_API_KEY"] = or_key
+                if oca_key:
+                    os.environ["ORCAROUTER_API_KEY"] = oca_key
                 if g_key:
                     os.environ["GOOGLE_API_KEY"] = g_key
                 from utils.generation_utils import reinitialize_clients
@@ -496,12 +525,12 @@ def build_app():
                     return f"Clients initialized: {', '.join(initialized)}."
                 return (
                     "Warning: no API clients could be initialized. "
-                    "Enter at least one key—OpenRouter or Google (Gemini)."
+                    "Enter at least one key—OpenRouter, OrcaRouter or Google (Gemini)."
                 )
 
             apply_keys_btn = gr.Button("Apply Keys", size="sm")
             keys_status = gr.Textbox(visible=False)
-            apply_keys_btn.click(apply_keys, inputs=[openrouter_key_input, google_key_input], outputs=[keys_status])
+            apply_keys_btn.click(apply_keys, inputs=[openrouter_key_input, orcarouter_key_input, google_key_input], outputs=[keys_status])
 
         # ================================================================
         # TABS
