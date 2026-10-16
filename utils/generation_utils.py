@@ -56,6 +56,7 @@ anthropic_client = None
 openai_client = None
 openrouter_client = None
 openrouter_api_key = ""
+atlascloud_client = None
 
 
 def reinitialize_clients():
@@ -67,7 +68,7 @@ def reinitialize_clients():
     Returns a list of client names that were successfully initialized.
     """
     global gemini_client, anthropic_client, openai_client
-    global openrouter_client, openrouter_api_key
+    global openrouter_client, openrouter_api_key, atlascloud_client
 
     initialized = []
 
@@ -105,6 +106,25 @@ def reinitialize_clients():
         initialized.append("OpenRouter")
     else:
         openrouter_client = None
+
+    atlascloud_api_key = get_config_val(
+        "api_keys", "atlascloud_api_key", "ATLASCLOUD_API_KEY", ""
+    )
+    if atlascloud_api_key:
+        atlascloud_base_url = get_config_val(
+            "base_urls",
+            "atlascloud_base_url",
+            "ATLASCLOUD_BASE_URL",
+            "https://api.atlascloud.ai/v1",
+        )
+        atlascloud_client = AsyncOpenAI(
+            base_url=atlascloud_base_url.rstrip("/"),
+            api_key=atlascloud_api_key,
+        )
+        print("Initialized Atlas Cloud Client with API Key")
+        initialized.append("Atlas Cloud")
+    else:
+        atlascloud_client = None
 
     return initialized
 
@@ -370,12 +390,23 @@ async def call_claude_with_retry_async(
     return response_text_list
 
 async def call_openai_with_retry_async(
-    model_name, contents, config, max_attempts=5, retry_delay=30, error_context=""
+    model_name,
+    contents,
+    config,
+    max_attempts=5,
+    retry_delay=30,
+    error_context="",
+    client=None,
+    provider_name="OpenAI",
 ):
     """
     ASYNC: Call OpenAI API with asynchronous retry logic.
     This follows the same pattern as Claude's implementation.
     """
+    client = client or openai_client
+    if client is None:
+        raise RuntimeError(f"{provider_name} client is not initialized")
+
     system_prompt = config["system_prompt"]
     temperature = config["temperature"]
     candidate_num = config["candidate_num"]
@@ -393,7 +424,7 @@ async def call_openai_with_retry_async(
         try:
             openai_contents = _convert_to_openai_format(current_contents)
             # Attempt to generate the very first candidate.
-            first_response = await openai_client.chat.completions.create(
+            first_response = await client.chat.completions.create(
                 model=model_name,
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -405,7 +436,7 @@ async def call_openai_with_retry_async(
             # If we reach here, the input is valid.
             content = first_response.choices[0].message.content or ""
             if not content.strip():
-                print(f"OpenAI returned empty content, retrying...")
+                print(f"{provider_name} returned empty content, retrying...")
                 if attempt < max_attempts - 1:
                     await asyncio.sleep(retry_delay)
                 continue
@@ -437,7 +468,7 @@ async def call_openai_with_retry_async(
         )
         valid_openai_contents = _convert_to_openai_format(current_contents)
         tasks = [
-            openai_client.chat.completions.create(
+            client.chat.completions.create(
                 model=model_name,
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -752,13 +783,24 @@ async def call_model_with_retry_async(
     Unified router that dispatches to the correct provider based on model_name.
 
     Routing rules:
-      1. Explicit prefix overrides: "openrouter/" -> OpenRouter, "claude-" -> Anthropic,
+      1. Explicit prefix overrides: "atlas/" -> Atlas Cloud,
+         "openrouter/" -> OpenRouter, "claude-" -> Anthropic,
          "gpt-"/"o1-"/"o3-"/"o4-" -> OpenAI
       2. No prefix: auto-detect based on which API key is configured.
          Priority: OpenRouter > Gemini > Anthropic > OpenAI
     """
     # Explicit provider prefix overrides auto-detection
-    if model_name.startswith("openrouter/"):
+    if model_name.startswith("atlas/"):
+        provider = "atlascloud"
+        actual_model = model_name[len("atlas/") :]
+        if not actual_model:
+            raise ValueError("Atlas Cloud model id cannot be empty")
+        if atlascloud_client is None:
+            raise RuntimeError(
+                "Atlas Cloud client is not initialized. Set ATLASCLOUD_API_KEY "
+                "or configure api_keys.atlascloud_api_key."
+            )
+    elif model_name.startswith("openrouter/"):
         provider = "openrouter"
         actual_model = model_name[len("openrouter/"):]
     elif model_name.startswith("claude-"):
@@ -802,6 +844,18 @@ async def call_model_with_retry_async(
         "candidate_num": config.candidate_count if hasattr(config, "candidate_count") else 1,
         "max_completion_tokens": config.max_output_tokens if hasattr(config, "max_output_tokens") else 50000,
     }
+
+    if provider == "atlascloud":
+        return await call_openai_with_retry_async(
+            model_name=actual_model,
+            contents=contents,
+            config=cfg_dict,
+            max_attempts=max_attempts,
+            retry_delay=retry_delay,
+            error_context=error_context,
+            client=atlascloud_client,
+            provider_name="Atlas Cloud",
+        )
 
     call_fn = {
         "openrouter": call_openrouter_with_retry_async,
