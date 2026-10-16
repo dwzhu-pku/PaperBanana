@@ -25,3 +25,4 @@ api_keys:
   openai_api_key: ""
   anthropic_api_key: ""
   openrouter_api_key: "" # e.g. "sk-or-v1-xxxxx". Set model_name to "openrouter/<model>" to use.
+  orcarouter_api_key: "" # e.g. "sk-orca-xxxxx". Set model_name to "orcarouter/<model>" to use.

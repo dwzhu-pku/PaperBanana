@@ -121,6 +121,21 @@ class VanillaAgent(BaseAgent):
                     max_attempts=5,
                     retry_delay=30,
                 )
+            elif generation_utils.orcarouter_client is not None:
+                # OrcaRouter image generation
+                image_config = {
+                    "system_prompt": self.system_prompt,
+                    "temperature": self.exp_config.temperature,
+                    "aspect_ratio": aspect_ratio,
+                    "image_size": image_size,
+                }
+                response_list = await generation_utils.call_orcarouter_image_generation_with_retry_async(
+                    model_name=self.model_name,
+                    contents=content_list,
+                    config=image_config,
+                    max_attempts=5,
+                    retry_delay=30,
+                )
             else:
                 gen_config_args["response_modalities"] = ["IMAGE"]
                 gen_config_args["image_config"] = types.ImageConfig(
