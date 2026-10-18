@@ -299,6 +299,7 @@ Thanks to all contributors who helped improve PaperBanana, whether through code,
     <tr>
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/XiaoHuo888-hue"><img src="https://avatars.githubusercontent.com/u/315183888?v=4?s=100" width="100px;" alt="XiaoHuo888-hue"/><br /><sub><b>XiaoHuo888-hue</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=XiaoHuo888-hue" title="Code">💻</a></td>
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/binyangzhu000-sudo"><img src="https://avatars.githubusercontent.com/u/224954946?v=4?s=100" width="100px;" alt="nb213"/><br /><sub><b>nb213</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=binyangzhu000-sudo" title="Code">💻</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://camwolford.github.io/"><img src="https://avatars.githubusercontent.com/u/140654638?v=4?s=100" width="100px;" alt="Campbell Wolford"/><br /><sub><b>Campbell Wolford</b></sub></a><br /><a href="#ideas-camwolford" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/dwzhu-pku/PaperBanana/issues?q=author%3Acamwolford" title="Bug reports">🐛</a></td>
     </tr>
   </tbody>
 </table>
