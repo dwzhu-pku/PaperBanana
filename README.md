@@ -305,6 +305,7 @@ Thanks to all contributors who helped improve PaperBanana, whether through code,
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/binyangzhu000-sudo"><img src="https://avatars.githubusercontent.com/u/224954946?v=4?s=100" width="100px;" alt="nb213"/><br /><sub><b>nb213</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=binyangzhu000-sudo" title="Code">💻</a></td>
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/tjndr"><img src="https://avatars.githubusercontent.com/u/12607177?v=4?s=100" width="100px;" alt="Tejinder Singh"/><br /><sub><b>Tejinder Singh</b></sub></a><br /><a href="#ideas-tjndr" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="16.66%"><a href="https://camwolford.github.io/"><img src="https://avatars.githubusercontent.com/u/140654638?v=4?s=100" width="100px;" alt="Campbell Wolford"/><br /><sub><b>Campbell Wolford</b></sub></a><br /><a href="#ideas-camwolford" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/dwzhu-pku/PaperBanana/issues?q=author%3Acamwolford" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/noking-xdj"><img src="https://avatars.githubusercontent.com/u/54163745?v=4?s=100" width="100px;" alt="NoKing"/><br /><sub><b>NoKing</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=noking-xdj" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
