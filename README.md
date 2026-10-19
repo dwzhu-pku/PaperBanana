@@ -15,6 +15,7 @@ This repository forked the content of that repo and aims to keep evolving toward
 
 
 ## Latest News
+- **2026-09-23**: 🎉 Congratulations to [Xueqing Wu](https://x.com/xueqing_w) on releasing **PaperBanana-Interact**, a follow-up to PaperBanana that makes figure generation a multi-turn conversation, so you can iteratively refine figures with feedback. Check out the [paper](https://arxiv.org/abs/2608.30241), [code](https://github.com/shirley-wu/PaperBanana-Interact), [data](https://huggingface.co/datasets/xqwu/MTPaperBananaBench), [demo](https://huggingface.co/spaces/xqwu/pb-interact-demo) and [project page](https://shirley-wu.github.io/PaperBanana-Interact).
 - **2026-04-30**: PaperBanana was accepted to ICML 2026 as a Spotlight.
 - **2026-03-24**: PaperBanana is now [hosted on Hugging Face Spaces](https://huggingface.co/spaces/dwzhu/PaperBanana). Many thanks to the Hugging Face team for their support.
 - **2026-03-11**: Published PaperBanana as a [ClawHub skill](https://clawhub.ai/skills/paperbanana) — install with `clawhub install paperbanana`.
