@@ -26,12 +26,18 @@ api_keys:
   anthropic_api_key: ""
   openrouter_api_key: "" # e.g. "sk-or-v1-xxxxx". Set model_name to "openrouter/<model>" to use.
   orcarouter_api_key: "" # e.g. "sk-orca-xxxxx". Set model_name to "orcarouter/<model>" to use.
+  api_route_api_key: "" # Or API_ROUTE_API_KEY. Text: main_model_name="api-route/gpt-6.1-sol".
   atlascloud_api_key: "" # Set model_name to "atlas/<model>" to use Atlas Cloud.
   local_openai_api_key: "" # Optional for local/<model>. Defaults to "local".
   ollama_api_key: "" # Optional for ollama/<model>. Defaults to "ollama".
 
 base_urls:
+  api_route_base_url: "https://global.api-route.com/v1" # Or API_ROUTE_BASE_URL.
   atlascloud_base_url: "https://api.atlascloud.ai/v1"
   # Text-only OpenAI-compatible servers. Image agents reject local/ and ollama/.
   local_openai_base_url: "" # Required for local/<model>, e.g. "http://127.0.0.1:8000/v1"
   ollama_base_url: "" # Optional override; ollama/<model> defaults to http://localhost:11434/v1
+
+# API Route is opt-in for text generation via the api-route/ prefix.
+# Keep image_gen_model_name and its provider key configured separately.
+# Setup: https://www.api-route.com/en/docs/quickstart
