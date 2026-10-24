@@ -232,6 +232,61 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "XiaoHuo888-hue",
+      "name": "XiaoHuo888-hue",
+      "avatar_url": "https://avatars.githubusercontent.com/u/315183888?v=4",
+      "profile": "https://github.com/XiaoHuo888-hue",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "binyangzhu000-sudo",
+      "name": "nb213",
+      "avatar_url": "https://avatars.githubusercontent.com/u/224954946?v=4",
+      "profile": "https://github.com/binyangzhu000-sudo",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "tjndr",
+      "name": "Tejinder Singh",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12607177?v=4",
+      "profile": "https://github.com/tjndr",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "camwolford",
+      "name": "Campbell Wolford",
+      "avatar_url": "https://avatars.githubusercontent.com/u/140654638?v=4",
+      "profile": "https://camwolford.github.io/",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "serendipityshe",
+      "name": "serendipityshe",
+      "avatar_url": "https://avatars.githubusercontent.com/u/144142961?v=4",
+      "profile": "https://github.com/serendipityshe",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "noking-xdj",
+      "name": "NoKing",
+      "avatar_url": "https://avatars.githubusercontent.com/u/54163745?v=4",
+      "profile": "https://github.com/noking-xdj",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitType": "docs"
