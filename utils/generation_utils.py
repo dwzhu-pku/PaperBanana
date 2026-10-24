@@ -125,8 +125,37 @@ def _make_local_text_client(kind: str, *, require_base_url: bool):
     return AsyncOpenAI(base_url=base_url.rstrip("/"), api_key=api_key)
 
 
+def _bound_client(name: str):
+    """Return the active job's client, or the process-global client.
+
+    A credential context never falls back to globals or the environment.
+    """
+    from utils.request_scope import current_credentials
+
+    creds = current_credentials()
+    if creds is None:
+        return globals()[name]
+    return creds.client(name)
+
+
+def _bound_secret(name: str) -> str:
+    """Return the active job's key, or the process-global key."""
+    from utils.request_scope import current_credentials
+
+    creds = current_credentials()
+    if creds is None:
+        return globals()[name]
+    return creds.secret(name)
+
+
 def _client_for_local_text(kind: str):
     """Reuse the initialized client, or build one for this text call."""
+    from utils.request_scope import current_credentials
+
+    creds = current_credentials()
+    if creds is not None:
+        return creds.build_local(kind, require_base_url=True)
+
     global local_openai_client, ollama_client
     current = ollama_client if kind == "ollama" else local_openai_client
     if current is not None:
@@ -272,7 +301,8 @@ async def call_gemini_with_retry_async(
     """
     ASYNC: Call Gemini API with asynchronous retry logic.
     """
-    if gemini_client is None:
+    client = _bound_client("gemini_client")
+    if client is None:
         raise RuntimeError(
             "Gemini client was not initialized: missing Google API key. "
             "Please set GOOGLE_API_KEY in environment, or configure api_keys.google_api_key in configs/model_config.yaml."
@@ -287,9 +317,6 @@ async def call_gemini_with_retry_async(
     current_contents = contents
     for attempt in range(max_attempts):
         try:
-            # Use global client
-            client = gemini_client
-
             # Convert generic content list to Gemini's format right before the API call
             gemini_contents = _convert_to_gemini_parts(current_contents)
             response = await client.aio.models.generate_content(
@@ -422,6 +449,7 @@ async def call_claude_with_retry_async(
     candidate_num = config["candidate_num"]
     max_output_tokens = config["max_output_tokens"]
     response_text_list = []
+    anthropic = _bound_client("anthropic_client")
 
     # --- Preparation Phase ---
     # Convert to the Claude-specific format and perform an initial optimistic resize.
@@ -436,7 +464,7 @@ async def call_claude_with_retry_async(
         try:
             claude_contents = _convert_to_claude_format(current_contents)
             # Attempt to generate the very first candidate.
-            first_response = await anthropic_client.messages.create(
+            first_response = await anthropic.messages.create(
                 model=model_name,
                 max_tokens=max_output_tokens,
                 temperature=temperature,
@@ -471,7 +499,7 @@ async def call_claude_with_retry_async(
         )
         valid_claude_contents = _convert_to_claude_format(current_contents)
         tasks = [
-            anthropic_client.messages.create(
+            anthropic.messages.create(
                 model=model_name,
                 max_tokens=max_output_tokens,
                 temperature=temperature,
@@ -621,7 +649,7 @@ async def call_openai_with_retry_async(
     ASYNC: Call OpenAI API with asynchronous retry logic.
     This follows the same pattern as Claude's implementation.
     """
-    client = client or openai_client
+    client = client or _bound_client("openai_client")
     if client is None:
         raise RuntimeError(f"{provider_name} client is not initialized")
 
@@ -671,9 +699,10 @@ async def call_openai_image_generation_with_retry_async(
         "output_format": output_format,
     })
 
+    image_client = _bound_client("openai_client")
     for attempt in range(max_attempts):
         try:
-            response = await openai_client.images.generate(**gen_params)
+            response = await image_client.images.generate(**gen_params)
             
             # OpenAI images.generate returns a list of images in response.data
             if response.data and response.data[0].b64_json:
@@ -769,7 +798,7 @@ async def call_openrouter_with_retry_async(
     """
     return await _call_router_text_with_retry_async(
         provider_name="OpenRouter",
-        client=openrouter_client,
+        client=_bound_client("openrouter_client"),
         missing_key_message=(
             "OpenRouter client was not initialized: missing API key. "
             "Please set OPENROUTER_API_KEY in environment, or configure "
@@ -793,7 +822,7 @@ async def call_orcarouter_with_retry_async(
     """
     return await _call_router_text_with_retry_async(
         provider_name="OrcaRouter",
-        client=orcarouter_client,
+        client=_bound_client("orcarouter_client"),
         missing_key_message=(
             "OrcaRouter client was not initialized: missing API key. "
             "Please set ORCAROUTER_API_KEY in environment, or configure "
@@ -952,14 +981,23 @@ async def call_openrouter_image_generation_with_retry_async(
     Images are returned in choices[0].message.content as inline_data or
     in choices[0].message.images as data URLs.
     """
-    if not openrouter_api_key:
+    from utils.request_scope import OPENROUTER_DEFAULT_BASE, current_credentials
+
+    creds = current_credentials()
+    if creds is not None:
+        api_key = creds.openrouter_api_key
+        base = (creds.openrouter_base_url or OPENROUTER_DEFAULT_BASE).rstrip("/")
+    else:
+        api_key = openrouter_api_key
+        base = "https://openrouter.ai/api/v1"
+    if not api_key:
         raise RuntimeError(
             "OpenRouter client was not initialized: missing API key."
         )
     return await _router_image_generation_with_retry(
         provider_name="OpenRouter",
-        api_key=openrouter_api_key,
-        endpoint="https://openrouter.ai/api/v1/chat/completions",
+        api_key=api_key,
+        endpoint=f"{base}/chat/completions",
         model_name=_to_openrouter_model_id(model_name),
         contents=contents,
         config=config,
@@ -978,14 +1016,23 @@ async def call_orcarouter_image_generation_with_retry_async(
     Images are returned in choices[0].message.content as inline_data or
     in choices[0].message.images as data URLs.
     """
-    if not orcarouter_api_key:
+    from utils.request_scope import ORCAROUTER_DEFAULT_BASE, current_credentials
+
+    creds = current_credentials()
+    if creds is not None:
+        api_key = creds.orcarouter_api_key
+        base = (creds.orcarouter_base_url or ORCAROUTER_DEFAULT_BASE).rstrip("/")
+    else:
+        api_key = orcarouter_api_key
+        base = "https://api.orcarouter.ai/v1"
+    if not api_key:
         raise RuntimeError(
             "OrcaRouter client was not initialized: missing API key."
         )
     return await _router_image_generation_with_retry(
         provider_name="OrcaRouter",
-        api_key=orcarouter_api_key,
-        endpoint="https://api.orcarouter.ai/v1/chat/completions",
+        api_key=api_key,
+        endpoint=f"{base}/chat/completions",
         model_name=_to_orcarouter_model_id(model_name),
         contents=contents,
         config=config,
@@ -993,6 +1040,207 @@ async def call_orcarouter_image_generation_with_retry_async(
         retry_delay=retry_delay,
         error_context=error_context,
     )
+
+
+def _redact_secret(text: str, secret: str) -> str:
+    if not text or not secret:
+        return text or ""
+    return text.replace(secret, "[redacted]")
+
+
+def _resolve_aihubmix() -> tuple[str, str]:
+    """Key and base URL for AIHubMix.
+
+    An active credential context is authoritative: an empty key there must not
+    pick up the sponsor key from the environment.
+    """
+    from utils.request_scope import AIHUBMIX_DEFAULT_BASE, current_credentials
+
+    creds = current_credentials()
+    if creds is not None:
+        return creds.aihubmix()
+    return os.getenv("AIHUBMIX_API_KEY", ""), os.getenv("AIHUBMIX_BASE_URL", AIHUBMIX_DEFAULT_BASE).rstrip("/")
+
+
+def _strip_aihubmix_prefix(model_name: str) -> str:
+    prefix = "aihubmix/"
+    stripped = model_name[len(prefix):] if model_name.startswith(prefix) else model_name
+    if not stripped:
+        raise ValueError("AIHubMix model id cannot be empty")
+    return stripped
+
+
+def _aihubmix_timeout_seconds() -> float:
+    raw = os.getenv("PAPERBANANA_AIHUBMIX_TIMEOUT", "180")
+    try:
+        return max(0.1, float(raw))
+    except ValueError:
+        return 180.0
+
+
+async def _aihubmix_post(*, kind: str, model_name: str, payload: dict, max_attempts: int, retry_delay: int):
+    """POST one AIHubMix chat completion, billing each attempt when an observer is set."""
+    from utils.request_scope import current_billing
+
+    api_key, base = _resolve_aihubmix()
+    if not api_key:
+        raise RuntimeError(
+            "AIHubMix client is not initialized: missing API key. "
+            "Sponsored mode reads AIHUBMIX_API_KEY from the server environment. "
+            "Bring-your-own-key requests do not use that key."
+        )
+    endpoint = f"{base}/chat/completions"
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+    observer = current_billing()
+    timeout = _aihubmix_timeout_seconds()
+
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        for attempt in range(max_attempts):
+            attempt_key = None
+            if observer is not None:
+                attempt_key = await observer.reserve_attempt(kind=kind, model=model_name)
+            try:
+                response = await client.post(endpoint, headers=headers, json=payload)
+            except httpx.ConnectTimeout:
+                if observer is not None and attempt_key is not None:
+                    await observer.finish_attempt(attempt_key, outcome="rejected", usage=None)
+                if attempt < max_attempts - 1:
+                    await asyncio.sleep(min(retry_delay, 1))
+                continue
+            except httpx.ConnectError:
+                if observer is not None and attempt_key is not None:
+                    await observer.finish_attempt(attempt_key, outcome="rejected", usage=None)
+                if attempt < max_attempts - 1:
+                    await asyncio.sleep(min(retry_delay, 1))
+                continue
+            except httpx.TimeoutException:
+                if observer is not None and attempt_key is not None:
+                    await observer.finish_attempt(attempt_key, outcome="ambiguous", usage=None)
+                if attempt < max_attempts - 1:
+                    await asyncio.sleep(min(retry_delay, 1))
+                continue
+            except httpx.TransportError as exc:
+                if observer is not None and attempt_key is not None:
+                    await observer.finish_attempt(attempt_key, outcome="ambiguous", usage=None)
+                print(
+                    f"AIHubMix transport error on attempt {attempt + 1}: "
+                    f"{_redact_secret(str(exc), api_key)}"
+                )
+                if attempt < max_attempts - 1:
+                    await asyncio.sleep(min(retry_delay, 1))
+                continue
+
+            usage = None
+            try:
+                body = response.json()
+                if isinstance(body, dict):
+                    usage = body.get("usage") if isinstance(body.get("usage"), dict) else None
+            except Exception:
+                body = None
+
+            status = response.status_code
+            if status == 401 or status == 403:
+                if observer is not None and attempt_key is not None:
+                    await observer.finish_attempt(attempt_key, outcome="rejected", usage=None)
+                raise RuntimeError(f"AIHubMix rejected the API key (HTTP {status}).")
+            if status == 408 or status == 409 or status == 429 or status >= 500:
+                if observer is not None and attempt_key is not None:
+                    await observer.finish_attempt(attempt_key, outcome="ambiguous", usage=usage)
+                print(f"AIHubMix attempt {attempt + 1} failed: HTTP {status}.")
+                if attempt < max_attempts - 1:
+                    await asyncio.sleep(min(retry_delay * (2 ** attempt), 60))
+                continue
+            if status >= 400:
+                if observer is not None and attempt_key is not None:
+                    await observer.finish_attempt(attempt_key, outcome="rejected", usage=None)
+                detail = ""
+                if isinstance(body, dict):
+                    detail = _redact_secret(str(body.get("error") or ""), api_key)[:300]
+                print(f"AIHubMix attempt {attempt + 1} rejected: HTTP {status}. {detail}")
+                return None
+            if observer is not None and attempt_key is not None:
+                await observer.finish_attempt(attempt_key, outcome="success", usage=usage)
+            return body if isinstance(body, dict) else None
+    return None
+
+
+async def call_aihubmix_with_retry_async(
+    model_name, contents, config, max_attempts=5, retry_delay=5, error_context=""
+):
+    """Call AIHubMix's OpenAI-compatible chat endpoint. Used by sponsored text steps."""
+    del error_context
+    actual_model = _strip_aihubmix_prefix(model_name)
+    system_prompt = config.get("system_prompt", "") if isinstance(config, dict) else ""
+    temperature = config.get("temperature", 1.0) if isinstance(config, dict) else 1.0
+    payload = {
+        "model": actual_model,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": _convert_to_openai_format(contents)},
+        ],
+        "temperature": temperature,
+    }
+    data = await _aihubmix_post(
+        kind="text",
+        model_name=actual_model,
+        payload=payload,
+        max_attempts=max_attempts,
+        retry_delay=retry_delay,
+    )
+    if not data:
+        return ["Error"]
+    choices = data.get("choices") or []
+    if not choices:
+        return ["Error"]
+    message = choices[0].get("message") or {}
+    content = message.get("content") or ""
+    if not str(content).strip():
+        return ["Error"]
+    return [str(content)]
+
+
+async def call_aihubmix_image_generation_with_retry_async(
+    model_name, contents, config, max_attempts=5, retry_delay=30, error_context=""
+):
+    """Call AIHubMix for an image. The response uses the same shape as the routers."""
+    del error_context
+    actual_model = _strip_aihubmix_prefix(model_name)
+    system_prompt = config.get("system_prompt", "")
+    temperature = config.get("temperature", 1.0)
+    aspect_ratio = config.get("aspect_ratio", "1:1")
+    image_size = config.get("image_size", "1k")
+    image_config = {}
+    if aspect_ratio:
+        image_config["aspect_ratio"] = aspect_ratio
+    if image_size:
+        image_config["image_size"] = image_size
+    payload = {
+        "model": actual_model,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": _convert_to_openai_format(contents)},
+        ],
+        "temperature": temperature,
+        "modalities": ["image", "text"],
+    }
+    if image_config:
+        payload["image_config"] = image_config
+    data = await _aihubmix_post(
+        kind="image",
+        model_name=actual_model,
+        payload=payload,
+        max_attempts=max_attempts,
+        retry_delay=retry_delay,
+    )
+    if not data:
+        return ["Error"]
+    choices = data.get("choices") or []
+    if not choices:
+        return ["Error"]
+    b64_data = _image_b64_from_router_message(choices[0].get("message") or {})
+    if not b64_data:
+        return ["Error"]
+    return [b64_data]
 
 
 async def dispatch_image_generation(
@@ -1013,12 +1261,26 @@ async def dispatch_image_generation(
 ):
     """Dispatch one image generation the way the diagram agents do.
 
-    Priority when enabled: a ``gpt-image`` model name, then an initialized
-    OpenRouter client, then an initialized OrcaRouter client, then Gemini.
-    Callers keep ``assert_not_local_openai_image_model`` so the text-only
-    rejection stays at the agent boundary. Polish leaves out gpt-image and
-    OrcaRouter because it historically only chose OpenRouter or Gemini.
+    Priority when enabled: an ``aihubmix/`` model name, then a ``gpt-image``
+    model name, then an initialized OpenRouter client, then an initialized
+    OrcaRouter client, then Gemini. Active job credentials replace the
+    process-global clients. Callers keep ``assert_not_local_openai_image_model``
+    so the text-only rejection stays at the agent boundary. Polish leaves out
+    gpt-image and OrcaRouter because it historically only chose OpenRouter or Gemini.
     """
+    if str(model_name or "").startswith("aihubmix/"):
+        return await call_aihubmix_image_generation_with_retry_async(
+            model_name=model_name,
+            contents=contents,
+            config={
+                "system_prompt": system_prompt,
+                "temperature": temperature,
+                "aspect_ratio": aspect_ratio,
+                "image_size": image_size,
+            },
+            max_attempts=max_attempts,
+            retry_delay=retry_delay,
+        )
     if include_gpt_image and "gpt-image" in model_name:
         image_prompt = prompt
         if gpt_image_prompt_limit is not None:
@@ -1042,7 +1304,7 @@ async def dispatch_image_generation(
         "aspect_ratio": aspect_ratio,
         "image_size": image_size,
     }
-    if openrouter_client is not None:
+    if _bound_client("openrouter_client") is not None:
         return await call_openrouter_image_generation_with_retry_async(
             model_name=model_name,
             contents=contents,
@@ -1050,7 +1312,7 @@ async def dispatch_image_generation(
             max_attempts=max_attempts,
             retry_delay=retry_delay,
         )
-    if include_orcarouter and orcarouter_client is not None:
+    if include_orcarouter and _bound_client("orcarouter_client") is not None:
         return await call_orcarouter_image_generation_with_retry_async(
             model_name=model_name,
             contents=contents,
@@ -1080,24 +1342,29 @@ async def call_model_with_retry_async(
     Unified router that dispatches to the correct provider based on model_name.
 
     Routing rules:
-      1. Explicit prefix overrides: "atlas/" -> Atlas Cloud,
+      1. Explicit prefix overrides: "aihubmix/" -> AIHubMix,
+         "atlas/" -> Atlas Cloud,
          "local/" and "ollama/" -> local OpenAI-compatible text endpoints,
          "openrouter/" -> OpenRouter, "orcarouter/" -> OrcaRouter,
          "claude-" -> Anthropic,
          "gpt-"/"o1-"/"o3-"/"o4-" -> OpenAI
-      2. No prefix: auto-detect based on which API key is configured.
+      2. No prefix: auto-detect based on which API key is configured for the
+         active job, or the process-global clients when no job is active.
          Priority: OpenRouter > OrcaRouter > Gemini > Anthropic > OpenAI
     """
     # Explicit provider prefix overrides auto-detection
     local_text = _split_local_text_prefix(model_name)
     local_text_client = None
     local_text_name = ""
-    if model_name.startswith("atlas/"):
+    if model_name.startswith("aihubmix/"):
+        provider = "aihubmix"
+        actual_model = model_name
+    elif model_name.startswith("atlas/"):
         provider = "atlascloud"
         actual_model = model_name[len("atlas/") :]
         if not actual_model:
             raise ValueError("Atlas Cloud model id cannot be empty")
-        if atlascloud_client is None:
+        if _bound_client("atlascloud_client") is None:
             raise RuntimeError(
                 "Atlas Cloud client is not initialized. Set ATLASCLOUD_API_KEY "
                 "or configure api_keys.atlascloud_api_key."
@@ -1124,17 +1391,17 @@ async def call_model_with_retry_async(
     else:
         # Auto-detect provider based on which API key is configured
         actual_model = model_name
-        if openrouter_client is not None:
+        if _bound_client("openrouter_client") is not None:
             provider = "openrouter"
             actual_model = _to_openrouter_model_id(model_name)
-        elif orcarouter_client is not None:
+        elif _bound_client("orcarouter_client") is not None:
             provider = "orcarouter"
             actual_model = _to_orcarouter_model_id(model_name)
-        elif gemini_client is not None:
+        elif _bound_client("gemini_client") is not None:
             provider = "gemini"
-        elif anthropic_client is not None:
+        elif _bound_client("anthropic_client") is not None:
             provider = "anthropic"
-        elif openai_client is not None:
+        elif _bound_client("openai_client") is not None:
             provider = "openai"
         else:
             raise RuntimeError(
@@ -1160,6 +1427,16 @@ async def call_model_with_retry_async(
         "max_completion_tokens": config.max_output_tokens if hasattr(config, "max_output_tokens") else 50000,
     }
 
+    if provider == "aihubmix":
+        return await call_aihubmix_with_retry_async(
+            model_name=actual_model,
+            contents=contents,
+            config=cfg_dict,
+            max_attempts=max_attempts,
+            retry_delay=retry_delay,
+            error_context=error_context,
+        )
+
     if provider in ("atlascloud", "local_text"):
         return await call_openai_with_retry_async(
             model_name=actual_model,
@@ -1168,7 +1445,7 @@ async def call_model_with_retry_async(
             max_attempts=max_attempts,
             retry_delay=retry_delay,
             error_context=error_context,
-            client=atlascloud_client if provider == "atlascloud" else local_text_client,
+            client=_bound_client("atlascloud_client") if provider == "atlascloud" else local_text_client,
             provider_name="Atlas Cloud" if provider == "atlascloud" else local_text_name,
         )
 

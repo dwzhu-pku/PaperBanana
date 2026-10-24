@@ -11,3 +11,6 @@ results/
 *.env
 configs/*.local.yaml
 configs/secrets*.yaml
+
+# Hosted site local disk and bucket stand-in
+var/

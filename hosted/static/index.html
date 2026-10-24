@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PaperBanana</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"></span>
+      <div>
+        <p class="eyebrow">Hosted trial</p>
+        <h1>PaperBanana</h1>
+      </div>
+    </div>
+    <div class="account" id="account"></div>
+  </header>
+  <main>
+    <section id="banner" class="banner" hidden></section>
+    <nav class="tabs" id="tabs">
+      <button type="button" data-tab="generate" class="active">Generate</button>
+      <button type="button" data-tab="history">History</button>
+      <button type="button" data-tab="admin" id="admin-tab" hidden>Admin</button>
+    </nav>
+    <section id="generate" class="panel">
+      <form id="job-form">
+        <div class="split">
+          <label>Method section
+            <textarea name="content" rows="12" required placeholder="Paste the method section or plot data."></textarea>
+          </label>
+          <div class="stack">
+            <label>Figure caption
+              <textarea name="caption" rows="4" required placeholder="What the figure should communicate."></textarea>
+            </label>
+            <label>Output
+              <select name="task_name">
+                <option value="diagram">Diagram</option>
+                <option value="plot">Statistical plot</option>
+              </select>
+            </label>
+            <fieldset>
+              <legend>How to pay for the model</legend>
+              <label class="choice"><input type="radio" name="mode" value="sponsored" checked> Free trial</label>
+              <label class="choice"><input type="radio" name="mode" value="byok"> Your API key</label>
+            </fieldset>
+            <div id="sponsored-note" class="note"></div>
+            <div id="byok-fields" hidden>
+              <label>Provider
+                <select name="provider">
+                  <option value="openrouter">OpenRouter</option>
+                  <option value="google">Google Gemini</option>
+                  <option value="openai">OpenAI</option>
+                  <option value="anthropic">Anthropic</option>
+                  <option value="orcarouter">OrcaRouter</option>
+                  <option value="atlascloud">Atlas Cloud</option>
+                </select>
+              </label>
+              <label>API key
+                <input name="api_key" type="password" autocomplete="off" placeholder="Used for this job only">
+              </label>
+              <label>Text model
+                <input name="main_model" placeholder="google/gemini-3.1-pro-preview">
+              </label>
+              <label>Image model
+                <input name="image_model" placeholder="google/gemini-3.1-flash-image-preview">
+              </label>
+              <label>Candidates
+                <input name="num_candidates" type="number" min="1" max="4" value="1">
+              </label>
+              <label>Critic rounds
+                <input name="max_critic_rounds" type="number" min="0" max="3" value="1">
+              </label>
+            </div>
+            <button class="primary" type="submit" id="submit">Generate</button>
+            <p id="form-error" class="error"></p>
+          </div>
+        </div>
+      </form>
+      <section id="live" class="live" hidden>
+        <div class="live-head">
+          <h2 id="live-title">Working</h2>
+          <span id="live-status"></span>
+        </div>
+        <div class="bar"><div id="live-bar"></div></div>
+        <p id="live-stage"></p>
+        <div id="live-images" class="images"></div>
+      </section>
+    </section>
+    <section id="history" class="panel" hidden></section>
+    <section id="admin" class="panel" hidden></section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

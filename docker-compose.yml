@@ -1,0 +1,63 @@
+# Local PaperBanana hosted site.
+# Mock Hugging Face sign-in, a directory that stands in for a private bucket,
+# and a mock AIHubMix. SQLite stays on the app container's local disk.
+services:
+  mock-oauth:
+    build:
+      context: .
+      dockerfile: hosted/Dockerfile
+    command: python -m hosted.mock_oauth
+    environment:
+      OAUTH_CLIENT_ID: local-paperbanana
+      OAUTH_CLIENT_SECRET: local-paperbanana-secret
+      PORT: "9000"
+    ports:
+      - "9000:9000"
+
+  mock-aihubmix:
+    build:
+      context: .
+      dockerfile: hosted/Dockerfile
+    command: python -m hosted.mock_aihubmix
+    environment:
+      PORT: "9001"
+      MOCK_AIHUBMIX_DEBUG: "1"
+    ports:
+      - "9001:9001"
+
+  app:
+    build:
+      context: .
+      dockerfile: hosted/Dockerfile
+    depends_on:
+      - mock-oauth
+      - mock-aihubmix
+    environment:
+      PAPERBANANA_OAUTH_MODE: mock
+      OAUTH_CLIENT_ID: local-paperbanana
+      OAUTH_CLIENT_SECRET: local-paperbanana-secret
+      PAPERBANANA_OAUTH_AUTHORIZE_URL: http://127.0.0.1:9000/oauth/authorize
+      PAPERBANANA_OAUTH_TOKEN_URL: http://mock-oauth:9000/oauth/token
+      PAPERBANANA_OAUTH_USERINFO_URL: http://mock-oauth:9000/oauth/userinfo
+      SESSION_SECRET: local-dev-session-secret
+      PAPERBANANA_COOKIE_SECURE: "0"
+      PAPERBANANA_ADMIN_HF_IDS: user-admin
+      AIHUBMIX_API_KEY: local-mock-sponsor-key
+      AIHUBMIX_BASE_URL: http://mock-aihubmix:9001/v1
+      PAPERBANANA_DB_PATH: /var/paperbanana/local/ledger.db
+      PAPERBANANA_BUCKET_BACKEND: local
+      PAPERBANANA_BUCKET_DIR: /var/paperbanana/bucket
+      PAPERBANANA_DAILY_BUDGET_USD: "20"
+      PAPERBANANA_MONTHLY_BUDGET_USD: "400"
+      PAPERBANANA_USER_DAILY_LIMIT: "3"
+      PAPERBANANA_SPONSORED_MAX_CRITIC_ROUNDS: "1"
+      PAPERBANANA_SPONSORED_CANDIDATES: "1"
+    ports:
+      - "7860:7860"
+    volumes:
+      - paperbanana-local:/var/paperbanana/local
+      - paperbanana-bucket:/var/paperbanana/bucket
+
+volumes:
+  paperbanana-local:
+  paperbanana-bucket:
