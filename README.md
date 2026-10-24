@@ -161,6 +161,16 @@ python main.py \
 - `demo_planner_critic`: Demo mode (Retriever → Planner → Visualizer → Critic; no Stylist) without evaluation
 - `demo_full`: Demo mode (full pipeline) without evaluation
 
+#### Option 4: Hosted site (FastAPI, local Docker)
+
+The single-instance site with Hugging Face sign-in, a free-trial ledger, and bring-your-own-key jobs lives under `hosted/`. Run it locally with mock sign-in, a mock AIHubMix, and a directory that stands in for a private bucket:
+
+```bash
+docker compose up --build
+```
+
+Then open http://127.0.0.1:7860. The local runbook is [docs/hosted-local.md](docs/hosted-local.md). Later deployment steps (a new Space, not `dwzhu/PaperBanana`) are in [docs/hosted-deploy.md](docs/hosted-deploy.md). The Gradio and Streamlit demos above are unchanged.
+
 ### Visualization Tools
 
 View pipeline evolution and intermediate results:
