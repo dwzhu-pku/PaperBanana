@@ -60,6 +60,7 @@ orcarouter_client = None
 orcarouter_api_key = ""
 atlascloud_client = None
 api_route_client = None
+runcrate_client = None
 local_openai_client = None
 ollama_client = None
 
@@ -151,7 +152,7 @@ def reinitialize_clients():
     global gemini_client, anthropic_client, openai_client
     global openrouter_client, openrouter_api_key
     global orcarouter_client, orcarouter_api_key
-    global atlascloud_client, api_route_client
+    global atlascloud_client, api_route_client, runcrate_client
     global local_openai_client, ollama_client
 
     initialized = []
@@ -239,6 +240,25 @@ def reinitialize_clients():
         initialized.append("API Route")
     else:
         api_route_client = None
+
+    runcrate_api_key = get_config_val(
+        "api_keys", "runcrate_api_key", "RUNCRATE_API_KEY", ""
+    )
+    if runcrate_api_key:
+        runcrate_base_url = get_config_val(
+            "base_urls",
+            "runcrate_base_url",
+            "RUNCRATE_BASE_URL",
+            "https://api.runcrate.ai/v1",
+        )
+        runcrate_client = AsyncOpenAI(
+            base_url=runcrate_base_url.rstrip("/"),
+            api_key=runcrate_api_key,
+        )
+        print("Initialized Runcrate Client with API Key")
+        initialized.append("Runcrate")
+    else:
+        runcrate_client = None
 
     local_openai_client = _make_local_text_client("local", require_base_url=False)
     if local_openai_client is not None:
@@ -1101,6 +1121,7 @@ async def call_model_with_retry_async(
 
     Routing rules:
       1. Explicit prefix overrides: "atlas/" -> Atlas Cloud, "api-route/" -> API Route,
+         "runcrate/" -> Runcrate,
          "local/" and "ollama/" -> local OpenAI-compatible text endpoints,
          "openrouter/" -> OpenRouter, "orcarouter/" -> OrcaRouter,
          "claude-" -> Anthropic,
@@ -1131,6 +1152,16 @@ async def call_model_with_retry_async(
             raise RuntimeError(
                 "API Route client is not initialized. Set API_ROUTE_API_KEY "
                 "or configure api_keys.api_route_api_key."
+            )
+    elif model_name.startswith("runcrate/"):
+        provider = "runcrate"
+        actual_model = model_name[len("runcrate/") :]
+        if not actual_model:
+            raise ValueError("Runcrate model id cannot be empty")
+        if runcrate_client is None:
+            raise RuntimeError(
+                "Runcrate client is not initialized. Set RUNCRATE_API_KEY "
+                "or configure api_keys.runcrate_api_key."
             )
     elif local_text is not None:
         kind, actual_model = local_text
@@ -1190,10 +1221,11 @@ async def call_model_with_retry_async(
         "max_completion_tokens": config.max_output_tokens if hasattr(config, "max_output_tokens") else 50000,
     }
 
-    if provider in ("atlascloud", "api_route", "local_text"):
+    if provider in ("atlascloud", "api_route", "runcrate", "local_text"):
         compatible_client, compatible_name = {
             "atlascloud": (atlascloud_client, "Atlas Cloud"),
             "api_route": (api_route_client, "API Route"),
+            "runcrate": (runcrate_client, "Runcrate"),
             "local_text": (local_text_client, local_text_name),
         }[provider]
         return await call_openai_with_retry_async(

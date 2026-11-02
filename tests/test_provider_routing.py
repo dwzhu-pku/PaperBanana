@@ -22,6 +22,7 @@ CLIENT_GLOBALS = (
     "orcarouter_api_key",
     "atlascloud_client",
     "api_route_client",
+    "runcrate_client",
     "local_openai_client",
     "ollama_client",
 )
