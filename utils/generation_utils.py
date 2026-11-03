@@ -22,6 +22,7 @@ import base64
 from io import BytesIO
 from functools import partial
 from ast import literal_eval
+from types import SimpleNamespace
 from typing import List, Dict, Any
 
 import httpx
@@ -139,6 +140,83 @@ def _client_for_local_text(kind: str):
     else:
         local_openai_client = client
     return client
+
+
+LITELLM_PREFIX = "litellm/"
+# LiteLLM is optional and installed separately: it caps openai below 3.x, which
+# would otherwise move every install off the openai release requirements.txt resolves.
+LITELLM_REQUIREMENT = "litellm>=1.97.0,<1.106.0"
+_LITELLM_DOWNLOAD_MAX_BYTES = 32 * 1024 * 1024
+# LiteLLM exceptions that a retry cannot fix (bad key, bad request, unknown model).
+_LITELLM_NON_RETRYABLE_ERRORS = frozenset(
+    {
+        "AuthenticationError",
+        "BadRequestError",
+        "ContentPolicyViolationError",
+        "NotFoundError",
+        "PermissionDeniedError",
+        "UnsupportedParamsError",
+    }
+)
+
+
+def _split_litellm_prefix(model_name: str):
+    """Return the LiteLLM model id for litellm/<provider>/<model>, else None."""
+    stripped = (model_name or "").strip()
+    if not stripped.lower().startswith(LITELLM_PREFIX):
+        return None
+    actual_model = stripped[len(LITELLM_PREFIX) :].strip()
+    if not actual_model:
+        raise ValueError("LiteLLM model id cannot be empty")
+    return actual_model
+
+
+def _import_litellm():
+    try:
+        import litellm
+    except ImportError as exc:
+        raise RuntimeError(
+            "litellm/ models need the LiteLLM SDK. Install it with "
+            f'pip install "{LITELLM_REQUIREMENT}".'
+        ) from exc
+    # Failures are reported through the retry loops; keep LiteLLM's help banner out of the logs.
+    litellm.suppress_debug_info = True
+    return litellm
+
+
+def _litellm_request_kwargs():
+    """Optional key and base URL for every litellm/ call.
+
+    Left unset, LiteLLM reads the upstream provider's own credentials from the
+    environment (e.g. VERTEXAI_PROJECT, AWS_ACCESS_KEY_ID, AZURE_API_KEY).
+    """
+    kwargs = {"drop_params": True}
+    api_key = get_config_val("api_keys", "litellm_api_key", "LITELLM_API_KEY", "")
+    if api_key:
+        kwargs["api_key"] = api_key
+    base_url = get_config_val("base_urls", "litellm_base_url", "LITELLM_BASE_URL", "")
+    if base_url:
+        kwargs["api_base"] = base_url.rstrip("/")
+    return kwargs
+
+
+class _LiteLLMChatCompletions:
+    def __init__(self, litellm_module):
+        self._litellm = litellm_module
+
+    async def create(self, **kwargs):
+        return await self._litellm.acompletion(**kwargs, **_litellm_request_kwargs())
+
+
+class _LiteLLMChatClient:
+    """Exposes litellm.acompletion as client.chat.completions.create.
+
+    This lets litellm/ text models reuse the shared OpenAI-compatible retry loop
+    while LiteLLM translates the request for the upstream provider.
+    """
+
+    def __init__(self, litellm_module):
+        self.chat = SimpleNamespace(completions=_LiteLLMChatCompletions(litellm_module))
 
 
 def reinitialize_clients():
@@ -1035,6 +1113,160 @@ async def call_orcarouter_image_generation_with_retry_async(
     )
 
 
+def _litellm_is_gemini_image_model(model_name: str) -> bool:
+    """Gemini image models (AI Studio or Vertex AI) take a native imageConfig.
+
+    Mirrors LiteLLM's own check, which looks for "gemini" in the model id after
+    the provider prefix.
+    """
+    return "gemini" in model_name.split("/", 1)[-1].lower()
+
+
+def _openai_image_size_for_ratio(aspect_ratio: str) -> str:
+    """Closest OpenAI-style size (GPT Image accepts these three) for a W:H ratio."""
+    try:
+        width, height = (float(part) for part in str(aspect_ratio).split(":", 1))
+        ratio = width / height
+    except (TypeError, ValueError, ZeroDivisionError):
+        return "1024x1024"
+    if ratio > 1.1:
+        return "1536x1024"
+    if ratio < 0.9:
+        return "1024x1536"
+    return "1024x1024"
+
+
+def _split_image_contents(contents: List[Dict[str, Any]]):
+    """Return (prompt text, list of input image bytes) from a generic content list."""
+    texts = []
+    images = []
+    for item in contents:
+        if item.get("type") == "text":
+            texts.append(item.get("text", ""))
+        elif item.get("type") == "image":
+            source = item.get("source", {})
+            data = source.get("data") if source.get("type") == "base64" else item.get("image_base64")
+            if data:
+                images.append(base64.b64decode(data))
+    return "\n\n".join(text for text in texts if text), images
+
+
+async def _litellm_image_b64(item) -> str | None:
+    """Base64 image from one LiteLLM ImageResponse item (b64_json or URL)."""
+    b64_data = getattr(item, "b64_json", None)
+    if b64_data:
+        return b64_data
+    url = getattr(item, "url", None)
+    if not url:
+        return None
+    if url.startswith("data:image"):
+        return url.split(",", 1)[1] if "," in url else None
+    async with httpx.AsyncClient(timeout=120, follow_redirects=True) as client:
+        async with client.stream("GET", url) as resp:
+            resp.raise_for_status()
+            buffer = bytearray()
+            async for chunk in resp.aiter_bytes():
+                buffer.extend(chunk)
+                if len(buffer) > _LITELLM_DOWNLOAD_MAX_BYTES:
+                    raise RuntimeError(
+                        f"LiteLLM image exceeds the {_LITELLM_DOWNLOAD_MAX_BYTES} byte limit"
+                    )
+    return base64.b64encode(bytes(buffer)).decode("utf-8")
+
+
+async def call_litellm_image_generation_with_retry_async(
+    model_name, contents, config, max_attempts=5, retry_delay=30, error_context=""
+):
+    """
+    ASYNC: Generate one image through the LiteLLM SDK for litellm/<provider>/<model>.
+
+    Text-only contents use litellm.aimage_generation; contents with an input
+    image (polish, refine) use litellm.aimage_edit. Gemini image models get the
+    aspect ratio and resolution tier as a native imageConfig; other models get
+    the closest OpenAI-style size. Errors a retry cannot fix fail fast.
+    """
+    litellm = _import_litellm()
+    actual_model = _split_litellm_prefix(model_name) or model_name
+    prompt, images = _split_image_contents(contents)
+    system_prompt = config.get("system_prompt", "")
+    if system_prompt:
+        prompt = f"{system_prompt}\n\n{prompt}" if prompt else system_prompt
+
+    # No "n": one image is every provider's default, and some (Gemini image edits) reject the field.
+    request = {"model": actual_model, "prompt": prompt, **_litellm_request_kwargs()}
+    aspect_ratio = config.get("aspect_ratio")
+    image_size = config.get("image_size")
+    if _litellm_is_gemini_image_model(actual_model):
+        image_config = {}
+        if aspect_ratio:
+            image_config["aspectRatio"] = aspect_ratio
+        if image_size:
+            image_config["imageSize"] = str(image_size).upper()
+        if image_config:
+            request["imageConfig"] = image_config
+    else:
+        request["size"] = _openai_image_size_for_ratio(aspect_ratio or "1:1")
+
+    context_msg = f" for {error_context}" if error_context else ""
+    for attempt in range(max_attempts):
+        try:
+            if images:
+                response = await litellm.aimage_edit(
+                    image=images if len(images) > 1 else images[0], **request
+                )
+            else:
+                response = await litellm.aimage_generation(**request)
+
+            for item in getattr(response, "data", None) or []:
+                b64_data = await _litellm_image_b64(item)
+                if b64_data:
+                    return [b64_data]
+
+            print(f"[Warning]: LiteLLM image generation returned no images{context_msg}, retrying...")
+            if attempt < max_attempts - 1:
+                await asyncio.sleep(retry_delay)
+
+        except Exception as e:
+            if type(e).__name__ in _LITELLM_NON_RETRYABLE_ERRORS:
+                print(f"LiteLLM image generation failed{context_msg}: {e}. Not retrying.")
+                return ["Error"]
+            current_delay = min(retry_delay * (2 ** attempt), 60)
+            print(
+                f"LiteLLM image gen attempt {attempt + 1} failed{context_msg}: {e}. "
+                f"Retrying in {current_delay}s..."
+            )
+            if attempt < max_attempts - 1:
+                await asyncio.sleep(current_delay)
+
+    print(f"Error: All {max_attempts} LiteLLM image attempts failed{context_msg}")
+    return ["Error"]
+
+
+async def refine_image_with_litellm(image_model, image_b64, edit_prompt, aspect_ratio, image_size):
+    """Refine path shared by app.py and demo.py for a litellm/ image model.
+
+    Returns (image_bytes, message), or (None, error message) on failure.
+    """
+    contents = [
+        {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": image_b64}},
+        {"type": "text", "text": edit_prompt},
+    ]
+    config = {"system_prompt": "", "aspect_ratio": aspect_ratio, "image_size": image_size}
+    try:
+        result = await call_litellm_image_generation_with_retry_async(
+            model_name=image_model,
+            contents=contents,
+            config=config,
+            max_attempts=3,
+            retry_delay=10,
+            error_context="refine_image",
+        )
+    except Exception as e:
+        return None, f"Error: LiteLLM refine failed: {e}"
+    if result and result[0] != "Error":
+        return base64.b64decode(result[0]), "Image refined successfully! (via LiteLLM)"
+    return None, "Error: LiteLLM refine returned no image."
+
 async def dispatch_image_generation(
     model_name,
     *,
@@ -1058,7 +1290,22 @@ async def dispatch_image_generation(
     Callers keep ``assert_not_local_openai_image_model`` so the text-only
     rejection stays at the agent boundary. Polish leaves out gpt-image and
     OrcaRouter because it historically only chose OpenRouter or Gemini.
+    An explicit ``litellm/`` model goes through the LiteLLM SDK first, so
+    ``litellm/openai/gpt-image-1`` is not mistaken for the OpenAI client path.
     """
+    if _split_litellm_prefix(model_name) is not None:
+        return await call_litellm_image_generation_with_retry_async(
+            model_name=model_name,
+            contents=contents,
+            config={
+                "system_prompt": system_prompt,
+                "aspect_ratio": aspect_ratio,
+                "image_size": image_size,
+            },
+            max_attempts=max_attempts,
+            retry_delay=retry_delay,
+        )
+
     if include_gpt_image and "gpt-image" in model_name:
         image_prompt = prompt
         if gpt_image_prompt_limit is not None:
@@ -1121,7 +1368,7 @@ async def call_model_with_retry_async(
 
     Routing rules:
       1. Explicit prefix overrides: "atlas/" -> Atlas Cloud, "api-route/" -> API Route,
-         "runcrate/" -> Runcrate,
+         "runcrate/" -> Runcrate, "litellm/" -> LiteLLM SDK,
          "local/" and "ollama/" -> local OpenAI-compatible text endpoints,
          "openrouter/" -> OpenRouter, "orcarouter/" -> OrcaRouter,
          "claude-" -> Anthropic,
@@ -1133,7 +1380,11 @@ async def call_model_with_retry_async(
     local_text = _split_local_text_prefix(model_name)
     local_text_client = None
     local_text_name = ""
-    if model_name.startswith("atlas/"):
+    litellm_model = _split_litellm_prefix(model_name)
+    if litellm_model is not None:
+        provider = "litellm"
+        actual_model = litellm_model
+    elif model_name.startswith("atlas/"):
         provider = "atlascloud"
         actual_model = model_name[len("atlas/") :]
         if not actual_model:
@@ -1220,6 +1471,18 @@ async def call_model_with_retry_async(
         "candidate_num": config.candidate_count if hasattr(config, "candidate_count") else 1,
         "max_completion_tokens": config.max_output_tokens if hasattr(config, "max_output_tokens") else 50000,
     }
+
+    if provider == "litellm":
+        return await call_openai_with_retry_async(
+            model_name=actual_model,
+            contents=contents,
+            config=cfg_dict,
+            max_attempts=max_attempts,
+            retry_delay=retry_delay,
+            error_context=error_context,
+            client=_LiteLLMChatClient(_import_litellm()),
+            provider_name="LiteLLM",
+        )
 
     if provider in ("atlascloud", "api_route", "runcrate", "local_text"):
         compatible_client, compatible_name = {

@@ -178,6 +178,12 @@ async def refine_image_with_nanoviz(image_bytes, edit_prompt, aspect_ratio="21:9
     assert_not_local_openai_image_model(image_model, route_name="image refinement")
     image_b64 = base64.b64encode(image_bytes).decode("utf-8")
 
+    # Path 0: an explicit litellm/<provider>/<model> image model goes through the LiteLLM SDK
+    if image_model.strip().lower().startswith("litellm/"):
+        from utils.generation_utils import refine_image_with_litellm
+
+        return await refine_image_with_litellm(image_model, image_b64, edit_prompt, aspect_ratio, image_size)
+
     # Path 1: OpenRouter
     try:
         from utils.generation_utils import call_openrouter_image_generation_with_retry_async
