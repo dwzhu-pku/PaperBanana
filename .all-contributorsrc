@@ -296,6 +296,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "heydryft",
+      "name": "Nirupam Bhowmick",
+      "avatar_url": "https://avatars.githubusercontent.com/u/48842933?v=4",
+      "profile": "https://github.com/heydryft",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitType": "docs"
