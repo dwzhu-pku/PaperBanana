@@ -309,6 +309,9 @@ Thanks to all contributors who helped improve PaperBanana, whether through code,
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/serendipityshe"><img src="https://avatars.githubusercontent.com/u/144142961?v=4?s=100" width="100px;" alt="serendipityshe"/><br /><sub><b>serendipityshe</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=serendipityshe" title="Code">💻</a></td>
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/noking-xdj"><img src="https://avatars.githubusercontent.com/u/54163745?v=4?s=100" width="100px;" alt="NoKing"/><br /><sub><b>NoKing</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=noking-xdj" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/DennyHo0917"><img src="https://avatars.githubusercontent.com/u/149746199?v=4?s=100" width="100px;" alt="DennyHo0917"/><br /><sub><b>DennyHo0917</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=DennyHo0917" title="Code">💻</a></td>
+    </tr>
   </tbody>
 </table>
 
