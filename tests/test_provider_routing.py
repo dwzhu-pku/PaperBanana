@@ -23,6 +23,7 @@ CLIENT_GLOBALS = (
     "atlascloud_client",
     "api_route_client",
     "runcrate_client",
+    "cloudgpu_client",
     "local_openai_client",
     "ollama_client",
 )
