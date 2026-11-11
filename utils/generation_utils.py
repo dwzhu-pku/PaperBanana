@@ -62,6 +62,7 @@ orcarouter_api_key = ""
 atlascloud_client = None
 api_route_client = None
 runcrate_client = None
+cloudgpu_client = None
 local_openai_client = None
 ollama_client = None
 
@@ -230,7 +231,7 @@ def reinitialize_clients():
     global gemini_client, anthropic_client, openai_client
     global openrouter_client, openrouter_api_key
     global orcarouter_client, orcarouter_api_key
-    global atlascloud_client, api_route_client, runcrate_client
+    global atlascloud_client, api_route_client, runcrate_client, cloudgpu_client
     global local_openai_client, ollama_client
 
     initialized = []
@@ -337,6 +338,25 @@ def reinitialize_clients():
         initialized.append("Runcrate")
     else:
         runcrate_client = None
+
+    cloudgpu_api_key = get_config_val(
+        "api_keys", "cloudgpu_api_key", "CLOUDGPU_API_KEY", ""
+    )
+    if cloudgpu_api_key:
+        cloudgpu_base_url = get_config_val(
+            "base_urls",
+            "cloudgpu_base_url",
+            "CLOUDGPU_BASE_URL",
+            "https://cloudgpu.app/v1",
+        )
+        cloudgpu_client = AsyncOpenAI(
+            base_url=cloudgpu_base_url.rstrip("/"),
+            api_key=cloudgpu_api_key,
+        )
+        print("Initialized CloudGPU Client with API Key")
+        initialized.append("CloudGPU")
+    else:
+        cloudgpu_client = None
 
     local_openai_client = _make_local_text_client("local", require_base_url=False)
     if local_openai_client is not None:
@@ -1368,7 +1388,7 @@ async def call_model_with_retry_async(
 
     Routing rules:
       1. Explicit prefix overrides: "atlas/" -> Atlas Cloud, "api-route/" -> API Route,
-         "runcrate/" -> Runcrate, "litellm/" -> LiteLLM SDK,
+         "runcrate/" -> Runcrate, "cloudgpu/" -> CloudGPU, "litellm/" -> LiteLLM SDK,
          "local/" and "ollama/" -> local OpenAI-compatible text endpoints,
          "openrouter/" -> OpenRouter, "orcarouter/" -> OrcaRouter,
          "claude-" -> Anthropic,
@@ -1413,6 +1433,16 @@ async def call_model_with_retry_async(
             raise RuntimeError(
                 "Runcrate client is not initialized. Set RUNCRATE_API_KEY "
                 "or configure api_keys.runcrate_api_key."
+            )
+    elif model_name.startswith("cloudgpu/"):
+        provider = "cloudgpu"
+        actual_model = model_name[len("cloudgpu/") :]
+        if not actual_model:
+            raise ValueError("CloudGPU model id cannot be empty")
+        if cloudgpu_client is None:
+            raise RuntimeError(
+                "CloudGPU client is not initialized. Set CLOUDGPU_API_KEY "
+                "or configure api_keys.cloudgpu_api_key."
             )
     elif local_text is not None:
         kind, actual_model = local_text
@@ -1484,11 +1514,12 @@ async def call_model_with_retry_async(
             provider_name="LiteLLM",
         )
 
-    if provider in ("atlascloud", "api_route", "runcrate", "local_text"):
+    if provider in ("atlascloud", "api_route", "runcrate", "cloudgpu", "local_text"):
         compatible_client, compatible_name = {
             "atlascloud": (atlascloud_client, "Atlas Cloud"),
             "api_route": (api_route_client, "API Route"),
             "runcrate": (runcrate_client, "Runcrate"),
+            "cloudgpu": (cloudgpu_client, "CloudGPU"),
             "local_text": (local_text_client, local_text_name),
         }[provider]
         return await call_openai_with_retry_async(
