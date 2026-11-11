@@ -305,6 +305,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "mrhy7176",
+      "name": "CloudGPU",
+      "avatar_url": "https://avatars.githubusercontent.com/u/129925370?v=4",
+      "profile": "https://cloudgpu.app",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitType": "docs"
