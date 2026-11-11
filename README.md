@@ -313,6 +313,7 @@ Thanks to all contributors who helped improve PaperBanana, whether through code,
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/DennyHo0917"><img src="https://avatars.githubusercontent.com/u/149746199?v=4&size=100" width="100px" height="100px" alt="DennyHo0917"/><br /><sub><b>DennyHo0917</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=DennyHo0917" title="Code">💻</a></td>
       <td align="center" valign="top" width="16.66%"><a href="https://github.com/heydryft"><img src="https://avatars.githubusercontent.com/u/48842933?v=4&size=100" width="100px" height="100px" alt="Nirupam Bhowmick"/><br /><sub><b>Nirupam Bhowmick</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=heydryft" title="Code">💻</a></td>
       <td align="center" valign="top" width="16.66%"><a href="https://cloudgpu.app"><img src="https://avatars.githubusercontent.com/u/129925370?v=4&size=100" width="100px" height="100px" alt="CloudGPU"/><br /><sub><b>CloudGPU</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=mrhy7176" title="Code">💻</a></td>
+      <td align="center" valign="top" width="16.66%"><a href="https://github.com/prodmanpd"><img src="https://avatars.githubusercontent.com/u/63293651?v=4&size=100" width="100px" height="100px" alt="Prodman Devokadev"/><br /><sub><b>Prodman Devokadev</b></sub></a><br /><a href="https://github.com/dwzhu-pku/PaperBanana/commits?author=prodmanpd" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
