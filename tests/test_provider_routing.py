@@ -24,6 +24,7 @@ CLIENT_GLOBALS = (
     "api_route_client",
     "runcrate_client",
     "cloudgpu_client",
+    "teamorouter_client",
     "local_openai_client",
     "ollama_client",
 )
