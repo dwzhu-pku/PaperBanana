@@ -63,6 +63,7 @@ atlascloud_client = None
 api_route_client = None
 runcrate_client = None
 cloudgpu_client = None
+teamorouter_client = None
 local_openai_client = None
 ollama_client = None
 
@@ -232,6 +233,7 @@ def reinitialize_clients():
     global openrouter_client, openrouter_api_key
     global orcarouter_client, orcarouter_api_key
     global atlascloud_client, api_route_client, runcrate_client, cloudgpu_client
+    global teamorouter_client
     global local_openai_client, ollama_client
 
     initialized = []
@@ -357,6 +359,25 @@ def reinitialize_clients():
         initialized.append("CloudGPU")
     else:
         cloudgpu_client = None
+
+    teamorouter_api_key = get_config_val(
+        "api_keys", "teamorouter_api_key", "TEAMOROUTER_API_KEY", ""
+    )
+    if teamorouter_api_key:
+        teamorouter_base_url = get_config_val(
+            "base_urls",
+            "teamorouter_base_url",
+            "TEAMOROUTER_BASE_URL",
+            "https://api.teamorouter.com/v1",
+        )
+        teamorouter_client = AsyncOpenAI(
+            base_url=teamorouter_base_url.rstrip("/"),
+            api_key=teamorouter_api_key,
+        )
+        print("Initialized TeamoRouter Client with API Key")
+        initialized.append("TeamoRouter")
+    else:
+        teamorouter_client = None
 
     local_openai_client = _make_local_text_client("local", require_base_url=False)
     if local_openai_client is not None:
@@ -1388,7 +1409,8 @@ async def call_model_with_retry_async(
 
     Routing rules:
       1. Explicit prefix overrides: "atlas/" -> Atlas Cloud, "api-route/" -> API Route,
-         "runcrate/" -> Runcrate, "cloudgpu/" -> CloudGPU, "litellm/" -> LiteLLM SDK,
+         "runcrate/" -> Runcrate, "cloudgpu/" -> CloudGPU,
+         "teamorouter/" -> TeamoRouter, "litellm/" -> LiteLLM SDK,
          "local/" and "ollama/" -> local OpenAI-compatible text endpoints,
          "openrouter/" -> OpenRouter, "orcarouter/" -> OrcaRouter,
          "claude-" -> Anthropic,
@@ -1443,6 +1465,16 @@ async def call_model_with_retry_async(
             raise RuntimeError(
                 "CloudGPU client is not initialized. Set CLOUDGPU_API_KEY "
                 "or configure api_keys.cloudgpu_api_key."
+            )
+    elif model_name.startswith("teamorouter/"):
+        provider = "teamorouter"
+        actual_model = model_name[len("teamorouter/") :]
+        if not actual_model:
+            raise ValueError("TeamoRouter model id cannot be empty")
+        if teamorouter_client is None:
+            raise RuntimeError(
+                "TeamoRouter client is not initialized. Set TEAMOROUTER_API_KEY "
+                "or configure api_keys.teamorouter_api_key."
             )
     elif local_text is not None:
         kind, actual_model = local_text
@@ -1514,12 +1546,13 @@ async def call_model_with_retry_async(
             provider_name="LiteLLM",
         )
 
-    if provider in ("atlascloud", "api_route", "runcrate", "cloudgpu", "local_text"):
+    if provider in ("atlascloud", "api_route", "runcrate", "cloudgpu", "teamorouter", "local_text"):
         compatible_client, compatible_name = {
             "atlascloud": (atlascloud_client, "Atlas Cloud"),
             "api_route": (api_route_client, "API Route"),
             "runcrate": (runcrate_client, "Runcrate"),
             "cloudgpu": (cloudgpu_client, "CloudGPU"),
+            "teamorouter": (teamorouter_client, "TeamoRouter"),
             "local_text": (local_text_client, local_text_name),
         }[provider]
         return await call_openai_with_retry_async(
